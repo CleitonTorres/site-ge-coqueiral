@@ -1,0 +1,10 @@
+.margin img {
+    margin: 10px;
+}
+
+.flexCollCenter{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

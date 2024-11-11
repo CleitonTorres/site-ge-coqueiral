@@ -1,6 +1,8 @@
 import Banner from '@/components/layout/banner/banner';
+import Box from '@/components/layout/box/box';
 import Section from '@/components/layout/sections/section';
 import type { Metadata } from 'next'
+import Image from 'next/image';
  
 export const metadata: Metadata = {
   title: '19º/ES Grupo Escoteiro Coqueiral',
@@ -15,8 +17,86 @@ export default function Home() {
         paragraph='Venha fazer parte deste Movimento que já conta com mais de 57 milhões de pessoas em todo o mundo.'
         imageURL='/logo/logo.png'
       />
+      <Section customClass={['flesRowSpace']}>
+        <Box customClass={['flexCollCenter']}>
+          <Image 
+            alt='imagem seja escoteiro'
+            width={181}
+            height={181}
+            src={'/icons/40.png'}
+          />
+          <span style={{fontSize: 32, fontWeight: 600}}>66.787</span>
+          <span style={{fontWeight: 300}}>jovens atendidos</span>
+        </Box>
+        <Box customClass={['flexCollCenter']}>
+          <Image 
+            alt='imagem seja escoteiro'
+            width={181}
+            height={181}
+            src={'/icons/41.png'}
+          />
+          <span style={{fontSize: 32, fontWeight: 600}}>25.408</span>
+          <span style={{fontWeight: 300}}>voluntários</span>
+        </Box>
+        <Box customClass={['flexCollCenter']}>
+          <Image 
+            alt='imagem seja escoteiro'
+            width={181}
+            height={181}
+            src={'/icons/42.png'}
+          />
+          <span style={{fontSize: 32, fontWeight: 600}}>1.416</span>
+          <span style={{fontWeight: 300}}>unidades escoteiras</span>
+        </Box>
+        <Box customClass={['flexCollCenter']}>
+          <Image 
+            alt='imagem seja escoteiro'
+            width={181}
+            height={181}
+            src={'/icons/43.png'}
+          />
+          <span style={{fontSize: 32, fontWeight: 600}}>7.536.668</span>
+          <span style={{fontWeight: 300}}>horas de voluntariado em 2024</span>
+        </Box>
+      </Section>
       <Section>
-        <h1 className='textLarge colorWhite'>Destaques</h1>
+        <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
+        <Box customClass={['margin']}>
+          <Image 
+            alt='imagem seja escoteiro'
+            width={540}
+            height={178}
+            src={'/images/ePrancheta-1-1.png'}
+          />
+          <Image 
+            alt='imagem seja escoteiro'
+            width={540}
+            height={178}
+            src={'/images/espacoseguro.png'}
+          />
+        </Box>
+      </Section>
+      <Section>
+        <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
+      </Section>
+      <Section customClass={['flexCollLeft']}>
+        <h1 style={{fontSize: 52, fontWeight: 300, width: 500}}>
+          Não há ensino que se compare ao exemplo.
+        </h1>
+        <Image 
+          alt='imagem seja escoteiro'
+          width={340}
+          height={108}
+          src={'/icons/home-phrase.png'}
+          style={{marginLeft: 300}}
+        />
+        <Image 
+          alt='figura de um escoteiro'
+          width={300}
+          height={300}
+          src={'/icons/scout.png'}
+          style={{position: 'absolute', right: 0}}
+        />
       </Section>
     </>
   );

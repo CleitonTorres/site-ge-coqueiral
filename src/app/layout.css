@@ -1,5 +1,6 @@
 .conteinerAreaAssociado{
   background-color: var(--verde);
+  min-width: var(--widthLarge);
 }
 .navBox{
   position: relative;
@@ -41,6 +42,10 @@
   cursor: pointer;
   height: 35px;
   padding: 5px;
+}
+#area-do-associado ul li{
+  width: 150px;
+  text-align: center;
 }
 #area-do-associado ul li:hover {
   background-color: var(--sejaescoteiro);
@@ -124,12 +129,16 @@
   height: 200px;
   background-color: var(--cinza)
 }
+.titleItem:hover {
+  cursor: default !important;
+}
 .subTitle{
   font-weight: 600;
   margin: 0;
 }
 .subTitle:hover{
   opacity: 80%;
+  cursor: default !important;
 }
 .subItens{
   font-size: 12px !important;
@@ -138,6 +147,9 @@
 }
 .subItens li{
   margin: 0 !important;
+}
+.subItens li:hover{
+  font-weight: 600 !important;
 }
 .active{
   display: block;

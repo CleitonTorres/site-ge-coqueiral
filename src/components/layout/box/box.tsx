@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react';
-import styles from './section.module.css';
+import styles from './box.module.css';
 
 type Props = {
     children:React.ReactNode
     customClass?: string[]
 }
-export default function Section({children, customClass}:Props){
+export default function Box({children, customClass}:Props){
     const [customStyles, setCustomStyles] = useState('');
 
     useEffect(()=>{
@@ -20,9 +20,10 @@ export default function Section({children, customClass}:Props){
             setCustomStyles(customClass ? styles[customClass] : '') 
         }
     },[customClass])
+
     return(
-        <section className={`${styles.conteiner} flexCollCenter ${customStyles}`}>
+        <div className={`${styles.conteiner} flexRowTopWrap ${customStyles}`}>
             {children}
-        </section>
+        </div>
     )
 }

@@ -16,9 +16,9 @@ export default function Banner({title, subTitle, paragraph, imageURL}:Props){
             </video>
             <div className={styles.filter}></div>
             <div className={`${styles.rotulo} flexCollCenter`}>
-                {title ? <h1 className='textLarge colorWhite'>{title}</h1> :null}
-                {subTitle ? <h4 className='colorWhite textMedium'>Educação para a vida.</h4> :null}
-                {paragraph ? <p className='colorWhite textMediumFit'>
+                {title ? <h1 className={`${styles.title} textLarge colorWhite`}>{title}</h1> :null}
+                {subTitle ? <h4 className={`${styles.subTitle} colorWhite textMedium`}>Educação para a vida.</h4> :null}
+                {paragraph ? <p className={`${styles.paragraph} colorWhite textMediumFit`}>
                     Venha fazer parte deste Movimento que já conta com mais de 57 milhões de pessoas em todo o mundo.
                 </p>:null}
                 {imageURL ? 

@@ -37,7 +37,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             <li>Voluntário</li>
                             <li>Área da Região</li>
                             <li>Loja Nacional</li>
-                            <li>Downloads</li>
                             <li>Paxtu</li>
                         </ul>
                     </nav>
@@ -88,7 +87,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         className='flexRowTop subItemList' 
                                     >
                                         <li className='subItensContents'>
-                                            <li className='subTitle'>Sobre nós</li>
+                                            <ul className='subTitle'>Sobre nós</ul>
                                             <ul className='subItens'>
                                                 <li>Escoteiros do Brasil</li>
                                                 <li>Em Coqueiral</li>
@@ -97,13 +96,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                             </ul>
                                         </li>
                                         <li className='subItensContents'>
-                                            <li className='subTitle'>Transparencia</li>
+                                            <ul className='subTitle'>Transparencia</ul>
                                             <ul className='subItens'>
 
                                             </ul>
                                         </li>
                                         <li className='subItensContents'>
-                                            <li className='subTitle'>Institucional</li>
+                                            <ul className='subTitle'>Institucional</ul>
                                         </li>
                                     </ul>
                                 </li>
@@ -123,7 +122,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             </div>
             
           {/* Layout UI */}
-          <main>{children}</main>
+          <main className='flexCollTop'>{children}</main>
         </body>
       </html>
     )
