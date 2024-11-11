@@ -1,4 +1,3 @@
-"use client"
 import Banner from '@/components/layout/banner/banner';
 import Section from '@/components/layout/sections/section';
 import type { Metadata } from 'next'
