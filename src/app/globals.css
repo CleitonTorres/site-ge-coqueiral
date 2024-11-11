@@ -1,13 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CRoboto+Slab%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --verde: #9eb83b;
+  --turquesa-ea: #47a8a5;
+  --amarelo-ea: #f2ce19;
+  --azul: #2c77f6;
+  --azul-escuro: #2c4678;
+  --cinza: #eee;
+  --cinza-escuro: #d7d7d8;
+  --verde: #9eb83b;
+  --turquesa-ea: #47a8a5;
+  --amarelo-ea: #f2ce19;
+  --sejaescoteiro: #3B401C;
+  --nos-amarelo: #ffff00;
+  --nos-roxo: #800080;
+  --light-blue: #58b4e2;
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --widthLarge: 1140px;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  font-family: var(--font-family-sans-serif);
+  padding: 0;
+  margin: 0;
 }
 
 html,
@@ -17,26 +60,109 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: #fff;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* custom classes */
+.flexRowCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flexRowTop{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.flexCollTop{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flexCollBotton{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.flexCollCenter{
+  display: flex;
+  flex-direction: column;
+  width: 300p;
+  justify-content: center;
+  align-items: center;
+}
+.flexRowSpaceBetween{
+  display: flex;
+  flex-direction: row;
+  width: 300p;
+  justify-content: space-between;
+  align-items: center;
+}
+.uperCase {
+  text-transform: uppercase !important;
+}
+.latterSpacing {
+  letter-spacing: 5px;
+}
+.margin5{
+  margin: 5px;
+}
+.margin10{
+  margin: 10px;
+}
+.paddin10{
+  padding: 10px;
+}
+.porcent30{
+  width: 30%;
+}
+.porcent40{
+  width: 40%;
+}
+.porcent50{
+  width: 50%;
+}
+.porcent60{
+  width: 60%;
+}
+.porcent70{
+  width: 70%;
+}
+.porcent100{
+  width: 100%;
+}
+.cursorPointer{
+  cursor: pointer;
+}
+.textLarge{
+  font-size: 46px;
+}
+.textMedium{
+  font-size: 32px;
+}
+.textMediumFit{
+  font-size: 22px;
+}
+.textSmall{
+  font-size: 12px;
+}
+.colorWhite{
+  color: var(--white);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@keyframes slide {
+  0%{
+    width: 0;
+  }
+  100%{
+    width: 100%;
   }
 }
