@@ -150,6 +150,7 @@ body {
 }
 .textLarge{
   font-size: 46px;
+  font-weight: 400;
 }
 .textMedium{
   font-size: 32px;

@@ -1,5 +1,7 @@
+import Botton from '@/components/form/botton/botton';
 import Banner from '@/components/layout/banner/banner';
 import Box from '@/components/layout/box/box';
+import Card from '@/components/layout/card/card';
 import Section from '@/components/layout/sections/section';
 import type { Metadata } from 'next'
 import Image from 'next/image';
@@ -16,8 +18,9 @@ export default function Home() {
         subTitle='Educação para a vida'
         paragraph='Venha fazer parte deste Movimento que já conta com mais de 57 milhões de pessoas em todo o mundo.'
         imageURL='/logo/logo.png'
+        videoURL='/videos/videoinst.mp4'
       />
-      <Section customClass={['flesRowSpace']}>
+      <Section customClass={['fullWidth', 'flexRowCenter']}>
         <Box customClass={['flexCollCenter']}>
           <Image 
             alt='imagem seja escoteiro'
@@ -59,9 +62,10 @@ export default function Home() {
           <span style={{fontWeight: 300}}>horas de voluntariado em 2024</span>
         </Box>
       </Section>
-      <Section>
+
+      <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
-        <Box customClass={['margin']}>
+        <Box customClass={['margin', 'flexRowWrap']}>
           <Image 
             alt='imagem seja escoteiro'
             width={540}
@@ -76,10 +80,35 @@ export default function Home() {
           />
         </Box>
       </Section>
-      <Section>
+    
+      <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
+        <Box customClass={['fullWidth', 'flexRowWrap']}>
+          <Card
+            textData='07 de dezembro de 2024'
+            title='Última atividade do ano | início das férias'
+            paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
+            imageURL='/images/banner-ferias.webp'
+          />
+          <Card
+            textData='07 de dezembro de 2024'
+            title='Última atividade do ano | início das férias'
+            paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
+            imageURL='/images/banner-ferias.webp'
+          />
+          <Card
+            textData='07 de dezembro de 2024'
+            title='Última atividade do ano | início das férias'
+            paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
+            imageURL='/images/banner-ferias.webp'
+          />
+        </Box>
+        <Botton
+          title='VER TODAS'
+        />
       </Section>
-      <Section customClass={['flexCollLeft']}>
+
+      <Section customClass={['fullWidth', 'flexCollTop']}>
         <h1 style={{fontSize: 52, fontWeight: 300, width: 500}}>
           Não há ensino que se compare ao exemplo.
         </h1>

@@ -1,8 +1,9 @@
 "use client"
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { FaInstagram } from "react-icons/fa";
 import './globals.css';
 import './layout.css'
-import { useEffect, useState } from 'react';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('');
@@ -121,8 +122,17 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                 </nav>
             </div>
             
-          {/* Layout UI */}
-          <main className='flexCollTop'>{children}</main>
+            {/* Layout UI */}
+            <main className='flexCollTop'>{children}</main>
+
+            <div className='footer'>
+                <div className='flexCollCenter boxIcon margin10'>
+                    <FaInstagram size={26} color='var(--verde)'/>
+                </div>
+                <span>
+                    © 2024 Escoteiros do Brasil - Todos os direitos reservados
+                </span>
+            </div>
         </body>
       </html>
     )

@@ -22,7 +22,7 @@ export default function Box({children, customClass}:Props){
     },[customClass])
 
     return(
-        <div className={`${styles.conteiner} flexRowTopWrap ${customStyles}`}>
+        <div className={`flexRowTopWrap ${customStyles}`}>
             {children}
         </div>
     )

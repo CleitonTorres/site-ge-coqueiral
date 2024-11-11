@@ -1,19 +1,22 @@
 .conteiner{
-    height: 300px;
-    width: var(--widthLarge);
+    position: relative;
+    min-height: 400px;
+    margin-bottom: 50px;
 }
 
-.flesRowCenter{
+.flexRowCenter{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
-.flesRowSpace{
+.flexRowSpace{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 .flexCollTop{
     display: flex;
@@ -26,4 +29,13 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+}
+.fullWidth {
+    width: 100vw;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.maxWidth{
+    min-width: 400px;
+    max-width: var(--widthLarge) !important;
 }
