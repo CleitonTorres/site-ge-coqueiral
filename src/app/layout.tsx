@@ -22,6 +22,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         }
     }
 
+    const navigate = (url:string, target:string)=>{
+        window.open(url, target)
+    }
+
     useEffect(()=>{
         document.addEventListener( 'click', ()=>{
             if(activeMenu !== "") setActiveMenu('none');
@@ -112,10 +116,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Sobre nós</ul>
                                         <ul className='subItens'>
-                                            <li>Escoteiros do Brasil</li>
-                                            <li>Em Coqueiral</li>
-                                            <li>No Brasil</li>
-                                            <li>No Mundo</li>
+                                            <li 
+                                                onClick={
+                                                    ()=>navigate('https://www.escoteiros.org.br/escoteiros-do-brasil/', '_black')
+                                                }>Escoteiros do Brasil</li>
+                                            <li onClick={()=>navigate('https://www.escoteiros.org.br/internacional/', '_black')}>No Mundo</li>
+                                            <li onClick={()=> navigate('https://www.escoteiros.org.br/brasil/', '_black')}>No Brasil</li>
+                                            <li onClick={()=> navigate('/coqueiral', '_self')}>Em Coqueiral</li>
                                         </ul>
                                     </li>
                                     <li className='subItensContents'>
