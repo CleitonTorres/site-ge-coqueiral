@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaInstagram } from "react-icons/fa";
+import { FiMenu } from "react-icons/fi";
 import './globals.css';
 import './layout.css'
 
@@ -45,28 +46,33 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
                 <div id="bottons">
                     <div className='bottonsConteiner porcent100 margin10'>
-                        <div className='porcent40 flexRowCenter cursorPointer'>
+                        <div className='boxLogoUEB'>
                             <Image 
                                 width={270} 
                                 height={90} 
                                 alt='logo escoteiros do brasil' 
                                 src={'/icons/logo.png'}
+                                style={{width: '80%', objectFit: 'contain'}}
                             />
                             <Image 
                                 width={48} 
                                 height={48} 
                                 alt='logo melhores ongs' 
                                 src={'/icons/selo2023.png'}
+                                style={{width: '10%', objectFit: 'contain'}}
                             />
                         </div>
-                        <div className='porcent60 flexRowCenter'>
+                        <div className='porcent60 flexRowCenter' id="bottonsDoeEmpresa">
                             <div className='margin10 cursorPointer doeAgora flexRowCenter'>
                                 <span>Doe agora</span>
                             </div>
                             <div className='cursorPointer empresaAmiga flexRowCenter'>
                                 <span>Empresa Parceira</span>
                             </div>
-                        </div>                    
+                        </div>
+                        <div className='boxIconMenu'>
+                            <FiMenu size={50}/>
+                        </div>                
                     </div>
                 </div>
 
@@ -254,8 +260,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         </div>
                     </div>
                 </nav>
+                <div className='linhaDoeAgora'>
+                    <span>Contribua com os Escoteiros de Coqueiral</span> 
+                    <a href="">DOE AGORA</a>
+                </div> 
             </div>
-            
+
             {/* Layout UI */}
             <main className='flexCollTop'>{children}</main>
 

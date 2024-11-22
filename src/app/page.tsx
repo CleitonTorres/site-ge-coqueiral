@@ -20,6 +20,8 @@ export default function Home() {
         imageURL='/logo/logo.png'
         videoURL='/videos/videoinst.mp4'
       />
+
+      {/* estatisticas */}
       <Section customClass={['fullWidth', 'flexRowCenter']}>
         <Box customClass={['flexCollCenter']}>
           <Image 
@@ -63,24 +65,28 @@ export default function Home() {
         </Box>
       </Section>
 
+      {/* destaques */}
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
         <Box customClass={['margin', 'flexRowWrap']}>
           <Image 
             alt='imagem seja escoteiro'
-            width={540}
+            width={408}
             height={178}
             src={'/images/ePrancheta-1-1.png'}
+            style={{objectFit: 'contain'}}
           />
           <Image 
             alt='imagem seja escoteiro'
-            width={540}
+            width={408}
             height={178}
             src={'/images/espacoseguro.png'}
+            style={{objectFit: 'contain'}}
           />
         </Box>
       </Section>
     
+      {/* notícias */}
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
         <Box customClass={['fullWidth', 'flexRowWrap']}>
@@ -109,7 +115,9 @@ export default function Home() {
       </Section>
 
       <Section customClass={['fullWidth', 'flexCollTop']}>
-        <h1 style={{fontSize: 52, fontWeight: 300, width: 500}}>
+        <h1 
+          style={{fontSize: '8vw', fontWeight: 300, width: '100%', margin: '10px'}}
+        >
           Não há ensino que se compare ao exemplo.
         </h1>
         <Image 
@@ -117,14 +125,14 @@ export default function Home() {
           width={340}
           height={108}
           src={'/icons/home-phrase.png'}
-          style={{marginLeft: 300}}
+          style={{marginLeft: 300, objectFit: 'contain'}}
         />
         <Image 
           alt='figura de um escoteiro'
           width={300}
           height={300}
           src={'/icons/scout.png'}
-          style={{position: 'absolute', right: 0}}
+          style={{position: 'absolute', right: 0, width: '30vw', objectFit: 'contain', maxWidth: 296 }}
         />
       </Section>
     </>
