@@ -31,7 +31,7 @@ export default function Home() {
             src={'/icons/40.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>66.787</span>
-          <span style={{fontWeight: 300}}>jovens atendidos</span>
+          <span style={{fontWeight: 300}}>jovens atendidos no Brasil</span>
         </Box>
         <Box customClass={['flexCollCenter']}>
           <Image 
@@ -41,7 +41,7 @@ export default function Home() {
             src={'/icons/41.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>25.408</span>
-          <span style={{fontWeight: 300}}>voluntários</span>
+          <span style={{fontWeight: 300}}>voluntários no Brasil</span>
         </Box>
         <Box customClass={['flexCollCenter']}>
           <Image 
@@ -51,7 +51,7 @@ export default function Home() {
             src={'/icons/42.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>1.416</span>
-          <span style={{fontWeight: 300}}>unidades escoteiras</span>
+          <span style={{fontWeight: 300}}>unidades escoteiras no Brasil</span>
         </Box>
         <Box customClass={['flexCollCenter']}>
           <Image 
@@ -61,7 +61,7 @@ export default function Home() {
             src={'/icons/43.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>7.536.668</span>
-          <span style={{fontWeight: 300}}>horas de voluntariado em 2024</span>
+          <span style={{fontWeight: 300}}>horas de voluntariado em 2024 no Brasil</span>
         </Box>
       </Section>
 

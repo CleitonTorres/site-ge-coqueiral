@@ -12,7 +12,7 @@ export default function Card({title, paragraph, imageURL, textData}:Props){
         <div className={styles.conteiner}>
             {imageURL ? <Image
                 alt="card"
-                width={408}
+                width={400}
                 height={150}
                 src={imageURL}
             />:null}

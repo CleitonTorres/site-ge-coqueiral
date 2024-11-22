@@ -3,7 +3,13 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    width: 408px;
-    height: 364px;
+    width: 400px;
     margin: 10px;
+    padding: 6px;
+}
+.conteiner p{
+    width: 90%;
+}
+.conteiner h1{
+    width: 90%;
 }
