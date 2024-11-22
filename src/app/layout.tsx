@@ -7,16 +7,25 @@ import './globals.css';
 import './layout.css'
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
-    const [activeMenu, setActiveMenu] = useState('');
+    const [activeMenu, setActiveMenu] = useState('none');
+    const [animation, setAnimation] = useState('');
 
     const togleMenu = (id:string)=>{
         setActiveMenu(id);
     }
 
+    const mobileMenu = ()=>{
+        if(animation === "slideDown"){
+            setAnimation('slideUp')
+        }else{
+            setAnimation('slideDown')
+        }
+    }
+
     useEffect(()=>{
         document.addEventListener( 'click', ()=>{
-            setActiveMenu('none')
-        })
+            if(activeMenu !== "") setActiveMenu('none');
+        });
     });
 
     return (
@@ -70,13 +79,17 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 <span>Empresa Parceira</span>
                             </div>
                         </div>
-                        <div className='boxIconMenu'>
+                        <div className='boxIconMenu' onClick={mobileMenu}>
                             <FiMenu size={50}/>
                         </div>                
                     </div>
                 </div>
 
-                <nav id="menu" className='menu porcent100 flexRowSpaceBetween'>
+                <nav 
+                    id="menu" 
+                    className='menu '
+                    style={{animation: animation ? `${animation} 1s linear forwards` : undefined}}
+                >
                     <div className='boxItem' onMouseEnter={()=> togleMenu('1')}>
                         <h1 className='title'>Quem Somos</h1>
                         <div 
@@ -260,6 +273,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         </div>
                     </div>
                 </nav>
+                
                 <div className='linhaDoeAgora'>
                     <span>Contribua com os Escoteiros de Coqueiral</span> 
                     <a href="">DOE AGORA</a>
