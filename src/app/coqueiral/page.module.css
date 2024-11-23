@@ -46,7 +46,9 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    width: 100%;
+    width: var(--widthLarge);
+    max-width: var(--widthLarge);
+    min-width: var(--minWidth);
 }
 .sectionsBtn h2{
     padding: 3px;
@@ -81,4 +83,4 @@
     .subConteiner img{
         width: 340px;
     }
-  }
+}

@@ -36,7 +36,7 @@
   justify-content: space-between;
 }
 
-#area-do-associado ul {
+.dropMenuBox {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -45,18 +45,47 @@
   text-transform: uppercase;
   font-size: 1em;
   font-weight: 390;
+  width: 70%;
 }
-
-#area-do-associado ul li{
+.dropItemMenuBox{
+  position: relative;
   height: 35px;
   text-align: center;
   margin: 5px;
   cursor: pointer;  
   padding: 5px;
 }
-#area-do-associado ul li:hover {
+.dropItemMenuBox span:hover {
   background-color: var(--sejaescoteiro);
   color: var(--white);
+}
+.dropItemMenuBox span{
+  padding: 3px;
+  padding-right: 13px;
+}
+.dropItemMenuBox svg{
+  position: absolute;
+  right: 0px;
+  top: 10px;
+}
+.dropdown-menu{
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--cinza-escuro);
+  list-style: none;
+  width: auto;
+  text-wrap: nowrap;
+  font-size: 14px;
+  padding: 6px;
+}
+.dropdown-menu li{
+  line-height: 24px;
+}
+.dropdown-menu li:hover{
+  color: var(--azul-escuro);
 }
 .bottonsConteiner {
   display: flex;
@@ -207,6 +236,7 @@
 }
 .subItens li:hover{
   font-weight: 600 !important;
+  cursor: pointer;
 }
 .active{
   display: block;
@@ -269,6 +299,17 @@
     }
 }
 @media (max-width: 991px) {
+  #bottons{
+    position: relative;
+    margin-bottom: 100px;
+  }
+  .bottonsConteiner {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
   .conteinerAreaAssociado, .menu{
     display: none;
   }
@@ -289,6 +330,7 @@
     width: 50px;
     height: 70px;
     margin: 0;
+    margin-right: 10px;
     display: flex;
     justify-content: center;
     align-items: center;

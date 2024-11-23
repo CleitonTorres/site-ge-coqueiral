@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaInstagram } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
+import { IoMdArrowDropdown } from "react-icons/io";
 import './globals.css';
 import './layout.css'
 
@@ -47,12 +48,49 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             />
                             Área do Associado
                         </span>
-                        <ul className='porcent70'>
-                            <li>Jovem</li>
-                            <li>Voluntário</li>
-                            <li>Área da Região</li>
-                            <li>Loja Nacional</li>
-                            <li>Paxtu</li>
+                        <ul className='dropMenuBox'>
+                            <li className='dropItemMenuBox'>
+                                <span onMouseOver={()=>togleMenu('drop01')}>
+                                    Jovem
+                                    <IoMdArrowDropdown size={20}/>
+                                </span>
+                                <ul 
+                                    className='dropdown-menu' 
+                                    id='drop01'
+                                    style={{display: activeMenu === 'drop01' ? 'flex' : 'none'}}
+                                >
+                                    <li onClick={()=>navigate('/progressao', '_self')}>Progressão</li>
+                                    <li>Tribo da Terra</li>
+                                    <li>Especialidades</li>
+                                </ul>
+                            </li>
+                            <li className='dropItemMenuBox'>
+                                <span onMouseOver={()=>togleMenu('drop02')}>
+                                    Voluntário
+                                    <IoMdArrowDropdown size={20}/>
+                                </span>
+                                <ul 
+                                    className='dropdown-menu' 
+                                    id='drop02'
+                                    style={{display: activeMenu === 'drop02' ? 'flex' : 'none'}}
+                                >
+                                    <li>Ciclo de vida</li>
+                                    <li>Campo Escola Virtual</li>
+                                </ul>
+                            </li>
+                            <li className='dropItemMenuBox' onClick={()=>navigate('http://escoteiroses.org.br/', '_blanck')}>
+                                <span>Área da Região</span>
+                            </li>
+                            <li className='dropItemMenuBox' onClick={()=>navigate('https://loja.escoteiros.org.br/', '_blanck')}>
+                                <span>
+                                    Loja Nacional
+                                </span>
+                            </li>
+                            <li className='dropItemMenuBox' onClick={()=>navigate('https://paxtu.escoteiros.org.br/', '_blanck')}>
+                                <span>
+                                    Paxtu
+                                </span>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -66,6 +104,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 alt='logo escoteiros do brasil' 
                                 src={'/icons/logo.png'}
                                 style={{width: '80%', objectFit: 'contain'}}
+                                onClick={()=>navigate('/', '_self')}
                             />
                             <Image 
                                 width={48} 
@@ -73,6 +112,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 alt='logo melhores ongs' 
                                 src={'/icons/selo2023.png'}
                                 style={{width: '10%', objectFit: 'contain'}}
+                                onClick={()=>navigate('https://www.premiomelhores.org/dados-2023/', '_blanck')}
                             />
                         </div>
                         <div className='porcent60 flexRowCenter' id="bottonsDoeEmpresa">
@@ -94,7 +134,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                     className='menu '
                     style={{animation: animation ? `${animation} 1s linear forwards` : undefined}}
                 >
-                    <div className='boxItem' onMouseEnter={()=> togleMenu('1')}>
+                    <div className='boxItem' onMouseOver={()=> togleMenu('1')}>
                         <h1 className='title'>Quem Somos</h1>
                         <div 
                             className={`boxSubItens`}
@@ -146,7 +186,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             </div>
                         </div>
                     </div>
-                    <div className='boxItem' onMouseEnter={()=> togleMenu('2')}>
+                    <div className='boxItem' onMouseOver={()=> togleMenu('2')}>
                         <h1 className='title'>O que fazemos</h1>
                         <div 
                             className={`boxSubItens`}
@@ -192,7 +232,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             </div>
                         </div>
                     </div>
-                    <div className='boxItem' onMouseEnter={()=> togleMenu('3')}>
+                    <div className='boxItem' onMouseOver={()=> togleMenu('3')}>
                         <h1 className='title'>Fale Conosco</h1>
                         <div 
                             className={`boxSubItens`}
@@ -234,7 +274,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             </div>
                         </div>
                     </div>
-                    <div className='boxItem' onMouseEnter={()=> togleMenu('4')}>
+                    <div className='boxItem' onMouseOver={()=> togleMenu('4')}>
                         <h1 className='title'>Seja Escoteiro</h1>
                         <div 
                             className={`boxSubItens`}

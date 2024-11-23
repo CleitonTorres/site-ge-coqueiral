@@ -30,7 +30,7 @@ export default function Coqueiral (){
                     />
                 </div>
             </div>
-            <div className={styles.sectionsBtn}>
+            <div className={styles.sectionsBtn}> 
                 <h2 className={styles.subTitle}>Na comunidade</h2>
             </div>
             <div className={styles.conteinerSections}>   
