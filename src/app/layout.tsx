@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { FaInstagram } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
@@ -12,7 +12,11 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     const [animation, setAnimation] = useState('');
 
     const togleMenu = (id:string)=>{
-        setActiveMenu(id);
+        if(id === activeMenu) {
+            setActiveMenu('none')
+        }else{
+            setActiveMenu(id);
+        }
     }
 
     const mobileMenu = ()=>{
@@ -27,15 +31,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         window.open(url, target)
     }
 
-    useEffect(()=>{
-        document.addEventListener( 'click', ()=>{
-            if(activeMenu !== "") setActiveMenu('none');
-        });
-    });
+    const minimizeMenu = ()=>{
+        setActiveMenu('none');
+    }
 
     return (
       <html lang="pt-BR">
-        <body className='flexCollTop' style={{ position: 'relative', minHeight: '100vh' }}>
+        <body 
+            className='flexCollTop' 
+            style={{ position: 'relative', minHeight: '100vh' }}
+        >
             <div className='navBox porcent100 flexCollTop'>
                 <div className='conteinerAreaAssociado porcent100 flexRowCenter'>
                     <nav id="area-do-associado">
@@ -50,7 +55,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         </span>
                         <ul className='dropMenuBox'>
                             <li className='dropItemMenuBox'>
-                                <span onMouseOver={()=>togleMenu('drop01')}>
+                                <span onClick={()=>togleMenu('drop01')}>
                                     Jovem
                                     <IoMdArrowDropdown size={20}/>
                                 </span>
@@ -65,7 +70,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 </ul>
                             </li>
                             <li className='dropItemMenuBox'>
-                                <span onMouseOver={()=>togleMenu('drop02')}>
+                                <span onClick={()=>togleMenu('drop02')}>
                                     Voluntário
                                     <IoMdArrowDropdown size={20}/>
                                 </span>
@@ -129,168 +134,166 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                     </div>
                 </div>
 
+                {/* Menu */}
                 <nav 
                     id="menu" 
                     className='menu '
                     style={{animation: animation ? `${animation} 1s linear forwards` : undefined}}
                 >
-                    <div className='boxItem' onMouseOver={()=> togleMenu('1')}>
-                        <h1 className='title'>Quem Somos</h1>
+                    <div className='boxItem' >
+                        <h1 className='title' onClick={()=> togleMenu('1')}>Quem Somos</h1>
                         <div 
                             className={`boxSubItens`}
-                            style={{display: activeMenu === '1' ? 'block' : 'none'}}
+                            style={{display: activeMenu === '1' ? 'flex' : 'none'}}
                             id='1'
                         >
-                            <div className='flexRowSpaceBetween'>
-                                <Image 
-                                    className='imageMenu'
-                                    alt='icon'
-                                    width={52}
-                                    height={52}
-                                    src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/movimento.svg'}
-                                />
-                                <h1 className='titleItem flexCollBotton paddin10'>
-                                    Quem Somos
-                                </h1>                        
-                                <div className='flexRowTop subItemList'>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Sobre nós</ul>
-                                        <ul className='subItens'>
-                                            <li 
-                                                onClick={
-                                                    ()=>navigate('https://www.escoteiros.org.br/escoteiros-do-brasil/', '_black')
-                                                }>Escoteiros do Brasil</li>
-                                            <li onClick={()=>navigate('https://www.escoteiros.org.br/internacional/', '_black')}>No Mundo</li>
-                                            <li onClick={()=> navigate('https://www.escoteiros.org.br/brasil/', '_black')}>No Brasil</li>
-                                            <li onClick={()=> navigate('/coqueiral', '_self')}>Em Coqueiral</li>
-                                        </ul>
-                                    </li>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Transparencia</ul>
-                                        <ul className='subItens'>
-                                            <li>Governança</li>
-                                            <li>Programa de Integridade</li>
-                                            <li>Proteção Infantojuvenil</li>
-                                            <li>No Mundo</li>
-                                        </ul>
-                                    </li>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Institucional</ul>
-                                        <ul className='subItens'>
-                                            <li>Conselhos</li>
-                                            <li>Diretoria</li>
-                                            <li>Equipes</li>
-                                        </ul>
-                                    </li>
-                                </div>
+                            <span onClick={minimizeMenu} className='iconClose'>X</span>
+                            <Image 
+                                className='imageMenu'
+                                alt='icon'
+                                width={52}
+                                height={52}
+                                src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/movimento.svg'}
+                            />
+                            <h1 className='titleItem flexCollBotton paddin10'>
+                                Quem Somos
+                            </h1>                        
+                            <div className='flexRowTop subItemList'>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Sobre nós</ul>
+                                    <ul className='subItens'>
+                                        <li 
+                                            onClick={
+                                                ()=>navigate('https://www.escoteiros.org.br/escoteiros-do-brasil/', '_black')
+                                            }>Escoteiros do Brasil</li>
+                                        <li onClick={()=>navigate('https://www.escoteiros.org.br/internacional/', '_black')}>No Mundo</li>
+                                        <li onClick={()=> navigate('https://www.escoteiros.org.br/brasil/', '_black')}>No Brasil</li>
+                                        <li onClick={()=> navigate('/coqueiral', '_self')}>Em Coqueiral</li>
+                                    </ul>
+                                </li>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Transparencia</ul>
+                                    <ul className='subItens'>
+                                        <li>Governança</li>
+                                        <li>Programa de Integridade</li>
+                                        <li>Proteção Infantojuvenil</li>
+                                        <li>No Mundo</li>
+                                    </ul>
+                                </li>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Institucional</ul>
+                                    <ul className='subItens'>
+                                        <li>Conselhos</li>
+                                        <li>Diretoria</li>
+                                        <li>Equipes</li>
+                                    </ul>
+                                </li>
                             </div>
                         </div>
                     </div>
-                    <div className='boxItem' onMouseOver={()=> togleMenu('2')}>
-                        <h1 className='title'>O que fazemos</h1>
+                    <div className='boxItem'>
+                        <h1 className='title' onClick={()=> togleMenu('2')}>O que fazemos</h1>
                         <div 
                             className={`boxSubItens`}
-                            style={{display: activeMenu === '2' ? 'block' : 'none'}}
+                            style={{display: activeMenu === '2' ? 'flex' : 'none'}}
                             id='2'
                         >
-                            <div className='flexRowSpaceBetween'>
-                                <Image 
-                                    className='imageMenu'
-                                    alt='icon'
-                                    width={52}
-                                    height={52}
-                                    src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/fazemos.svg'}
-                                />
-                                <h1 className='titleItem flexCollBotton paddin10'>O que fazemos</h1>                        
-                                <div className='flexRowTop subItemList'>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Educação</ul>
-                                        <ul className='subItens'>
-                                            <li>Projeto Educativo</li>
-                                            <li>Método Escoteiro</li>
-                                            <li>Escotismo e ODS</li>
-                                            <li>Espaços Seguros</li>
-                                        </ul>
-                                    </li>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Informações</ul>
-                                        <ul className='subItens'>
-                                            <li>Eventos</li>
-                                            <li>Notícias</li>
-                                        </ul>
-                                    </li>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Projetos</ul>
-                                        <ul className='subItens'>
-                                            <li>Escoteiro Dev</li>
-                                            <li>MutEco</li>
-                                            <li>MutCom</li>
-                                            <li>Educação Escoteira</li>
-                                        </ul>
-                                    </li>
-                                </div>
+                            <span onClick={minimizeMenu} className='iconClose'>X</span>
+                            <Image 
+                                className='imageMenu'
+                                alt='icon'
+                                width={52}
+                                height={52}
+                                src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/fazemos.svg'}
+                            />
+                            <h1 className='titleItem flexCollBotton paddin10'>O que fazemos</h1>                        
+                            <div className='flexRowTop subItemList'>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Educação</ul>
+                                    <ul className='subItens'>
+                                        <li>Projeto Educativo</li>
+                                        <li>Método Escoteiro</li>
+                                        <li>Escotismo e ODS</li>
+                                        <li>Espaços Seguros</li>
+                                    </ul>
+                                </li>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Informações</ul>
+                                    <ul className='subItens'>
+                                        <li>Eventos</li>
+                                        <li>Notícias</li>
+                                    </ul>
+                                </li>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Projetos</ul>
+                                    <ul className='subItens'>
+                                        <li>Escoteiro Dev</li>
+                                        <li>MutEco</li>
+                                        <li>MutCom</li>
+                                        <li>Educação Escoteira</li>
+                                    </ul>
+                                </li>
                             </div>
                         </div>
                     </div>
-                    <div className='boxItem' onMouseOver={()=> togleMenu('3')}>
-                        <h1 className='title'>Fale Conosco</h1>
+                    <div className='boxItem'>
+                        <h1 className='title' onClick={()=> togleMenu('3')}>Fale Conosco</h1>
                         <div 
                             className={`boxSubItens`}
-                            style={{display: activeMenu === '3' ? 'block' : 'none'}}
+                            style={{display: activeMenu === '3' ? 'flex' : 'none'}}
                             id='3'
                         >
-                            <div className='flexRowSpaceBetween'>
-                                <Image 
-                                    className='imageMenu'
-                                    alt='icon'
-                                    width={52}
-                                    height={52}
-                                    src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/informacoes.svg'}
-                                />
-                                <h1 className='titleItem flexCollBotton paddin10'>Fale Conosco</h1>                        
-                                <div className='flexRowTop subItemList'>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Imprensa</ul>
-                                        <ul className='subItens'>
-                                            <li>Realeases</li>
-                                            <li>Galeria de fotos</li>
-                                        </ul>
-                                    </li>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Doações</ul>
-                                        <ul className='subItens'>
-                                            <li>Pessoa física</li>
-                                            <li>Pessoa jurídica</li>
-                                        </ul>
-                                    </li>
-                                    <li className='subItensContents'>
-                                        <ul className='subTitle'>Contato</ul>
-                                        <ul className='subItens'>
-                                            <li>Fale conosco</li>
-                                            <li>Seja um voluntário</li>
-                                        </ul>
-                                    </li>
-                                </div>
+                            <span onClick={minimizeMenu} className='iconClose'>X</span>
+                            <Image 
+                                className='imageMenu'
+                                alt='icon'
+                                width={52}
+                                height={52}
+                                src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/informacoes.svg'}
+                            />
+                            <h1 className='titleItem flexCollBotton paddin10'>Fale Conosco</h1>                        
+                            <div className='flexRowTop subItemList'>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Imprensa</ul>
+                                    <ul className='subItens'>
+                                        <li>Realeases</li>
+                                        <li>Galeria de fotos</li>
+                                    </ul>
+                                </li>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Doações</ul>
+                                    <ul className='subItens'>
+                                        <li>Pessoa física</li>
+                                        <li>Pessoa jurídica</li>
+                                    </ul>
+                                </li>
+                                <li className='subItensContents'>
+                                    <ul className='subTitle'>Contato</ul>
+                                    <ul className='subItens'>
+                                        <li>Fale conosco</li>
+                                        <li>Seja um voluntário</li>
+                                    </ul>
+                                </li>
                             </div>
                         </div>
                     </div>
-                    <div className='boxItem' onMouseOver={()=> togleMenu('4')}>
-                        <h1 className='title'>Seja Escoteiro</h1>
+                    <div className='boxItem'>
+                        <h1 className='title' onClick={()=> togleMenu('4')}>Seja Escoteiro</h1>
                         <div 
                             className={`boxSubItens`}
-                            style={{display: activeMenu === '4' ? 'block' : 'none'}}
+                            style={{display: activeMenu === '4' ? 'flex' : 'none'}}
                             id='4'
                         >
-                            <div className='flexRowSpaceBetween'>
-                                <Image 
-                                    className='imageMenu'
-                                    alt='icon'
-                                    width={52}
-                                    height={52}
-                                    src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/fale-conosco.svg'}
-                                />
-                                <h1 className='titleItem flexCollBotton paddin10'>Seja Escoteiro</h1>                        
-                                <div className='flexRowTop subItemList'>
+                            <span onClick={minimizeMenu} className='iconClose'>X</span>
+                            <Image 
+                                className='imageMenu'
+                                alt='icon'
+                                width={52}
+                                height={52}
+                                src={'https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/icons/fale-conosco.svg'}
+                            />
+                            <h1 className='titleItem flexCollBotton paddin10'>Seja Escoteiro</h1>                        
+                            <div className='flexRowTop subItemList'>
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Sou jovem</ul>
                                         <ul className='subItens'>
@@ -315,7 +318,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                             <li>NÓS - Clube de Vantagens</li>
                                         </ul>
                                     </li>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -331,6 +333,51 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             <main className='flexCollTop'>{children}</main>
 
             <div className='footer'>
+                <nav>
+                    <ul className='menuFooter'>
+                        <li className='dropItemMenuBoxFooter'>
+                            <span>
+                                <b>Jovem</b>
+                            </span>
+                            <ul className='footerMenu' >
+                                <li 
+                                    className='link'
+                                    onClick={()=>navigate('/progressao', '_self')}>Progressão</li>
+                                <li className='link'>Tribo da Terra</li>
+                                <li className='link'>Especialidades</li>
+                            </ul>
+                        </li>
+                        <li className='dropItemMenuBoxFooter'>
+                            <span>
+                                <b>Voluntário</b>
+                            </span>
+                            <ul className='footerMenu'>
+                                <li className='link'>Ciclo de vida</li>
+                                <li className='link'>Campo Escola Virtual</li>
+                            </ul>
+                        </li>
+                        <li 
+                            className='dropItemMenuBoxFooter link' 
+                            onClick={()=>navigate('http://escoteiroses.org.br/', '_blanck')}>
+                            <span><b>Área da Região</b></span>
+                        </li>
+                        <li 
+                            className='dropItemMenuBoxFooter link' 
+                            onClick={()=>navigate('https://loja.escoteiros.org.br/', '_blanck')}>
+                            <span>
+                               <b>Loja Nacional</b>
+                            </span>
+                        </li>
+                        <li 
+                            className='dropItemMenuBoxFooter link' 
+                            onClick={()=>navigate('https://paxtu.escoteiros.org.br/', '_blanck')}>
+                            <span>
+                                <b>Paxtu</b>
+                            </span>
+                        </li>
+                    </ul>
+                </nav>
+
                 <div className='flexCollCenter boxIcon margin10'>
                     <FaInstagram size={26} color='var(--verde)' onClick={()=>{
                         window.open('https://www.instagram.com/19escoqueiral/', '_blank')
