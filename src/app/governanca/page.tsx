@@ -63,7 +63,7 @@ export default function Page(){
                     </h1>
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/11/Poli%CC%81tica_de_governanc%CC%A7a_institucional.pdf" target='_blank'>Política de Governança</a>
                         </li>
                     </ul>
@@ -73,15 +73,15 @@ export default function Page(){
                     </h1>
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="">Balanço Consolidado</a>
                         </li>
                         <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="">Parecer Comissão Fiscal</a>
                         </li>
                         <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="">Parecer Auditoria Externa</a>
                         </li>
                     </ul>

@@ -76,23 +76,23 @@ export default function Page(){
                     </p>
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/Compete%CC%82ncias-e-Rotas-de-Aprendizagem-Ramo-Lobinho.pdf" target='_blank'>Ramo Lobinho</a>
                         </li>
                         <li className='boxShadow'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/COMPETENCIAS-ESPECIFICAS-RAMO-ESCOTEIRO.pdf" target='_blank'>Ramo Escoteiro</a>
                         </li>
                         <li className='boxShadow'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/COMPETENCIAS-ESPECIFICAS-RAMO-SENIOR.pdf" target='_blank'>Ramo Sênior</a>
                         </li>
                         <li className='boxShadow'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/COMPETENCIAS-ESPECI%CC%81FICAS-RAMO-PIONEIRO.pdf" target='_blank'>Ramo Pioneiro</a>
                         </li>
                         <li className='boxShadow'>
-                            <Image alt='' width={80} height={100} src={'/icons/iconeDoc.png'}/>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/Competencias-e-Rotas-de-Aprendizagem-Dirigente.pdf" target='_blank'>Dirigente</a>
                         </li>
                     </ul>
