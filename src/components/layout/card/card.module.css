@@ -7,8 +7,14 @@
     margin: 10px;
     padding: 6px;
 }
+.conteiner:hover{
+    cursor: pointer;
+}
 .conteiner p{
     width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .conteiner h1{
     width: 90%;

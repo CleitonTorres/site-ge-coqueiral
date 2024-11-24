@@ -171,6 +171,7 @@ export default function Progressao(){
                     <p className={styles.paragraph}>
                         Muitas das atividades propostas nos guias também podem ser consideradas na realização de requisitos de diversas especialidades. Confira <a href="https://www.escoteiros.org.br/especialidades/" target="_blanck">as Especialidades </a> no site da UEB e converse com seu escotista.
                     </p>
+                    <br/>
                     <div 
                         className={`${styles.boxCliqueAqui} ${styles.colorEscoteiro}`}
                         onClick={()=>{
@@ -308,6 +309,7 @@ export default function Progressao(){
                     <p className={styles.paragraph}>
                         Muitas das atividades propostas nos guias também podem ser consideradas na realização de requisitos de diversas especialidades. Confira as <a href="https://www.escoteiros.org.br/especialidades/" target="_blanck"> Especialidades </a> no site da UEB e converse com seu escotista.
                     </p>
+                    <br/>
                     <div 
                         className={`${styles.boxCliqueAqui} ${styles.colorSenior}`}
                         onClick={()=>{
@@ -449,7 +451,7 @@ export default function Progressao(){
                     <p className={styles.paragraph}>
                         Se quiser saber mais sobre a Progressão Pessoal, recomendamos que você consulte o “Guia do Projeto Pioneiro”, um livro onde você poderá encontrar toda a informação necessária para progredir.
                     </p>
-
+                    <br/>
                     <div 
                         className={`${styles.boxCliqueAqui} ${styles.colorPio}`}
                         onClick={()=>{

@@ -13,7 +13,6 @@ export default function Coqueiral (){
                     height={600}
                     src={'/images/jornal01.png'}
                     className={styles.image}
-                    style={{objectFit: 'contain'}}
                 />
                 <div className={styles.subConteiner}>
                     <h2 className={styles.subTitle}>Fundação</h2>
@@ -26,16 +25,16 @@ export default function Coqueiral (){
                         height={370}
                         src={'/images/jornal02.png'}
                         className={styles.image}
-                        style={{objectFit: 'contain'}}
                     />
                 </div>
             </div>
+            <br />
             <div className={styles.sectionsBtn}> 
                 <h2 className={styles.subTitle}>Na comunidade</h2>
             </div>
             <div className={styles.conteinerSections}>   
                 <div className="flexRowTop">
-                    <p>
+                    <p className={styles.paragraph}>
                         A relevância das relações do movimento escoteiro tem sido comprovada mediante diversas atividades realizadas em conjunto com a Prefeitura de Aracruz e a Comunidade do Bairro Coqueiral. Um dos reconhecimentos da relevância do Movimento Escoteiro foi expresso mediante a publicação da lei municipal 4.206/2018 que instituiu a “semana municipal do escoteiro”.
                         Além da participação ativa junto a comunidade com reuniões semanais que acontecem aos sábados de 15:00 às 17:30, e as instituições administrativas e ambientais locais, o 19/ES GE Coqueiral, elabora anualmente as seguintes atividades (em Coqueiral).
                     </p>
@@ -45,7 +44,6 @@ export default function Coqueiral (){
                         height={284}
                         src={'/images/foto03.jpeg'}
                         className={styles.image}
-                        style={{objectFit: 'contain'}}
                     />
                 </div>             
                 

@@ -64,9 +64,15 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     id='drop01'
                                     style={{display: activeMenu === 'drop01' ? 'flex' : 'none'}}
                                 >
-                                    <li onClick={()=>navigate('/progressao', '_self')}>Progressão</li>
-                                    <li>Tribo da Terra</li>
-                                    <li>Especialidades</li>
+                                    <li className='link'>
+                                        <a href='https://www.escoteiros.org.br/especialidades/' target='_blank'>Especialidades</a>
+                                    </li>
+                                    <li className='link'>
+                                        <a href='/progressao' target='_self'>Progressão</a>
+                                    </li>
+                                    <li className='link'>
+                                        <a href='/tribo-da-terra' target='_self'>Tribo da Terra</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li className='dropItemMenuBox'>
@@ -79,8 +85,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     id='drop02'
                                     style={{display: activeMenu === 'drop02' ? 'flex' : 'none'}}
                                 >
-                                    <li>Ciclo de vida</li>
-                                    <li>Campo Escola Virtual</li>
+                                    <li className='link'>
+                                        <a href="/ciclo-vida">Ciclo de vida</a>
+                                    </li>
+                                    <li className='link'>
+                                        <a href="/campo-escola">Campo Escola Virtual</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li className='dropItemMenuBox' onClick={()=>navigate('http://escoteiroses.org.br/', '_blanck')}>
@@ -162,19 +172,26 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 <li className='subItensContents'>
                                     <ul className='subTitle'>Sobre nós</ul>
                                     <ul className='subItens'>
-                                        <li 
-                                            onClick={
-                                                ()=>navigate('https://www.escoteiros.org.br/escoteiros-do-brasil/', '_black')
-                                            }>Escoteiros do Brasil</li>
-                                        <li onClick={()=>navigate('https://www.escoteiros.org.br/internacional/', '_black')}>No Mundo</li>
-                                        <li onClick={()=> navigate('https://www.escoteiros.org.br/brasil/', '_black')}>No Brasil</li>
-                                        <li onClick={()=> navigate('/coqueiral', '_self')}>Em Coqueiral</li>
+                                        <li>
+                                            <a href='/escoteiros-do-brasil/' target='_self'>Escoteiros do Brasil</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.escoteiros.org.br/internacional/" target='_blanck'>No Mundo</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.escoteiros.org.br/brasil/" target='_blank'>No Brasil</a>
+                                        </li>
+                                        <li>
+                                            <a href="/coqueiral" target='_self'>Em Coqueiral</a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li className='subItensContents'>
                                     <ul className='subTitle'>Transparencia</ul>
                                     <ul className='subItens'>
-                                        <li>Governança</li>
+                                        <li>
+                                            <a href="/governanca">Governança</a>
+                                        </li>
                                         <li>Programa de Integridade</li>
                                         <li>Proteção Infantojuvenil</li>
                                         <li>No Mundo</li>
@@ -340,11 +357,18 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 <b>Jovem</b>
                             </span>
                             <ul className='footerMenu' >
+                                <li className='link textColorWhite'>
+                                    <a href='https://www.escoteiros.org.br/especialidades/' target='_blank'>Especialidades</a>
+                                </li>
                                 <li 
-                                    className='link'
-                                    onClick={()=>navigate('/progressao', '_self')}>Progressão</li>
-                                <li className='link'>Tribo da Terra</li>
-                                <li className='link'>Especialidades</li>
+                                    className='link textColorWhite'
+                                >
+                                    <a href='/progressao' target='_self'>Progressão</a>
+                                </li>
+                                
+                                <li className='link textColorWhite'>                                    
+                                    <a href='/tribo-da-terra' target='_self'>Tribo da Terra</a>
+                                </li>                                
                             </ul>
                         </li>
                         <li className='dropItemMenuBoxFooter'>
@@ -352,24 +376,28 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 <b>Voluntário</b>
                             </span>
                             <ul className='footerMenu'>
-                                <li className='link'>Ciclo de vida</li>
-                                <li className='link'>Campo Escola Virtual</li>
+                                <li className='link textColorWhite'>
+                                    <a href="/ciclo-vida">Ciclo de vida</a>
+                                </li>
+                                <li className='link textColorWhite'>
+                                    <a href="/campo-escola">Campo Escola Virtual</a>
+                                </li>
                             </ul>
                         </li>
                         <li 
-                            className='dropItemMenuBoxFooter link' 
+                            className='dropItemMenuBoxFooter link cursorPointer' 
                             onClick={()=>navigate('http://escoteiroses.org.br/', '_blanck')}>
                             <span><b>Área da Região</b></span>
                         </li>
                         <li 
-                            className='dropItemMenuBoxFooter link' 
+                            className='dropItemMenuBoxFooter link cursorPointer' 
                             onClick={()=>navigate('https://loja.escoteiros.org.br/', '_blanck')}>
                             <span>
                                <b>Loja Nacional</b>
                             </span>
                         </li>
                         <li 
-                            className='dropItemMenuBoxFooter link' 
+                            className='dropItemMenuBoxFooter link cursorPointer' 
                             onClick={()=>navigate('https://paxtu.escoteiros.org.br/', '_blanck')}>
                             <span>
                                 <b>Paxtu</b>
@@ -378,7 +406,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                     </ul>
                 </nav>
 
-                <div className='flexCollCenter boxIcon margin10'>
+                <div className='flexCollCenter boxIcon margin10 cursorPointer'>
                     <FaInstagram size={26} color='var(--verde)' onClick={()=>{
                         window.open('https://www.instagram.com/19escoqueiral/', '_blank')
                     }}/>

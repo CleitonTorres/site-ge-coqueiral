@@ -91,22 +91,25 @@ export default function Home() {
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
         <Box customClass={['fullWidth', 'flexRowWrap']}>
           <Card
-            textData='07 de dezembro de 2024'
+            date='07 de dezembro de 2024'
             title='Última atividade do ano | início das férias'
             paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
             imageURL='/images/banner-ferias.webp'
+            idNews='teste01'
           />
           <Card
-            textData='07 de dezembro de 2024'
+            date='07 de dezembro de 2024'
             title='Última atividade do ano | início das férias'
             paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
             imageURL='/images/banner-ferias.webp'
+            idNews='teste02'
           />
           <Card
-            textData='07 de dezembro de 2024'
+            date='07 de dezembro de 2024'
             title='Última atividade do ano | início das férias'
             paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
             imageURL='/images/banner-ferias.webp'
+            idNews='test03'
           />
         </Box>
         <Botton
@@ -116,7 +119,7 @@ export default function Home() {
 
       <Section customClass={['fullWidth', 'flexCollTop']}>
         <h1 
-          style={{fontSize: '8vw', fontWeight: 300, width: '100%', margin: '10px'}}
+          style={{fontSize: '8vw', fontWeight: 300, width: '100%', marginLeft: '20px'}}
         >
           Não há ensino que se compare ao exemplo.
         </h1>

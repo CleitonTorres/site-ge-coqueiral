@@ -256,7 +256,13 @@
 .active{
   display: block;
 }
-
+.link a {
+  cursor: pointer;
+  text-decoration: none;
+}
+.textColorWhite a{
+  color: var(--white);
+}
 .boxIconMenu{
   display: none;
   z-index: 100;
@@ -274,6 +280,7 @@
   background-color: var(--verde);
   height: auto;
   color: var(--white);
+  padding: 10px;
 }
 .footer span{
   text-align: center;
@@ -292,12 +299,14 @@
 .menuFooter{
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
   flex-wrap: wrap;
   list-style: none;
   color: var(--white);
 }
 .dropItemMenuBoxFooter{
   width: 33%;
+  min-width: 136px;
   padding-left: 6px;
 }
 .footerMenu{
