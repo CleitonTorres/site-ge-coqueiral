@@ -19,7 +19,8 @@ export default function Section({children, customClass}:Props){
         }else{
             setCustomStyles(customClass ? styles[customClass] : '') 
         }
-    },[customClass])
+    },[customClass]);
+    
     return(
         <section className={`${styles.conteiner} flexCollCenter ${customStyles}`}>
             {children}

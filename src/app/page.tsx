@@ -76,6 +76,48 @@ export default function Home() {
             src={'/images/ePrancheta-1-1.png'}
             style={{objectFit: 'contain'}}
           />
+          <a href='/empresa-parceira' target='_self' style={{position: 'relative'}}>
+            <Image 
+              alt='imagem seja escoteiro'
+              width={408}
+              height={135}
+              src={'/images/empresaParceira.jpg'}
+            />
+            <span style={{
+              position: 'absolute', 
+              left: '50%', 
+              top: '40%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: 24,
+              textWrap: 'nowrap',
+              color: 'var(--white)',
+              fontWeight: 600
+            }}>Seja uma Empresa Parceira</span>
+            <span style={{
+              position: 'absolute', 
+              left: '50%', 
+              top: '60%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: 12,
+              color: 'var(--white)',
+              fontWeight: 600
+            }}>saiba como</span>
+            <Image 
+              alt=''
+              width={26}
+              height={26}
+              src={'https://upload.wikimedia.org/wikipedia/commons/3/3c/Fleur-de-lis-fill.svg'}
+              style={{
+                position: 'absolute', 
+                right: 0, 
+                top: '60%',
+                transform: 'translate(-50%, 0%)',
+                backgroundColor:'var(--white)',
+                borderRadius: '50%',
+                padding: 3
+              }}
+            />
+          </a>
           <Image 
             alt='imagem seja escoteiro'
             width={408}

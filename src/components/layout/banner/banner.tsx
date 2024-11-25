@@ -10,7 +10,7 @@ type Props = {
 }
 export default function Banner({title, subTitle, paragraph, imageURL, videoURL}:Props){
     return(
-        <div className={`${styles.conteiner} porcent100`}>
+        <div className={`${styles.conteiner}`}>
             {videoURL ? 
                 <video autoPlay loop className={styles.video}>
                     <source src={videoURL} type="video/mp4" />

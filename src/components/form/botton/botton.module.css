@@ -13,3 +13,10 @@
     color: var( --azul-escuro);
     cursor: pointer;
 }
+
+.width300{
+    width: 300px;
+}
+.margin0{
+    margin: 0 auto;
+}

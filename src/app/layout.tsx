@@ -135,7 +135,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 <span>Doe agora</span>
                             </div>
                             <div className='cursorPointer empresaAmiga flexRowCenter'>
-                                <span>Empresa Parceira</span>
+                                <span onClick={()=>window.open("/empresa-parceira", '_self')}>Empresa Parceira</span>
                             </div>
                         </div>
                         <div className='boxIconMenu' onClick={mobileMenu}>
