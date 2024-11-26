@@ -23,6 +23,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         if(animation === "slideDown"){
             setAnimation('slideUp')
         }else{
+            window.scrollTo(0,0);
             setAnimation('slideDown')
         }
     }

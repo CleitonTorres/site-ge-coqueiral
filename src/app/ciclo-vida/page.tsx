@@ -12,7 +12,7 @@ export default function Page(){
                         alt=""
                         width={970}
                         height={350}
-                        src={'/images/senior02.jpg'}
+                        src={'/images/adulto05.jpeg'}
                         className={styles.image}
                     />
                     <h1 className={styles.subTitle}>

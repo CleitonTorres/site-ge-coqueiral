@@ -165,7 +165,7 @@
 }
   
 .porserescoteiro{
-    width: 100vw;
+    width: 99vw;
     height: auto;
     min-width: var(--minWidth);
     max-width: var(--widthLarge);

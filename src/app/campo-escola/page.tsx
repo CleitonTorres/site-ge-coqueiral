@@ -9,13 +9,15 @@ export default function Page(){
             <h1 className={styles.title}>Campo Escola Virtual</h1>
             <div className={styles.conteiner}>
                 <div className={styles.subConteiner}>
-                    <Image 
-                        alt=""
-                        width={970}
-                        height={350}
-                        src={'/images/senior02.jpg'}
-                        className={styles.image}
-                    />
+                    <div className={styles.boxImage}>
+                        <Image 
+                            alt=""
+                            width={970}
+                            height={350}
+                            src={'/images/adulto07.jpg'}
+                            className={styles.image}
+                        />
+                    </div>                    
                     <p className={styles.paragraph}>
                         Os Escoteiros do Brasil oferecem a todos os seus voluntários a oportunidade de conhecer mais sobre o Movimento Escoteiro e aperfeiçoar os seus conhecimentos, a partir do Campo-Escola Virtual.                    
                     </p>

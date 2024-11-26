@@ -30,7 +30,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/senior08.jpg'}
                     />
                     <p>
                         Fazer parte de uma fraternidade global com mais de 57 milhões de pessoas mundo afora. Como escoteiro, estamos diretamente conectados com povos dos quatro cantos do Planeta, compartilhando valores e construindo laços que duram a vida inteira.
@@ -41,7 +41,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/senior09.jpg'}
                     />
                     <p>
                         Ser amante da natureza de forma ativa. Isso quer dizer: buscar para si mesmo e para a sociedade um desenvolvimento sustentável, contribuindo com a preservação do meio ambiente e dos ecossistemas que dele fazem parte.
@@ -63,7 +63,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/adulto02.jpg'}
                     />
                     <p>
                         Trabalhar em benefício do próximo e em prol da paz, sendo solidário a seus semelhantes e sensível às questões sociais através do voluntariado e da participação ativa em questões determinantes da sua comunidade.
@@ -74,7 +74,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/senior10.jpg'}
                     />
                     <p>
                         Responsabilizar-se pelo bem-estar coletivo, bem como por sua própria saúde, seja ela física, mental ou espiritual, atuando de maneira consciente e equilibrada na sua vida pessoal e nas demais relações de convívio social.
@@ -85,7 +85,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/senior06.jpeg'}
                     />
                     <p>
                         Descobrir e aprimorar suas potencialidades, criando oportunidades para exercitar sua criatividade e realizando análise crítica sobre suas atitudes, a fim de tornar-se um cidadão e líder responsável, pioneiro na construção de um mundo melhor.
@@ -130,7 +130,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/lobos03.png'}
                         />
                         <h1 className={styles.titleRamos}>Ramo Lobinho</h1>
                         <p className={styles.paragraphRamos}>
@@ -142,7 +142,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/escoteiros06.png'}
                         />
                         <h1 className={styles.titleRamos}>Ramo escoteiro</h1>
                         <p className={styles.paragraphRamos}>
@@ -154,7 +154,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/senior03.jpg'}
                         />
                         <h1 className={styles.titleRamos}>Ramo sênior</h1>
                         <p className={styles.paragraphRamos}>
@@ -166,7 +166,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/cla02.jpg'}
                         />
                         <h1 className={styles.titleRamos}>Ramo pioneiro</h1>
                         <p className={styles.paragraphRamos}>
@@ -178,7 +178,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/adulto01.jpeg'}
                         />
                         <h1 className={styles.titleRamos}>Adulto voluntário</h1>
                         <p className={styles.paragraphRamos}>
@@ -206,7 +206,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/adulto03.png'}
                     />
                     <p>
                         Seja um voluntário                   
@@ -217,7 +217,7 @@ export default function Page(){
                         alt=''
                         width={200}
                         height={200}
-                        src={'/images/senior05.jpg'}
+                        src={'/images/grupo01.jpeg'}
                     />
                     <p>
                         abra sua UEL                    
