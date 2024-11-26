@@ -136,7 +136,7 @@
   background-repeat: no-repeat;
   image-rendering: optimizeQuality;
 }
-.doeAgora span, .empresaAmiga span{
+.doeAgora a, .empresaAmiga a{
   display: none;
   width: 0;
   height: 50px;
@@ -150,10 +150,10 @@
   border-radius: 20px;
   color: var(--white);
 }
-.doeAgora span{
+.doeAgora a{
   background-color: var(--azul);
 }
-.empresaAmiga span{
+.empresaAmiga a{
   background-color: var(--turquesa-ea);
 }
 .empresaAmiga{
@@ -166,7 +166,7 @@
   background-repeat: no-repeat;
   image-rendering: optimizeQuality;
 }
-.doeAgora:hover span, .empresaAmiga:hover span{
+.doeAgora:hover a, .empresaAmiga:hover a{
   display: block;
   animation: show 0.5s linear forwards;
 }

@@ -153,6 +153,7 @@ body {
 .textLarge{
   font-size: 46px;
   font-weight: 400;
+  padding: 10px;
 }
 .textMedium{
   font-size: 32px;
@@ -178,5 +179,11 @@ body {
   }
   100%{
     width: 100%;
+  }
+}
+
+@media (max-width: 500px){
+  .textResponsive{
+      font-size: 9vw !important;
   }
 }

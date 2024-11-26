@@ -1,0 +1,28 @@
+.conteiner{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+}
+.logo{
+    object-fit: contain;
+    width: 100%;
+}
+.spam01{
+    font-size: 24;
+    text-wrap: nowrap;
+    color: var(--azul-escuro);
+    font-weight: 600
+}
+
+.icon{
+    position: absolute; 
+    right: 0; 
+    top: 60%;
+    transform: translate(-50%, 0%);
+    background-color: var(--white);
+    border-radius: 50%;
+    padding: 3
+  }

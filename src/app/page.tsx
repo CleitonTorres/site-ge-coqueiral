@@ -2,6 +2,7 @@ import Botton from '@/components/form/botton/botton';
 import Banner from '@/components/layout/banner/banner';
 import Box from '@/components/layout/box/box';
 import Card from '@/components/layout/card/card';
+import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import Section from '@/components/layout/sections/section';
 import type { Metadata } from 'next'
 import Image from 'next/image';
@@ -157,6 +158,23 @@ export default function Home() {
         <Botton
           title='VER TODAS'
         />
+      </Section>
+
+      {/* empresas parceiras */}
+      <Section customClass={['fullWidth', 'flexCollTop']}>
+        <h1 
+          className='textLarge textResponsive' 
+          style={{color: 'var(--azul-escuro)', textAlign: 'center'}}
+        >
+          Empresas que apoiam o escotismo em Coqueiral
+        </h1>
+        <Box customClass={['margin', 'flexRowWrap']}>
+          <CardEmpresaParceira 
+            nameEmpresa='Paralegal Soluções' 
+            logoURL='/logo/empresas-parceira/paraLegal.png'
+            linkSiteEmpresa={'https://www.paralegalsolucoes.com.br/'}
+          />
+        </Box>
       </Section>
 
       <Section customClass={['fullWidth', 'flexCollTop']}>

@@ -132,10 +132,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         </div>
                         <div className='porcent60 flexRowCenter' id="bottonsDoeEmpresa">
                             <div className='margin10 cursorPointer doeAgora flexRowCenter'>
-                                <span>Doe agora</span>
+                                <a href='/doe' target='_self'>Doe agora</a>
                             </div>
                             <div className='cursorPointer empresaAmiga flexRowCenter'>
-                                <span onClick={()=>window.open("/empresa-parceira", '_self')}>Empresa Parceira</span>
+                                <a href="/empresa-parceira" target='_self'>Empresa Parceira</a>
                             </div>
                         </div>
                         <div className='boxIconMenu' onClick={mobileMenu}>
@@ -342,7 +342,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                 
                 <div className='linhaDoeAgora'>
                     <span>Contribua com os Escoteiros de Coqueiral</span> 
-                    <a href="">DOE AGORA</a>
+                    <a href="/doe">DOE AGORA</a>
                 </div> 
             </div>
 
