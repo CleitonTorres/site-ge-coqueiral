@@ -59,12 +59,16 @@ export default function Page(){
                     <br />
 
                     <h1 className={styles.subTitle}>
-                        Documentos e Políticas
+                        Documentos
                     </h1>
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/11/Poli%CC%81tica_de_governanc%CC%A7a_institucional.pdf" target='_blank'>Política de Governança</a>
+                            <a href="https://drive.google.com/file/d/1WK2V1144XU3_c9-3zBGMxbUydm2siZk0/view?usp=sharing" target='_blank'>Estatuto</a>
+                        </li>
+                        <li className='boxShadow cursoPointer'>
+                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
+                            <a href="https://drive.google.com/file/d/1Ou9twuEVwzVTZPehaTneQC2iKTRvZaAP/view?usp=sharing" target='_blank'>Regimento Interno</a>
                         </li>
                     </ul>
                     <br />
@@ -74,15 +78,11 @@ export default function Page(){
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="">Balanço Consolidado</a>
+                            <a href="https://drive.google.com/file/d/1lQxWNaJAWJsEeja5TaF6h1HyLmT_m17A/view?usp=sharing" target='_blank'>Balanço Consolidado 2023</a>
                         </li>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a href="">Parecer Comissão Fiscal</a>
-                        </li>
-                        <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="">Parecer Auditoria Externa</a>
                         </li>
                     </ul>
                 </div>

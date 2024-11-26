@@ -1,0 +1,234 @@
+.conteiner{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 100vw;
+    min-width: var(--minWidth);
+    max-width: 1140px;
+}
+.subConteiner{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 40px 0px;
+    width: 100%;
+    min-width: var(--minWidth);
+    max-width: 1140px;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: first baseline;
+    align-items: center;
+    background-color: var(--white);
+    width: 330px;
+    height: auto;
+    border: 2px solid var(--white);
+    margin: 10px;
+    min-height: 475px;
+}
+.card2{
+    display: flex;
+    flex-direction: column;
+    justify-content: first baseline;
+    align-items: center;
+    background-color: var(--white);
+    width: 330px;
+    height: auto;
+    border: 2px solid var(--white);
+    margin: 10px;
+    min-height: 355px;
+    overflow: hidden;
+}
+.card img {
+    width: 100%;
+    object-fit: cover;
+}
+.card2 img{
+    width: auto;
+    height: 300px;
+    object-fit: cover;
+}
+.card p, .card2 p{
+    text-align: justify;
+    width: 100%;
+    font-size: 20px;
+    padding: 6px;
+    text-align: center;
+    margin-top: 20px;
+}
+.title{
+    height: 80px;
+    color: var(--white);
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 800;
+    font-size: 34px;
+    padding: 14px;
+    width: 100%;
+    max-width: var(--widthLarge);
+    min-width: var(--minWidth);
+}
+.subTitle{
+    font-weight: 500;
+    font-size: 26px;
+}
+.paragraph{
+    text-align: justify;
+    width: 100%;
+}
+.boxParagraph2{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--white);
+    width: 100vw;
+}
+.boxParagraph2::after{
+    content: "";
+    width: 100vw;
+    height: 300px;
+    position: absolute;
+    bottom: -300;
+    background-color: var(--white);
+    z-index: 0;
+}
+.boxParagraph2 h1, .boxParagraph2 p {
+    color: var(--sejaescoteiro);
+}
+.paragraphs2{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 18px;
+}
+.paragraph2{
+    text-align: justify;
+    width: 380px;
+    margin: 10px;
+}
+.image{
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+.logoSejaEscoteiro{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    z-index: 10;
+}
+.boxLinks{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    align-items: first baseline;
+    margin: 10px;
+    list-style: none;
+}
+.boxLinks li{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    width: 150px;
+    margin: 10px;
+}
+.bgAmarelo{
+    position: relative;
+    width: 100vw;
+    height: auto;
+    min-height: 600px;
+    min-width: 991px;
+    background-image: url('https://www.escoteiros.org.br/wp-content/themes/escoteiros-theme/img/fundoVerde.svg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    padding: 150px 0 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+  
+.porserescoteiro{
+    width: 100vw;
+    height: auto;
+    min-width: var(--minWidth);
+    max-width: var(--widthLarge);
+    object-fit: contain;
+    margin-top: 30px;
+}
+.colorGreen{
+    color: var(--verde);
+}
+.colorGreenDark{
+    color: var(--sejaescoteiro);
+}
+.colorWhite{
+    color: var(--white);
+}
+.bussola{
+    position: absolute;
+    top: 0;
+    right: 100px;
+    width: 200px;
+    height: auto;
+    object-fit: contain;
+}
+.titleRamos, .paragraphRamos{
+    text-transform: uppercase;
+    color: var(--white);
+}
+.bgGreen{
+    background-color: var(--sejaescoteiro);
+}
+.padding0{
+    padding: 0;
+}
+.paddingBottom40{
+    padding-bottom: 40px;
+}
+.paddingBottom0{
+    padding-bottom: 0;
+}
+.minHeight462{
+    min-height: 462px;
+}
+@media (max-width: 991px){
+    .subConteiner{
+        width: 100vw;
+    }
+    .subTitle{
+        margin-left: 20px;
+    }
+    .paragraph{
+        padding: 20px;
+    }
+    .bussola{
+        width: 150px;
+    }
+    .bgAmarelo{
+        min-height: 400px;
+        margin: 0;
+        padding: 0;
+        padding-top: 40px;
+    }
+    .title{
+        height: 120px;
+        width: 400px
+    }
+}

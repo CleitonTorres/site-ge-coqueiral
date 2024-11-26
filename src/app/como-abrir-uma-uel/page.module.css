@@ -31,9 +31,6 @@
     text-align: justify;
     width: 100%;
 }
-.paragraph a{
-    text-decoration: underline;
-}
 .image{
     margin: 0 auto;
     width: 100%;
@@ -46,6 +43,7 @@
     flex-wrap: wrap;
     width: 100%;
     justify-content: center;
+    align-items: first baseline;
     margin: 10px;
     list-style: none;
 }
@@ -56,28 +54,9 @@
     align-items: center;
     list-style: none;
     width: 150px;
-    height: 180px;
     margin: 10px;
 }
-.boxLinks li a{
-    text-align: center;
-}
-.boxAcesse{
-    background-color: var(--light-blue);
-    width: 300px;
-    height: 150px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-.boxAcesse span{
-    text-transform: uppercase;
-    color: var(--white);
-    font-size: 24px;
-    text-align: center;
-}
+
 @media (max-width: 991px){
     .subTitle{
         margin-left: 20px;

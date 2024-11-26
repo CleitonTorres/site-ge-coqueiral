@@ -70,6 +70,7 @@ export default function Home() {
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
         <Box customClass={['margin', 'flexRowWrap']}>
+          <a href='/seja-escoteiro' target='_self' style={{position: 'relative'}}>
           <Image 
             alt='imagem seja escoteiro'
             width={408}
@@ -77,6 +78,7 @@ export default function Home() {
             src={'/images/ePrancheta-1-1.png'}
             style={{objectFit: 'contain'}}
           />
+          </a>
           <a href='/empresa-parceira' target='_self' style={{position: 'relative'}}>
             <Image 
               alt='imagem seja escoteiro'

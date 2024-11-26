@@ -1,16 +1,33 @@
+'use client'
 import Image from 'next/image';
 import styles from './banner.module.css';
+import { useEffect, useState } from 'react';
 
 type Props = {
     title?: string,
     subTitle?: string,
     paragraph?: string,
     imageURL?: string,
-    videoURL?: string
+    videoURL?: string,
+    customClass?: string[]
 }
-export default function Banner({title, subTitle, paragraph, imageURL, videoURL}:Props){
+export default function Banner({title, subTitle, paragraph, imageURL, videoURL, customClass}:Props){
+    const [customStyles, setCustomStyles] = useState('');
+
+    useEffect(()=>{
+        if(Array.isArray(customClass)){
+            let newString = '';
+            for (const item of customClass) {
+                newString += styles[item] + " ";         
+            }
+            setCustomStyles(newString)
+        }else{
+            setCustomStyles(customClass ? styles[customClass] : '') 
+        }
+    },[customClass]);
+
     return(
-        <div className={`${styles.conteiner}`}>
+        <div className={`${styles.conteiner} ${customStyles}`}>
             {videoURL ? 
                 <video autoPlay loop className={styles.video}>
                     <source src={videoURL} type="video/mp4" />

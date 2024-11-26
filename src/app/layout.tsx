@@ -331,8 +331,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Saiba mais</ul>
                                         <ul className='subItens'>
-                                            <li>Como ser escoteiro</li>
-                                            <li>NÓS - Clube de Vantagens</li>
+                                            <li>
+                                            <a href='/seja-escoteiro' target='_self'>Como ser escoteiro</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.escoteiros.org.br/clube-de-vantagens/" target='_blank'>NÓS - Clube de Vantagens</a>
+                                            </li>
                                         </ul>
                                     </li>
                             </div>

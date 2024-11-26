@@ -35,6 +35,14 @@
     width: 80%;
 }
 
+/* custom classes */
+.justifyBottom .rotulo{
+    top: 90%;
+}
+.greenFilter .filter{
+    background-color: var(--sejaescoteiro);
+}
+
 @media (max-width: 500px) {
     .title{
         font-size: 22px;
