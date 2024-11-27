@@ -1,0 +1,41 @@
+.conteiner{
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: solid 1px rgb(var(--primaryColorAzul));
+    border-radius: 50%;
+    background-color: rgb(var(--primaryColorCinza));
+    -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+}
+
+.conteiner img{
+    width: 99%;
+    height: 99%;
+}
+.loop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border-left: solid 4px rgb(var(--primaryColorBranco));
+    border-radius: 50%;
+    transition: 0.5s;
+    animation: effect linear infinite 1s;
+}
+
+.size100 {
+    width: 100px;
+    height: 100px;
+}
+
+@keyframes effect {
+    0% {
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}

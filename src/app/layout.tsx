@@ -6,6 +6,7 @@ import { FiMenu } from "react-icons/fi";
 import { IoMdArrowDropdown } from "react-icons/io";
 import './globals.css';
 import './layout.css'
+import Script from 'next/script';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
@@ -38,6 +39,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
     return (
       <html lang="pt-BR">
+        <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`}/>
         <body 
             className='flexCollTop' 
             style={{ position: 'relative', minHeight: '100vh' }}
@@ -91,6 +93,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     </li>
                                     <li className='link'>
                                         <a href="/campo-escola">Campo Escola Virtual</a>
+                                    </li>
+                                    <li className='link'>
+                                        <a href="/administrativo">Acesso administrativo</a>
                                     </li>
                                 </ul>
                             </li>
@@ -386,6 +391,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 </li>
                                 <li className='link textColorWhite'>
                                     <a href="/campo-escola">Campo Escola Virtual</a>
+                                </li>
+                                <li className='link textColorWhite'>
+                                    <a href="/administrativo">Acesso administrativo</a>
                                 </li>
                             </ul>
                         </li>
