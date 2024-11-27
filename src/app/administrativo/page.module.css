@@ -49,6 +49,9 @@
     opacity: 0.8;
 }
 @media (max-width: 991px){
+    .title{
+        font-size: 24px;
+    }
     .subTitle{
         margin-left: 20px;
     }
