@@ -1,3 +1,7 @@
+.subConteiner{
+    margin: 20px 0px;
+    width: 100%
+}
 .title{
     background-color: var(--azul-claro);
     height: 80px;
@@ -28,4 +32,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+@media (max-width: 650px){
+    .title{
+        font-size: 5vw;
+        height: 60px;
+    }
 }

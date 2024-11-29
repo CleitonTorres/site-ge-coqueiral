@@ -135,26 +135,35 @@ export default function Home() {
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
         <Box customClass={['fullWidth', 'flexRowWrap']}>
-          <Card
-            date='07 de dezembro de 2024'
-            title='Última atividade do ano | início das férias'
-            paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
-            imageURL='/images/banner-ferias.webp'
-            idNews='teste01'
+        <Card
+            dataNews={{
+              date:'07 de dezembro de 2024',
+              title:'Última atividade do ano | início das férias',
+              paragraph:'Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades',
+              imageID:'/images/banner-ferias.webp',
+              _id:'teste02',
+              destaque: false
+            }}            
           />
           <Card
-            date='07 de dezembro de 2024'
-            title='Última atividade do ano | início das férias'
-            paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
-            imageURL='/images/banner-ferias.webp'
-            idNews='teste02'
+            dataNews={{
+              date:'07 de dezembro de 2024',
+              title:'Última atividade do ano | início das férias',
+              paragraph:'Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades',
+              imageID:'/images/banner-ferias.webp',
+              _id:'teste02',
+              destaque: false
+            }}            
           />
           <Card
-            date='07 de dezembro de 2024'
-            title='Última atividade do ano | início das férias'
-            paragraph='Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades'
-            imageURL='/images/banner-ferias.webp'
-            idNews='test03'
+            dataNews={{
+              date:'07 de dezembro de 2024',
+              title:'Última atividade do ano | início das férias',
+              paragraph:'Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades',
+              imageID:'/images/banner-ferias.webp',
+              _id:'teste02',
+              destaque: false
+            }}            
           />
         </Box>
         <Botton

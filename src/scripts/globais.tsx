@@ -77,3 +77,13 @@ export const calcTotalFilesMB = (files:File)=>{
     const formattedTotalSize = bytesToMegabytes(totalSizeInMB).toFixed(2);
     return formattedTotalSize;
 }
+export const isValidURL = (string: string): boolean => {
+    // Regex para verificar URL
+    const regex = /^(https?:\/\/|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+.*$/;
+    return regex.test(string);
+};
+
+export const isRelativeURL = (string: string): boolean => {
+    // Verifica se é um caminho relativo (começa com "/")
+    return /^\/[a-zA-Z0-9-_.]+/.test(string);
+};

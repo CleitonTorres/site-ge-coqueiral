@@ -328,7 +328,7 @@ export default function Page(){
                 <form className={`${styles.subConteiner}`} method='POST'>
                     <h4>Cadastrar notícia</h4> 
                     <div className={styles.boxInputs}>
-                        <div className={`${styles.boxInput} ${styles.inputFlexTop}`} style={{height: '134px'}}> 
+                        <div className={`${styles.boxInput}`}> 
                             <label htmlFor="user">Título</label>                   
                             <input 
                                 type="text" 
@@ -336,15 +336,6 @@ export default function Page(){
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.title || '' }
                                 placeholder='título da notícia'
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="user">Parágrafo</label>                   
-                            <textarea 
-                                name='paragraph' 
-                                onChange={(e)=>handleDataNews(e)}
-                                value={dataNews.paragraph || '' }
-                                placeholder='texto da notícia'
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -360,7 +351,7 @@ export default function Page(){
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">ID da imagem a ser exibida (1000x600)</label>
+                            <label htmlFor="user">ID da imagem do banner (1000x600)</label>
                             <input 
                                 type="file" 
                                 name='upload' 
@@ -368,14 +359,13 @@ export default function Page(){
                                 onChange={(e)=>handleUpload(e)}
                             />
                         </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="user">Algum link que deseje vincular à notícia</label>                   
-                            <input 
-                                type="text" 
-                                name='urlLink' 
+                        <div className={styles.boxTextArea}>
+                            <label htmlFor="user">Parágrafo (* para negrito, /p para parágrafo)</label>                   
+                            <textarea 
+                                name='paragraph' 
                                 onChange={(e)=>handleDataNews(e)}
-                                value={dataNews.urlLink || '' }
-                                placeholder='link para direcionar o leitor'
+                                value={dataNews.paragraph || '' }
+                                placeholder='exemplo: *texto da notícia* (vai ficar em negrito) /p texto qualquer /p (vai quebrar linha como um parágrafo)'
                             />
                         </div>
                     </div>

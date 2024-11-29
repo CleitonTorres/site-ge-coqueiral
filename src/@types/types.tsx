@@ -21,7 +21,7 @@ export interface DataNews {
     title: string,
     paragraph: string,
     imageID: string,
-    urlLink: string,
     destaque: boolean,
+    date: string,
     _id: string
 }

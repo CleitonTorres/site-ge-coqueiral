@@ -26,6 +26,11 @@
     display: flex;
     flex-direction: column;
 }
+.boxTextArea{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 .title{
     background-color: var(--azul-claro);
     height: 80px;
@@ -70,9 +75,9 @@
     align-content: center;
     width: 100%;
 }
-.subConteiner textarea{
-    width: 100vw;
-    max-width: 360px;
+.boxTextArea textarea{
+    width: 100%;
+    min-width: 360px;
     margin: 10px;
     text-align: center;
     height: 90px;
