@@ -8,6 +8,7 @@ import './globals.css';
 import './layout.css'
 import Script from 'next/script';
 import Provider from '@/components/context/context';
+import Head from 'next/head';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
@@ -40,6 +41,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
     return (
       <html lang="pt-BR">
+        <Head>
+            <title>19º/ES Grupo Escoteiro Coqueiral</title>
+            <meta name="google-site-verification" content="uGHXGvSMiMVO1Nw4N9-8OlJ9L-MB-lDi8zsnkbQP8RM" />
+        </Head>
         <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`}/>
         <body 
             className='flexCollTop' 

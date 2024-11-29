@@ -6,7 +6,6 @@ import Box from '@/components/layout/box/box';
 import Card from '@/components/layout/card/card';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import Section from '@/components/layout/sections/section';
-import Head from 'next/head';
 import Image from 'next/image';
 import { useContext } from 'react';
 import { v4 } from 'uuid';
@@ -16,9 +15,6 @@ function Home() {
 
   return (
     <>
-      <Head>
-        <title>19º/ES Grupo Escoteiro Coqueiral</title>
-      </Head>
       <Banner 
         title='19º/ES Grupo Escoteiro Coqueiral.' 
         subTitle='Educação para a vida'
