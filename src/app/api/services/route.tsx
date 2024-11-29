@@ -1,6 +1,14 @@
-import { ResponseRecaptcha } from "@/@types/types";
+import { DataNews, ResponseRecaptcha } from "@/@types/types";
+import { connectToDatabase } from "@/scripts/connectDB";
 import axios from "axios";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
+
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
 export async function POST(req: NextRequest) {
     const authorization = req.headers.get('Authorization');
@@ -12,8 +20,10 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const {token, service} = body as {token:string, service: string};        
-        
+        const service = body.service as string;
+        const news = body.news as DataNews;
+        const token = body.token as string;
+
         if(service === 'recatptcha'){
             const response = await axios.post('https://www.google.com/recaptcha/api/siteverify',
                 `secret=${process.env.NEXT_PUBLIC_RECATCHA_SECRET_KEY}&response=${token}`
@@ -24,11 +34,23 @@ export async function POST(req: NextRequest) {
             }else{
                 throw new Error("erro ao tentar autenticar Recaptcha");
             }
+        }if (service === 'news'){
+            if(!news){
+                return NextResponse.json({error: "Sem dados na requisição"}, {status: 500});
+            }
+
+            // Conectando ao banco de dados
+            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postUser");
+            const collection = db.collection('news');
+
+            const resp = await collection.insertOne({...news, _id: new ObjectId()});
+
+            return NextResponse.json(resp, {status: 200});
         }else{
-            return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
+            return NextResponse.json({error: "Metodo não reconhecido"}, {status: 405});
         }
     }catch(e){
         console.log(e)
-        return NextResponse.json({error: "erro ao tentar autenticar Recaptcha"}, {status: 500});
+        return NextResponse.json({error: "erro na requisição"}, {status: 405});
     }
 }

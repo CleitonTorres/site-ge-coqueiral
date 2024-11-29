@@ -20,7 +20,7 @@
     left: 0;
     width: 40px;
     height: 40px;
-    border-left: solid 4px rgb(var(--primaryColorBranco));
+    border-left: solid 4px rgb(var(--white));
     border-radius: 50%;
     transition: 0.5s;
     animation: effect linear infinite 1s;

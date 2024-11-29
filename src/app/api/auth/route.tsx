@@ -43,7 +43,6 @@ export async function GET(req: NextRequest) {
         if(!dataUser.user || !dataUser.password){
             NextResponse.json({error: "Faltam dados para a autenticação."}, { status: 400 });
         }
-        console.log(dataUser)
         try {            
             const response = await auth(dataUser.user, dataUser.password);
 

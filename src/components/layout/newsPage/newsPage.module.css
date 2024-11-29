@@ -1,0 +1,31 @@
+.title{
+    background-color: var(--azul-claro);
+    height: 80px;
+    color: var(--white);
+    font-style: normal;
+    font-weight: normal;
+    font-size: 34px;
+    padding: 14px;
+    width: 100%;
+    max-width: var(--widthLarge);
+    min-width: var(--minWidth);
+}
+.paragraph{
+    text-align: justify;
+    width: 100%;
+    padding: 0px 10px;
+}
+.paragraph a {
+    text-decoration: underline;
+}
+.conteinerImg{
+    position: relative;
+    width: 100%;
+    max-height: 600px;
+}
+.image{
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

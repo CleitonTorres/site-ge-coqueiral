@@ -39,7 +39,7 @@ export const createCookie = async (dataProfile:ProfileProps) => {
         console.log(e);
         return false;
     }
-};
+}
 
 export const getCookie = () => {
     const sessionData = sessionStorage.getItem("coqueiralSite");
@@ -60,7 +60,20 @@ export const getCookie = () => {
     }
 
     return cookieData;
-};
+}
+
 export const destroyCookie = (token:string) => {
     sessionStorage.removeItem(token)
+}
+
+export const calcTotalFilesMB = (files:File)=>{
+    // Função para converter bytes para megabytes
+    const bytesToMegabytes = (bytes:number) => {
+        return bytes / (1024 * 1024);
+    };
+
+    // Calcular o tamanho total em MB
+    const totalSizeInMB = files.size;
+    const formattedTotalSize = bytesToMegabytes(totalSizeInMB).toFixed(2);
+    return formattedTotalSize;
 }
