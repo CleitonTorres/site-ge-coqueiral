@@ -1,19 +1,24 @@
+'use client'
+import { Context } from '@/components/context/context';
 import Botton from '@/components/form/botton/botton';
 import Banner from '@/components/layout/banner/banner';
 import Box from '@/components/layout/box/box';
 import Card from '@/components/layout/card/card';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import Section from '@/components/layout/sections/section';
-import type { Metadata } from 'next'
+import Head from 'next/head';
 import Image from 'next/image';
- 
-export const metadata: Metadata = {
-  title: '19º/ES Grupo Escoteiro Coqueiral',
-}
+import { useContext } from 'react';
+import { v4 } from 'uuid';
 
-export default function Home() {
+function Home() {
+  const context = useContext(Context);
+
   return (
     <>
+      <Head>
+        <title>19º/ES Grupo Escoteiro Coqueiral</title>
+      </Head>
       <Banner 
         title='19º/ES Grupo Escoteiro Coqueiral.' 
         subTitle='Educação para a vida'
@@ -134,17 +139,7 @@ export default function Home() {
       {/* notícias */}
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
-        <Box customClass={['fullWidth', 'flexRowWrap']}>
-        <Card
-            dataNews={{
-              date:'07 de dezembro de 2024',
-              title:'Última atividade do ano | início das férias',
-              paragraph:'Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades',
-              imageID:'/images/banner-ferias.webp',
-              _id:'teste02',
-              destaque: false
-            }}            
-          />
+        <Box customClass={['fullWidth', 'flexRowTopWrap']}>
           <Card
             dataNews={{
               date:'07 de dezembro de 2024',
@@ -155,16 +150,23 @@ export default function Home() {
               destaque: false
             }}            
           />
-          <Card
-            dataNews={{
-              date:'07 de dezembro de 2024',
-              title:'Última atividade do ano | início das férias',
-              paragraph:'Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades',
-              imageID:'/images/banner-ferias.webp',
-              _id:'teste02',
-              destaque: false
-            }}            
-          />
+          {context?.dataNews?.filter(news=> !news.destaque).map((news)=>{            
+            return(
+              <Card
+                key={v4()}
+                dataNews={{
+                  date: news.date || "",
+                  title:  news.title || "",
+                  paragraph:  news.paragraph || "",
+                  imageID: news.imageID,
+                  _id: news._id,
+                  destaque: news.destaque
+                }}           
+              />
+            )
+          })
+
+          }
         </Box>
         <Botton
           title='VER TODAS'
@@ -212,3 +214,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home;

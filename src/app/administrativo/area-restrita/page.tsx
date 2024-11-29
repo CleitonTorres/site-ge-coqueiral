@@ -146,8 +146,8 @@ export default function Page(){
 
     const submitNews = async(e:FormEvent<HTMLButtonElement>)=>{
         e.preventDefault();
-        if(!dataNews.title || !dataNews.paragraph){
-            alert("Preencha os campos de autenticação!")
+        if(!dataNews.title || !dataNews.paragraph || !dataNews.imageID){
+            alert("Preencha os campos obrigatórios!")
             return;
         }
 
@@ -376,6 +376,7 @@ export default function Page(){
                 <div className={styles.subConteiner} style={{maxWidth: 'var(--widthLarge)'}}>
                     <h4>Preview da Notícia</h4>
                     <NewsPage 
+                        idNews=''
                         origem='cadastro'
                         dataNews={dataNews}
                     />

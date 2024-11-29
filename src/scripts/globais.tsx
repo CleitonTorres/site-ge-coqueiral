@@ -87,3 +87,9 @@ export const isRelativeURL = (string: string): boolean => {
     // Verifica se é um caminho relativo (começa com "/")
     return /^\/[a-zA-Z0-9-_.]+/.test(string);
 };
+
+export const isBase64 = (string:string)=>{
+    const verify = string.includes('base64');
+
+    return verify;
+}

@@ -9,7 +9,7 @@ export default function Card({dataNews}:{dataNews:DataNews}){
     return(
         <Link href={{
             pathname: '/news/',
-            query: {...dataNews}
+            query: {idNews: dataNews._id}
         }} className={styles.conteiner}>
             {dataNews.imageID ? <Image
                 alt="card"

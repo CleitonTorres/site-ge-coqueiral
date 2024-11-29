@@ -34,10 +34,10 @@ async function auth(user:string, password:string) {
 export async function GET(req: NextRequest) {
     // Parseando os parâmetros da URL (query params)
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
-    const person = url.searchParams.get("person") as "me" | "auth" | "users";
+    const service = url.searchParams.get("service") as "me" | "auth" | "users";
     const data = url.searchParams.get("data");
 
-    if(person === "auth"){
+    if(service === "auth"){
         const dataUser = JSON.parse(decryptPassword(data as string)) as PropsSingIn;
 
         if(!dataUser.user || !dataUser.password){
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: "Erro ao processar os dados." }, { status: 500 });
         }
     }else{
-        return NextResponse.json({ error: "Requisição não reconhecida." }, { status: 404 });
+        return NextResponse.json({ error: "Requisição não reconhecida." }, { status: 405 });
     }
 }
 

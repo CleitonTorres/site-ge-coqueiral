@@ -15,6 +15,13 @@
     align-items: center;
     flex-wrap: wrap;
 }
+.flexRowTopWrap{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
 .fullWidth{
     width: 100%;
 }

@@ -53,7 +53,7 @@ export default function Page(){
                         await axios.get(`${process.env.NEXT_PUBLIC_URL_AUTH}`,{
                             params:{            
                                 data: encryptPassword(JSON.stringify(dataForm)),
-                                person: "auth"
+                                service: "auth"
                             }
                         })
                         .then((response)=>{

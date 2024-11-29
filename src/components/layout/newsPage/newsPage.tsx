@@ -1,58 +1,61 @@
 'use client'
 import Section from '@/components/layout/sections/section';
 import styles from './newsPage.module.css';
-import { DataNews } from '@/@types/types';
 import Image from 'next/image';
-import { isRelativeURL, isValidURL } from '@/scripts/globais';
+import { isBase64, isRelativeURL, isValidURL } from '@/scripts/globais';
+import { useContext, useEffect, useState } from 'react';
+import { Context } from '@/components/context/context';
+import { DataNews } from '@/@types/types';
 
 type Props = {
     origem: 'cadastro' | 'view',
-    dataNews: DataNews
+    idNews: string,
+    dataNews?: DataNews
 }
 
 const formatText = (text:string) => {
     if(!text) return<></>;
 
-     // Regex para identificar os padrões de formatação
-     const pattern = /\/p(.*?)\/p|\*(.*?)\*/g;
+    // Regex para identificar os padrões de formatação
+    const pattern = /\/p(.*?)\/p|\*(.*?)\*/g;
 
-     const elements: JSX.Element[] = [];
-     let lastIndex = 0;
+    const elements: JSX.Element[] = [];
+    let lastIndex = 0;
  
-     // Percorre as correspondências dos padrões
-     text.replace(pattern, (match, p1, bold, index) => {
-         // Adiciona o texto antes da correspondência como texto simples
-         if (lastIndex < index) {
-             elements.push(<span key={lastIndex}>{text.slice(lastIndex, index)}</span>);
-         }
+    // Percorre as correspondências dos padrões
+    text.replace(pattern, (match, p1, bold, index) => {
+        // Adiciona o texto antes da correspondência como texto simples
+        if (lastIndex < index) {
+            elements.push(<span className={styles.paragraph} key={lastIndex}>{text.slice(lastIndex, index)}</span>);
+        }
+
+        // Verifica qual padrão foi encontrado
+        if (p1 !== undefined) {
+            // Formatação de parágrafo
+            elements.push(
+                <p key={index} className={styles.paragraph}>
+                    {formatText(p1)} {/* Processa recursivamente */}
+                </p>
+            );
+        } else if (bold !== undefined) {
+            // Formatação de negrito
+            elements.push(
+                <strong key={index} style={{ fontWeight: 'bold' }}>
+                    {bold}
+                </strong>
+            );
+        }
+
+        lastIndex = index + match.length;
+        return match; // Necessário para o replace continuar
+    });
  
-         // Verifica qual padrão foi encontrado
-         if (p1 !== undefined) {
-             // Formatação de parágrafo
-             elements.push(
-                 <p key={index} style={{ margin: '10px 0' }}>
-                     {formatText(p1)} {/* Processa recursivamente */}
-                 </p>
-             );
-         } else if (bold !== undefined) {
-             // Formatação de negrito
-             elements.push(
-                 <strong key={index} style={{ fontWeight: 'bold' }}>
-                     {bold}
-                 </strong>
-             );
-         }
+    // Adiciona qualquer texto restante após o último match
+    if (lastIndex < text.length) {
+        elements.push(<p className={styles.paragraph} key={lastIndex}>{text.slice(lastIndex)}</p>);
+    }
  
-         lastIndex = index + match.length;
-         return match; // Necessário para o replace continuar
-     });
- 
-     // Adiciona qualquer texto restante após o último match
-     if (lastIndex < text.length) {
-         elements.push(<span key={lastIndex}>{text.slice(lastIndex)}</span>);
-     }
- 
-     return elements;
+    return elements;
 };
 const TextFormatter = ({ text }: { text: string }) => {
     return <div className={styles.subConteiner}>{formatText(text)}</div>;
@@ -91,22 +94,34 @@ const TextFormatter = ({ text }: { text: string }) => {
 //     );
 // }
 
-export default function NewsPage({dataNews}:Props) {
+export default function NewsPage({idNews, dataNews}:Props) {
+    const context = useContext(Context);
+    const [news, setNews] = useState(context?.dataNews.find(news=> news._id === idNews));
+
+    useEffect(()=>{
+        if(dataNews){
+            console.log(dataNews)
+            setNews(dataNews)
+        }
+    },[dataNews]);
+
+    if(!news) return <span>Nada para ler aqui</span>;
+
     return(
         <Section customClass={['flexCollTop', 'maxWidth']}>
-            <h1 className={styles.title}>{dataNews.title}</h1>
-            {dataNews.imageID ? 
+            <h1 className={styles.title}>{news.title}</h1>
+            {news.imageID ? 
                 <div className={styles.conteinerImg}>
                         <Image 
                         alt=""
                         width={970}
                         height={350}
-                        src={isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`}
+                        src={isBase64(news.imageID) ? news.imageID : isValidURL(news.imageID) ? news.imageID : isRelativeURL(news.imageID) ? news.imageID : `https://drive.google.com/uc?export=download&id=${news.imageID}`}
                         className={styles.image}
                         decoding='auto'/>
                 </div>                
             :null}
-            <TextFormatter text={dataNews.paragraph}/>
+            <TextFormatter text={news.paragraph}/>
         </Section>
     )
 }
