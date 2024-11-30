@@ -224,6 +224,7 @@
   font-weight: 600;
   text-align: left;
   padding: 5px;
+  padding-left: 10px;
 }
 .subTitle:hover{
   opacity: 80%;
@@ -233,6 +234,7 @@
   font-size: 12px !important;
   text-align: left;
   height: 130px;
+  padding-left: 10px;
 }
 .subItens li{
   margin: 0 !important;

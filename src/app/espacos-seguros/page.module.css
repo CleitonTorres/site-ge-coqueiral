@@ -185,6 +185,8 @@
 }
 .heightSlim{
     height: 100px;
+    padding-left: 10px;
+
 }
 @media (max-width: 991px){
     .subTitle{

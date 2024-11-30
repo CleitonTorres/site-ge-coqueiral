@@ -35,7 +35,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/cla03.jpg'}
                         />
                         <p className={styles.paragraph}>                 
                             <b>Proteger</b> as crianças, adolescentes, jovens e adultos de <b>qualquer tipo de abusos</b>
@@ -47,7 +47,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/senior12.jpeg'}
                         />
                         <p className={styles.paragraph}>                 
                             <b>Prevenir os riscos à saúde física, mental</b> e promover o desenvolvimento global dos associados
@@ -59,7 +59,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/lobo04.jpeg'}
                         />
                         <p className={styles.paragraph}>                 
                             Zelar para que o Movimento Escoteiro proporcione aos jovens um <b>ambiente seguro</b> no qual possam <b>crescer e se desenvolver</b>
@@ -71,7 +71,7 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={200}
-                            src={'/images/senior05.jpg'}
+                            src={'/images/senior13.jpeg'}
                         />
                         <p className={styles.paragraph}>                 
                             Adotar <b>medidas para promover a segurança física e psicológica</b> dos associados em todas as situações possíveis.
@@ -84,7 +84,7 @@ export default function Page(){
                     width={200}
                     height={90}
                     src={'/images/espacos-seguros.png'}
-                    style={{width: 400, objectFit: 'contain', marginTop: 40}}
+                    style={{width: 380, objectFit: 'contain', marginTop: 40, marginLeft: 10}}
                 />
 
                 <p className={styles.paragraph}>
@@ -115,18 +115,6 @@ export default function Page(){
                         />
                         <p className={styles.paragraph}>                 
                             Os <b style={{color: '#0096D6'}}>princípios</b> do Movimento Escoteiro
-                        </p>       
-                    </div>
-
-                    <div className={`${styles.card2}`}>
-                        <Image 
-                            alt=''
-                            width={200}
-                            height={150}
-                            src={'/icons/topico-Principios.png'}
-                        />
-                        <p className={styles.paragraph}>                 
-                            Proporcionar <b style={{color: '#E8646E'}}>oportunidades iguais</b> a todos
                         </p>       
                     </div>
 
