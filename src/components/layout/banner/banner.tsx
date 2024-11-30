@@ -34,21 +34,26 @@ export default function Banner({title, subTitle, paragraph, imageURL, videoURL, 
                     Seu navegador não suporta vídeos HTML5.
                 </video>
             :null}
-            <div className={styles.filter}></div>
-            <div className={`${styles.rotulo} flexCollCenter`}>
-                {title ? <h1 className={`${styles.title} textLarge colorWhite`}>{title}</h1> :null}
-                {subTitle ? <h4 className={`${styles.subTitle} colorWhite textMedium`}>{subTitle}</h4> :null}
-                {paragraph ? <p className={`${styles.paragraph} colorWhite textMediumFit`}>
-                    {paragraph}
-                </p>:null}
-                {imageURL ? 
-                <Image 
-                    width={100} 
-                    height={100} 
-                    alt='logo grupo escoteiro Coqueiral' 
-                    src={imageURL}
-                />:null}
-            </div>            
+            <div className={styles.filter}>
+            </div>
+            
+            {!title && !subTitle && !paragraph ?
+                <div className={`${styles.rotulo} flexCollCenter`}>
+                    {title ? <h1 className={`${styles.title} textLarge colorWhite`}>{title}</h1> :null}
+                    {subTitle ? <h4 className={`${styles.subTitle} colorWhite textMedium`}>{subTitle}</h4> :null}
+                    {paragraph ? <p className={`${styles.paragraph} colorWhite textMediumFit`}>
+                        {paragraph}
+                    </p>:null}
+                    {imageURL ? 
+                    <Image 
+                        width={100} 
+                        height={100} 
+                        alt='logo grupo escoteiro Coqueiral' 
+                        src={imageURL}
+                    />
+                :null}
+            </div>
+            :null} 
         </div>
     )
 }

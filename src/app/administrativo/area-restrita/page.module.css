@@ -29,7 +29,7 @@
 .boxTextArea{
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 98vw;
 }
 .title{
     background-color: var(--azul-claro);
@@ -44,7 +44,7 @@
     min-width: var(--minWidth);
 }
 .subConteiner label, .subConteiner input, .subConteiner select, .subConteiner button{
-    width: 100vw;
+    width: 98vw;
     max-width: 360px;
     margin: 10px;
     text-align: center;
@@ -76,8 +76,8 @@
     width: 100%;
 }
 .boxTextArea textarea{
-    width: 100%;
-    min-width: 360px;
+    width: 96%;
+    min-width: 300px;
     margin: 10px;
     text-align: left;
     height: 90px;

@@ -10,13 +10,14 @@
     overflow: hidden;
 }
 .video{
+    background-color: transparent;
     object-fit: cover;
 }
 .filter{
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     background-color: var(--azul);
     opacity: 30%;
@@ -41,6 +42,19 @@
 }
 .greenFilter .filter{
     background-color: var(--sejaescoteiro);
+}
+
+.responsive{
+    min-width: 100vw;
+    min-height: fit-content
+}
+
+.responsive .video{
+    object-fit: contain;
+    width: 100vw !important;
+}
+.espacoSeguro .filter{
+    display: none;
 }
 
 @media (max-width: 500px) {

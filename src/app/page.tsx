@@ -122,13 +122,15 @@ function Home() {
               }}
             />
           </a>
-          <Image 
-            alt='imagem seja escoteiro'
-            width={408}
-            height={178}
-            src={'/images/espacoseguro.png'}
-            style={{objectFit: 'contain'}}
-          />
+          <a href='/espacos-seguros' target='_self' style={{position: 'relative'}}>
+            <Image 
+              alt='imagem seja escoteiro'
+              width={408}
+              height={178}
+              src={'/images/espacoseguro.png'}
+              style={{objectFit: 'contain'}}
+            />
+          </a>
         </Box>
       </Section>
     

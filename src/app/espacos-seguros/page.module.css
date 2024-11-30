@@ -1,0 +1,208 @@
+.conteiner{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100vw;
+    min-width: var(--minWidth);
+    max-width: var(--widthLarge);
+}
+.subConteiner{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100vw;
+    max-width: var(--widthLarge);
+    margin-bottom: 30px;
+}
+.title{
+    height: auto;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 34px;
+    padding: 14px;
+    width: 100%;
+    max-width: var(--widthLarge);
+    min-width: var(--minWidth);
+}
+.titleCenter{
+    color: var(--white);
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 24px;
+    word-spacing: 7px;
+}
+.paragraph{
+    text-align: justify;
+    width: 100%;
+    line-height: 35px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.paragraph a {
+    text-decoration: underline #0096D6; 
+    font-weight: 700;
+    color: #0096D6;
+}
+.image{
+    margin: 0 auto;
+    width: 100vw;
+    height: auto;
+    object-fit: contain;
+}
+.card{
+    width: 400px;
+    height: auto;
+    margin: 10px;
+    border: 2px solid #dcd9d9;
+}
+.card img{
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+.card .paragraph {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+}
+.card2{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 400px;
+    height: 150px;
+    margin: 10px;
+    border: 2px solid #dcd9d9;
+}
+.card2 img{
+    width: 200px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.card2 .paragraph{
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+}
+.faixa{
+    width: 100vw;
+    background-color: #2BBC7D;
+    height: 350px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.faixa img{
+    border-radius: 50%;
+    margin: 10px;
+    margin-right: 50px;
+}
+.faixa .paragraph{
+    padding: 20px;
+    max-width: 450px;
+    font-weight: 700;
+    color: var(--white);
+    font-size: 18px;
+}
+.faixa .paragraph span{
+    background-color: #0096D6;
+    color: var(--white);
+}
+.card3{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 180px;
+    height: 270px;
+    border: 2px solid #dcd9d9;
+    margin: 10px;
+    border-bottom: solid 8px;
+}
+.card3 .paragraph{
+    font-size: 12px;
+    text-align: center;
+    line-height: 15px;
+    padding: 10px;
+}
+.card3 img{
+    width: 50px;
+    height: 80px;
+    object-fit: contain;
+    margin-top: 10px;
+}
+.card4{
+    width: 180px;
+    height: 220px;
+    border: 2px solid #dcd9d9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+.card4 img{
+    width: 80px;
+    height: 90px;
+    object-fit: contain;
+}
+.card4 h4{
+    font-size: 10px;
+    text-align: center;
+}
+.card4 .paragraph {
+    font-size: 12px;
+    text-align: center;
+    line-height: 14px;
+    padding: 0;
+}
+.borderGreen{
+    border-bottom: #2BBC7D 8px solid;
+}
+.borderBlue{
+    border-bottom: #0096D6 8px solid;
+}
+.borderRed{
+    border-bottom: #E8646E 8px solid;
+}
+.destaque{
+    text-decoration: underline green 2px;
+    font-weight: 700;
+}
+.green{
+    color: #2BBC7D;
+}
+.blue{
+    color: #0096D6;
+}
+.heightSlim{
+    height: 100px;
+}
+@media (max-width: 991px){
+    .subTitle{
+        margin-left: 20px;
+    }
+    .paragraph{
+        padding: 20px;
+    }
+    .faixa{
+        flex-direction: column;
+        height: auto;
+    }
+    .faixa img{
+        width: 150px;
+        height: auto;
+        margin-right: 10px;
+    }
+    .faixa .paragraph{
+        font-size: 3vw;
+    }
+}
