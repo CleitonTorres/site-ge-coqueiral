@@ -44,7 +44,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <html lang="pt-BR">
         <head>
             <title>19º/ES Grupo Escoteiro Coqueiral</title>
-            <meta name="google-site-verification" content="uGHXGvSMiMVO1Nw4N9-8OlJ9L-MB-lDi8zsnkbQP8RM" />
+            <meta name="google-site-verification" content="RJr9dk5TXSf7loXF4hfxMGts_RSZp63yB6crb-bUSCI" />
         </head>
         <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`}/>
         <body 
