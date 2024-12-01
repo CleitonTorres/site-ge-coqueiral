@@ -32,6 +32,16 @@ const nextConfig: NextConfig = {
         hostname: 'scontent-gig4-2.cdninstagram.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'scontent-iad3-2.cdninstagram.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scontent-iad3-1.cdninstagram.com',
+        port: '',
+      },
     ],
   },
   productionBrowserSourceMaps: false,
