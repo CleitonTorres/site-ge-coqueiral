@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
         hostname: 'drive.google.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'scontent-gig4-1.cdninstagram.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scontent-gig4-2.cdninstagram.com',
+        port: '',
+      },
     ],
   },
   productionBrowserSourceMaps: false,

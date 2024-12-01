@@ -11,7 +11,7 @@ export const Context = createContext( {} as PropsContext );
 
 export default function Provider({children}:{children:ReactNode}){
     const [dataNews, setDataNewsHome] = useState<DataNews[]>([]);
-
+    
     const getNews = async()=>{
         let data:DataNews[] = [];
         await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
@@ -27,8 +27,8 @@ export default function Provider({children}:{children:ReactNode}){
           setDataNewsHome(data);
         })
         .catch(err=> console.log(err))
-    }
-    
+    }    
+
     useEffect(()=>{
         if(dataNews.length === 0) getNews();
     },[]);

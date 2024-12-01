@@ -10,6 +10,17 @@ export const config = {
     },
 };
 
+const getInstagramFeed = async () => {
+  const url = `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=12&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}`;
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error('Erro ao buscar o feed do Instagram');
+  }
+
+  return response.json();
+};
+
 export async function GET(req: NextRequest) {
     // Parseando os parâmetros da URL (query params)
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
@@ -55,7 +66,7 @@ export async function POST(req: NextRequest) {
             }else{
                 throw new Error("erro ao tentar autenticar Recaptcha");
             }
-        }if (service === 'news'){
+        }else if (service === 'news'){
             if(!news){
                 return NextResponse.json({error: "Sem dados na requisição"}, {status: 500});
             }
@@ -67,6 +78,14 @@ export async function POST(req: NextRequest) {
             const resp = await collection.insertOne({...news, _id: new ObjectId()});
 
             return NextResponse.json(resp, {status: 200});
+        }else if(service === 'feedInsta'){
+            try{
+                const feed = await getInstagramFeed();
+                return NextResponse.json(feed, {status: 200});
+            }catch(error){
+                console.log(error);
+                return NextResponse.json({error: "Não foi possivel receber o feed"}, {status: 500});
+            }
         }else{
             return NextResponse.json({error: "Metodo não reconhecido"}, {status: 405});
         }

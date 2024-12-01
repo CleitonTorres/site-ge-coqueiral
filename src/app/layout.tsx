@@ -8,6 +8,8 @@ import './globals.css';
 import './layout.css'
 import Script from 'next/script';
 import Provider from '@/components/context/context';
+import Section from '@/components/layout/sections/section';
+import InstagramFeed from '@/components/layout/feeds/feeds';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
@@ -374,6 +376,11 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                 {/* Layout UI */}
                 <main className='flexCollTop'>{children}</main>
 
+                {/* feeds do insta */}
+                <Section customClass={['fullWidth', 'flexCollTop']}>
+                    <InstagramFeed />
+                </Section>
+                
                 <div className='footer'>
                     <nav>
                         <ul className='menuFooter'>
