@@ -17,7 +17,7 @@ export default function Coqueiral (){
                 <div className={styles.subConteiner}>
                     <h2 className={styles.subTitle}>Fundação</h2>
                     <p className={styles.paragraph}>
-                        Graças a uma iniciativa do então CCC (Centro Comunitário de Coqueiral) e da disposição do nosso chefe fundador Fernando Girelli no dia 30/05/1988 deu-se origem ao 19º ES Grupo Escoteiro Coqueiral que logo mais em 04/09/1988 e após os devidos tramites legais foi autorizado pela União dos Escoteiros do Brasil a aplicar o método escoteiro escoteiro, posteriormente em 2003 foi reconhecido como entidade de interesse público municipal pela Lei nº 2651, de 16 de dezembro de 2003 e em 2024 reconhecido como Entidade de Interesse Público Estadual (Lei 12.133/24).
+                        Graças a uma iniciativa do então CCC (Centro Comunitário de Coqueiral) e da disposição do nosso chefe fundador Fernando Girelli no dia 30/05/1988 deu-se origem ao 19º ES Grupo Coqueiral que logo mais em 04/09/1988 e após os devidos tramites legais foi autorizado pela União dos Escoteiros do Brasil a aplicar o método escoteiro escoteiro, posteriormente em 2003 foi reconhecido como entidade de interesse público municipal pela Lei nº 2651, de 16 de dezembro de 2003 e em 2024 reconhecido como Entidade de Interesse Público Estadual (Lei 12.133/24).
                     </p>
                     <Image
                         alt=""

@@ -59,7 +59,7 @@ export default function Page(){
                         alt=""
                         width={970}
                         height={350}
-                        src={'/images/lobos01.jpg'}
+                        src={'/images/grupo00.jpg'}
                         className={styles.image}
                     />
 
@@ -114,13 +114,6 @@ export default function Page(){
                         </li>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={90} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://www.escoteiros.org.br/wp-content/uploads/2022/04/SFH-v2.pdf" target='_blank'>
-                                Proteção da Criança e do Adolescente
-                            </a>
-                            <h5>Manual para Escotistas</h5>
-                        </li>
-                        <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={90} src={'/icons/IconeDoc.png'}/>
                             <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/protecao_da_crianca_e_do_adolecente_manual_para_escotistas.pdf" target='_blank'>
                                 Proteção da Criança e do Adolescente
                             </a>
@@ -158,12 +151,6 @@ export default function Page(){
                                 Declaração contra o Bullying
                             </a>
                             <h5>Documento da Região Interamericana</h5>
-                        </li>
-                        <li className='boxShadow cursoPointer'>
-                            <Image alt='' width={80} height={90} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://www.escoteiros.org.br/wp-content/uploads/2020/07/ficha_tecnica_bullying.pdf" target='_blank'>
-                                Ficha Técnica Bullying
-                            </a>
                         </li>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={90} src={'/icons/IconeDoc.png'}/>

@@ -95,7 +95,7 @@
     width: 100vw;
     height: 300px;
     position: absolute;
-    bottom: -300;
+    bottom: -300px;
     background-color: var(--white);
     z-index: 0;
 }

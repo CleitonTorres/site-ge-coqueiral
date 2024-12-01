@@ -27,18 +27,20 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 90%;
 }
 .title, .subTitle, .paragraph  {
     width: 100%;
     text-align: center;
 }
 .paragraph {
-    width: 80%;
+    width: 100%;
 }
 
 /* custom classes */
 .justifyBottom .rotulo{
-    top: 90%;
+    top: 85%;
 }
 .greenFilter .filter{
     background-color: var(--sejaescoteiro);

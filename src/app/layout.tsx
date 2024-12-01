@@ -243,10 +243,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Educação</ul>
                                         <ul className='subItens'>
-                                            <li>Projeto Educativo</li>
-                                            <li>Método Escoteiro</li>
+                                            <li>
+                                                <a href="/projeto-educativo">Projeto Educativo</a>
+                                            </li>
+                                            <li>
+                                                <a href="/metodo-escoteiro">Método Escoteiro</a>
+                                            </li>
                                             <li>Escotismo e ODS</li>
-                                            <li>Espaços Seguros</li>
+                                            <li>
+                                                <a href="/espacos-seguros">Espaços Seguros</a>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li className='subItensContents'>
