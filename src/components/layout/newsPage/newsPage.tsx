@@ -2,7 +2,7 @@
 import Section from '@/components/layout/sections/section';
 import styles from './newsPage.module.css';
 import Image from 'next/image';
-import { isBase64, isRelativeURL, isValidURL } from '@/scripts/globais';
+import { dateFormat3, isBase64, isRelativeURL, isValidURL } from '@/scripts/globais';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '@/components/context/context';
 import { DataNews } from '@/@types/types';
@@ -121,6 +121,21 @@ export default function NewsPage({idNews, dataNews}:Props) {
                         decoding='auto'/>
                 </div>                
             :null}
+            <div className={styles.dataLocal}>
+                <h4>{`${dateFormat3(dataNews?.date)}`}</h4>
+                {dataNews?.linkMaps ?
+                <div className={styles.boxLocation}>
+                    <Image 
+                        alt=''
+                        width={16}
+                        height={20}
+                        src={'/icons/location.svg'}
+                        className={styles.svg}
+                    />
+                    <h6><a href={dataNews.linkMaps}>Local</a></h6>
+                </div>
+                :null}
+            </div>
             <TextFormatter text={news.paragraph}/>
         </Section>
     )

@@ -8,8 +8,6 @@ import './globals.css';
 import './layout.css'
 import Script from 'next/script';
 import Provider from '@/components/context/context';
-import Section from '@/components/layout/sections/section';
-import InstagramFeed from '@/components/layout/feeds/feeds';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
@@ -39,7 +37,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     const minimizeMenu = ()=>{
         setActiveMenu('none');
     }
-
+    
     return (
       <html lang="pt-BR">
         <head>
@@ -251,7 +249,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                             <li>
                                                 <a href="/metodo-escoteiro">Método Escoteiro</a>
                                             </li>
-                                            <li>Escotismo e ODS</li>
+                                            <li>
+                                                <a href="/escotismo-ods">Escotismo e ODS</a>
+                                            </li>
                                             <li>
                                                 <a href="/espacos-seguros">Espaços Seguros</a>
                                             </li>
@@ -260,8 +260,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Informações</ul>
                                         <ul className='subItens'>
-                                            <li>Eventos</li>
-                                            <li>Notícias</li>
+                                            <li>
+                                                <a href="/eventos">Eventos</a>
+                                            </li>
+                                            <li>
+                                                <a href="/noticias">Notícias</a>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li className='subItensContents'>
@@ -297,7 +301,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         <ul className='subTitle'>Imprensa</ul>
                                         <ul className='subItens'>
                                             <li>Realeases</li>
-                                            <li>Galeria de fotos</li>
+                                            <li>
+                                                <a href="/galeria-fotos">Galeria de fotos</a>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li className='subItensContents'>
@@ -375,11 +381,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
                 {/* Layout UI */}
                 <main className='flexCollTop'>{children}</main>
-
-                {/* feeds do insta */}
-                <Section customClass={['fullWidth', 'flexCollTop']}>
-                    <InstagramFeed />
-                </Section>
                 
                 <div className='footer'>
                     <nav>

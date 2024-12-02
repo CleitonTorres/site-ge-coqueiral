@@ -5,6 +5,7 @@ import Banner from '@/components/layout/banner/banner';
 import Box from '@/components/layout/box/box';
 import Card from '@/components/layout/card/card';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
+import InstagramFeed from '@/components/layout/feeds/feeds';
 import Section from '@/components/layout/sections/section';
 import Image from 'next/image';
 import { useContext } from 'react';
@@ -132,22 +133,16 @@ function Home() {
             />
           </a>
         </Box>
+        <Botton
+          title='VER TODOS'
+          action={()=>window.open('/eventos', '_self')}
+        />
       </Section>
     
       {/* notícias */}
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
         <Box customClass={['fullWidth', 'flexRowTopWrap']}>
-          <Card
-            dataNews={{
-              date:'07 de dezembro de 2024',
-              title:'Última atividade do ano | início das férias',
-              paragraph:'Em fim estamos chegando em mais um final de ciclo e que ciclo em! Este ano foi cheio de atividades',
-              imageID:'/images/banner-ferias.webp',
-              _id:'teste02',
-              destaque: false
-            }}            
-          />
           {context?.dataNews?.filter(news=> !news.destaque).map((news)=>{            
             return(
               <Card
@@ -158,6 +153,8 @@ function Home() {
                   paragraph:  news.paragraph || "",
                   imageID: news.imageID,
                   _id: news._id,
+                  linkMaps: '',
+                  evento: false,
                   destaque: news.destaque
                 }}           
               />
@@ -168,6 +165,7 @@ function Home() {
         </Box>
         <Botton
           title='VER TODAS'
+          action={()=>window.open('/noticias', '_self')}
         />
       </Section>
 
@@ -209,6 +207,11 @@ function Home() {
           style={{position: 'absolute', right: 0, width: '30vw', objectFit: 'contain', maxWidth: 296 }}
         />
       </Section>
+
+      {/* feeds do insta */}
+        <Section customClass={['fullWidth', 'flexCollTop']}>
+            <InstagramFeed limit={9}/>
+        </Section>
     </>
   );
 }

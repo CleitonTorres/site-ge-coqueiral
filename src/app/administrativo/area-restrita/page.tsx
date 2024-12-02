@@ -62,10 +62,10 @@ export default function Page(){
         const value = e.target.value;
 
         setDataNews((prev)=>{
-            if(name === "destaque"){
+            if(['destaque', 'evento'].includes(name)){
                 return{
                     ...prev,
-                    destaque: value === "Sim" ? true : false
+                    [name]: value === "Sim" ? true : false
                 }
             }
             return{
@@ -155,6 +155,7 @@ export default function Page(){
             setShowModal(true);
             let idImage= '';
             const formData = new FormData();
+
             //enviar os arquivos para nuvem.
             if (file) {
                 //anexas os arquivos para serem enviados por e-mail.
@@ -175,12 +176,12 @@ export default function Page(){
                     setShowModal(false);
                     return;
                 }
-            }
-
+            }           
+           
             await axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,
                 {
                     service: 'news',
-                    news: {...dataNews, imageID: idImage}
+                    news: {...dataNews, imageID: idImage, date: new Date(dataNews.date)}
                 },{
                     headers:{
                         'Authorization': `Bearer ${dataUser.token}`
@@ -345,6 +346,20 @@ export default function Page(){
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.destaque ? 'Sim' : 'Não'  }
                             >
+                                <option value={''} key={v4()}></option>
+                                {['Não','Sim'].map(item=> (
+                                    <option value={item} key={v4()}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Se trata de um Evento?</label>                   
+                            <select 
+                                name='evento' 
+                                onChange={(e)=>handleDataNews(e)}
+                                value={dataNews.evento ? 'Sim' : 'Não'  }
+                            >
+                                <option value={''} key={v4()}></option>
                                 {['Não','Sim'].map(item=> (
                                     <option value={item} key={v4()}>{item}</option>
                                 ))}
@@ -357,6 +372,26 @@ export default function Page(){
                                 name='upload' 
                                 accept='image/*'
                                 onChange={(e)=>handleUpload(e)}
+                            />
+                        </div>
+                        <div className={`${styles.boxInput}`}> 
+                            <label htmlFor="user">Link do mapa</label>                   
+                            <input 
+                                type="text" 
+                                name='linkMaps' 
+                                onChange={(e)=>handleDataNews(e)}
+                                value={dataNews.linkMaps || '' }
+                                placeholder='link das coordenadas'
+                            />
+                        </div>
+                        <div className={`${styles.boxInput}`}> 
+                            <label htmlFor="user">Data</label>                   
+                            <input 
+                                type="date" 
+                                name='date' 
+                                onChange={(e)=>handleDataNews(e)}
+                                value={dataNews.date?.toString() || '' }
+                                placeholder='link das coordenadas'
                             />
                         </div>
                         <div className={styles.boxTextArea}>

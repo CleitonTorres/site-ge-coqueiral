@@ -22,6 +22,8 @@ export interface DataNews {
     paragraph: string,
     imageID: string,
     destaque: boolean,
-    date: string,
+    date: Date,
+    evento?: boolean, //se não for evento é notícia.
+    linkMaps: string,
     _id: string
 }

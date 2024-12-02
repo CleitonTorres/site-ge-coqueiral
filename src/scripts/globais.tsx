@@ -93,3 +93,62 @@ export const isBase64 = (string:string)=>{
 
     return verify;
 }
+
+//data de saída aaaa-mm-dd
+export function dateFormat1(date:Date | undefined){
+    if(!date){
+        return ''
+    }
+    else{
+        // Garantir que o input seja um objeto Date
+        date = typeof date === 'string' ? new Date(date) : date;
+
+        // Extrair dia, mês e ano
+        const dia = date.getDate();
+        const mes = date.getMonth()+1; // Meses começam em 0
+        const ano = date.getFullYear();    
+
+        return `${ano}-${mes}-${dia}`;
+    }
+}
+
+//data de saída dd/mm/aaaa
+export function dateFormat2(date:Date | undefined){
+    if(!date){
+        return ''
+    }
+    else{
+        // Garantir que o input seja um objeto Date
+        date = typeof date === 'string' ? new Date(date) : date;
+
+        // Extrair dia, mês e ano
+        const dia = date.getDate();
+        const mes = date.getMonth()+1; // Meses começam em 0
+        const ano = date.getFullYear();    
+
+        return `${dia}/${mes}/${ano}`;
+    }
+}
+
+// Formatar data no formato "22 de fevereiro de 2024"
+export function dateFormat3(input: Date | undefined): string {
+    if (!input) {
+        return '';
+    }
+
+    const monthNames = [
+        'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+    ];
+
+    // Garantir que o input seja um objeto Date
+    const date = typeof input === 'string' ? new Date(input) : input;
+
+    // Extrair dia, mês e ano
+    const dia = date.getDate();
+    const mes = date.getMonth(); // Meses começam em 0
+    const ano = date.getFullYear();
+
+    return `${dia} de ${monthNames[mes]} de ${ano}`;
+}
+

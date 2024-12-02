@@ -10,8 +10,9 @@ export const config = {
     },
 };
 
-const getInstagramFeed = async () => {
-  const url = `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=12&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}`;
+const getInstagramFeed = async (limit?:string) => {
+  const url = limit ? `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
+   `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}`;
   const response = await fetch(url);
   
   if (!response.ok) {
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
         const service = body.service as string;
         const news = body.news as DataNews;
         const token = body.token as string;
+        const limit = body.limit as string;
 
         if(service === 'recatptcha'){
             const response = await axios.post('https://www.google.com/recaptcha/api/siteverify',
@@ -80,7 +82,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(resp, {status: 200});
         }else if(service === 'feedInsta'){
             try{
-                const feed = await getInstagramFeed();
+                const feed = await getInstagramFeed(limit);
                 return NextResponse.json(feed, {status: 200});
             }catch(error){
                 console.log(error);

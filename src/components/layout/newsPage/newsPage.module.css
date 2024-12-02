@@ -33,7 +33,30 @@
     height: 100%;
     object-fit: cover;
 }
-
+.boxLocation{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    border-bottom: 2px var(--green) solid;
+}
+.svg{
+    margin-right: 6px;
+}
+.dataLocal{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 6px;
+}
+.dataLocal h4{
+    font-size: 12px;
+    font-weight: 600;
+    text-wrap: nowrap;
+    margin-right: 10px;
+}
 @media (max-width: 650px){
     .title{
         font-size: 5vw;
