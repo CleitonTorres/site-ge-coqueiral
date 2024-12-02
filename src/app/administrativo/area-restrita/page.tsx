@@ -230,6 +230,16 @@ export default function Page(){
                         <li className={`${styles.cardActions} boxShadow`} onClick={()=>handleActions(3)}>
                             <b className='cursorPointer'>Cadastrar notícia</b>
                         </li>
+                        <li className={`${styles.cardActions} boxShadow`} onClick={()=>handleActions(4)}>
+                        <a className='cursorPointer' href='/administrativo/area-restrita/saae-database'>
+                            <b className='cursorPointer'>Cadastrar base de dados para SAAE</b>
+                        </a>
+                        </li>
+                        <li 
+                            className={`${styles.cardActions} boxShadow`} 
+                            onClick={()=>handleActions(5)}>
+                            <a className='cursorPointer' href='/administrativo/area-restrita/saae'><b>Nova SAAE</b></a>
+                        </li>
                     </ul>
                     <br />
                     

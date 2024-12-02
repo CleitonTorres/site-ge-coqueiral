@@ -101,6 +101,9 @@
     height: 140px;
     background-color: var(--verde);
 }
+.cardActions:hover{
+    filter: grayscale(60%);
+}
 .height400{
     height: 300px;
 }
