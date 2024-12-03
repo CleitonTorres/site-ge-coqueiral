@@ -4,11 +4,24 @@ import axios from "axios";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
+// import OpenAI from "openai";
+
 export const config = {
     api: {
         bodyParser: false,
     },
 };
+
+// const gpt = async()=>{
+//     const openai = new OpenAI();
+//     const completion = await openai.chat.completions.create({
+//         model: "gpt-4o",
+//         messages: [
+//             {"role": "user", "content": "write a haiku about ai"}
+//         ]
+//     });
+// }
+
 
 const getInstagramFeed = async (limit?:string) => {
   const url = limit ? `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :

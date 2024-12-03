@@ -210,7 +210,7 @@ function Home() {
 
       {/* feeds do insta */}
         <Section customClass={['fullWidth', 'flexCollTop']}>
-            <InstagramFeed limit={9}/>
+            <InstagramFeed limit={9} carrocel/>
         </Section>
     </>
   );

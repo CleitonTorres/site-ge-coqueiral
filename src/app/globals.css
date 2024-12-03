@@ -173,6 +173,19 @@ body {
   box-shadow: 2px 6px 14px 0px rgba(0,0,0,0.75);
 }
 
+
+/* estilos do Swiper */
+.swiper-slide img {
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.swiper-slide video {
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 @keyframes slide {
   0%{
     width: 0;
