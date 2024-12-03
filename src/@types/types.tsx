@@ -49,3 +49,23 @@ export interface Endereco {
     uf: string,
     cep: string
 }
+
+export interface IADataForm{
+    atividade: string;
+    perigo: string,
+    danos: string,
+    controleOperacional: string,
+    acoesMitigadoras: string,
+    probabilidade: number,
+    consequencia: number
+}
+export interface ResponseDataIA {
+    atividade: string,
+    perigo: string,
+    danos: string,
+    controleOperacional: string,
+    acoesMitigadoras: string,
+};
+export interface RequestDataIA {
+    input: string;
+};

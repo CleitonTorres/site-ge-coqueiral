@@ -3,8 +3,9 @@ import { closeDatabase, connectToDatabase } from "@/scripts/connectDB";
 import axios from "axios";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
-
-// import OpenAI from "openai";
+import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { z } from "zod";
 
 export const config = {
     api: {
@@ -12,16 +13,17 @@ export const config = {
     },
 };
 
-// const gpt = async()=>{
-//     const openai = new OpenAI();
-//     const completion = await openai.chat.completions.create({
-//         model: "gpt-4o",
-//         messages: [
-//             {"role": "user", "content": "write a haiku about ai"}
-//         ]
-//     });
-// }
+const responseIADataAtividade = z.object({
+    perigo: z.string(),
+    danos: z.string(),
+    controleOperacional: z.string(),
+    acoesMitigadoras: z.string()
+});
 
+const responseIA = z.object({
+    atividade: z.string(),
+    dados: z.array(responseIADataAtividade)    
+});
 
 const getInstagramFeed = async (limit?:string) => {
   const url = limit ? `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
@@ -70,6 +72,7 @@ export async function POST(req: NextRequest) {
         const news = body.news as DataNews;
         const token = body.token as string;
         const limit = body.limit as string;
+        const input = body.input as string;
 
         if(service === 'recatptcha'){
             const response = await axios.post('https://www.google.com/recaptcha/api/siteverify',
@@ -101,8 +104,28 @@ export async function POST(req: NextRequest) {
                 console.log(error);
                 return NextResponse.json({error: "Não foi possivel receber o feed"}, {status: 500});
             }
+        }else if(service === 'iaSaae'){
+            // Consultando a API do ChatGPT
+            const openai = new OpenAI({
+                apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY
+            });
+            const completion = await openai.beta.chat.completions.parse({
+                model: "gpt-4o-mini-2024-07-18",
+                messages: [
+                    { role: "system", content: "You are a helpful assistant." },
+                    {
+                        role: "user",
+                        content: `Para a atividade "${input}", providencie as seguintes informações:\n1. Perigos (perigo),\n2. Danos (danos),\n3. Controle operacional (controleOperacional),\n4. Ações mitigadoras (acoesMitigadoras).`,
+                    },
+                ],
+                response_format: zodResponseFormat(responseIA, "event"),
+            })
+            
+            const event = completion.choices[0].message.parsed;
+            return NextResponse.json(event, {status: 200});
+
         }else{
-            return NextResponse.json({error: "Metodo não reconhecido"}, {status: 405});
+            return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
         }
     }catch(e){
         console.log(e)

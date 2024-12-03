@@ -125,6 +125,8 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
                       alt={'Post do Instagram'}
                       width={200}
                       height={200}
+                      priority
+                      quality={100}
                       loading="lazy"
                     />
                   ) : post.media_type === 'VIDEO' ? (
