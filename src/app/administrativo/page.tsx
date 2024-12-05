@@ -1,15 +1,16 @@
 'use client'
 import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import Modal from '@/components/layout/modal/modal';
 import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 import axios from 'axios';
 import { createCookie, encryptPassword } from '@/scripts/globais';
 import { ResponseRecaptcha } from '@/@types/types';
+import { Context } from '@/components/context/context';
 
 export default function Page(){
-    //const router = useRouter();
+    const context = useContext(Context);
     const [dataForm, setData] = useState({} as {user: string, password: string});
     const [showModal, setShowModal] = useState(false);
 
@@ -82,7 +83,11 @@ export default function Page(){
         });
     }
 
-
+    useEffect(()=>{
+        if(context.verifySession()){
+            window.location.href ='/administrativo/area-restrita';
+        }
+    },[]);
 
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>

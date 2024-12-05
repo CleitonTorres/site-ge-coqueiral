@@ -127,7 +127,6 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
                       height={200}
                       priority
                       quality={100}
-                      loading="lazy"
                     />
                   ) : post.media_type === 'VIDEO' ? (
                     <video controls style={{ width: '100%' }}>

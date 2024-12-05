@@ -1,17 +1,18 @@
 'use client'
 import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import { DataNews, ProfileProps } from '@/@types/types';
-import { calcTotalFilesMB, createCookie, destroyCookie, encryptPassword, getCookie } from '@/scripts/globais';
+import { calcTotalFilesMB, encryptPassword } from '@/scripts/globais';
 import Modal from '@/components/layout/modal/modal';
 import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 import axios from 'axios';
 import { v4 } from 'uuid';
 import NewsPage from '@/components/layout/newsPage/newsPage';
+import { Context } from '@/components/context/context';
 
 export default function Page(){
-    const [dataUser, setDataUser] = useState({} as ProfileProps);
+    const context = useContext(Context);
     const [dataNewUser, setDataNewUser] = useState({} as ProfileProps);
     const [showModal, setShowModal] = useState(false);
     const [actions, setAction] = useState<number | undefined>();
@@ -19,29 +20,6 @@ export default function Page(){
 
     //arquivos anexados.
     const [file, setFile] = useState({} as File);
-
-    const recoverProfile = async()=>{
-        //caso esteja vindo da página de login.
-        const token = getCookie();
-
-        if(!token){
-            window.location.href ='/administrativo';
-            return;
-        }
-
-        // Verificar a validade do cookie com base no maxAge
-        const dataMatch = token.expires ? Date.now() < token.expires : false;
-        
-        if(!dataMatch){
-            console.log("token expirado!")
-            window.location.href ='/administrativo';
-        }else{
-            destroyCookie('coqueiralSite')
-            createCookie(token)
-            setDataUser({...token, token: `${process.env.NEXT_PUBLIC_AUTORIZATION}`})
-            return;
-        }
-    }
 
     const handleData = (e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
@@ -127,7 +105,7 @@ export default function Page(){
                 dataNewUser: encryptPassword(JSON.stringify(dataNewUser)),
             },{
                 headers:{
-                    'Authorization': `Bearer ${dataUser.token}`
+                    'Authorization': `Bearer ${context.dataUser.token}`
                 }
             }
         )
@@ -164,7 +142,7 @@ export default function Page(){
                 
                 const respUpload = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/upload/`, formData,{
                     headers:{
-                        'Authorization': `Bearer ${dataUser.token}`
+                        'Authorization': `Bearer ${context.dataUser.token}`
                     }
                 });
 
@@ -184,7 +162,7 @@ export default function Page(){
                     news: {...dataNews, imageID: idImage, date: new Date(dataNews.date)}
                 },{
                     headers:{
-                        'Authorization': `Bearer ${dataUser.token}`
+                        'Authorization': `Bearer ${context.dataUser.token}`
                     }
                 }
             )
@@ -205,7 +183,7 @@ export default function Page(){
     }
 
     useEffect(()=>{
-        recoverProfile();
+        context.recoverProfile();
     },[]);
 
     useEffect(()=>{
@@ -217,7 +195,7 @@ export default function Page(){
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Área Restrita</h1>
-            <h4>Bem vindo(a), {dataUser?.name}</h4>
+            <h4>Bem vindo(a), {context.dataUser?.name}</h4>
             <div className={styles.conteiner}>
                 <div className={styles.subConteiner}>                    
                     <ul>
@@ -244,7 +222,7 @@ export default function Page(){
                     <br />
                     
                 </div>
-                {actions === 1 && ["Admin", "Dirigente"].includes(dataUser.nivelAcess) ? 
+                {actions === 1 && ["Admin", "Dirigente"].includes(context.dataUser.nivelAcess) ? 
                 <form className={`${styles.subConteiner}`} method='POST'>
                     <h4>Cadastrar novo usuário</h4> 
                     <div className={styles.boxInputs}>
@@ -259,6 +237,16 @@ export default function Page(){
                             />
                         </div>
                         <div className={styles.boxInput}>
+                            <label htmlFor="user">Registro Escoteiro</label>                   
+                            <input 
+                                type="text" 
+                                name='registro' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.registro || '' }
+                                placeholder='registro escoteiro'
+                            />
+                        </div>
+                        <div className={styles.boxInput}>
                             <label htmlFor="user">Cargo</label>                   
                             <select 
                                 name='cargo' 
@@ -266,8 +254,10 @@ export default function Page(){
                                 value={dataNewUser.cargo || '' }
                             >
                                 {[
+                                    '',
                                     'Chefe de ramo', 
-                                    'Ch. Assistente', 
+                                    'Ch. Assistente de ramo',
+                                    'Ch. Assistente administrativo', 
                                     'Diretor(a) Administrativo', 
                                     'Diretor(a) Financeiro',
                                     'Diretor(a) de Métodos Educativos',
@@ -283,12 +273,26 @@ export default function Page(){
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.ramo || '' }
                             >
+                                <option value=""></option>
                                 {[
+                                    '',
                                     'Lobinho', 
                                     'Escoteiro', 
                                     'Sênior', 
                                     'Pioneiro',
                                     'Diretoria'].map(item=> (
+                                    <option value={item} key={v4()}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Nível de formação</label>                   
+                            <select 
+                                name='nivelFormacao' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.nivelFormacao || '' }
+                            >
+                                {['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (
                                     <option value={item} key={v4()}>{item}</option>
                                 ))}
                             </select>
@@ -300,10 +304,30 @@ export default function Page(){
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.nivelAcess || '' }
                             >
-                                {['Admin', 'Escotista', 'Dirigente'].map(item=> (
+                                {['', 'Escotista', 'Dirigente'].map(item=> (
                                     <option value={item} key={v4()}>{item}</option>
                                 ))}
                             </select>
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Contato</label>                   
+                            <input 
+                                type="tel" 
+                                name='tel' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.tel || '' }
+                                placeholder='celular'
+                            />
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">E-mail</label>                   
+                            <input 
+                                type="email" 
+                                name='email' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.email || '' }
+                                placeholder='e-mail'
+                            />
                         </div>
                         <div className={styles.boxInput}>
                             <label htmlFor="user">Usuário</label>                   

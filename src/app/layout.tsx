@@ -8,6 +8,7 @@ import './globals.css';
 import './layout.css'
 import Script from 'next/script';
 import Provider from '@/components/context/context';
+import Breadcrumb from '@/components/layout/breadcrumb/breadCrumb';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
@@ -19,6 +20,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         }else{
             setActiveMenu(id);
         }
+    }
+    const menuActive = (id:string)=>{
+        setActiveMenu(id);
+    }
+    const menuDisable = ()=>{
+        setActiveMenu('none');
     }
 
     const mobileMenu = ()=>{
@@ -163,9 +170,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         className='menu '
                         style={{animation: animation ? `${animation} 1s linear forwards` : undefined}}
                     >
-                        <div className='boxItem' >
-                            <h1 className='title' onClick={()=> togleMenu('1')}>Quem Somos</h1>
+                        <div className='boxItem' onMouseLeave={()=> menuDisable()}>
+                            <h1 
+                                className='title'
+                                onMouseEnter={()=> menuActive('1')} 
+                                onClick={()=> togleMenu('1')}>Quem Somos</h1>
                             <div 
+                                onMouseLeave={()=> menuDisable()}
                                 className={`boxSubItens`}
                                 style={{display: activeMenu === '1' ? 'flex' : 'none'}}
                                 id='1'
@@ -224,9 +235,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 </div>
                             </div>
                         </div>
-                        <div className='boxItem'>
-                            <h1 className='title' onClick={()=> togleMenu('2')}>O que fazemos</h1>
+                        <div className='boxItem' onMouseLeave={()=> menuDisable()}>
+                            <h1 
+                                className='title'
+                                onMouseEnter={()=> menuActive('2')}
+                                onClick={()=> togleMenu('2')}>O que fazemos</h1>
                             <div 
+                                onMouseLeave={()=> menuDisable()}
                                 className={`boxSubItens`}
                                 style={{display: activeMenu === '2' ? 'flex' : 'none'}}
                                 id='2'
@@ -272,18 +287,22 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Projetos</ul>
                                         <ul className='subItens'>
-                                            <li>Escoteiro Dev</li>
-                                            <li>MutEco</li>
-                                            <li>MutCom</li>
-                                            <li>Educação Escoteira</li>
+                                            <li><a href="/escoteiro-dev">Escoteiro Dev</a></li>
+                                            <li><a href="/muteco">MutEco</a></li>
+                                            <li><a href="/mutcom">MutCom</a></li>
+                                            <li><a href="/edu-escoteira">Educação Escoteira</a></li>
                                         </ul>
                                     </li>
                                 </div>
                             </div>
                         </div>
-                        <div className='boxItem'>
-                            <h1 className='title' onClick={()=> togleMenu('3')}>Fale Conosco</h1>
+                        <div className='boxItem' onMouseLeave={()=> menuDisable()}>
+                            <h1 
+                                className='title' 
+                                onMouseEnter={()=> menuActive('3')}
+                                onClick={()=> togleMenu('3')}>Fale Conosco</h1>
                             <div 
+                                onMouseLeave={()=> menuDisable()}
                                 className={`boxSubItens`}
                                 style={{display: activeMenu === '3' ? 'flex' : 'none'}}
                                 id='3'
@@ -301,7 +320,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Imprensa</ul>
                                         <ul className='subItens'>
-                                            <li>Realeases</li>
                                             <li>
                                                 <a href="/galeria-fotos">Galeria de fotos</a>
                                             </li>
@@ -310,23 +328,27 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Doações</ul>
                                         <ul className='subItens'>
-                                            <li>Pessoa física</li>
-                                            <li>Pessoa jurídica</li>
+                                            <li><a href="/doe">Pessoa física</a></li>
+                                            <li><a href="/empresa-parceira">Pessoa jurídica</a></li>
                                         </ul>
                                     </li>
                                     <li className='subItensContents'>
                                         <ul className='subTitle'>Contato</ul>
                                         <ul className='subItens'>
-                                            <li>Fale conosco</li>
-                                            <li>Seja um voluntário</li>
+                                            <li><a href="https://www.instagram.com/19escoqueiral/" target='_blank'>Fale conosco</a></li>
+                                            <li><a href="/seja-escoteiro">Seja um voluntário</a></li>
                                         </ul>
                                     </li>
                                 </div>
                             </div>
                         </div>
-                        <div className='boxItem'>
-                            <h1 className='title' onClick={()=> togleMenu('4')}>Seja Escoteiro</h1>
+                        <div className='boxItem' onMouseLeave={()=> menuDisable()}>
+                            <h1 
+                                className='title' 
+                                onMouseEnter={()=> menuActive('4')}
+                                onClick={()=> togleMenu('4')}>Seja Escoteiro</h1>
                             <div 
+                                onMouseLeave={()=> menuDisable()}
                                 className={`boxSubItens`}
                                 style={{display: activeMenu === '4' ? 'flex' : 'none'}}
                                 id='4'
@@ -344,18 +366,28 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         <li className='subItensContents'>
                                             <ul className='subTitle'>Sou jovem</ul>
                                             <ul className='subItens'>
-                                                <li>Lobinho - 6,5 a 10,5 anos</li>
-                                                <li>Escoteiro - 10 a 14 anos</li>
-                                                <li>Sênior/Guia - 15 a 17 anos</li>
-                                                <li>Pioneiro - 18 a 21 anos</li>
+                                                <li>
+                                                    <a href="/ramo-lobinho">Lobinho - 6,5 a 10,5 anos</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/ramo-escoteiro">Escoteiro - 10 a 14 anos</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/ramo-senior">Sênior/Guia - 15 a 17 anos</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/ramo-pioneiro">Pioneiro - 18 a 21 anos</a>
+                                                </li>
                                             </ul>
                                         </li>
                                         <li className='subItensContents'>
                                             <ul className='subTitle'>Sou adulto</ul>
                                             <ul className='subItens'>
-                                                <li>Ser Voluntário</li>
-                                                <li>Entre em contato</li>
-                                                <li>Como abrir uma UEL</li>
+                                                <li><a href="/seja-escoteiro">Ser Voluntário</a></li>
+                                                <li>
+                                                    <a href="https://www.instagram.com/19escoqueiral/" target='_blank'>Entre em contato</a>
+                                                </li>
+                                                <li><a href="/como-abrir-uma-uel">Como abrir uma UEL</a></li>
                                             </ul>
                                         </li>
                                         <li className='subItensContents'>
@@ -373,6 +405,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             </div>
                         </div>
                     </nav>
+                    
+                    <Breadcrumb />
                     
                     <div className='linhaDoeAgora'>
                         <span>Contribua com os Escoteiros de Coqueiral</span> 

@@ -1,0 +1,7 @@
+.conteiner ol li{
+    font-size: 14px;
+}
+
+.conteiner ol li a:hover {
+    text-decoration: underline;
+}

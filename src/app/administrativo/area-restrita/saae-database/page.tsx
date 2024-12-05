@@ -1,29 +1,50 @@
 'use client'
 import Section from "@/components/layout/sections/section";
 import styles from './page.module.css';
-import { ChangeEvent, useState } from "react";
-import { DataBaseSaae } from "@/@types/types";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { DataBaseSaae, Endereco } from "@/@types/types";
 import Box from "@/components/layout/box/box";
+import { Odss } from "@/components/data-training/data-training";
+import { Context } from "@/components/context/context";
 
 type PropsPartes = {
     label: string,
     partesInteressadas: string[],
+    optionsList?: string,
     handleRemoveTag: (idx:number)=>void,
     inputValue: string,
-    handleInputChange: (e: ChangeEvent<HTMLTextAreaElement>)=>void,
-    handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>)=>void
+    handleInputChange: (e: ChangeEvent<HTMLInputElement>)=>void,
+    handleKeyPress: (e: React.KeyboardEvent<HTMLInputElement>)=>void
 }
-const PartesInteressas = ({label, inputValue, partesInteressadas, handleRemoveTag, handleInputChange, handleKeyPress}:PropsPartes)=>{
+const PartesInteressas = ({
+    label, inputValue, partesInteressadas, optionsList,
+    handleRemoveTag, handleInputChange, handleKeyPress}:PropsPartes)=>{
     return (
         <div className={styles.boxInput}>
-            <span>{label}</span>
-            
-            <textarea
+            <span>{label}</span> 
+            <input 
+                list={optionsList} 
+                placeholder="Digite e pressione Enter ou vírgula"
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
-                placeholder="Digite e pressione Enter ou vírgula"
+                className={`${styles.collum}`}
             />
+            {
+                <datalist id="optionsODS">
+                    {Odss.sort((a,b)=>{
+                        const item1 = parseInt(a.split('.')[0]);
+                        const item2 = parseInt(b.split('.')[0]);
+                        if(item1 > item2){
+                            return 1
+                        }else if(item1 < item2){
+                            return -1
+                        }else return 0;
+                    }).map(ods=> (
+                        <option value={ods} key={ods}>{ods}</option>
+                    ))}
+                </datalist>
+            }
             <div style={{
                 display: 'flex', 
                 flexDirection: 'row',
@@ -72,6 +93,7 @@ const PartesInteressas = ({label, inputValue, partesInteressadas, handleRemoveTa
 }
 
 export default function Page(){
+    const context = useContext(Context);
     const [data, setData] = useState({} as DataBaseSaae);
     const [inicioFim, setInicioFim] = useState(false);
     
@@ -130,15 +152,17 @@ export default function Page(){
         setData((prev)=>{
             return{
                 ...prev,
-                localFim:{
+                localFim: prev.localFim ? {
                     ...prev.localFim,
                     [name]: value
-                }
+                } : {
+                    [name]: value
+                } as unknown as Endereco
             }
         })
     }
 
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
 
@@ -160,7 +184,7 @@ export default function Page(){
             setInputValuePartesInteressadas(''); // Limpa o input
         }
     };
-    const handleKeyPressODS = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyPressODS = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
 
@@ -201,6 +225,10 @@ export default function Page(){
             }
         });
     };
+
+    useEffect(()=>{
+        context.recoverProfile();
+    },[]);
 
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
@@ -257,6 +285,7 @@ export default function Page(){
                         label='ODSs'
                         inputValue={inputValueODS || ''}
                         partesInteressadas={data?.ods || []}
+                        optionsList="optionsODS"
                         handleRemoveTag={handleRemoveTagODS}
                         handleKeyPress={handleKeyPressODS}
                         handleInputChange={(e)=>setInputValueODSs(e.target.value)}

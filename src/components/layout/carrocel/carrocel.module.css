@@ -1,0 +1,118 @@
+.conteiner{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-width: var(--minWidth);
+    max-width: var(--widthLarge);
+    overflow: hidden;
+}
+.conteiner h1{
+    margin: 10px auto;
+}
+.content{ 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.item{
+    max-width: 200px;
+    margin: 10px;
+}
+.item a, .carouselItem a{
+    font-size: 10px;
+    font-weight: 700;
+}
+.item a:hover, .carouselItem a:hover{
+    text-decoration: underline;
+}
+.item p, .carouselItem p {
+    font-size: 12px;
+    max-height: 200px;
+    overflow-y: scroll;
+    padding: 3px;
+    width: 100%;
+}
+.textWhite .item, .textWhite .item, .textWhite .item{
+    color: var(--white);
+}
+
+/* Container do carrossel */
+.carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+.carouselWrapper {
+    display: flex;
+    transition: transform 0.5s ease; /* Suaviza a transição entre os slides */
+}
+
+.carouselItem {
+    min-width: 100%; /* Cada slide ocupa 100% da largura do container */
+    height: auto;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    animation: fadeIn 0.5s linear forwards;
+    overflow: hidden;
+}
+.carouselItem p {
+    padding-left: 10px;
+}
+.carouselItem img{
+    object-fit: cover;
+    width: auto;
+    height: 400px;
+}
+.navigation {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 16px;
+}
+
+.navButton {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.navButton:hover {
+    background-color: #555;
+}
+
+@keyframes fadeIn {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@media (max-width: 450px) {
+    .content div{
+        max-width: 120px;
+        margin: 1px;
+        margin-bottom: 10px;
+    }
+    .content div img, .content div video{
+        width: 100%;
+        height: 120px;
+    }
+    .content div p{
+        height: 120px;
+    }
+}

@@ -1,0 +1,118 @@
+.conteiner{
+    display: flex;
+    flex-direction: column;
+}
+.boxHead{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+}
+.boxHead svg{
+    font-size: 26px;
+    margin-left: 20px;
+    background-color: var(--blue);
+    padding: 3px;
+    border-radius: 50%;
+}
+.boxHead svg path{
+    color: var(--light);
+}
+.boxHead svg:hover{
+    cursor: pointer;
+    background-color: var(--verde);
+}
+.boxHead svg:hover path{
+    color: var(--dark);
+}
+.boxHead svg:active{
+    padding: 4px;
+}
+
+.addItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+}
+.addItem  span{
+    margin-right: 6px;
+}
+.addItem svg path{
+    color: var(--blue);
+}
+.addItem  svg{
+    font-size: 24px;
+}
+.addItem:hover svg{
+    background-color: var(--verde);
+    border-radius: 10px;
+    padding: 3px;
+    cursor: pointer;
+}
+.addItem:hover svg:active{
+    padding: 4px;
+}
+.removeItem path{
+    color: red;
+}
+.boxTextarea{
+    width: 100%;
+    margin-top: 10px;
+}
+.boxTextarea textarea{
+    width: 100%;
+    resize: vertical;
+    padding: 5px;
+}
+.boxTextarea h4{
+    line-height: 30px;
+}
+.boxTextarea svg{
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.modalDicas{
+    position: fixed;
+    right: 10px;
+    top: 20px;
+    /* transform: translateY(-50%); */
+    background-color: var(--blue);
+    width: 96vw;
+    min-width: 350px;
+    max-width: 600px;
+    height: auto;
+    min-height: 400px;
+    border: 2px solid var(--dark);
+    overflow-y: scroll;
+    padding: 6px;
+    z-index: 1000;
+}
+
+.modalDicas p, .modalDicas ol li {
+    color: var(--light);
+    font-size: 12px;
+    font-weight: 300;
+    text-align: justify;
+    
+}
+.modalDicas ol li{
+    margin-left: 20px;
+}
+.modalDicas ol li b{
+    font-weight: 700;
+    color: var(--light);
+    text-decoration: underline;
+}
+
+.closeBtn{
+    position: absolute;
+    right: 10px;
+    color: var(--light);
+    font-weight: 700;
+    font-size: 14px;
+}
+.closeBtn:hover{
+    cursor: pointer;
+}

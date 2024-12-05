@@ -1,0 +1,22 @@
+.conteiner {
+    width: 100vw;
+    max-width: 1200px;;
+}
+.boxButtom{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+.boxButtom svg{    
+    width: 50%;
+    min-width: 10%;
+    max-width: 50%;
+    margin-top: 30px;
+}
+.boxButtom svg:hover{
+    cursor: pointer;
+}
+.boxButtom svg:active{
+    padding: 4px;
+}

@@ -7,10 +7,10 @@
 }
 .menu{
   position: relative;
-  margin: 10px 0;
   padding: 0 10px;
   width: 100%;
   max-width: var(--widthLarge);
+  min-height: 45px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -194,7 +194,7 @@
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  bottom: -221px;
+  bottom: -207px;
   left: -10px;
   width: var(--widthLarge);
   z-index: 10;
@@ -455,11 +455,13 @@
     height: 0px;
     padding: 0;
     margin: 0;
+    min-height: 0;
   }
   100%{
     height: 160px;
     padding: 40px;
     margin: 0px 10px;
+    min-height: 45px;
   }
 }
 @keyframes slideUp {
@@ -467,10 +469,12 @@
     height: 160px;
     padding: 40px;
     margin: 0px 10px;
+    min-height: 45px;
   }
   100%{
-    height: 0px;
-    padding: 0;
-    margin: 0;
+    height: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 0;
   }
 }

@@ -6,14 +6,14 @@ import Image from 'next/image';
 export default function Page(){
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
-            <h1 className={styles.title}>Como abrir uma Unidade Escoteira</h1>
+            <h1 className={styles.title}>Como abrir uma Unidade Escoteira Local</h1>
             <div className={styles.conteiner}>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""
                         width={970}
                         height={350}
-                        src={'/images/senior02.jpg'}
+                        src={'/images/grupo01.jpeg'}
                         className={styles.image}
                     />
                     <p className={styles.paragraph}>

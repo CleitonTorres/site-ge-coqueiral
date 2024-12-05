@@ -1,4 +1,5 @@
-import { ProfileProps } from "@/@types/types";
+import { CEP, ProfileProps } from "@/@types/types";
+import axios from "axios";
 import CryptoJS from "crypto-js";
 
 // Função para criptografar a senha
@@ -104,7 +105,7 @@ export function dateFormat1(date:Date | undefined){
         date = typeof date === 'string' ? new Date(date) : date;
 
         // Extrair dia, mês e ano
-        const dia = date.getDate();
+        const dia = date.getUTCDate();
         const mes = date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
 
@@ -152,3 +153,83 @@ export function dateFormat3(input: Date | undefined): string {
     return `${dia} de ${monthNames[mes]} de ${ano}`;
 }
 
+export function formatToHourMin(text:string) {
+    // Remove tudo que não é número
+    const onlyNumbers = text.replace(/\D/g, "");
+
+    // Garante que tenha no máximo 4 dígitos (HHMM)
+    const trimmed = onlyNumbers.slice(0, 4);
+
+    // Divide os números em hora e minutos
+    const hours = trimmed.slice(0, 2);
+    const minutes = trimmed.slice(2, 4);
+
+    // Retorna o texto no formato HH:MM
+    return hours + (minutes ? `:${minutes}` : "");
+}
+
+export function addTime(initialTime:string, addedTime:string) {
+    // Verifica se o formato inicial está correto (HH:MM)
+    const timePattern = /^(\d{1,2}):(\d{2})$/;
+    const match = initialTime.match(timePattern);
+
+    const matchAddTime = addedTime.match(timePattern);
+
+    if (!match || !matchAddTime) {
+        return ''
+    }
+
+    // Extrai horas e minutos da string inicial
+    const initialHours = parseInt(match[1], 10);
+    const initialMinutes = parseInt(match[2], 10);
+
+    const addHours = parseInt(matchAddTime[1], 10);
+    const addMinutes = parseInt(matchAddTime[2], 10);
+
+    // Converte tudo para minutos
+    const totalMinutes = initialHours * 60 + initialMinutes + (addHours * 60 + addMinutes);
+
+    // Converte minutos de volta para horas e minutos
+    const resultHours = Math.floor(totalMinutes / 60) % 24; // Garantir que as horas fiquem dentro de 24
+    const resultMinutes = totalMinutes % 60;
+
+    // Formata o resultado com dois dígitos
+    const formattedHours = String(resultHours).padStart(2, "0");
+    const formattedMinutes = String(resultMinutes).padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}`;
+}
+
+export function maskcep(v:string){
+    if(!v){return ''}
+    
+    v= v.replace(/\D/g,"")                
+    v= v.replace(/^(\d{5})(\d)/,"$1-$2") 
+    return v;
+}
+
+export async function getDadosCEP(cep:string):Promise<CEP> {
+    const cepCleam = cleamText(cep);
+    let data = {} as CEP;
+
+    await axios.get(`https://viacep.com.br/ws/${cepCleam}/json/`)
+    .then(resp => {
+        data= resp.data;
+    })
+    .catch(err => {
+        console.log(err);
+        data= {} as CEP;
+    })
+
+    return data;
+}
+
+export function cleamText(value:string){
+    if(!value){return ""}
+    return value.replace(/[^a-zA-Z0-9]/g, "").toLowerCase().trim();
+}
+
+export function temApenasNumeros(str:string) {
+    // Testa se a string contém apenas números
+    return /^\d+$/.test(str);
+}

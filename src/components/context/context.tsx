@@ -1,16 +1,21 @@
 'use client'
-import { DataNews } from "@/@types/types";
+import { DataNews, ProfileProps } from "@/@types/types";
+import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
 import axios from "axios";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 type PropsContext ={
-    dataNews: DataNews[]
+    dataNews: DataNews[],
+    dataUser: ProfileProps,
+    recoverProfile: ()=>Promise<void>,
+    verifySession: ()=>boolean
 }
 
 export const Context = createContext( {} as PropsContext );
 
 export default function Provider({children}:{children:ReactNode}){
     const [dataNews, setDataNewsHome] = useState<DataNews[]>([]);
+    const [dataUser, setDataUser] = useState({} as ProfileProps);
 
     const getNews = async()=>{
       if(dataNews.length > 0) return;
@@ -31,12 +36,53 @@ export default function Provider({children}:{children:ReactNode}){
       .catch(err=> console.log(err))
     }    
 
+    const recoverProfile = async()=>{
+      //caso esteja vindo da página de login.
+      const token = getCookie();
+
+      if(!token){
+          window.location.href ='/administrativo';
+          return;
+      }
+
+      // Verificar a validade do cookie com base no maxAge
+      const dataMatch = token.expires ? Date.now() < token.expires : false;
+      
+      if(!dataMatch){
+          console.log("token expirado!")
+          window.location.href ='/administrativo';
+      }else{
+          destroyCookie('coqueiralSite')
+          createCookie(token)
+          setDataUser({...token, token: `${process.env.NEXT_PUBLIC_AUTORIZATION}`})
+          return;
+      }
+    } 
+
+    const verifySession = ()=>{
+      //caso esteja vindo da página de login.
+      const token = getCookie();
+
+      if(!token){
+        return false;
+      }
+
+      // Verificar a validade do cookie com base no maxAge
+      const dataMatch = token.expires ? Date.now() < token.expires : false;
+
+      if(!dataMatch){
+          return false
+      }
+
+      return true;
+    }
+
     useEffect(()=>{
         if(dataNews.length === 0) getNews();
     },[]);
 
     return(
-        <Context.Provider value={{dataNews}}>
+        <Context.Provider value={{dataNews, dataUser, recoverProfile, verifySession}}>
             {children}
         </Context.Provider>
     )
