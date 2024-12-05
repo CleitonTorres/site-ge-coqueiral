@@ -21,7 +21,7 @@ function Home() {
         subTitle='Educação para a vida'
         paragraph='Venha fazer parte deste Movimento que já conta com mais de 57 milhões de pessoas em todo o mundo.'
         imageURL='/logo/logo.png'
-        videoURL='/videos/videoinst.mp4'
+        videoURL='/videos/banner.webm'
       />
 
       {/* estatisticas */}
