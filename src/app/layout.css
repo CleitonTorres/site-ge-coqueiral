@@ -391,6 +391,7 @@
     z-index: 99;
     padding: 0px !important;
     overflow: hidden;
+    min-height: 0;
   }
   .title{
     font-weight: 600;
