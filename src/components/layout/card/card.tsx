@@ -10,13 +10,15 @@ export default function Card({dataNews}:{dataNews:DataNews}){
         <Link href={{
             pathname: '/news/',
             query: {idNews: dataNews._id}
-        }} className={styles.conteiner}>
+            }} 
+            className={styles.conteiner}
+        >
             {dataNews.imageID ? 
                 <Image
                     alt="card"
                     width={400}
                     height={150}
-                    style={{objectFit: 'cover'}}
+                    style={{objectFit: 'cover', width: '98%'}}
                     src={isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`}
                 />
             :null}

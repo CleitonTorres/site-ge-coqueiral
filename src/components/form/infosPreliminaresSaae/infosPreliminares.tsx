@@ -1,33 +1,32 @@
 'use client'
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './infosPreliminares.module.css';
 import { InfosPreliminaresSaae } from '@/@types/types';
 import { FaPlus, FaMinus, FaInfo } from "react-icons/fa";
+import { Context } from '@/components/context/context';
 
 export default function InfosPreliminares (){
+    const context = useContext(Context);
     const [data, setData] = useState<InfosPreliminaresSaae[]>([]);
     const [showDicas, setShowDicas] = useState(false);
 
-    const handleChange = (e: ChangeEvent<HTMLTextAreaElement>)=>{
+    const handleChange = async (e: ChangeEvent<HTMLTextAreaElement>)=>{
         e.preventDefault();
         const name = e.target.name;
         const value = e.target.value;
 
-        console.log(name, value)
-        setData((prev)=>{
-            const newData = prev.map((info)=>{
-                if(info.item === name){
-                    return{
-                        ...info,
-                        text: value
-                    }
-                }else{
-                    return info
+        const newData = data.map((info)=>{
+            if(info.item === name){
+                return{
+                    ...info,
+                    text: value
                 }
-            });
-
-            return newData
-        })
+            }else{
+                return info
+            }
+        });
+        setData(newData); 
+        updateContext(newData);       
     }
 
     const addItem = ()=>{
@@ -42,17 +41,33 @@ export default function InfosPreliminares (){
         })
     }
     const removeItem = (idx:string)=>{
-        setData((prev)=>{
-            const filter = prev.filter(infos=> infos.item !== idx)
-            const rename = filter.map((infos, idx)=> {
-                return{
-                    ...infos,
-                    item: `${idx+1}`
-                }
-            })
-            return rename
+        const filter = data.filter(infos=> infos.item !== idx)
+        const rename = filter.map((infos, idx)=> {
+            return{
+                ...infos,
+                item: `${idx+1}`
+            }
         })
+        setData(rename)
+        updateContext(rename)
     }
+
+    const updateContext = (newData:InfosPreliminaresSaae[])=>{
+        context.setDataSaae(saae=>{
+            return{
+                ...saae,
+                infosPreliminares: newData
+            }
+        });
+    };
+
+    useEffect(()=>{
+        //pega as infos salvas no contexto.
+        // Atualiza o contexto e define o estado local após isso
+        const infosPreliminares = context.dataSaae?.infosPreliminares || []; // Dados iniciais
+        setData(infosPreliminares);
+    },[])
+
     return(
         <div className={styles.conteiner}>
             <h5>Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286</h5>
@@ -61,10 +76,11 @@ export default function InfosPreliminares (){
                 <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
             </div>
             
-            <div onClick={addItem} className={styles.addItem}>
-                <span>Adicionar item: </span><FaPlus title='dicas de preenchimento'/>
+            <div className={styles.addItem}>
+                <span>Adicionar item: </span>
+                <FaPlus title='dicas de preenchimento'  onClick={addItem}/>
             </div>
-            {data.map((item, idx)=>(
+            {data?.map((item, idx)=>(
                 <div key={item.item} className={styles.boxTextarea}>
                     <h4>Item {item.item} <FaMinus 
                         onClick={()=>removeItem((idx+1).toString())} 

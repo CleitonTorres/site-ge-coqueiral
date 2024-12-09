@@ -25,7 +25,7 @@ function Home() {
       />
 
       {/* estatisticas */}
-      <Section customClass={['fullWidth', 'flexRowCenter']}>
+      <Section customClass={['fullWidth', 'flexRowCenter', 'minWidth']}> 
         <Box customClass={['flexCollCenter']}>
           <Image 
             alt='imagem seja escoteiro'
@@ -69,24 +69,36 @@ function Home() {
       </Section>
 
       {/* destaques */}
-      <Section customClass={['fullWidth']}>
+      <Section customClass={['fullWidth', 'minWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
         <Box customClass={['margin', 'flexRowWrap']}>
-          <a href='/seja-escoteiro' target='_self' style={{position: 'relative'}}>
-          <Image 
-            alt='imagem seja escoteiro'
-            width={408}
-            height={178}
-            src={'/images/ePrancheta-1-1.png'}
-            style={{objectFit: 'contain'}}
-          />
+          <a 
+            href='/seja-escoteiro' 
+            target='_self' 
+            style={{position: 'relative'}}
+            className='destaquesImg'
+          >
+            <Image 
+              alt='imagem seja escoteiro'
+              width={408}
+              height={178}
+              src={'/images/ePrancheta-1-1.png'}
+              style={{objectFit: 'contain'}}
+              className='destaquesImg'
+            />
           </a>
-          <a href='/empresa-parceira' target='_self' style={{position: 'relative'}}>
+          <a 
+            href='/empresa-parceira' 
+            target='_self' 
+            style={{position: 'relative'}} 
+            className='destaquesImg'
+          >
             <Image 
               alt='imagem seja escoteiro'
               width={408}
               height={135}
               src={'/images/empresaParceira.jpg'}
+              className='destaquesImg'
             />
             <span style={{
               position: 'absolute', 
@@ -123,13 +135,19 @@ function Home() {
               }}
             />
           </a>
-          <a href='/espacos-seguros' target='_self' style={{position: 'relative'}}>
+          <a 
+            href='/espacos-seguros' 
+            target='_self' 
+            style={{position: 'relative'}}
+            className='destaquesImg'
+          >
             <Image 
               alt='imagem seja escoteiro'
               width={408}
               height={178}
               src={'/images/espacoseguro.png'}
               style={{objectFit: 'contain'}}
+              className='destaquesImg'
             />
           </a>
         </Box>

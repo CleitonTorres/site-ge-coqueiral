@@ -2,6 +2,7 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { IoIosArrowBack, IoIosArrowForward  } from "react-icons/io";
 import styles from './feeds.module.css';
 
 type InstagramPost = {
@@ -143,8 +144,16 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
 
             {/* Botões de Navegação */}
             <div className={styles.navigation}>
-              <button onClick={goToPrev} className={styles.navButton}>Anterior</button>
-              <button onClick={goToNext} className={styles.navButton}>Próximo</button>
+              <IoIosArrowBack 
+                onClick={goToPrev}
+                className={styles.navButton}
+                size={36}
+              />
+              <IoIosArrowForward 
+                onClick={goToNext} 
+                className={styles.navButton}
+                size={36}
+              />
             </div>
           </div>
         </div>

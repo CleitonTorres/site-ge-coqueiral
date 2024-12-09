@@ -25,6 +25,9 @@
     font-size: 10px;
     font-weight: 700;
 }
+.item a{
+    text-wrap: nowrap;
+}
 .item a:hover, .carouselItem a:hover{
     text-decoration: underline;
 }
@@ -82,12 +85,11 @@ transition: transform 0.5s ease; /* Suaviza a transição entre os slides */
 }
 
 .navButton {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
+    background-color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    opacity: 0.5;
 }
 
 .navButton:hover {

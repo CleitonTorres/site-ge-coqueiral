@@ -22,7 +22,7 @@ export default function Box({children, customClass}:Props){
     },[customClass])
 
     return(
-        <div className={`${customStyles}`}>
+        <div className={`${styles.conteiner} ${customStyles}`}>
             {children}
         </div>
     )

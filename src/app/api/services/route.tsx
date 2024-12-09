@@ -4,8 +4,9 @@ import axios from "axios";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { zodResponseFormat } from "openai/helpers/zod";
-import { z } from "zod";
+import { MessageContent } from "openai/resources/beta/threads/messages.mjs";
+// import { zodResponseFormat } from "openai/helpers/zod";
+// import { z } from "zod";
 
 export const config = {
     api: {
@@ -13,17 +14,17 @@ export const config = {
     },
 };
 
-const responseIADataAtividade = z.object({
-    perigo: z.string(),
-    danos: z.string(),
-    controleOperacional: z.string(),
-    acoesMitigadoras: z.string()
-});
+// const responseIADataAtividade = z.object({
+//     perigo: z.string(),
+//     danos: z.string(),
+//     controleOperacional: z.string(),
+//     acoesMitigadoras: z.string()
+// });
 
-const responseIA = z.object({
-    atividade: z.string(),
-    dados: z.array(responseIADataAtividade)    
-});
+// const responseIA = z.object({
+//     atividade: z.string(),
+//     dados: z.array(responseIADataAtividade)    
+// });
 
 const getInstagramFeed = async (limit?:string) => {
   const url = limit ? `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
@@ -107,23 +108,119 @@ export async function POST(req: NextRequest) {
         }else if(service === 'iaSaae'){
             // Consultando a API do ChatGPT
             const openai = new OpenAI({
-                apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY
+                //project: process.env.NEXT_PUBLIC_OPENIA_PROJECT_ID,
+                apiKey: `${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
             });
-            const completion = await openai.beta.chat.completions.parse({
-                model: "gpt-4o-mini-2024-07-18",
-                messages: [
-                    { role: "system", content: "You are a helpful assistant." },
-                    {
-                        role: "user",
-                        content: `Para a atividade "${input}", providencie as seguintes informações:\n1. Perigos (perigo),\n2. Danos (danos),\n3. Controle operacional (controleOperacional),\n4. Ações mitigadoras (acoesMitigadoras).`,
-                    },
-                ],
-                response_format: zodResponseFormat(responseIA, "event"),
-            })
-            
-            const event = completion.choices[0].message.parsed;
-            return NextResponse.json(event, {status: 200});
 
+            // const assistant = await openai.beta.assistants.create({
+            //     name: "Mathias",
+            //     instructions: `Você é um assistente que vai auxiliar no preenchimento de uma tabela de controle operacional de riscos. O usuário vai te passar um tipo de atividade ao ar livre e você vai sugerir prováveis riscos, quais danos esses riscos pode causar, prováveis medidas de controle operacional (que evita que o risco aconteça) e sugerir ações mitigadoras (caso algum dos danos ocorra). Você deve formatar a resposta com as seguintes chaves:
+
+            //     {
+            //         atividade: "nome da atividade",
+            //         dados: [
+            //             {
+            //                 perigo: "nome do risco identificado",
+            //                 dano: "descrições dos riscos identificados",
+            //                 controleOperacional: "medidas para evitar o risco",
+            //                 acoesMitigadoras: "ações caso o risco aconteça"
+            //             }
+            //         ]
+            //     }`,
+            //     model: "gpt-4o-mini-2024-07-18",
+            //     response_format: {
+            //         type: "json_schema",
+            //         json_schema:{
+            //             "name": "risco_operacional",
+            //             "schema": {
+            //               "type": "object",
+            //               "properties": {
+            //                 "atividade": {
+            //                   "type": "string",
+            //                   "description": "Nome da atividade ao ar livre."
+            //                 },
+            //                 "dados": {
+            //                   "type": "array",
+            //                   "description": "Lista de riscos identificados associados à atividade.",
+            //                   "items": {
+            //                     "type": "object",
+            //                     "properties": {
+            //                       "perigo": {
+            //                         "type": "string",
+            //                         "description": "Nome do risco identificado."
+            //                       },
+            //                       "dano": {
+            //                         "type": "string",
+            //                         "description": "Descrição dos danos que podem ser causados pelo risco."
+            //                       },
+            //                       "controleOperacional": {
+            //                         "type": "string",
+            //                         "description": "Medidas específicas para evitar que o risco aconteça."
+            //                       },
+            //                       "acoesMitigadoras": {
+            //                         "type": "string",
+            //                         "description": "Ações a serem tomadas caso o risco venha a acontecer."
+            //                       }
+            //                     },
+            //                     "required": [
+            //                       "perigo",
+            //                       "dano",
+            //                       "controleOperacional",
+            //                       "acoesMitigadoras"
+            //                     ],
+            //                     "additionalProperties": false
+            //                   }
+            //                 }
+            //               },
+            //               "required": [
+            //                 "atividade",
+            //                 "dados"
+            //               ],
+            //               "additionalProperties": false
+            //             },
+            //             "strict": true
+            //           }
+            //     },
+            // });
+            
+            const assistantSenior = await openai.beta.assistants.retrieve('asst_tvaWDeASyjtUX2uEsIXaZPVL');
+
+            //const project = openai.apiKey;
+            //console.log('Acessando o projeto:', project);
+
+            // Criação de thread
+            const thread = await openai.beta.threads.create();
+            
+            const message = await openai.beta.threads.messages.create(thread.id, {
+                role: "user",
+                content: `Me dê os dados de controle de risco para a seguinte atividade: "${input}". A resposta deve ser formatada como JSON.`,
+            });
+            
+            console.log("Mensagem enviada:", message.id);
+            
+            // Executa e aguarda a resposta
+            const run = await openai.beta.threads.runs.createAndPoll(thread.id, {
+                assistant_id: assistantSenior.id,
+                instructions: "Me forneça uma atividade para que eu possa gerar a resposta em formato JSON.",
+            });
+            
+            if (run.status === "completed") {
+                const messages = await openai.beta.threads.messages.list(run.thread_id);
+                let data:MessageContent[] = []
+                for (const mes of messages.data.reverse()) {
+                    if(mes.role === "assistant"){
+                        //console.log(`${mes.role}:`, JSON.stringify(mes.content));
+                        const resp  = mes.content[0] as unknown as {type: string, text:{value: string}};
+                        data = JSON.parse(resp.text.value)               
+                    }
+                }
+
+                return NextResponse.json(data, {status: 200});
+            } else {
+                console.log("Status:", run.status);
+                console.log("Run Details:", run.last_error);
+                return NextResponse.json({error: "Ocorreu uma falha no processamento"}, {status: 500});
+            }
         }else{
             return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
         }

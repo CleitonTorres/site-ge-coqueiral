@@ -1,0 +1,67 @@
+.conteiner{
+    position: fixed;
+    right: 170px;
+    top: 210px;
+    width: auto;
+    max-width: 200;
+    background-color: var(--verde);
+    border-radius: 10px;
+    padding: 5px;
+    word-break: break-word;
+    font-size: 14px;
+    font-weight: 300;
+    overflow: hidden;
+}
+
+.startTaping::after {
+    content: "|";
+    font-size: 14px;
+    animation: blink 0.5s infinite;
+}
+.stopTaping::after {
+    content: "";
+    font-size: 14px;
+    animation: blink 0.5s infinite step-end
+}
+
+.conteiner:hover{
+    cursor: pointer;
+}
+.slideIn{
+    animation: slideIn 0.2s linear forwards;
+}
+.slideOut{
+    animation: slidOut 0.2s linear forwards;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes slideIn {
+    0%{
+        right: 170px;
+        top: 210px;
+        width: 10px;
+        height: 10px;
+    }
+    100%{
+        right: 200px;
+        top: 150px;
+    }
+}
+
+@keyframes slidOut {
+    0%{
+        right: 200px;
+        top: 150px;
+        width: 200px;
+    }
+    100%{
+        right: 170px;
+        top: 210px;
+        width: 10px;
+        height: 10px;
+    }
+}

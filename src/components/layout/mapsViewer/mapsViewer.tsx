@@ -14,6 +14,8 @@ export default function MapsComponent ({lat, long, setLatLong}:Props){
     const [latLng, setLatLng] = useState({} as {lat: number, lng: number})
     
     useEffect(()=>{
+        if(isNaN(latLng.lat) || isNaN(latLng.lng)) return;
+        
         const unitMap = async ()=>{
             try{
                 const loader = new Loader({
@@ -58,7 +60,10 @@ export default function MapsComponent ({lat, long, setLatLong}:Props){
     },[latLng])
     
     useEffect(()=>{
-        console.log(lat, long)
+        if(isNaN(lat) || isNaN(long)){
+            return;
+        }
+
         setLatLng({lat: lat, lng: long})
     },[lat, long]);
 

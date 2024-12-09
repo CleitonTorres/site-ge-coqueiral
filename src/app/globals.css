@@ -174,18 +174,6 @@ body {
 }
 
 
-/* estilos do Swiper */
-.swiper-slide img {
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  object-fit: cover;
-}
-
-.swiper-slide video {
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
 @keyframes slide {
   0%{
     width: 0;
@@ -198,5 +186,8 @@ body {
 @media (max-width: 500px){
   .textResponsive{
       font-size: 9vw !important;
+  }
+  .destaquesImg{
+    width: 96%;
   }
 }

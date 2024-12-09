@@ -1,12 +1,13 @@
 'use client'
 import Section from "@/components/layout/sections/section";
 import styles from './page.module.css';
-import ActivityForm from "@/components/form/inputIA/inputIA";
 import { useContext, useEffect, useState } from "react";
 import InfosPreliminares from "@/components/form/infosPreliminaresSaae/infosPreliminares";
 import DadosGerais from "@/components/form/dadosGeraisSaae/dadosGerais";
 import { IoIosArrowForward, IoIosArrowBack  } from "react-icons/io";
 import { Context } from "@/components/context/context";
+import InventarioSaae from "@/components/form/inventarioSaae/inputIA";
+import MatrizRisco from "@/components/form/matrizSaae/matrizRisco";
 
 export default function Page(){
     const context = useContext(Context);
@@ -22,7 +23,8 @@ export default function Page(){
             <div className={styles.conteiner}>
                 {currenteSession === 0 ? <InfosPreliminares /> : null}
                 {currenteSession === 1 ? <DadosGerais /> : null}
-                {currenteSession === 2 ? <ActivityForm /> : null}
+                {currenteSession === 2 ? <InventarioSaae /> : null}
+                {currenteSession === 3 ? <MatrizRisco /> : null}
                 
                 <div className={styles.boxButtom}>
                     <IoIosArrowBack 

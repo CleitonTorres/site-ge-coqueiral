@@ -146,3 +146,15 @@
     margin-right: 20px;
     margin-left: 2px;
 }
+
+@media (max-width: 499px) {
+    .conteiner h1{
+        font-size: 16px;
+    }
+    .collum2 textarea{
+        min-width: 96%;
+    }
+    .collum h1, .collum2 h1, .collum3 h1{
+        font-size: 14px;
+    }
+}

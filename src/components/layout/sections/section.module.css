@@ -37,6 +37,9 @@
     min-width: 400px;
     max-width: var(--widthLarge) !important;
 }
+.minWidth{
+    min-width: var(--minWidth);
+}
 .colorGrennDark{
     background-color: var(--sejaescoteiro);
 }

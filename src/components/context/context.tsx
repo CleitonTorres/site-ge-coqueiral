@@ -1,14 +1,16 @@
 'use client'
-import { DataNews, ProfileProps } from "@/@types/types";
+import { DataNews, ProfileProps, SAAE } from "@/@types/types";
 import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
 import axios from "axios";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 
 type PropsContext ={
-    dataNews: DataNews[],
-    dataUser: ProfileProps,
-    recoverProfile: ()=>Promise<void>,
-    verifySession: ()=>boolean
+  dataNews: DataNews[],
+  dataUser: ProfileProps,
+  recoverProfile: ()=>Promise<void>,
+  verifySession: ()=>boolean,
+  setDataSaae: Dispatch<SetStateAction<SAAE>>,
+  dataSaae: SAAE
 }
 
 export const Context = createContext( {} as PropsContext );
@@ -16,6 +18,7 @@ export const Context = createContext( {} as PropsContext );
 export default function Provider({children}:{children:ReactNode}){
     const [dataNews, setDataNewsHome] = useState<DataNews[]>([]);
     const [dataUser, setDataUser] = useState({} as ProfileProps);
+    const [dataSaae, setDataSaae] = useState({} as SAAE);
 
     const getNews = async()=>{
       if(dataNews.length > 0) return;
@@ -81,8 +84,12 @@ export default function Provider({children}:{children:ReactNode}){
         if(dataNews.length === 0) getNews();
     },[]);
 
+    useEffect(()=>{
+      console.log("contexto: ", dataSaae)
+    },[dataSaae]);
+
     return(
-        <Context.Provider value={{dataNews, dataUser, recoverProfile, verifySession}}>
+        <Context.Provider value={{dataNews, dataUser, dataSaae, recoverProfile, verifySession, setDataSaae}}>
             {children}
         </Context.Provider>
     )

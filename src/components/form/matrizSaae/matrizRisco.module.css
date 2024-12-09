@@ -1,0 +1,69 @@
+.conteiner{
+    display: flex;
+    flex-direction: column;
+}
+.resultado{
+    display: inline-block;
+    width: 220px;
+    display: flex;
+}
+.conteiner h1, .conteiner h3, .resultado{
+    padding-left: 6px;
+}
+.resultado span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--dark);
+    width: 100px;
+    height: 50px;
+    padding: 6px;
+}
+
+.matriz{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 480px;
+    padding: 6px;
+}
+.rotuloConsequencia, .valor{
+    width: 70px;
+    height: 70px;
+    border: 1px solid var(--blue);
+    margin: 1px;
+}
+
+.rotuloProbabilidade{
+    font-size: 14px;
+    border: 1px solid var(--blue);
+    margin: 1px;
+}
+
+.rotuloConsequencia{
+    display: flex;
+    font-size: 13px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.rotuloProbabilidade{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+}
+.valor{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.width100{
+    width: 100px;
+    text-align: left;
+}
+.conteiner p{
+    width: 100%;
+    padding: 10px;
+    text-align: justify;
+}

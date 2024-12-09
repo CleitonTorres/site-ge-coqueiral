@@ -1,4 +1,5 @@
-import { ChangeEvent, FocusEvent, useEffect, useState } from 'react';
+'use client'
+import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
 import styles from './dadosGerais.module.css';
 import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types';
 import { v4 } from 'uuid';
@@ -6,65 +7,80 @@ import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDados
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { dataBaseSaae, Odss, tiposAtividade } from '@/components/data-training/data-training';
 import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
+import { Context } from '@/components/context/context';
 
 export default function DadosGerais(){
-    const [data, setData] = useState({} as DadosGeraisSaae)
+    const context = useContext(Context);
+    const [data, setData] = useState({} as DadosGeraisSaae);
+
     const [currentProgramacao, setCurrentProgramacao] = useState({} as ProgramacaoAtividade);
     const [atividade, setAtividade] = useState('');
     const [odss, setOdss] = useState('');
 
     const [atividadesList, setAtividadesList] = useState<string[]>([]);
     const [inicioFim, setInicioFim] = useState(false);
-    const [latLong, setLatLong] = useState({} as {
-        lat: number,
-        long: number
-    });
 
     const handleForm = (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
         const name = e.target.name;
         const value= e.target.value;
 
-        setData((prev)=>{
-            if(['horaInicio', 'horaFim'].includes(name)){
-                return{
-                    ...prev,
-                    [name]: formatToHourMin(value)
-                }
-            }else if(name.includes("localInicio")){
-                const nameSplit = name.split('.')[1];
-                return{
-                    ...prev,
-                    localInicio: {
-                        ...prev.localInicio,
-                        [nameSplit]: maskcep(value)
-                    }
-                }
-            }else if(name.includes("localFim")){
-                const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
-                const local:Endereco = prev.localFim ? {
-                    ...prev.localFim,
-                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                } as Endereco: {
-                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                } as unknown as  Endereco;
+        let newData = {} as DadosGeraisSaae;
+        if(['horaInicio', 'horaFim'].includes(name)){
+            newData = {
+                ...data,
+                [name]: formatToHourMin(value)
+            }
+        }else if(name.includes("localInicio")){
+            const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
+            const local:Endereco = data.localInicio ? {
+                ...data.localInicio,
+                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+            } as Endereco: {
+                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+            } as unknown as  Endereco;
 
-                return{
-                    ...prev,
-                    localFim: local
-                }
-            }else if(["dataInicio", 'dataFim'].includes(name)){
-                const date = new Date(value + 'T00:00');
-                return{
-                    ...prev,
-                    [name]: date
+            newData = {
+                ...data,
+                localInicio: local
+            }
+        }else if(name.includes("localFim")){
+            const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
+            const local:Endereco = data.localFim ? {
+                ...data.localFim,
+                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+            } as Endereco: {
+                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+            } as unknown as  Endereco;
+
+            newData = {
+                ...data,
+                localFim: local
+            }
+        }else if(["dataInicio", 'dataFim'].includes(name)){
+            const date = new Date(value + 'T00:00');
+            newData = {
+                ...data,
+                [name]: date
+            }
+        }else if(name.includes('latLong')){
+            const nameSplit = name.split('.')[1];
+            newData = {
+                ...data,
+                latLong:{
+                    ...data.latLong,
+                    [nameSplit]: parseInt(value)
                 }
             }
-            return{
-                ...prev,
+        }else{
+            newData = {
+                ...data,
                 [name]: value
             }
-        })
+        }
+
+        setData(newData);  
+        updateContext(newData);     
     }
 
     const handleFormProgramacao= (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
@@ -102,17 +118,20 @@ export default function DadosGerais(){
             alert(`Formato inválido. Use o formato HH:MM. Hora informada: ${currentProgramacao.hora}, minutos informados: ${currentProgramacao.duracao}`);
             return
         }
-        setData((prev)=>{
-            const newProgragacao = prev.programacao ? [
-                ...prev.programacao,
-                {...currentProgramacao, id: prev.programacao.length+1}
-            ] : [{...currentProgramacao, id: 1}]
-            
-            return{
-                ...prev,
-                programacao: newProgragacao
-            }
-        });
+
+        const newProgragacao = data.programacao ? [
+            ...data.programacao,
+            {...currentProgramacao, id: data.programacao.length+1}
+        ] : [{...currentProgramacao, id: 1}]
+        
+        const newData = {
+            ...data,
+            programacao: newProgragacao
+        }
+
+        setData(newData);
+        
+        updateContext(newData);
 
         setCurrentProgramacao((prev)=>{
             return{
@@ -120,23 +139,24 @@ export default function DadosGerais(){
                 hora: addTime(prev.hora, prev.duracao)
             } as ProgramacaoAtividade
         });
-    }
-
+    }    
+    
     const removeAtividade = (idx:number)=>{
-        setData((prev)=>{
-            const filter = prev.programacao.filter(prog=> prog.id !== idx);
-            const rename = filter.map((prog, idx)=> {
-                return{
-                    ...prog,
-                    id: idx+1
-                } as ProgramacaoAtividade
-            });
+        const filter = data.programacao.filter(prog=> prog.id !== idx);
+        const rename = filter.map((prog, idx)=> {
+            return{
+                ...prog,
+                id: idx+1
+            } as ProgramacaoAtividade
+        });
 
-            return {
-                ...prev, 
-                programacao: rename
-            }
-        })
+        const newData= {
+            ...data, 
+            programacao: rename
+        }
+
+        setData(newData);
+        updateContext(newData);
     }
 
     const getAtividade = (e: FocusEvent<HTMLInputElement, Element>)=>{
@@ -146,34 +166,37 @@ export default function DadosGerais(){
         if(value === ""){
             return;
         }
-        setData((prev)=>{
-            const atividade = dataBaseSaae.find(ativ=> ativ.produto?.includes(value))
-            if(atividade){
-                setInicioFim(atividade.localFim ? true : false);
-                return{
-                    ...prev,
-                    nomeAtividade: atividade.produto,
-                    tipoAtividade: atividade.atividade,
-                    odss: atividade.ods,
-                    localInicio: {
-                        logradouro: atividade.localInicio?.logradouro,
-                        bairro: atividade.localInicio?.bairro,
-                        municipio: atividade.localInicio.municipio,
-                        uf: atividade.localInicio.uf,
-                        cep: atividade.localInicio.cep
-                    },
-                    localFim: atividade.localFim ? {
-                        logradouro: atividade.localFim?.logradouro,
-                        bairro: atividade.localFim?.bairro,
-                        municipio: atividade.localFim.municipio,
-                        uf: atividade.localFim.uf,
-                        cep: atividade.localFim.cep
-                    } : undefined
-                } as DadosGeraisSaae
-            }else{
-                return prev
-            }
-        });
+
+        const atividade = dataBaseSaae.find(ativ=> ativ.produto?.includes(value));
+        let newData= {} as DadosGeraisSaae;
+        if(atividade){
+            setInicioFim(atividade.localFim ? true : false);
+            newData = {
+                ...data,
+                nomeAtividade: atividade.produto,
+                tipoAtividade: atividade.atividade,
+                odss: atividade.ods,
+                localInicio: {
+                    logradouro: atividade.localInicio?.logradouro,
+                    bairro: atividade.localInicio?.bairro,
+                    municipio: atividade.localInicio.municipio,
+                    uf: atividade.localInicio.uf,
+                    cep: atividade.localInicio.cep
+                },
+                localFim: atividade.localFim ? {
+                    logradouro: atividade.localFim?.logradouro,
+                    bairro: atividade.localFim?.bairro,
+                    municipio: atividade.localFim.municipio,
+                    uf: atividade.localFim.uf,
+                    cep: atividade.localFim.cep
+                } : undefined
+            } as DadosGeraisSaae;
+        }else{
+            newData= data
+        }
+
+        setData(newData);
+        updateContext(newData);
     }
 
     //busca o endereço da empresa.
@@ -183,8 +206,8 @@ export default function DadosGerais(){
 
         if(value !== '' && value.length === 8 && temApenasNumeros(value)){
             getDadosCEP(value)
-            .then((data)=> {
-                const segmentos:Array<string> = data.logradouro.split(" ")
+            .then((resp)=> {
+                const segmentos:Array<string> = resp.logradouro.split(" ")
                 const tipo_logradouro = segmentos[0];
                 let logradouro = '';
 
@@ -196,27 +219,27 @@ export default function DadosGerais(){
                         logradouro += `${segmentos[index]} `;
                     }
                 }
-                if(data){
-                    setData((prev)=>{
-                        const logra = data.complemento ? tipo_logradouro+ " " + logradouro + ', '+ data.complemento : tipo_logradouro + logradouro;
-                        return{
-                            ...prev,  
-                            [initialName]: {
-                                ...prev[initialName],
-                                logradouro: logra,
-                                bairro: data.bairro,
-                                municipio: data.localidade,
-                                uf: data.uf
-                            }
+                if(resp){
+                    const logra = resp.complemento ? tipo_logradouro+ " " + logradouro + ', '+ resp.complemento : tipo_logradouro + " " + logradouro;
+                    const newData = {
+                        ...data,  
+                        [initialName]: {
+                            ...data[initialName],
+                            logradouro: logra,
+                            bairro: resp.bairro,
+                            municipio: resp.localidade,
+                            uf: resp.uf
                         }
-                    })
+                    }
+                    setData(newData);
+                    updateContext(newData);
                 }
             })
             .catch(err=> console.log(err))
         }
     }
 
-    const handleKeyPress = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleKeyBlur = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const value = e.target.value;
         const name = e.target.name as 'tipoAtividade' | 'odss';
@@ -224,51 +247,119 @@ export default function DadosGerais(){
         // Adicionar o valor ao array se não for vazio e não for duplicado
         const trimmedValue = value.trim();
         if (trimmedValue && !data[name]?.includes(trimmedValue)) {
-            setData((prev)=> {
-                const newArray = prev[name] ? [
-                    ...prev[name],
-                    trimmedValue
-                ] : [trimmedValue];
+            const newArray = data[name] ? [
+                ...data[name],
+                trimmedValue
+            ] : [trimmedValue];
 
-                return {
-                    ...prev,
-                    [name]: newArray
-                }
-            });
+            const newData= {
+                ...data,
+                [name]: newArray
+            }
+
+            setData(newData);
+            updateContext(newData);
         }
         setAtividade(''); // Limpa o input
         setOdss(''); // Limpa o input
     };
 
+    const handleKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const value = e.target.value;
+        const name = e.target.name as 'tipoAtividade' | 'odss';
+
+        if (value.includes(',')) {
+            // Adicionar o valor ao array se não for vazio e não for duplicado
+            const trimmedValue = value.trim();
+            if (trimmedValue && !data[name]?.includes(trimmedValue)) {
+                const newArray = data[name] ? [
+                    ...data[name],
+                    trimmedValue
+                ] : [trimmedValue];
+
+                const newData= {
+                    ...data,
+                    [name]: newArray
+                }
+
+                setData(newData);
+                updateContext(newData);
+            }
+            setAtividade(''); // Limpa o input
+            setOdss(''); // Limpa o input
+        }
+    };
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        const name = e.currentTarget.name as 'tipoAtividade' | 'odss';
+        if (e.key === 'Enter') {
+            // Adicionar o valor ao array se não for vazio e não for duplicado
+            const trimmedValue = value.trim();
+            if (trimmedValue && !data[name]?.includes(trimmedValue)) {
+                const newArray = data[name] ? [
+                    ...data[name],
+                    trimmedValue
+                ] : [trimmedValue];
+
+                const newData= {
+                    ...data,
+                    [name]: newArray
+                }
+                setData(newData);
+                updateContext(newData);
+            }
+            setAtividade(''); // Limpa o input
+            setOdss(''); // Limpa o input
+        }
+    };
+
     const handleRemoveTag = (index: number, name:'tipoAtividade' | 'odss') => {
-        setData((prev)=>{
-            const newArray = prev[name].filter((_, i) => i !== index)
-            return {
-                ...prev,
-                [name]: newArray
+        const newArray = data[name].filter((_, i) => i !== index)
+            
+        const newData= {
+            ...data,
+            [name]: newArray
+        }
+        setData(newData);
+        updateContext(newData);
+    };
+
+    const latLongSet = (lat: number, lng: number)=>{
+        const newData = {
+            ...data,
+            latLong: {
+                lat: lat,
+                long: lng
+            }
+        }
+        setData(newData);
+        updateContext(newData);
+    }
+
+    const updateContext = (newData:DadosGeraisSaae)=>{
+        context.setDataSaae(saae=>{
+            return{
+                ...saae,
+                dadosGerais: newData
             }
         });
     };
 
-    const latLongSet = (lat: number, lng: number)=>{
-        setLatLong(()=>{
-            return{
-                lat: lat,
-                long: lng
-            }
-        })
-    }
-
     useEffect(()=>{
-        console.log(data)
-    },[data]);
-
-    useEffect(()=>{
+        //carrega a lista de atividades.
         setAtividadesList(()=>{
             const newData = dataBaseSaae?.map(ativ=> `${ativ.produto}`)
             return newData
-        })
+        });
     },[]);
+
+    useEffect(()=>{
+        //pega as infos salvas no contexto.
+        // Atualiza o contexto e define o estado local após isso
+        const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
+        setData(dadosGerais);
+    },[])
 
     return(
         <div className={styles.conteiner}>
@@ -305,10 +396,13 @@ export default function DadosGerais(){
                             list="options" 
                             name='tipoAtividade'
                             value={atividade}
+                            placeholder='Digite enter, vírgula ou selecione da lista para inserir'
                             onChange={(e) => {
                                 setAtividade(e.target.value);
-                                handleKeyPress(e);
+                                handleKeyChange(e);
                             }}
+                            onKeyDown={handleKeyDown}
+                            onBlur={handleKeyBlur}
                             className={`${styles.collum}`}
                         />
                         <datalist id="options">
@@ -348,10 +442,13 @@ export default function DadosGerais(){
                             list="optionsODS" 
                             name='odss'
                             value={odss}
+                            placeholder='Digite enter, vírgula ou selecione da lista para inserir'
                             onChange={(e) => {
                                 setOdss(e.target.value);
-                                handleKeyPress(e);
+                                handleKeyChange(e);
                             }}
+                            onKeyDown={handleKeyDown}
+                            onBlur={handleKeyBlur}
                             className={`${styles.collum}`}
                         />
                         <datalist id="optionsODS">
@@ -852,24 +949,26 @@ export default function DadosGerais(){
                     </h2>
                     <input
                         type='number'
-                        value={latLong.lat || ''}
-                        onChange={(e) => setLatLong((prev)=>{return{...prev, lat: parseFloat(e.target.value)}})}
+                        name='latLong.lat'
+                        value={data.latLong?.lat || ''}
+                        onChange={(e) => {
+                            handleForm(e)
+                        }}
                         placeholder="latitude"
                         style={{width: 200}}
                     />
                     <input
                         type='number'
-                        value={latLong.long || ''}
-                        onChange={(e) => setLatLong((prev)=>{
-                            return{...prev, long: parseFloat(e.target.value)}
-                        })}
+                        name='latLong.long'
+                        value={data.latLong?.long || ''}
+                        onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
                     />
                 </div>
                 <div className={styles.line}>
-                    {latLong.lat && latLong.long ?
-                        <MapsComponent lat={latLong.lat} long={latLong.long} setLatLong={latLongSet}/>
+                    {data.latLong?.lat && data.latLong?.long ?
+                        <MapsComponent lat={data.latLong?.lat} long={data.latLong?.long} setLatLong={latLongSet}/>
                     :null}                    
                 </div>
 

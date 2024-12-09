@@ -54,31 +54,27 @@ export interface Endereco {
     cep: string,
 }
 
-export interface IADataForm{
+export interface SAAE {
+    infosPreliminares: InfosPreliminaresSaae[],
+    dadosGerais: DadosGeraisSaae,
+    inventarioRiscos: InventarioSaaeType[],
+    planoEmergencia: PlanoEmergenciaSaae
+}
+
+export interface InventarioSaaeType{
     atividade: string;
     perigo: string,
     danos: string,
     controleOperacional: string,
     acoesMitigadoras: string,
     probabilidade: number,
-    consequencia: number
+    consequencia: number,
+    nivelRisco: number
 }
-export interface ResponseDataIA {
-    atividade: string,
-    perigo: string,
-    danos: string,
-    controleOperacional: string,
-    acoesMitigadoras: string,
-};
-export interface RequestDataIA {
-    input: string;
-};
-
 export interface InfosPreliminaresSaae {
     item: string,
     text: string
 }
-
 export interface DadosGeraisSaae {
     nomeAtividade: string,
     tipoAtividade: string[],
@@ -108,9 +104,9 @@ export interface DadosGeraisSaae {
     nivelFormacaoSupervisor?: string,
     comoChegar: string,
     linkMapa: string,
+    latLong: {lat: number, long: number},
     programacao: ProgramacaoAtividade[]
 }
-
 export interface ProgramacaoAtividade {
     data: Date,
     hora: string,
@@ -120,17 +116,20 @@ export interface ProgramacaoAtividade {
     responsavel: string
     id: number
 }
-export interface InventarioSaae {
-    [key:string]: string
-}
-
-export interface MatrizRiscoSaae {
-    [key:string]: string
-}
-
 export interface PlanoEmergenciaSaae {
     [key:string]: string
 }
+
+export interface ResponseDataIA {
+    atividade: string,
+    perigo: string,
+    danos: string,
+    controleOperacional: string,
+    acoesMitigadoras: string,
+};
+export interface RequestDataIA {
+    input: string;
+};
 
 export interface CEP{
     bairro: string,

@@ -1,3 +1,7 @@
+.conteiner{
+    width: 100%;
+}
+
 .margin img {
     margin: 10px;
 }
@@ -31,3 +35,7 @@
 .margin10{
     margin: 10px;
 }
+/* 
+@media (max-width: 499px) {
+    .conteiner{}
+} */

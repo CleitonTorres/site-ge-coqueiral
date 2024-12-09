@@ -44,7 +44,7 @@
 .addItem  svg{
     font-size: 24px;
 }
-.addItem:hover svg{
+.addItem svg:hover{
     background-color: var(--verde);
     border-radius: 10px;
     padding: 3px;
@@ -115,4 +115,17 @@
 }
 .closeBtn:hover{
     cursor: pointer;
+}
+
+@media (max-width: 499px) {
+    .boxHead h1{
+        font-size: 16px;
+        width: 90%;
+    }
+    .boxHead svg{
+        margin-left: 0;
+    }
+    .conteiner h5{
+        font-size: 10px;
+    }
 }

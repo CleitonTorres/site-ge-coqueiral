@@ -1,33 +1,41 @@
 'use client'
 import Section from "@/components/layout/sections/section";
 import styles from './page.module.css';
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState } from "react";
 import { DataBaseSaae, Endereco } from "@/@types/types";
 import Box from "@/components/layout/box/box";
 import { Odss } from "@/components/data-training/data-training";
 import { Context } from "@/components/context/context";
 
 type PropsPartes = {
+    name: string,
     label: string,
     partesInteressadas: string[],
     optionsList?: string,
-    handleRemoveTag: (idx:number)=>void,
     inputValue: string,
+    handleRemoveTag: (idx:number)=>void,    
     handleInputChange: (e: ChangeEvent<HTMLInputElement>)=>void,
-    handleKeyPress: (e: React.KeyboardEvent<HTMLInputElement>)=>void
+    handleKeyChange: (e: ChangeEvent<HTMLInputElement>) =>void,
+    handleKeyBlur: (e: FocusEvent<HTMLInputElement>)=>void,
+    handleKeyDown?: (e: KeyboardEvent<HTMLInputElement>) =>void
 }
-const PartesInteressas = ({
-    label, inputValue, partesInteressadas, optionsList,
-    handleRemoveTag, handleInputChange, handleKeyPress}:PropsPartes)=>{
+const AddTags = ({
+    name, label, inputValue, partesInteressadas, optionsList,
+    handleRemoveTag, handleInputChange, handleKeyChange, handleKeyBlur, handleKeyDown}:PropsPartes)=>{
     return (
         <div className={styles.boxInput}>
             <span>{label}</span> 
             <input 
+                name={name}
                 list={optionsList} 
-                placeholder="Digite e pressione Enter ou vírgula"
+                placeholder="Digite enter, vírgula ou selecione da lista para inserir"
                 value={inputValue}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyPress}
+                onChange={(e)=>{
+                    handleInputChange(e);
+                    handleKeyChange(e);
+                }}
+                onBlur={handleKeyBlur}
+                onKeyDown={handleKeyDown}
                 className={`${styles.collum}`}
             />
             {
@@ -53,38 +61,17 @@ const PartesInteressas = ({
                 {partesInteressadas.map((tag, index) => (
                     <div
                         key={index}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: "space-between",
-                            alignItems: 'center',
-                            padding: '4px 8px',
-                            backgroundColor: '#e0e0e0',
-                            borderRadius: '4px',
-                            fontSize: '14px',
-                            height: '30px',
-                            width: 'auto',
-                            maxWidth: '100px',
-                            margin: '3px'
-                        }}
+                        className={styles.boxTags}
                     >
                         {tag}
-                        <button
+                        <span
                             onClick={(e) => {
                                 e.preventDefault(); 
                                 handleRemoveTag(index)
                             }}
-                            style={{
-                                marginLeft: '4px',
-                                background: 'none',
-                                border: 'none',
-                                color: 'red',
-                                cursor: 'pointer',
-                                fontSize: '12px',
-                            }}
                         >
                             x
-                        </button>
+                        </span>
                     </div>
                 ))}
             </div>
@@ -162,47 +149,76 @@ export default function Page(){
         })
     }
 
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' || e.key === ',') {
-            e.preventDefault();
+    const handleKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const value = e.target.value;
+        const name = e.target.name as 'partesInteressadas' | 'ods';
 
+        if (value.includes(',')) {
             // Adicionar o valor ao array se não for vazio e não for duplicado
-            const trimmedValue = inputValuePartesInteressadas.trim();
-            if (trimmedValue && !data.partesInteressadas?.includes(trimmedValue)) {
+            const trimmedValue = value.trim();
+            if (trimmedValue && !data[name]?.includes(trimmedValue)) {
                 setData((prev)=> {
-                    const newArray = prev.partesInteressadas ?[
-                        ...prev.partesInteressadas,
+                    const newArray = prev[name] ? [
+                        ...prev[name],
                         trimmedValue
                     ] : [trimmedValue];
 
                     return {
                         ...prev,
-                        partesInteressadas: newArray
+                        [name]: newArray
                     }
                 });
             }
             setInputValuePartesInteressadas(''); // Limpa o input
+            setInputValueODSs(''); // Limpa o input
         }
     };
-    const handleKeyPressODS = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' || e.key === ',') {
-            e.preventDefault();
 
+    const handleKeyBlur = (e: FocusEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const value = e.target.value;
+        const name = e.target.name as 'partesInteressadas' | 'ods';
+
+        // Adicionar o valor ao array se não for vazio e não for duplicado
+        const trimmedValue = value.trim();
+        if (trimmedValue && !data[name]?.includes(trimmedValue)) {
+            setData((prev)=> {
+                const newArray = prev[name] ? [
+                    ...prev[name],
+                    trimmedValue
+                ] : [trimmedValue];
+
+                return {
+                    ...prev,
+                    [name]: newArray
+                }
+            });
+        }
+        setInputValuePartesInteressadas(''); // Limpa o input
+        setInputValueODSs(''); // Limpa o input
+    };
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        const name = e.currentTarget.name as 'partesInteressadas' | 'ods';
+        if (e.key === 'Enter') {
             // Adicionar o valor ao array se não for vazio e não for duplicado
-            const trimmedValue = inputValueODS.trim();
-            if (trimmedValue && !data.ods?.includes(trimmedValue)) {
+            const trimmedValue = value.trim();
+            if (trimmedValue && !data[name]?.includes(trimmedValue)) {
                 setData((prev)=> {
-                    const newArray = prev.ods ?[
-                        ...prev.ods,
+                    const newArray = prev[name] ? [
+                        ...prev[name],
                         trimmedValue
                     ] : [trimmedValue];
 
                     return {
                         ...prev,
-                        ods: newArray
+                        [name]: newArray
                     }
                 });
             }
+            setInputValuePartesInteressadas(''); // Limpa o input
             setInputValueODSs(''); // Limpa o input
         }
     };
@@ -272,22 +288,28 @@ export default function Page(){
                         />
                     </div>
 
-                    <PartesInteressas 
+                    <AddTags 
+                        name="partesInteressadas"
                         label='Partes Interessadas'
                         inputValue={inputValuePartesInteressadas || ''}
                         partesInteressadas={data?.partesInteressadas || []}
                         handleRemoveTag={handleRemoveTag}
-                        handleKeyPress={handleKeyPress}
+                        handleKeyBlur={handleKeyBlur}
+                        handleKeyChange={handleKeyChange}
+                        handleKeyDown={handleKeyDown}
                         handleInputChange={(e)=>setInputValuePartesInteressadas(e.target.value)}
                     />
 
-                    <PartesInteressas 
+                    <AddTags 
+                        name="ods"
                         label='ODSs'
                         inputValue={inputValueODS || ''}
                         partesInteressadas={data?.ods || []}
                         optionsList="optionsODS"
                         handleRemoveTag={handleRemoveTagODS}
-                        handleKeyPress={handleKeyPressODS}
+                        handleKeyBlur={handleKeyBlur}
+                        handleKeyChange={handleKeyChange}
+                        handleKeyDown={handleKeyDown}
                         handleInputChange={(e)=>setInputValueODSs(e.target.value)}
                     />
 

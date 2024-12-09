@@ -7,10 +7,10 @@
 }
 .menu{
   position: relative;
-  padding: 0 10px;
+  padding: 0 10px !important;
   width: 100%;
   max-width: var(--widthLarge);
-  min-height: 45px;
+  min-height: 45px !important;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -383,7 +383,7 @@
   }
   .menu{
     background-color: var(--cinza);
-    height: 0px;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -391,7 +391,10 @@
     z-index: 99;
     padding: 0px !important;
     overflow: hidden;
-    min-height: 0;
+    height: 0px;
+    min-height: 0  !important;
+    position: fixed;
+    top: 100px;
   }
   .title{
     font-weight: 600;
@@ -452,7 +455,6 @@
 
 @keyframes slideDown {
   0%{
-    display: flex;
     height: 0px;
     padding: 0;
     margin: 0;

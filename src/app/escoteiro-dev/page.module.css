@@ -22,6 +22,9 @@
     max-width: var(--widthLarge);
     min-width: var(--minWidth);
 }
+.conteiner h6{
+    padding: 10px;
+}
 .subTitle{
     font-weight: 500;
     font-size: 26px;
