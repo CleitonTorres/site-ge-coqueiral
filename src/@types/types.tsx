@@ -52,6 +52,7 @@ export interface Endereco {
     municipio: string,
     uf: string,
     cep: string,
+    coordenadas?: {lat: number, long: number}
 }
 
 export interface SAAE {
@@ -104,7 +105,6 @@ export interface DadosGeraisSaae {
     nivelFormacaoSupervisor?: string,
     comoChegar: string,
     linkMapa: string,
-    latLong: {lat: number, long: number},
     programacao: ProgramacaoAtividade[]
 }
 export interface ProgramacaoAtividade {

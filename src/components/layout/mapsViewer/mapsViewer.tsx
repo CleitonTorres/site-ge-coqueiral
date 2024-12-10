@@ -1,75 +1,110 @@
-import { useEffect, useRef, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
+import { useEffect, useRef } from "react";
+import { Endereco } from "@/@types/types";
 
 type Props = {
-    lat: number,
-    long: number,
+    data?: Endereco,
+    label: 'localInicio' | 'localFim',
     setLatLong: (
         lat: number,
-        lng: number
+        lng: number,
+        label: 'localInicio' | 'localFim',
+        adress?: string
     ) => void
 }
-export default function MapsComponent ({lat, long, setLatLong}:Props){
+const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
+export default function MapsComponent ({label, data, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
-    const [latLng, setLatLng] = useState({} as {lat: number, lng: number})
-    
-    useEffect(()=>{
-        if(isNaN(latLng.lat) || isNaN(latLng.lng)) return;
+
+    const loadMapAddress = async()=>{
+        if(!mapRef.current)return;
+        if(!data) return;
+
+        const geocoder = new google.maps.Geocoder();
+
+        console.log('endereço obtido', data)
+        const mapOptions: google.maps.MapOptions= {
+            center: data.coordenadas?.lat && data.coordenadas.long ? {lat: data.coordenadas?.lat, lng: data.coordenadas.long} : { lat: -23.55052, lng: -46.633308 }, // Localização padrão inicial (São Paulo),
+            zoom: 19,
+            mapId: `MY_NEXTJS_MAPID_${label}`,
+            clickableIcons: true
+        };
+
+        const map = new google.maps.Map(mapRef.current, mapOptions);
         
-        const unitMap = async ()=>{
-            try{
-                const loader = new Loader({
-                    apiKey: `${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`,
-                    version: 'quarterly'
-                });
+        // const placeMarkerAndPanTo = async(coor: google.maps.LatLng)=>{
+        //     map.setCenter(coor);         
+        // } 
 
-                const {Map} = await loader.importLibrary('maps') as google.maps.MapsLibrary;
-                const placeMarkerAndPanTo = async(coor: {lat: number, lng: number})=>{
-                    setLatLong(coor.lat, coor.lng);
-                    map.setCenter(latLng);
-                }             
+        new AdvancedMarkerElement({
+            position: mapOptions.center,
+            map: map,
+        });
+        
+        const address = `${data.logradouro}, ${data.bairro}, ${data.municipio}, ${data.uf}, ${data.cep}`
+        
+        if(!data.coordenadas?.lat ||  !data.coordenadas?.long){
+            console.log("entrou no marcador pelo endereço")
+            geocoder.geocode({ address }, async(results, status) => {
+                if (status === "OK") {
+                    if(!results) return;
 
-                const mapOptions: google.maps.MapOptions= {
-                    center: latLng,
-                    zoom: 17,
-                    mapId: 'MY_NEXTJS_MAPID',
-                    clickableIcons: true
-                };
-                
-                if(!mapRef.current)return;
-
-                const map = new Map(mapRef.current, mapOptions)
-                const {AdvancedMarkerElement} = await loader.importLibrary('marker') as google.maps.MarkerLibrary;
-                new AdvancedMarkerElement({
-                      position: latLng,
-                      map: map,
-                });
-                
-                placeMarkerAndPanTo(latLng);
-
-                map.addListener("click", (e) => {
-                    placeMarkerAndPanTo({lat: e.latLng.lat(), lng: e.latLng.lng()});
-                });
-            }
-            catch(e){
-                console.log(e)
-                console.log("dados inválidos.")
-            }
+                    const location = results[0].geometry.location;
+                    map.setCenter(location);                
+                    
+                    new AdvancedMarkerElement({
+                        position: location,
+                        map: map,
+                    });
+                } else {
+                    console.error("Geocoding falhou: " + status);
+                }
+            }); 
         }
-        unitMap();
-    },[latLng])
-    
+
+        map.addListener("click", (e) => {
+            const latLng = e.latLng;
+
+            // Converte as coordenadas para um endereço
+            geocoder.geocode({ location: latLng }, (results, status) => {
+                if (status === "OK") {
+                    if (results && results[0]) {
+                        const clickedAddress = results[0].formatted_address;
+
+                        // Atualiza o estado ou faz algo com o endereço encontrado
+                        console.log("Endereço encontrado:", clickedAddress);
+                        setLatLong(e.latLng.lat(), e.latLng.lng(), label, clickedAddress);
+                        
+                        // Atualiza o mapa e o marcador
+                        
+                        //placeMarkerAndPanTo(e.latLng);
+
+                        // Exemplo: Atualizar o contexto ou exibir o endereço no UI
+                        // updateAddressInContext(clickedAddress);
+                    } else {
+                        console.warn("Nenhum endereço encontrado para esta localização.");
+                    }
+                } else {
+                    console.error("Erro ao buscar o endereço: " + status);
+                }
+            });
+            
+        });
+    }
+
     useEffect(()=>{
-        if(isNaN(lat) || isNaN(long)){
+        if(!data){
             return;
         }
 
-        setLatLng({lat: lat, lng: long})
-    },[lat, long]);
+        loadMapAddress()
+
+    },[data]);
 
     return(
-        <div style={{width: '100vw'}}>
-            <h1>Localização</h1>
+        <div style={{width: '100vw', marginBottom: '30px'}}>
+            <h1>Localização {label === "localInicio" ? 'Início' : 'Fim'}</h1>
+            <h6>{`${data?.logradouro}, ${data?.bairro}, ${data?.municipio}, ${data?.uf}, ${data?.cep}`}</h6>
             <div ref={mapRef} style={{height: '500px', width: "100%"}}></div>
         </div>
     )

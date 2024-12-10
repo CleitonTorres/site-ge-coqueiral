@@ -3,11 +3,13 @@ import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState
 import styles from './dadosGerais.module.css';
 import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types';
 import { v4 } from 'uuid';
-import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDadosCEP, maskcep, temApenasNumeros } from '@/scripts/globais';
+import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { dataBaseSaae, Odss, tiposAtividade } from '@/components/data-training/data-training';
-import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
 import { Context } from '@/components/context/context';
+import dynamic from 'next/dynamic';
+
+const MapsComponent = dynamic(()=> import('@/components/layout/mapsViewer/mapsViewer'), {ssr: false});
 
 export default function DadosGerais(){
     const context = useContext(Context);
@@ -32,30 +34,73 @@ export default function DadosGerais(){
                 [name]: formatToHourMin(value)
             }
         }else if(name.includes("localInicio")){
-            const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
-            const local:Endereco = data.localInicio ? {
-                ...data.localInicio,
-                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-            } as Endereco: {
-                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-            } as unknown as  Endereco;
+            //localInicio.coordenadas.long
+            if(name.includes('coordenadas')){
+                const nameSplit = name.split('.')[2] as 'lat' | 'long';
+                const coordenadas = data.localInicio?.coordenadas ? {
+                    ...data.localInicio.coordenadas,
+                    [nameSplit]: parseInt(value)
+                } : {
+                    [nameSplit]: parseInt(value)
+                } as unknown as {
+                    lat: number, long: number
+                }
 
-            newData = {
-                ...data,
-                localInicio: local
+                newData = {
+                    ...data,
+                    localInicio: {
+                        ...data.localInicio,
+                        coordenadas: coordenadas
+                    }
+                }
+            }else{
+                const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
+                const local:Endereco = data.localInicio ? {
+                    ...data.localInicio,
+                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                } as Endereco: {
+                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                } as unknown as  Endereco;
+
+                newData = {
+                    ...data,
+                    localInicio: local
+                }
             }
         }else if(name.includes("localFim")){
-            const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
-            const local:Endereco = data.localFim ? {
-                ...data.localFim,
-                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-            } as Endereco: {
-                [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-            } as unknown as  Endereco;
+            if(name.includes('coordenadas')){
+                const nameSplit = name.split('.')[2] as 'lat' | 'long';
+                const coordenadas = data.localFim?.coordenadas ? {
+                    ...data.localFim.coordenadas,
+                    [nameSplit]: parseInt(value)
+                } : {
+                    [nameSplit]: parseInt(value)
+                } as unknown as {
+                    lat: number, long: number
+                }
 
-            newData = {
-                ...data,
-                localFim: local
+                newData = {
+                    ...data,
+                    localFim: data.localFim ? {
+                        ...data.localFim,
+                        coordenadas: coordenadas
+                    } : {
+                        coordenadas: coordenadas
+                    } as unknown as Endereco
+                }
+            }else{
+                const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
+                const local:Endereco = data.localFim ? {
+                    ...data.localFim,
+                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                } as Endereco: {
+                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                } as unknown as  Endereco;
+
+                newData = {
+                    ...data,
+                    localFim: local
+                }
             }
         }else if(["dataInicio", 'dataFim'].includes(name)){
             const date = new Date(value + 'T00:00');
@@ -63,14 +108,15 @@ export default function DadosGerais(){
                 ...data,
                 [name]: date
             }
-        }else if(name.includes('latLong')){
-            const nameSplit = name.split('.')[1];
+        }else if(name.includes('custoIndividual')){
             newData = {
                 ...data,
-                latLong:{
-                    ...data.latLong,
-                    [nameSplit]: parseInt(value)
-                }
+                [name]: maskMoeda(value)
+            }
+        }else if(['telCoordenador', 'telSupervisor'].includes(name)){
+            newData = {
+                ...data,
+                [name]: masktel(value)
             }
         }else{
             newData = {
@@ -325,12 +371,79 @@ export default function DadosGerais(){
         updateContext(newData);
     };
 
-    const latLongSet = (lat: number, lng: number)=>{
-        const newData = {
-            ...data,
-            latLong: {
-                lat: lat,
-                long: lng
+    const latLongSet = (lat: number, lng: number, label: 'localInicio' | 'localFim', adress?: string)=>{
+        let newData = {} as DadosGeraisSaae;
+        if(adress){
+            const adressSplit = adress.split(',');
+            console.log("split", adressSplit);
+
+            if(adressSplit.length === 5){
+                newData =  {
+                    ...data,
+                    [label]:{
+                        ...data[label],
+                        logradouro: adressSplit[0] + ", " + adressSplit[1].split('-')[0],
+                        bairro: adressSplit[1].split('-')[1],
+                        municipio: adressSplit[2].split('-')[0],
+                        uf: adressSplit[2].split('-')[1],
+                        cep:  adressSplit[3],
+                        coordenadas:{
+                            lat: lat,
+                            long: lng
+                        }
+                    }
+                }
+            }else if(adressSplit.length === 3){
+                newData = {
+                    ...data,
+                    [label]:{
+                        ...data[label],
+                        logradouro: adressSplit[0].split(' ')[0],
+                        bairro: '',
+                        municipio: adressSplit[0].split(' ')[1],
+                        uf: adressSplit[1],
+                        cep:  '',
+                        coordenadas:{
+                            lat: lat,
+                            long: lng
+                        }
+                    }
+                }
+            }else{
+                newData = {
+                    ...data,
+                    [label]:{
+                        ...data[label],
+                        logradouro: adress,
+                        bairro: '',
+                        municipio: '',
+                        uf: '',
+                        cep:  '',
+                        coordenadas:{
+                            lat: lat,
+                            long: lng
+                        }
+                    }
+                }
+            }
+        }else{
+            newData = data[label] ? {
+                ...data,
+                [label]:{
+                    ...data[label],
+                    coordenadas: {
+                        lat: lat,
+                        long: lng
+                    }
+                }
+            } :{
+                ...data,
+                [label]:{
+                    coordenadas: {
+                        lat: lat,
+                        long: lng
+                    }
+                }
             }
         }
         setData(newData);
@@ -360,6 +473,10 @@ export default function DadosGerais(){
         const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
         setData(dadosGerais);
     },[])
+
+    // useEffect(()=>{
+    //     console.log('data local', data)
+    // },[data]);
 
     return(
         <div className={styles.conteiner}>
@@ -855,7 +972,7 @@ export default function DadosGerais(){
                             className={`${styles.collum}`}
                         >
                             {
-                                ['Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
+                                ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
                             }
                         </select>
                     </div>
@@ -905,13 +1022,16 @@ export default function DadosGerais(){
                             <h1>
                                 Nível de formação do Supervisor
                             </h1>
-                            <input
-                                type='text'
+                            <select
                                 name='nivelFormacaoSupervisor'
                                 value={data?.nivelFormacaoSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
-                            />
+                            >
+                                {
+                                    ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
+                                }
+                            </select>
                         </div>                        
                     </div>
                 </>:null}
@@ -945,12 +1065,12 @@ export default function DadosGerais(){
                 </div>
                 <div>
                     <h2>
-                        Coordenadas do local (opcional)
+                        Coordenadas do local Início (opcional)
                     </h2>
                     <input
                         type='number'
-                        name='latLong.lat'
-                        value={data.latLong?.lat || ''}
+                        name='localInicio.coordenadas.lat'
+                        value={data.localInicio?.coordenadas?.lat || ''}
                         onChange={(e) => {
                             handleForm(e)
                         }}
@@ -959,18 +1079,57 @@ export default function DadosGerais(){
                     />
                     <input
                         type='number'
-                        name='latLong.long'
-                        value={data.latLong?.long || ''}
+                        name='localInicio.coordenadas.long'
+                        value={data.localInicio?.coordenadas?.long || ''}
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
                     />
                 </div>
                 <div className={styles.line}>
-                    {data.latLong?.lat && data.latLong?.long ?
-                        <MapsComponent lat={data.latLong?.lat} long={data.latLong?.long} setLatLong={latLongSet}/>
+                    {(data.localInicio?.logradouro && data.localInicio?.bairro) || (data.localInicio?.coordenadas?.lat && data.localInicio?.coordenadas?.long) ?
+                        <MapsComponent 
+                            label='localInicio'
+                            setLatLong={latLongSet}
+                            data={data.localInicio}
+                        />
                     :null}                    
                 </div>
+                {(data.localFim?.logradouro && data.localFim?.bairro) || data.localFim?.coordenadas ?
+                <>
+                <div>
+                    <h2>
+                        Coordenadas do local Fim (opcional)
+                    </h2>
+                    <input
+                        type='number'
+                        name='localFim.coordenadas.lat'
+                        value={data.localFim?.coordenadas?.lat || ''}
+                        onChange={(e) => {
+                            handleForm(e)
+                        }}
+                        placeholder="latitude"
+                        style={{width: 200}}
+                    />
+                    <input
+                        type='number'
+                        name='localFim.coordenadas.long'
+                        value={data.localFim?.coordenadas?.long || ''}
+                        onChange={(e) => handleForm(e)}
+                        placeholder="longitude"
+                        style={{width: 200}}
+                    />
+                </div>
+
+                <div className={styles.line}>
+                    <MapsComponent 
+                        label='localFim'
+                        setLatLong={latLongSet}
+                        data={data.localFim}
+                    />                   
+                </div>
+                </>                 
+                :null}
 
                 {/* programação da atividade */}
                 <div className={styles.line}>

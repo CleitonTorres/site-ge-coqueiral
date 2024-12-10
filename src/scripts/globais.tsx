@@ -233,3 +233,41 @@ export function temApenasNumeros(str:string) {
     // Testa se a string contém apenas números
     return /^\d+$/.test(str);
 }
+
+export function maskMoeda(value:string | number) {
+    if(!value) {return "0"}
+    let v = '';
+    
+    if(typeof value !== "string") {
+        v = value.toFixed(2)
+    }else{
+        v = removeCifrao(value).replace(/\D/g,"");  
+    }
+
+    v =  v.replace(/(\d+)(\d{2})$/, "$1,$2");
+    v =  v.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    
+    return  "R$ " + v;
+}
+
+export function removeCifrao(str:string) { 
+    if(!str) return "0";
+    if(typeof str !== "string") return "0";
+    
+    // Remove tudo que não for número, ponto ou vírgula
+    const numeros = str.replace(/[^0-9.,]/g, '');
+
+    if(isNaN(parseFloat(numeros))) return "0";
+
+    // Substitui a vírgula por ponto para formar um número válido
+    const numerosFormatados = numeros.replace(/^R\$\s*/, '');
+    return numerosFormatados;
+}
+
+export function masktel(v:string){
+    if(!v){return ""}
+    v= v.replace(/\D/g,"");
+    v= v.replace(/^(\d{2})(\d)/g,"($1) $2");
+    v= v.replace(/(\d)(\d{4})$/,"$1-$2");
+    return v;
+}

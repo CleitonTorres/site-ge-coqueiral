@@ -107,9 +107,9 @@ export async function POST(req: NextRequest) {
             }
         }else if(service === 'iaSaae'){
             // Consultando a API do ChatGPT
+            console.log("key", process.env.NEXT_PUBLIC_GPT_API_KEY);
             const openai = new OpenAI({
-                //project: process.env.NEXT_PUBLIC_OPENIA_PROJECT_ID,
-                apiKey: `${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+                apiKey: `${process.env.NEXT_PUBLIC_GPT_API_KEY}`
             });
 
             // const assistant = await openai.beta.assistants.create({

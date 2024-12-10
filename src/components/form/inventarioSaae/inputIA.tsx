@@ -99,11 +99,12 @@ const InventarioSaae = () => {
         e?.preventDefault();
         const value = e?.target.value || valor;
 
+        //console.log("no submit", value)
         if(!useIA)return;
 
         if(!value) return;
 
-        const verify = atividadeCorrente.atividade === value;
+        const verify = inputForm.find(ativ=> ativ.atividade === value);
         if(verify) return;
 
         setLoading(true);
@@ -379,6 +380,7 @@ const InventarioSaae = () => {
                             value={item?.probabilidade}
                             onChange={(e)=>handleForm(e, idx)}
                         >
+                             <option value=""></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>

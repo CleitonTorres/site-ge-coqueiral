@@ -8,13 +8,29 @@ export default function MatrizRisco (){
     const context = useContext(Context);
     const [nivelRisco, setNivelRisco] = useState({} as InventarioSaaeType); 
 
+    const setColor = ()=>{
+        if(nivelRisco.nivelRisco > 0 && nivelRisco.nivelRisco < 4){
+            return 'green';
+        }else if(nivelRisco.nivelRisco > 3 && nivelRisco.nivelRisco < 8){
+            return 'yellow';
+        }else if(nivelRisco.nivelRisco > 7 && nivelRisco.nivelRisco < 13){
+            return 'orange';
+        }else{
+            return 'red';
+        }
+    }
     useEffect(()=>{
         setNivelRisco(()=>{
-            const maiorRisco = context.dataSaae?.inventarioRiscos?.reduce((prev, current) => {
-                return current.nivelRisco > prev?.nivelRisco ? current : prev;
-            }, context.dataSaae[0]);
-
-            return maiorRisco;
+            const maiorRisco = context.dataSaae?.inventarioRiscos?.sort((a,b)=> {
+                if(a.nivelRisco > b.nivelRisco){
+                    return - 1
+                }else if(a.nivelRisco > b.nivelRisco){
+                    return 1
+                }else{
+                    return 0
+                }
+            })
+            return maiorRisco[maiorRisco.length-1];
         });        
     },[]);
 
@@ -27,100 +43,207 @@ export default function MatrizRisco (){
             <h1>Matriz de risco</h1>
             <h3>Matriz de Probabilidade x Consequência</h3>
             
-            <div className={styles.resultado}>
+            <div className={`${styles.resultado}`}>
                 <span>Maior resultado</span>
-                <span>0</span>
+                <span 
+                    style={{backgroundColor: setColor(), fontWeight: '700'}}
+                >
+                    {nivelRisco.nivelRisco}
+                </span>
             </div>
             
             <div className={styles.matriz}>
                 <span className={styles.rotuloProbabilidade} title='probabilidade 5'>
                     Quase certo
                 </span>
-                <span className={styles.valor} id='5'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 5 ? styles.risco : ''}`} 
+                    id='5' 
+                    style={{
+                        backgroundColor: 'yellow'
+                    }}
+                > 
                     5
                 </span>
-                <span className={styles.valor} id='10'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 10 ? styles.risco : ''}`} 
+                    id='10' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     10
                 </span>
-                <span className={styles.valor} id='15'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 15 ? styles.risco : ''}`} 
+                    id='15' 
+                    style={{backgroundColor: 'red'}}
+                > 
                     15
                 </span>
-                <span className={styles.valor} id='20'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 20 ? styles.risco : ''}`} 
+                    id='20' 
+                    style={{
+                        backgroundColor: 'red'
+                    }}
+                > 
                     20
                 </span>
-                <span className={styles.valor} id='25'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 25 ? styles.risco : ''}`} 
+                    id='25' 
+                    style={{backgroundColor: 'red'}}
+                > 
                     25
                 </span>
-                <span className={styles.rotuloProbabilidade} title='probabilidade 4'>
+                <span 
+                    className={styles.rotuloProbabilidade} title='probabilidade 4'>
                     Provável
                 </span>
-                <span className={styles.valor} id='4'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 4 ? styles.risco : ''}`} 
+                    id='4' 
+                    style={{backgroundColor: 'yellow'}}
+                > 
                     4
                 </span>
-                <span className={styles.valor} id='8'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 8 ? styles.risco : ''}`} 
+                    id='8' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     8
                 </span>
-                <span className={styles.valor} id='12'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 12 ? styles.risco : ''}`}
+                    id='12' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     12
                 </span>
-                <span className={styles.valor} id='16'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 16 ? styles.risco : ''}`}
+                    id='16'
+                    style={{backgroundColor: 'red'}}
+                > 
                     16
                 </span>
-                <span className={styles.valor} id='20'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 20 ? styles.risco : ''}`} 
+                    id='20' 
+                    style={{backgroundColor: 'red'}}
+                > 
                     20
                 </span>
                 <span className={styles.rotuloProbabilidade} title='probabilidade 3'>
                     Possível
                 </span>
-                <span className={styles.valor} id='3'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 3 ? styles.risco : ''}`} 
+                    id='3' 
+                    style={{backgroundColor: 'green'}}
+                > 
                     3
                 </span>
-                <span className={styles.valor} id='6'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 6 ? styles.risco : ''}`} 
+                    id='6' 
+                    style={{backgroundColor: 'yellow'}}
+                > 
                     6
                 </span>
-                <span className={styles.valor} id='9'> 
+                <span  
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 9 ? styles.risco : ''}`}  
+                    id='9' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     9
                 </span>
-                <span className={styles.valor} id='12'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 12 ? styles.risco : ''}`} 
+                    id='12' 
+                    style={{backgroundColor: 'orange'}}> 
                     12
                 </span>
-                <span className={styles.valor} id='15'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 15 ? styles.risco : ''}`} 
+                    id='15' 
+                    style={{backgroundColor: 'red'}}> 
                     15
                 </span>
                 <span className={styles.rotuloProbabilidade} title='probabilidade 2'>
                     Raro
                 </span>
-                <span className={styles.valor} id='2'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 2 ? styles.risco : ''}`}  
+                    id='2' 
+                    style={{backgroundColor: 'green'}}
+                > 
                     2
                 </span>
-                <span className={styles.valor} id='2'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 4 ? styles.risco : ''}`} 
+                    id='4' 
+                    style={{backgroundColor: 'yellow'}}
+                > 
                     4
                 </span>
-                <span className={styles.valor} id='6'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 6 ? styles.risco : ''}`} 
+                    id='6' 
+                    style={{backgroundColor: 'yellow'}}
+                > 
                     6
                 </span>
-                <span className={styles.valor} id='8'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 8 ? styles.risco : ''}`} 
+                    id='8' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     8
                 </span>
-                <span className={styles.valor} id='10'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 10 ? styles.risco : ''}`} 
+                    id='10' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     10
                 </span>
                 <span className={styles.rotuloProbabilidade} title='probabilidade 1'>
                     Improvável
                 </span>
-                <span className={styles.valor} id='1'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 1 ? styles.risco : ''}`} 
+                    id='1' 
+                    style={{backgroundColor: 'green'}}
+                > 
                     1
                 </span>
-                <span className={styles.valor} id='2'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 2 ? styles.risco : ''}`} 
+                    id='2'
+                    style={{backgroundColor: 'green'}}
+                > 
                     2
                 </span>
-                <span className={styles.valor} id='3'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 3 ? styles.risco : ''}`}  
+                    id='3' 
+                    style={{backgroundColor: 'green'}}
+                > 
                     3
                 </span>
-                <span className={styles.valor} id='4'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 4 ? styles.risco : ''}`}  
+                    id='4' 
+                    style={{backgroundColor: 'yellow'}}
+                > 
                     4
                 </span>
-                <span className={styles.valor} id='5'> 
+                <span 
+                    className={`${styles.valor} ${nivelRisco.nivelRisco === 5 ? styles.risco : ''}`} 
+                    id='5' 
+                    style={{backgroundColor: 'orange'}}
+                > 
                     5
                 </span>
 

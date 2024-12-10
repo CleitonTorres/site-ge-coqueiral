@@ -86,7 +86,7 @@
     font-size: 10px;
     font-weight: 700;
 }
-.boxInput span::after{
+.collum span::after{
     content: '';
     animation: loadingDots 1s steps(3, end) infinite;
 }

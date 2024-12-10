@@ -383,7 +383,6 @@
   }
   .menu{
     background-color: var(--cinza);
-    
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -394,7 +393,7 @@
     height: 0px;
     min-height: 0  !important;
     position: fixed;
-    top: 100px;
+    top: 90px;
   }
   .title{
     font-weight: 600;
