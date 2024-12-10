@@ -57,7 +57,8 @@ const formatText = (text:string) => {
  
     return elements;
 };
-const TextFormatter = ({ text }: { text: string }) => {
+
+export const TextFormatter = ({ text }: { text: string }) => {
     return <div className={styles.subConteiner}>{formatText(text)}</div>;
 };
 
