@@ -117,9 +117,61 @@ export interface ProgramacaoAtividade {
     id: number
 }
 export interface PlanoEmergenciaSaae {
-    [key:string]: string
+    localInicio: Endereco,
+    localFim?: Endereco,
+    fichaMedicaRevisada: 'Sim' | 'Não',
+    kitPrimeirosSocorros: 'Sim' | 'Não',
+    inspesaoLocal: 'Sim' | 'Não',
+    dataInspecao: Date,
+    prontoSocorro: {
+        nome: string,
+        local: string,
+        distancia: string,
+        contato: string
+    },
+    hospital: {
+        nome: string,
+        local: string,
+        distancia: string,
+        contato: string
+    },
+    contatosEmergencia: ContatosEmergencia[],
+    espacosSeguros: {
+        infosPreliminares: 'Sim' | 'Não',
+        infosMedicas: 'Sim' | 'Não',
+        protecaoDados: 'Sim' | 'Não',
+        cursosEscotistas: 'Sim' | 'Não',
+        canalDenuncias: 'Sim' | 'Não',
+        acolhimento: Profissional[],
+        enfermaria: Profissional[],
+    }
+    veiculos: Veiculos[],
+    atividadePorProfissional: AtividadeProfissional[]
+    profSalvamento: Profissional[]
 }
 
+export interface ContatosEmergencia{
+    nome: string,
+    contato: string
+}
+export interface Profissional{
+    nome: string,
+    contato: string,
+    profissao: string,
+    numCarteirinhaClass: string,
+    cpf: string,
+    regEscoteiro: string
+}
+export interface Veiculos {
+    nomeMotorista: string,
+    tipoVeiculo: string,
+    contato: string,
+    profissao: string,
+    habilitacao: string,
+    cpf: string,
+    regEscoteiro: string,
+    manutencao: 'Sim' | 'Não'
+}
 export interface ResponseDataIA {
     atividade: string,
     perigo: string,
@@ -130,7 +182,15 @@ export interface ResponseDataIA {
 export interface RequestDataIA {
     input: string;
 };
-
+export interface AtividadeProfissional {
+    nomeProf: string,
+    contato: string,
+    profissao: string,
+    numCarteirinha: string,
+    regEscoteiro: string,
+    cpf: string,
+    redesSociais:  string[],
+}
 export interface CEP{
     bairro: string,
     cep: string,

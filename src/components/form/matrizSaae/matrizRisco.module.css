@@ -7,7 +7,7 @@
     width: 220px;
     display: flex;
 }
-.conteiner h1, .conteiner h3, .resultado{
+.conteiner h2, .conteiner h3, .resultado{
     padding-left: 6px;
 }
 .resultado span{

@@ -1,6 +1,8 @@
 import { CEP, ProfileProps } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { FaGlobe } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa6";
 
 // Função para criptografar a senha
 export const encryptPassword = (password:string)=> {
@@ -270,4 +272,17 @@ export function masktel(v:string){
     v= v.replace(/^(\d{2})(\d)/g,"($1) $2");
     v= v.replace(/(\d)(\d{4})$/,"$1-$2");
     return v;
+}
+
+export function setIconSocialMidia(link:string){
+    if(!link) return;
+    if(link.includes('facebook')){
+        return <FaFacebook size={24}/>
+    }else if(link.includes('instagram')){
+        return <FaInstagram size={24}/>
+    }else if(link.includes('tiktok')){
+        return <FaTiktok size={24}/>
+    }else{
+        return <FaGlobe size={24}/> 
+    }
 }

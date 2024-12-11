@@ -215,16 +215,18 @@ const InventarioSaae = () => {
     return (
         <div className={styles.conteiner}>
             {useIA ?
-            <div className={styles.boxAvatar}> 
-                <Image 
-                    alt='assistente Mathias'
-                    width={90}
-                    height={90}
-                    src={'/icons/assistente-mathias.png'}
-                />
-                <Texting text={commentIA} speed={100}/>
-            </div>:null}
-            <h2>Informe a atividade para obter dados de controle operacional:</h2>
+                <div className={styles.boxAvatar}> 
+                    <Image 
+                        alt='assistente Mathias'
+                        width={90}
+                        height={90}
+                        src={'/icons/assistente-mathias.png'}
+                    />
+                    <Texting text={commentIA} speed={100}/>
+                </div>
+            :null}
+            <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
+            <h2>3. Inventário de Riscos:</h2>
             <div className={styles.boxCheckIA}>
                 <label htmlFor="" style={{fontSize: '14px'}}>Usar IA Mathias?</label>
                 <input  

@@ -1,0 +1,101 @@
+.conteiner{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    max-width: 1232px;
+}
+.section{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 380px;
+    padding: 4px;
+}
+.subConteiner{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.boxInput{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 200px;
+    font-size: 12px;
+    text-align: justify;
+    border: 1px solid;
+    margin: 2px;
+    padding: 6px;
+}
+.boxInput input, .boxInput select{
+    border: none;
+    width: 100%;
+    margin-top: 6px;
+    min-height: 30px;
+    word-break: break-all;
+    padding: 3px;
+}
+.boxInput label{
+    font-weight: 700;
+}
+.addBtn, .removeBtn{
+    padding: 2px;
+}
+.addBtn:hover, .removeBtn:hover{
+    cursor: pointer;
+    background-color: var(--verde);
+    border-radius: 50%;
+}
+.addBtn:active, .btnRemAtividade:active{
+    padding: 5px;
+}
+
+.removeBtn path{
+    color: red;
+}
+.addBtn path{
+    color: blue;
+    font-size: 20px;
+}
+
+.borderGreen{
+    border: 4px solid var(--verde);
+}
+.minHeight{
+    min-height: 210px;
+}
+.minHeight90{
+    min-height: 90px;
+    justify-content: space-between;
+}
+.bgGreen{
+    background-color: var(--verde);
+    margin-top: 20px;
+}
+
+.boxTags{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    height: auto;
+    width: auto;
+    max-width: 100px;
+    margin: 3px;
+    font-size: 10px;
+}
+.boxTags button {
+    margin-left: 4px;
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 12px;
+}

@@ -6,9 +6,11 @@ import { InventarioSaaeType } from '@/@types/types';
 
 export default function MatrizRisco (){
     const context = useContext(Context);
-    const [nivelRisco, setNivelRisco] = useState({} as InventarioSaaeType); 
+    const [nivelRisco, setNivelRisco] = useState<InventarioSaaeType | undefined>(undefined); 
 
     const setColor = ()=>{
+        if(!nivelRisco) return '';
+
         if(nivelRisco.nivelRisco > 0 && nivelRisco.nivelRisco < 4){
             return 'green';
         }else if(nivelRisco.nivelRisco > 3 && nivelRisco.nivelRisco < 8){
@@ -19,6 +21,7 @@ export default function MatrizRisco (){
             return 'red';
         }
     }
+    
     useEffect(()=>{
         setNivelRisco(()=>{
             const maiorRisco = context.dataSaae?.inventarioRiscos?.sort((a,b)=> {
@@ -29,18 +32,16 @@ export default function MatrizRisco (){
                 }else{
                     return 0
                 }
-            })
-            return maiorRisco[maiorRisco.length-1];
+            });
+
+            return maiorRisco ? maiorRisco[maiorRisco.length-1] : undefined;
         });        
     },[]);
 
-    useEffect(()=>{
-        console.log(nivelRisco);
-    },[nivelRisco]);
-
     return(
         <div className={styles.conteiner}>
-            <h1>Matriz de risco</h1>
+            <h6>item 9.2 da Política Nacional de Gestão de Risco</h6>
+            <h2>4. Matriz de risco</h2>
             <h3>Matriz de Probabilidade x Consequência</h3>
             
             <div className={`${styles.resultado}`}>
@@ -48,7 +49,7 @@ export default function MatrizRisco (){
                 <span 
                     style={{backgroundColor: setColor(), fontWeight: '700'}}
                 >
-                    {nivelRisco.nivelRisco}
+                    {nivelRisco?.nivelRisco}
                 </span>
             </div>
             
@@ -57,7 +58,7 @@ export default function MatrizRisco (){
                     Quase certo
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 5 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 5 ? styles.risco : ''}`} 
                     id='5' 
                     style={{
                         backgroundColor: 'yellow'
@@ -66,21 +67,21 @@ export default function MatrizRisco (){
                     5
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 10 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 10 ? styles.risco : ''}`} 
                     id='10' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     10
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 15 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 15 ? styles.risco : ''}`} 
                     id='15' 
                     style={{backgroundColor: 'red'}}
                 > 
                     15
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 20 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 20 ? styles.risco : ''}`} 
                     id='20' 
                     style={{
                         backgroundColor: 'red'
@@ -89,7 +90,7 @@ export default function MatrizRisco (){
                     20
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 25 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 25 ? styles.risco : ''}`} 
                     id='25' 
                     style={{backgroundColor: 'red'}}
                 > 
@@ -100,35 +101,35 @@ export default function MatrizRisco (){
                     Provável
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 4 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 4 ? styles.risco : ''}`} 
                     id='4' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     4
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 8 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 8 ? styles.risco : ''}`} 
                     id='8' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     8
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 12 ? styles.risco : ''}`}
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 12 ? styles.risco : ''}`}
                     id='12' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     12
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 16 ? styles.risco : ''}`}
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 16 ? styles.risco : ''}`}
                     id='16'
                     style={{backgroundColor: 'red'}}
                 > 
                     16
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 20 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 20 ? styles.risco : ''}`} 
                     id='20' 
                     style={{backgroundColor: 'red'}}
                 > 
@@ -138,34 +139,34 @@ export default function MatrizRisco (){
                     Possível
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 3 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 3 ? styles.risco : ''}`} 
                     id='3' 
                     style={{backgroundColor: 'green'}}
                 > 
                     3
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 6 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 6 ? styles.risco : ''}`} 
                     id='6' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     6
                 </span>
                 <span  
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 9 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 9 ? styles.risco : ''}`}  
                     id='9' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     9
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 12 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 12 ? styles.risco : ''}`} 
                     id='12' 
                     style={{backgroundColor: 'orange'}}> 
                     12
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 15 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 15 ? styles.risco : ''}`} 
                     id='15' 
                     style={{backgroundColor: 'red'}}> 
                     15
@@ -174,35 +175,35 @@ export default function MatrizRisco (){
                     Raro
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 2 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 2 ? styles.risco : ''}`}  
                     id='2' 
                     style={{backgroundColor: 'green'}}
                 > 
                     2
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 4 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 4 ? styles.risco : ''}`} 
                     id='4' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     4
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 6 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 6 ? styles.risco : ''}`} 
                     id='6' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     6
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 8 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 8 ? styles.risco : ''}`} 
                     id='8' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     8
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 10 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 10 ? styles.risco : ''}`} 
                     id='10' 
                     style={{backgroundColor: 'orange'}}
                 > 
@@ -212,35 +213,35 @@ export default function MatrizRisco (){
                     Improvável
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 1 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 1 ? styles.risco : ''}`} 
                     id='1' 
                     style={{backgroundColor: 'green'}}
                 > 
                     1
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 2 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 2 ? styles.risco : ''}`} 
                     id='2'
                     style={{backgroundColor: 'green'}}
                 > 
                     2
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 3 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 3 ? styles.risco : ''}`}  
                     id='3' 
                     style={{backgroundColor: 'green'}}
                 > 
                     3
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 4 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 4 ? styles.risco : ''}`}  
                     id='4' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     4
                 </span>
                 <span 
-                    className={`${styles.valor} ${nivelRisco.nivelRisco === 5 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${nivelRisco?.nivelRisco === 5 ? styles.risco : ''}`} 
                     id='5' 
                     style={{backgroundColor: 'orange'}}
                 > 
