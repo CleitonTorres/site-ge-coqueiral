@@ -160,7 +160,12 @@ export interface Profissional{
     profissao: string,
     numCarteirinhaClass: string,
     cpf: string,
-    regEscoteiro: string
+    regEscoteiro: string,
+    docs: Docs[]
+}
+export interface Docs {
+    titulo: string,
+    doc: string | File
 }
 export interface Veiculos {
     nomeMotorista: string,
@@ -170,7 +175,8 @@ export interface Veiculos {
     habilitacao: string,
     cpf: string,
     regEscoteiro: string,
-    manutencao: 'Sim' | 'Não'
+    manutencao: 'Sim' | 'Não',
+    docs: Docs[]
 }
 export interface ResponseDataIA {
     atividade: string,
@@ -190,6 +196,7 @@ export interface AtividadeProfissional {
     regEscoteiro: string,
     cpf: string,
     redesSociais:  string[],
+    docs: Docs[]
 }
 export interface CEP{
     bairro: string,

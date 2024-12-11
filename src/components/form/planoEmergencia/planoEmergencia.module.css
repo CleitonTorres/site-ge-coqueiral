@@ -99,3 +99,37 @@
     cursor: pointer;
     font-size: 12px;
 }
+.removeDoc{
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 150px;
+    font-size: 14px;
+    text-align: center;
+    margin: 4px;
+    border: 1px var(--blue) dotted;
+    padding: 3px;
+    word-break: break-all;
+}
+.removeDoc b{
+    display: inline-block;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 3px;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 12px;
+}
+.removeDoc b:hover{
+    background-color: var(--blue);
+    color: var(--white);
+    cursor: pointer;
+}
+.removeDoc b:active{
+    padding: 4px;
+}

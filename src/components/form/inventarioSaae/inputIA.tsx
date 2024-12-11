@@ -254,15 +254,14 @@ const InventarioSaae = () => {
                         />                       
                     </div>
                     {inputForm?.map((item, idx)=>(
-                        <div className={styles.collum} key={`${idx}-atividade`}>
-                        <input
+                        <textarea
+                            key={`${idx}-atividade`}
                             name='atividade'
                             value={item?.atividade || ''}
                             onChange={(e) => handleForm(e, idx)}
                             placeholder="Exemplo: remada em caiaque"
-                            style={{border: 'none', height: 40}}
+                            className={`${styles.collum}`}
                         /> 
-                        </div>
                     ))}
                 </div>
                 <div className={styles.content}>

@@ -1,8 +1,8 @@
 'use client'
 import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import styles from './planoEmergencia.module.css';
-import { AtividadeProfissional, ContatosEmergencia, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
-import { dateFormat2, masktel, setIconSocialMidia } from '@/scripts/globais';
+import { AtividadeProfissional, ContatosEmergencia, Docs, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
+import { calcTotalFilesMB, dateFormat2, masktel, setIconSocialMidia } from '@/scripts/globais';
 import { Context } from '@/components/context/context';
 import { FaPlus } from 'react-icons/fa';
 
@@ -74,27 +74,84 @@ export default function PlanoEmergencia (){
             }
         }else if(name.includes('espacosSeguros')){
             //espacosSeguros.enfermaria.field
-            const nameSplit = name.split('.')[1] as 'infosPreliminares' | 'infosMedicas' | 'protecaoDados' | 'cursosEscotistas' | 'canalDenuncias' | 'acolhimento' | 'enfermaria'; 
+            const nameSplit = name.split('.')[1] as 'infosPreliminares' | 'infosMedicas' | 'protecaoDados' | 
+                'cursosEscotistas' | 'canalDenuncias' | 'acolhimento' | 'enfermaria'; 
             if(['acolhimento', 'enfermaria'].includes(nameSplit)){
                 const label = name.split('.')[1] as 'acolhimento' | 'enfermaria'; 
-                const nameField = name.split('.')[2] as 'nome' | 'contato' | 'profissao' | 'numCarteirinhaClass' | 'cpf' | 'regEscoteiro'; 
+                const nameField = name.split('.')[2] as 'nome' | 'contato' | 'profissao' | 'numCarteirinhaClass' | 'cpf' | 'regEscoteiro' | 'docs'; 
                 
-                const newArray = data.espacosSeguros[label]?.map((prof, index)=> {
-                    if(idx === index){
-                        return{
-                            ...prof,
-                            [nameField]: nameField === "contato" ? masktel(value) : value
+                if(nameField === 'docs'){
+                    const target = e.target as unknown as HTMLInputElement;
+                    const files = target.files;        
+                    const fileListArray = files ? Array.from(files) as File[] : [];
+                    
+                    fileListArray.forEach(file => {
+                        const fileSize = parseFloat(calcTotalFilesMB(file));
+                        if(fileSize > 4){
+                            alert("o tamanho máximo de um arquivo é de 4mb");
+                            return;
                         }
-                    }else{
-                        return prof
-                    }
-                });
+                    });
+                    
+                    console.log("entrou", idx, label, nameField);
+                    if(idx === undefined) return;
+                    const newArray = data.espacosSeguros[label]?.map((prof, index)=> {
+                        if(idx === index){
+                            console.log("encontrou", label, nameField);
+                            let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
+                            for (const file of fileListArray) {
+                                const match = newFiles?.find(doc=> doc.titulo === file.name);
+                                if(match){
+                                    newFiles = newFiles.map(doc=>{
+                                        if(doc.titulo === file.name){
+                                            return{
+                                                ...doc,
+                                                doc: file
+                                            }
+                                        }else{
+                                            return doc
+                                        }
+                                    })
+                                }else{
+                                    newFiles.push({ doc: file, titulo: file.name });
+                                }                    
+                            }
 
-                newData = {
-                    ...data,
-                    espacosSeguros:{
-                        ...data.espacosSeguros,
-                        [label]: newArray
+                            return{
+                                ...prof,
+                                [nameField]: newFiles
+                            }
+                        }else{
+                            console.log("não encontrou",idx, label, nameField);
+                            return prof
+                        }
+                    });
+
+                    newData= {
+                        ...data,
+                        espacosSeguros: {
+                            ...data.espacosSeguros,
+                            [label]: newArray
+                        }
+                    }
+                }else{
+                    const newArray = data.espacosSeguros[label]?.map((prof, index)=> {
+                        if(idx === index){
+                            return{
+                                ...prof,
+                                [nameField]: nameField === "contato" ? masktel(value) : value
+                            }
+                        }else{
+                            return prof
+                        }
+                    });
+
+                    newData = {
+                        ...data,
+                        espacosSeguros:{
+                            ...data.espacosSeguros,
+                            [label]: newArray
+                        }
                     }
                 }
             }else{
@@ -108,26 +165,77 @@ export default function PlanoEmergencia (){
             }
         }else if(name.includes('veiculos')){
             //veiculos.manutencao
-            const nameField = name.split('.')[1] as 'nomeMotorista' | 'tipoVeiculo' | 'contato' | 'profissao' | 'habilitacao' | 'cpf' | 'regEscoteiro' | 'manutencao'; 
+            const nameField = name.split('.')[1] as 'nomeMotorista' | 'tipoVeiculo' | 'contato' | 'profissao' 
+            | 'habilitacao' | 'cpf' | 'regEscoteiro' | 'manutencao' | 'docs'; 
             
-            const newArray = data.veiculos?.map((veic, index)=> {
-                if(idx === index){
-                    return{
-                        ...veic,
-                        [nameField]: nameField === "contato" ? masktel(value) : value
+            if(nameField === "docs"){
+                const target = e.target as unknown as HTMLInputElement;
+                const files = target.files;        
+                const fileListArray = files ? Array.from(files) as File[] : [];
+                
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
                     }
-                }else{
-                    return veic
+                });
+                
+                if(idx === undefined) return;
+                const newArray = data.veiculos?.map((veic, index)=> {
+                    if(idx === index){
+                        let newFiles: Docs[] = veic.docs? [...veic.docs] : [];
+                        for (const file of fileListArray) {
+                            const match = newFiles?.find(doc=> doc.titulo === file.name);
+                            if(match){
+                                newFiles = newFiles.map(doc=>{
+                                    if(doc.titulo === file.name){
+                                        return{
+                                            ...doc,
+                                            doc: file
+                                        }
+                                    }else{
+                                        return doc
+                                    }
+                                })
+                            }else{
+                                newFiles.push({ doc: file, titulo: file.name });
+                            }                    
+                        }
+
+                        return{
+                            ...veic,
+                            [nameField]: newFiles
+                        }
+                    }else{
+                        return veic
+                    }
+                });
+
+                newData= {
+                    ...data,
+                    veiculos: newArray
                 }
-            });
+            }else{
+                const newArray = data.veiculos?.map((veic, index)=> {
+                    if(idx === index){
+                        return{
+                            ...veic,
+                            [nameField]: nameField === "contato" ? masktel(value) : value
+                        }
+                    }else{
+                        return veic
+                    }
+                });
 
-            newData = {
-                ...data,
-                veiculos: newArray
-            }
-
+                newData = {
+                    ...data,
+                    veiculos: newArray
+                }
+            } 
         }else if(name.includes('atividadePorProfissional')){
-            const nameField = name.split('.')[1] as 'nomeProf' | 'contato' | 'profissao' | 'numCarteirinha' | 'regEscoteiro' | 'cpf' | 'redesSociais'; 
+            const nameField = name.split('.')[1] as 'nomeProf' | 'contato' | 'profissao' | 'numCarteirinha'
+            | 'regEscoteiro' | 'cpf' | 'redesSociais' | 'docs'; 
             //atividadePorProfissional.redesSociais
             if(nameField === "redesSociais"){
                 const newArray = data.atividadePorProfissional?.map((prof, index)=> {
@@ -152,6 +260,54 @@ export default function PlanoEmergencia (){
                     ...data,
                     atividadePorProfissional: newArray
                 }
+            }else if(nameField === 'docs'){
+                const target = e.target as unknown as HTMLInputElement;
+                const files = target.files;        
+                const fileListArray = files ? Array.from(files) as File[] : [];
+                
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
+                    }
+                });
+                
+                if(idx === undefined) return;
+                const newArray = data.atividadePorProfissional?.map((prof, index)=> {
+                    if(idx === index){
+                        let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
+                        for (const file of fileListArray) {
+                            const match = newFiles?.find(doc=> doc.titulo === file.name);
+                            if(match){
+                                newFiles = newFiles.map(doc=>{
+                                    if(doc.titulo === file.name){
+                                        return{
+                                            ...doc,
+                                            doc: file
+                                        }
+                                    }else{
+                                        return doc
+                                    }
+                                })
+                            }else{
+                                newFiles.push({ doc: file, titulo: file.name });
+                            }                    
+                        }
+
+                        return{
+                            ...prof,
+                            [nameField]: newFiles
+                        }
+                    }else{
+                        return prof
+                    }
+                });
+
+                newData= {
+                    ...data,
+                    atividadePorProfissional: newArray
+                }
             }else{
                 const newArray = data.atividadePorProfissional?.map((prof, index)=> {
                     if(idx === index){
@@ -170,22 +326,72 @@ export default function PlanoEmergencia (){
             }
         }else if(name.includes('profSalvamento')){
             //profSalvamento.nome
-            const nameField = name.split('.')[1] as 'nome' | 'contato' | 'profissao' | 'numCarteirinhaClass' | 'cpf' | 'regEscoteiro'; 
-            
-            const newArray = data.profSalvamento?.map((prof, index)=> {
-                if(idx === index){
-                    return{
-                        ...prof,
-                        [nameField]: nameField === "contato" ? masktel(value) : value
+            const nameField = name.split('.')[1] as 'nome' | 'contato' | 'profissao' | 
+                'numCarteirinhaClass' | 'cpf' | 'regEscoteiro' | 'docs'; 
+            if(nameField === 'docs'){
+                const target = e.target as unknown as HTMLInputElement;
+                const files = target.files;        
+                const fileListArray = files ? Array.from(files) as File[] : [];
+                
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
                     }
-                }else{
-                    return prof
-                }
-            });
+                });
+                
+                if(idx === undefined) return;
+                const newArray = data.profSalvamento?.map((prof, index)=> {
+                    if(idx === index){
+                        let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
+                        for (const file of fileListArray) {
+                            const match = newFiles?.find(doc=> doc.titulo === file.name);
+                            if(match){
+                                newFiles = newFiles.map(doc=>{
+                                    if(doc.titulo === file.name){
+                                        return{
+                                            ...doc,
+                                            doc: file
+                                        }
+                                    }else{
+                                        return doc
+                                    }
+                                })
+                            }else{
+                                newFiles.push({ doc: file, titulo: file.name });
+                            }                    
+                        }
 
-            newData = {
-                ...data,
-                profSalvamento: newArray
+                        return{
+                            ...prof,
+                            [nameField]: newFiles
+                        }
+                    }else{
+                        return prof
+                    }
+                });
+
+                newData= {
+                    ...data,
+                    profSalvamento: newArray
+                }
+            }else{
+                const newArray = data.profSalvamento?.map((prof, index)=> {
+                    if(idx === index){
+                        return{
+                            ...prof,
+                            [nameField]: nameField === "contato" ? masktel(value) : value
+                        }
+                    }else{
+                        return prof
+                    }
+                });
+
+                newData = {
+                    ...data,
+                    profSalvamento: newArray
+                }
             }
         }else{
             newData= {
@@ -260,6 +466,327 @@ export default function PlanoEmergencia (){
             }
         })
     }
+
+    //lida com arquivos
+    const handleUpload = (e:ChangeEvent<HTMLInputElement>)=>{
+        e.preventDefault();
+        const files = e.target.files;        
+        const fileListArray = files ? Array.from(files) as File[] : [];
+        const name = e.target.name;
+
+        if(!fileListArray || fileListArray.length === 0) return;
+        if(name === 'acolhimento'){
+            setCurrentProfAcolhimento((prev)=>{
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
+                    }
+                });
+
+                let newFiles: Docs[] = prev.docs ? [...prev.docs] : [];
+                for (const file of fileListArray) {
+                    const match = prev.docs?.find(doc=> doc.titulo === file.name);
+                    if(match){
+                        newFiles = newFiles.map(doc=>{
+                            if(doc.titulo === file.name){
+                                return{
+                                    ...doc,
+                                    doc: file
+                                }
+                            }else{
+                                return doc
+                            }
+                        })
+                    }else{
+                        newFiles.push({ doc: file, titulo: file.name });
+                    }                    
+                }
+
+                return {
+                    ...prev,
+                    docs: newFiles
+                }
+            })
+        }else if(name === 'enfermaria'){
+            setCurrentProfEnfermaria((prev)=>{
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
+                    }
+                });
+
+                let newFiles: Docs[] = prev.docs ? [...prev.docs] : [];
+                for (const file of fileListArray) {
+                    const match = prev.docs?.find(doc=> doc.titulo === file.name);
+                    if(match){
+                        newFiles = newFiles.map(doc=>{
+                            if(doc.titulo === file.name){
+                                return{
+                                    ...doc,
+                                    doc: file
+                                }
+                            }else{
+                                return doc
+                            }
+                        })
+                    }else{
+                        newFiles.push({ doc: file, titulo: file.name });
+                    }                    
+                }
+
+                return {
+                    ...prev,
+                    docs: newFiles
+                }
+            });
+        }else if(name === 'veiculos'){
+            setCurrentVeiculo((prev)=>{
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
+                    }
+                });
+
+                let newFiles: Docs[] = prev.docs ? [...prev.docs] : [];
+                for (const file of fileListArray) {
+                    const match = prev.docs?.find(doc=> doc.titulo === file.name);
+                    if(match){
+                        newFiles = newFiles.map(doc=>{
+                            if(doc.titulo === file.name){
+                                return{
+                                    ...doc,
+                                    doc: file
+                                }
+                            }else{
+                                return doc
+                            }
+                        })
+                    }else{
+                        newFiles.push({ doc: file, titulo: file.name });
+                    }                    
+                }
+
+                return {
+                    ...prev,
+                    docs: newFiles
+                }
+            });
+        }else if(name === 'profissional'){
+            setCurrentProfissional((prev)=>{
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
+                    }
+                });
+
+                let newFiles: Docs[] = prev.docs ? [...prev.docs] : [];
+                for (const file of fileListArray) {
+                    const match = prev.docs?.find(doc=> doc.titulo === file.name);
+                    if(match){
+                        newFiles = newFiles.map(doc=>{
+                            if(doc.titulo === file.name){
+                                return{
+                                    ...doc,
+                                    doc: file
+                                }
+                            }else{
+                                return doc
+                            }
+                        })
+                    }else{
+                        newFiles.push({ doc: file, titulo: file.name });
+                    }                    
+                }
+
+                return {
+                    ...prev,
+                    docs: newFiles
+                }
+            });
+        }else if(name === 'salvamento'){
+            setCurrentProfSalvamento((prev)=>{
+                fileListArray.forEach(file => {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return;
+                    }
+                });
+
+                let newFiles: Docs[] = prev.docs ? [...prev.docs] : [];
+                for (const file of fileListArray) {
+                    const match = prev.docs?.find(doc=> doc.titulo === file.name);
+                    if(match){
+                        newFiles = newFiles.map(doc=>{
+                            if(doc.titulo === file.name){
+                                return{
+                                    ...doc,
+                                    doc: file
+                                }
+                            }else{
+                                return doc
+                            }
+                        })
+                    }else{
+                        newFiles.push({ doc: file, titulo: file.name });
+                    }                    
+                }
+
+                return {
+                    ...prev,
+                    docs: newFiles
+                }
+            });
+        }
+    }
+    const handleRemoveUpload = (title:string, field: string, idxProfissional?:number)=>{
+        if(field === 'acolhimento'){
+            setCurrentProfAcolhimento((prev)=>{
+                const newData = prev.docs.filter(doc=> doc.titulo !== title);
+
+                return {...prev, docs: newData};
+            });
+        }else if(field === 'acolhimentoRemove'){
+            let newData = {} as PlanoEmergenciaSaae;
+            const newProf = data.espacosSeguros.acolhimento.map((acol, index)=>{
+                if(index === idxProfissional){
+                    return{
+                        ...acol,
+                        docs: acol.docs.filter(doc=> doc.titulo !== title)
+                    }
+                }else{
+                    return acol
+                }
+            });
+
+            newData= {
+                ...data, 
+                espacosSeguros: {
+                    ...data.espacosSeguros,
+                    acolhimento: newProf
+                }
+            };
+
+            setData(newData);
+            updateContext(newData);
+        }else if(field === 'enfermariaRemove'){
+            let newData = {} as PlanoEmergenciaSaae;
+            const newProf = data.espacosSeguros.enfermaria.map((enf, index)=>{
+                if(index === idxProfissional){
+                    return{
+                        ...enf,
+                        docs: enf.docs.filter(doc=> doc.titulo !== title)
+                    }
+                }else{
+                    return enf
+                }
+            });
+
+            newData= {
+                ...data, 
+                espacosSeguros: {
+                    ...data.espacosSeguros,
+                    enfermaria: newProf
+                }
+            };
+
+            setData(newData);
+            updateContext(newData);
+        }else if(field === 'enfermaria'){
+            setCurrentProfEnfermaria((prev)=>{
+                const newData = prev.docs.filter(doc=> doc.titulo !== title);
+
+                return {...prev, docs: newData};
+            });
+        }else if(field === 'veiculos'){
+            setCurrentVeiculo((prev)=>{
+                const newData = prev.docs.filter(doc=> doc.titulo !== title);
+
+                return {...prev, docs: newData};
+            });
+        }else if(field === 'veiculosRemove'){
+            let newData = {} as PlanoEmergenciaSaae;
+            const newVeiculos = data.veiculos.map((veic, index)=>{
+                if(index === idxProfissional){
+                    return{
+                        ...veic,
+                        docs: veic.docs.filter(doc=> doc.titulo !== title)
+                    }
+                }else{
+                    return veic
+                }
+            });
+
+            newData= {
+                ...data, 
+                veiculos: newVeiculos
+            };
+
+            setData(newData);
+            updateContext(newData);
+        }else if(field === 'profissional'){
+            setCurrentProfissional((prev)=>{
+                const newData = prev.docs.filter(doc=> doc.titulo !== title);
+
+                return {...prev, docs: newData};
+            });
+        }else if(field === 'profissionalRemove'){
+            let newData = {} as PlanoEmergenciaSaae;
+            const newProf = data.atividadePorProfissional.map((prof, index)=>{
+                if(index === idxProfissional){
+                    return{
+                        ...prof,
+                        docs: prof.docs.filter(doc=> doc.titulo !== title)
+                    }
+                }else{
+                    return prof
+                }
+            });
+
+            newData= {
+                ...data, 
+                atividadePorProfissional: newProf
+            };
+
+            setData(newData);
+            updateContext(newData);
+        }else if(field === 'salvamento'){
+            setCurrentProfSalvamento((prev)=>{
+                const newData = prev.docs.filter(doc=> doc.titulo !== title);
+
+                return {...prev, docs: newData};
+            });
+        }else if(field === 'salvamentoRemove'){
+            let newData = {} as PlanoEmergenciaSaae;
+            const newProf = data.profSalvamento.map((prof, index)=>{
+                if(index === idxProfissional){
+                    return{
+                        ...prof,
+                        docs: prof.docs.filter(doc=> doc.titulo !== title)
+                    }
+                }else{
+                    return prof
+                }
+            });
+
+            newData= {
+                ...data, 
+                profSalvamento: newProf
+            };
+
+            setData(newData);
+            updateContext(newData);
+        }
+    }
+    //-----------------
 
     const addContatoEmergencia = ()=>{
         if(!currentContatoEmerg.contato || !currentContatoEmerg.contato){
@@ -769,6 +1296,25 @@ export default function PlanoEmergencia (){
                     </div>
                     <FaPlus size={20} onClick={addProfAcolhimento} className={styles.addBtn}/>
                 </div>
+                {/* docs viewer */}                
+                <div className={styles.subConteiner}>
+                    <div className={styles.boxInput}>
+                        <label htmlFor="">Documentos</label>
+                        <input
+                            type='file' 
+                            name='acolhimento'
+                            multiple
+                            accept='image/*, .pdf'
+                            onChange={(e)=>handleUpload(e)}
+                        />
+                    </div>
+                    {currentProfAcolhimento?.docs?.map((doc, idx)=>(
+                        <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
+                            {doc.titulo}
+                            <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimento')}>X</b>
+                        </span>
+                    ))}
+                </div>
             </div>
             {data.espacosSeguros?.acolhimento?.map((acolh, idx)=>(
                 <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'acolhimento'}>
@@ -825,6 +1371,25 @@ export default function PlanoEmergencia (){
                             value={acolh.numCarteirinhaClass || ''}
                             onChange={(e)=>handleChangeData(e, idx)}
                         />
+                    </div>
+                    {/* docs viewer */}                
+                    <div className={styles.subConteiner}>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Documentos</label>
+                            <input
+                                type='file' 
+                                name='espacosSeguros.acolhimento.docs'
+                                multiple
+                                accept='image/*, .pdf'
+                                onChange={(e)=>handleChangeData(e, idx)}
+                            />
+                        </div>
+                        {acolh?.docs?.map((doc, idxDoc)=>(
+                            <span key={idxDoc+'docsAcolhimento'} className={styles.removeDoc}>
+                                {doc.titulo}
+                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimentoRemove', idx)}>X</b>
+                            </span>
+                        ))}
                     </div>
                 </div>
             ))}
@@ -889,6 +1454,26 @@ export default function PlanoEmergencia (){
                     </div>
                     <FaPlus size={20} onClick={addProfEnfermaria} className={styles.addBtn}/>
                 </div>
+
+                {/* docs viewer */}                
+                <div className={styles.subConteiner}>
+                    <div className={styles.boxInput}>
+                        <label htmlFor="">Documentos</label>
+                        <input
+                            type='file' 
+                            name='enfermaria'
+                            multiple
+                            accept='image/*, .pdf'
+                            onChange={(e)=>handleUpload(e)}
+                        />
+                    </div>
+                    {currentProfEnfermaria?.docs?.map((doc, idx)=>(
+                        <span key={idx+'docsEnfermaria'} className={styles.removeDoc}>
+                            {doc.titulo}
+                            <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermaria')}>X</b>
+                        </span>
+                    ))}
+                </div>
             </div>
             {data.espacosSeguros?.enfermaria?.map((enf, idx)=>(
                 <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'enfermaria'}>
@@ -945,6 +1530,26 @@ export default function PlanoEmergencia (){
                             value={enf.numCarteirinhaClass || ''}
                             onChange={(e)=>handleChangeData(e, idx)}
                         />
+                    </div>
+
+                    {/* docs viewer */}                
+                    <div className={styles.subConteiner}>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Documentos</label>
+                            <input
+                                type='file' 
+                                name='espacosSeguros.enfermaria.docs'
+                                multiple
+                                accept='image/*, .pdf'
+                                onChange={(e)=>handleChangeData(e, idx)}
+                            />
+                        </div>
+                        {enf?.docs?.map((doc, idxDoc)=>(
+                            <span key={idxDoc+'docsEnfermaria'} className={styles.removeDoc}>
+                                {doc.titulo}
+                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermariaRemove', idx)}>X</b>
+                            </span>
+                        ))}
                     </div>
                 </div>
             ))}
@@ -1032,6 +1637,25 @@ export default function PlanoEmergencia (){
                     </div> 
                     <FaPlus size={20} onClick={addVeiculo} className={styles.addBtn}/>
                 </div> 
+                {/* docs viewer */}                
+                <div className={styles.subConteiner}>
+                    <div className={styles.boxInput}>
+                        <label htmlFor="">Documentos</label>
+                        <input
+                            type='file' 
+                            name='veiculos'
+                            multiple
+                            accept='image/*, .pdf'
+                            onChange={(e)=>handleUpload(e)}
+                        />
+                    </div>
+                    {currentVeiculo?.docs?.map((doc, idx)=>(
+                        <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
+                            {doc.titulo}
+                            <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculos')}>X</b>
+                        </span>
+                    ))}
+                </div>
                 <h5>
                     Obs.: Anexar documento de identidade do habilitação do condutor.
                 </h5>      
@@ -1113,7 +1737,27 @@ export default function PlanoEmergencia (){
                             <option value="Sim">Sim</option>
                             <option value="Não">Não</option>
                         </select>
-                    </div>        
+                    </div>  
+
+                    {/* docs viewer */}                
+                    <div className={styles.subConteiner}>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Documentos</label>
+                            <input
+                                type='file' 
+                                name='veiculos.docs'
+                                multiple
+                                accept='image/*, .pdf'
+                                onChange={(e)=>handleChangeData(e, idx)}
+                            />
+                        </div>
+                        {veic?.docs?.map((doc, idxV)=>(
+                            <span key={idx+idxV+'docsVeiculos'} className={styles.removeDoc}>
+                                {doc.titulo}
+                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculosRemove', idx)}>X</b>
+                            </span>
+                        ))}
+                    </div>      
                 </div>
             ))}
 
@@ -1213,6 +1857,26 @@ export default function PlanoEmergencia (){
                     </div>
                     <FaPlus size={20} onClick={addProfissional} className={styles.addBtn}/>
                 </div>
+
+                {/* docs viewer */}                
+                <div className={styles.subConteiner}>
+                    <div className={styles.boxInput}>
+                        <label htmlFor="">Documentos</label>
+                        <input
+                            type='file' 
+                            name='profissional'
+                            multiple
+                            accept='image/*, .pdf'
+                            onChange={(e)=>handleUpload(e)}
+                        />
+                    </div>
+                    {currentProfissional?.docs?.map((doc, idx)=>(
+                        <span key={idx+'docsProfissional'} className={styles.removeDoc}>
+                            {doc.titulo}
+                            <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissional')}>X</b>
+                        </span>
+                    ))}
+                </div>
                 <h5>
                     Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                 </h5>
@@ -1311,6 +1975,26 @@ export default function PlanoEmergencia (){
                             </div>
                             :null}
                     </div>
+
+                    {/* docs viewer */}                
+                    <div className={styles.subConteiner}>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Documentos</label>
+                            <input
+                                type='file' 
+                                name='atividadePorProfissional.docs'
+                                multiple
+                                accept='image/*, .pdf'
+                                onChange={(e)=>handleChangeData(e, idx)}
+                            />
+                        </div>
+                        {prof?.docs?.map((doc, idxDoc)=>(
+                            <span key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
+                                {doc.titulo}
+                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissionalRemove', idx)}>X</b>
+                            </span>
+                        ))}
+                    </div>
                 </div>
             ))}
 
@@ -1374,6 +2058,25 @@ export default function PlanoEmergencia (){
                     </div>
                     <FaPlus size={20} onClick={addProfSalvamento} className={styles.addBtn}/>
                 </div>
+                {/* docs viewer */}                
+                <div className={styles.subConteiner}>
+                    <div className={styles.boxInput}>
+                        <label htmlFor="">Documentos</label>
+                        <input
+                            type='file' 
+                            name='salvamento'
+                            multiple
+                            accept='image/*, .pdf'
+                            onChange={(e)=>handleUpload(e)}
+                        />
+                    </div>
+                    {currentProfSalvamento?.docs?.map((doc, idx)=>(
+                        <span key={idx+'docsProfsalvamento'} className={styles.removeDoc}>
+                            {doc.titulo}
+                            <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamento')}>X</b>
+                        </span>
+                    ))}
+                </div>
                 <h5>
                     Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                 </h5>
@@ -1433,6 +2136,26 @@ export default function PlanoEmergencia (){
                             value={salv.contato || ''}
                             onChange={(e)=>handleChangeData(e, idx)}
                         />
+                    </div>
+
+                    {/* docs viewer */}                
+                    <div className={styles.subConteiner}>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Documentos</label>
+                            <input
+                                type='file' 
+                                name='profSalvamento.docs'
+                                multiple
+                                accept='image/*, .pdf'
+                                onChange={(e)=>handleChangeData(e, idx)}
+                            />
+                        </div>
+                        {salv?.docs?.map((doc, idxDoc)=>(
+                            <span key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
+                                {doc.titulo}
+                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamentoRemove', idx)}>X</b>
+                            </span>
+                        ))}
                     </div>
                 </div>
             ))}
