@@ -56,6 +56,10 @@ export interface Endereco {
 }
 
 export interface SAAE {
+    grauRisco: {
+        color: 'green' | 'yellow' | 'orange' | 'red' | '',
+        value: number
+    }
     infosPreliminares: InfosPreliminaresSaae[],
     dadosGerais: DadosGeraisSaae,
     inventarioRiscos: InventarioSaaeType[],
@@ -78,6 +82,9 @@ export interface InfosPreliminaresSaae {
 }
 export interface DadosGeraisSaae {
     nomeAtividade: string,
+    atividadeNaoSupervisionada: 'Sim' | 'Não',
+    usoTransporteInterMunicipal: 'Sim' | 'Não',
+    ramo: string[],
     tipoAtividade: string[],
     odss: string[],
     metodologia: string,
@@ -92,7 +99,6 @@ export interface DadosGeraisSaae {
     localChegada: string,
     meioTransporte: string,
     custoIndividual: string,
-    cienciaInfosPreliminares: 'Sim' | 'Não'
     coordenador: string,
     regCoordenador: string,
     telCoordenador: string,

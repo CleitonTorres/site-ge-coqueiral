@@ -49,6 +49,9 @@
     100%{
         right: 200px;
         top: 150px;
+        width: auto;
+        max-width: 200px;
+        height: auto;
     }
 }
 

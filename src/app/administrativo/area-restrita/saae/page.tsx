@@ -22,8 +22,8 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>SAAE</h1>
             <div className={styles.conteiner}>
-                {currenteSession === 0 ? <InfosPreliminares /> : null}
-                {currenteSession === 1 ? <DadosGerais /> : null}
+                {currenteSession === 0 ? <DadosGerais /> : null}
+                {currenteSession === 1 ? <InfosPreliminares /> : null}
                 {currenteSession === 2 ? <InventarioSaae /> : null}
                 {currenteSession === 3 ? <MatrizRisco /> : null}
                 {currenteSession === 4 ? <PlanoEmergencia /> : null}
@@ -31,13 +31,16 @@ export default function Page(){
                 <div className={styles.boxButtom}>
                     <IoIosArrowBack 
                         size={40}
-                        onClick={()=>{setCurrentSession((prev)=> {
+                        onClick={()=>{
+                            setCurrentSession((prev)=> {
                             if(prev === 0){
                                 return 6
                             }else{
                                 return prev-1
                             }
-                        })}}
+                            });
+                            window.scrollTo(0, 0);
+                        }}
                     />
                     <IoIosArrowForward 
                         size={40}
@@ -47,7 +50,9 @@ export default function Page(){
                             }else{
                                 return prev+1
                             }
-                        })}}
+                            });
+                            window.scrollTo(0, 0);
+                        }}
                     />
                 </div>                
             </div>

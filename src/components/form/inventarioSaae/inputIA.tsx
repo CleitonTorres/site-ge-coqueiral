@@ -7,6 +7,7 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import Image from 'next/image';
 import { Context } from '@/components/context/context';
 import Texting from '@/components/layout/texting/texting';
+import { setColor } from '@/scripts/globais';
 
 const InventarioSaae = () => {
     const context = useContext(Context);
@@ -14,7 +15,7 @@ const InventarioSaae = () => {
 
     const [inputForm, setInputForm] = useState<InventarioSaaeType[]>([]);
     const [loading, setLoading] = useState(false);
-    const [useIA, setUseIA] = useState(true);
+    const [useIA, setUseIA] = useState(false);
     const [commentIA, setCommentIA] = useState("Sempre Alerta chefe! Por favor, digite uma atividade para que eu possa lhe ajudar!");
 
     const handleCurrentAtivity = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLSelectElement>)=>{
@@ -202,9 +203,37 @@ const InventarioSaae = () => {
                 ...prev,
                 nivelRisco: value
             }
-        })
+        });
     },[atividadeCorrente.probabilidade, atividadeCorrente.consequencia])
     
+
+    //ordena os itens da lista e alimenta o contexto.
+    useEffect(()=>{
+        if(inputForm){
+            const maiorRisco = inputForm.sort((a,b)=>{
+                if(a.nivelRisco > b.nivelRisco){
+                return 1
+                }else if(a.nivelRisco < b.nivelRisco){
+                    return -1
+                }else{
+                    return 0
+                }
+            })[inputForm.length-1];
+
+            if(!maiorRisco) return;
+
+            context.setDataSaae((prev)=>{
+                return{
+                    ...prev,
+                    grauRisco: {
+                        color: setColor(maiorRisco.nivelRisco),
+                        value: maiorRisco.nivelRisco
+                    }
+                }
+            });
+        }
+    },[inputForm])
+
     useEffect(()=>{
         //pega as infos salvas no contexto.
         // Atualiza o contexto e define o estado local após isso

@@ -12,11 +12,12 @@ import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
 
 export default function DadosGerais(){
     const context = useContext(Context);
-    const [data, setData] = useState({} as DadosGeraisSaae);
+    const [data, setData] = useState({} as DadosGeraisSaae); 
 
     const [currentProgramacao, setCurrentProgramacao] = useState({} as ProgramacaoAtividade);
     const [atividade, setAtividade] = useState('');
     const [odss, setOdss] = useState('');
+    const [inputRamo, setInputRamo] = useState('');
 
     const [atividadesList, setAtividadesList] = useState<string[]>([]);
     const [inicioFim, setInicioFim] = useState(false);
@@ -307,6 +308,7 @@ export default function DadosGerais(){
         }
         setAtividade(''); // Limpa o input
         setOdss(''); // Limpa o input
+        setInputRamo('');
     };
 
     const handleKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -333,6 +335,7 @@ export default function DadosGerais(){
             }
             setAtividade(''); // Limpa o input
             setOdss(''); // Limpa o input
+            setInputRamo('');
         }
     };
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -356,10 +359,11 @@ export default function DadosGerais(){
             }
             setAtividade(''); // Limpa o input
             setOdss(''); // Limpa o input
+            setInputRamo('');
         }
     };
 
-    const handleRemoveTag = (index: number, name:'tipoAtividade' | 'odss') => {
+    const handleRemoveTag = (index: number, name:'tipoAtividade' | 'odss' | 'ramo') => {
         const newArray = data[name].filter((_, i) => i !== index)
             
         const newData= {
@@ -464,22 +468,17 @@ export default function DadosGerais(){
             const newData = dataBaseSaae?.map(ativ=> `${ativ.produto}`)
             return newData
         });
-    },[]);
 
-    useEffect(()=>{
         //pega as infos salvas no contexto.
         // Atualiza o contexto e define o estado local após isso
         const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
+        console.log('dados contexto', dadosGerais)
         setData(dadosGerais);
     },[])
 
-    // useEffect(()=>{
-    //     console.log('data local', data)
-    // },[data]);
-
     return(
         <div className={styles.conteiner}>
-            <h1>2. Dados gerais da atividade</h1>
+            <h1>1. Dados gerais da atividade</h1>
 
             <div className={styles.table}>
                 {/* nome/tipo/ods */}
@@ -512,7 +511,7 @@ export default function DadosGerais(){
                             list="options" 
                             name='tipoAtividade'
                             value={atividade}
-                            placeholder='Digite enter, vírgula ou selecione da lista para inserir'
+                            placeholder='precione Enter ou vírgula para inserir'
                             onChange={(e) => {
                                 setAtividade(e.target.value);
                                 handleKeyChange(e);
@@ -558,7 +557,7 @@ export default function DadosGerais(){
                             list="optionsODS" 
                             name='odss'
                             value={odss}
-                            placeholder='Digite enter, vírgula ou selecione da lista para inserir'
+                            placeholder='precione Enter ou vírgula para inserir'
                             onChange={(e) => {
                                 setOdss(e.target.value);
                                 handleKeyChange(e);
@@ -603,7 +602,88 @@ export default function DadosGerais(){
                                 </div>
                             ))}
                         </div>
-                    </div>                    
+                    </div>      
+                    <div className={styles.collum}>
+                        <h1>
+                            Ramo(s)
+                        </h1>
+                        <input
+                            type='text'
+                            name='ramo'
+                            list='listRamos'
+                            value={inputRamo || ''}
+                            onChange={(e) => {
+                                e.preventDefault();
+                                setInputRamo(e.target.value);
+                                handleKeyChange(e);
+                            }}
+                            onBlur={handleKeyBlur}
+                            onKeyDown={handleKeyDown}
+                            placeholder="precione Enter ou vírgula para inserir"
+                            className={`${styles.collum}`}
+                        />
+                        <datalist id='listRamos'>
+                            <option value='Lobinho'>Lobinho</option>
+                            <option value='Escoteiro'>Escoteiro</option>
+                            <option value='Sênior'>Sênior</option>
+                            <option value='Pioneiro'>Pioneiro</option>
+                            <option value='Escotista/Dirigente'>Escotista/Dirigente</option>
+                        </datalist>
+                        
+                        <div style={{
+                            display: 'flex', 
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                        }}>
+                            {data.ramo?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                                <div
+                                    key={index+'tags'}
+                                    className={styles.boxTags}
+                                >
+                                {tag}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault(); 
+                                            handleRemoveTag(index, 'ramo')
+                                        }}
+                                    >
+                                        x
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>  
+                    <div className={`${styles.collum3} ${styles.width100}`}>
+                        <h1>
+                            Atividade de Patrulha não supervisionada
+                        </h1>
+                        <select
+                            name='atividadeNaoSupervisionada'
+                            value={data?.atividadeNaoSupervisionada || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                        >
+                            <option value=""></option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                        </select>
+                    </div>  
+                    <div className={`${styles.collum3} ${styles.width100}`}>
+                        <h1>
+                            Uso de transporte Intermunicipal (público ou privado)?
+                        </h1>
+                        <select
+                            name='usoTransporteInterMunicipal'
+                            value={data?.usoTransporteInterMunicipal || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                        >
+                            <option value=""></option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                        </select>
+                    </div>  
+                             
                 </div>
                 
                 {/* local/endereço */}
@@ -797,14 +877,14 @@ export default function DadosGerais(){
                 
                 {/*data/inicio/fim */}
                 <div className={styles.line}>
-                    <div className={`${styles.collum} ${styles.width100}`}>
+                    <div className={`${styles.collum} ${styles.width120}`}>
                         <h1>
                             Data início
                         </h1>
                         <input
                             type='date'
                             name='dataInicio'
-                            datatype={dateFormat2(data?.dataInicio) || ''}
+                            datatype={dateFormat1(data?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                         />
@@ -843,14 +923,14 @@ export default function DadosGerais(){
                             className={`${styles.collum}`}
                         />
                     </div>
-                    <div className={`${styles.collum} ${styles.width100}`}>
+                    <div className={`${styles.collum} ${styles.width120}`}>
                         <h1>
                             Data encerramento
                         </h1>
                         <input
                             type='date'
                             name='dataFim'
-                            datatype={dateFormat2(data?.dataFim) || ''}
+                            datatype={dateFormat1(data?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                         />
@@ -894,19 +974,6 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                         />
-                    </div>
-                    <div className={styles.collum}>
-                        <h1>
-                            As partes envolvidas receberam as informações prévias?
-                        </h1>
-                        <select
-                            name='cienciaInfosPreliminares'
-                            value={data?.cienciaInfosPreliminares || ''}
-                            onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
-                        >
-                            {['', 'Sim', 'Não'].map(item=>(<option key={v4()} value={item}>{item}</option>))}
-                        </select>
                     </div>
                 </div>
 

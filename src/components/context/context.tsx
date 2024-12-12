@@ -84,8 +84,9 @@ export default function Provider({children}:{children:ReactNode}){
         if(dataNews.length === 0) getNews();
     },[]);
 
+    //seta o nível de risco da SAAE.
     useEffect(()=>{
-      console.log("contexto: ", dataSaae)
+      console.log("contexto: ", dataSaae);
     },[dataSaae]);
 
     return(

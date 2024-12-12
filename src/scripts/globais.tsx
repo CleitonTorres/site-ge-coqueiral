@@ -286,3 +286,17 @@ export function setIconSocialMidia(link:string){
         return <FaGlobe size={24}/> 
     }
 }
+
+export const setColor = (nivelRisco: number | undefined)=>{
+    if(nivelRisco === undefined) return '';
+
+    if(nivelRisco > 0 && nivelRisco < 4){
+        return 'green';
+    }else if(nivelRisco > 3 && nivelRisco < 8){
+        return 'yellow';
+    }else if(nivelRisco > 7 && nivelRisco < 13){
+        return 'orange';
+    }else{
+        return 'red';
+    }
+}

@@ -21,7 +21,6 @@ export default function MapsComponent ({label, data, setLatLong}:Props){
 
         const geocoder = new google.maps.Geocoder();
 
-        console.log('endereço obtido', data)
         const mapOptions: google.maps.MapOptions= {
             center: data.coordenadas?.lat && data.coordenadas.long ? {lat: data.coordenadas?.lat, lng: data.coordenadas.long} : { lat: -23.55052, lng: -46.633308 }, // Localização padrão inicial (São Paulo),
             zoom: 19,
@@ -49,7 +48,7 @@ export default function MapsComponent ({label, data, setLatLong}:Props){
 
                     const location = results[0].geometry.location;
                     map.setCenter(location);                
-                    
+                    setLatLong(location.lat(), location.lng(), label)
                     new AdvancedMarkerElement({
                         position: location,
                         map: map,
@@ -70,15 +69,7 @@ export default function MapsComponent ({label, data, setLatLong}:Props){
                         const clickedAddress = results[0].formatted_address;
 
                         // Atualiza o estado ou faz algo com o endereço encontrado
-                        console.log("Endereço encontrado:", clickedAddress);
                         setLatLong(e.latLng.lat(), e.latLng.lng(), label, clickedAddress);
-                        
-                        // Atualiza o mapa e o marcador
-                        
-                        //placeMarkerAndPanTo(e.latLng);
-
-                        // Exemplo: Atualizar o contexto ou exibir o endereço no UI
-                        // updateAddressInContext(clickedAddress);
                     } else {
                         console.warn("Nenhum endereço encontrado para esta localização.");
                     }

@@ -76,14 +76,13 @@
 .modalDicas{
     position: fixed;
     right: 10px;
-    top: 20px;
+    top: 100px;
     /* transform: translateY(-50%); */
     background-color: var(--blue);
     width: 96vw;
     min-width: 350px;
-    max-width: 600px;
-    height: auto;
-    min-height: 400px;
+    max-width: 630px;
+    max-height: 400px;
     border: 2px solid var(--dark);
     overflow-y: scroll;
     padding: 6px;
