@@ -7,9 +7,8 @@ import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDados
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { dataBaseSaae, Odss, tiposAtividade } from '@/components/data-training/data-training';
 import { Context } from '@/components/context/context';
-import dynamic from 'next/dynamic';
 
-const MapsComponent = dynamic(()=> import('@/components/layout/mapsViewer/mapsViewer'), {ssr: false});
+import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
 
 export default function DadosGerais(){
     const context = useContext(Context);

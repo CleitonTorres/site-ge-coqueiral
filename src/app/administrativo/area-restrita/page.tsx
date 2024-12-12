@@ -3,7 +3,7 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import { DataNews, ProfileProps } from '@/@types/types';
-import { calcTotalFilesMB, encryptPassword } from '@/scripts/globais';
+import { calcTotalFilesMB, dateFormat2, encryptPassword } from '@/scripts/globais';
 import Modal from '@/components/layout/modal/modal';
 import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 import axios from 'axios';
@@ -44,6 +44,11 @@ export default function Page(){
                 return{
                     ...prev,
                     [name]: value === "Sim" ? true : false
+                }
+            }else if(name === 'date'){
+                return{
+                    ...prev,
+                    date: new Date(value + 'T00:00')
                 }
             }
             return{
@@ -424,7 +429,7 @@ export default function Page(){
                                 type="date" 
                                 name='date' 
                                 onChange={(e)=>handleDataNews(e)}
-                                value={dataNews.date?.toString() || '' }
+                                datatype={dateFormat2(dataNews.date) || '' }
                                 placeholder='link das coordenadas'
                             />
                         </div>

@@ -1238,7 +1238,7 @@ export default function PlanoEmergencia (){
 
             {/* Acolhimento/Escuta */}
             <div className={`${styles.section} ${styles.bgGreen}`}>
-                <h3>Acolhimento/Escuta</h3>
+                <h3>Pessoa(s) do Acolhimento/Escuta</h3>
                 <div className={styles.subConteiner}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome</label>
@@ -1396,7 +1396,7 @@ export default function PlanoEmergencia (){
 
             {/* Enfermaria */}
             <div className={`${styles.section} ${styles.bgGreen}`}>
-                <h3>Enfermaria</h3>
+                <h3>Pessoa(s) da Enfermaria</h3>
                 <div className={styles.subConteiner}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome</label>
@@ -1763,7 +1763,8 @@ export default function PlanoEmergencia (){
 
             {/* Atividade conduzida por profissional */}
             <div className={`${styles.section} ${styles.bgGreen}`}>
-                <h3>Atividade conduzida por profissional</h3>
+                <h3>Profissional</h3>
+                <h6>quando a atividade for conduzida por profissionais</h6>
                 <div className={styles.subConteiner}>
                     <div className={`${styles.boxInput} ${styles.minHeight90}`}>
                         <label htmlFor="">Nome</label>
