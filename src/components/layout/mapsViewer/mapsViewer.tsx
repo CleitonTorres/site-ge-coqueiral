@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useRef } from "react";
 import { Endereco } from "@/@types/types";
 
@@ -11,8 +12,6 @@ type Props = {
         adress?: string
     ) => void
 }
-const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
-
 export default function MapsComponent ({label, data, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,9 +31,8 @@ export default function MapsComponent ({label, data, setLatLong}:Props){
 
         const map = new google.maps.Map(mapRef.current, mapOptions);
         
-        // const placeMarkerAndPanTo = async(coor: google.maps.LatLng)=>{
-        //     map.setCenter(coor);         
-        // } 
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+ 
 
         new AdvancedMarkerElement({
             position: mapOptions.center,
