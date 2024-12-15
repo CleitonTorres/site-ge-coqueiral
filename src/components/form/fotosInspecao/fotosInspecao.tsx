@@ -2,7 +2,7 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './fotosInspecao.module.css';
 import { calcTotalFilesMB } from '@/scripts/globais';
-import { FormFotosInspecao, FotosInspecaoType } from '@/@types/types';
+import { FormFotosInspecao } from '@/@types/types';
 import { Context } from '@/components/context/context';
 import Image from 'next/image';
 import { FaPlus } from 'react-icons/fa6';
@@ -83,12 +83,12 @@ export default function FotosInspecao(){
         })
     }
 
-    const handleChange = (e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=>{
-        e.preventDefault();
-        const name = e.target.name;
-        const value = e.target.value;
+    // const handleChange = (e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=>{
+    //     e.preventDefault();
+    //     const name = e.target.name;
+    //     const value = e.target.value;
 
-    }
+    // }
 
     const addSectionFotos = ()=>{
         if(currentForm.fotos?.length === 0 || !currentForm.title || !currentForm.description){
@@ -109,7 +109,6 @@ export default function FotosInspecao(){
         e.preventDefault();
         const files = e.target.files;        
         const fileListArray = files ? Array.from(files) as File[] : [];
-        const name = e.target.name;
 
         if(!fileListArray || fileListArray.length === 0) return;
         
@@ -173,53 +172,53 @@ export default function FotosInspecao(){
         })
     }
 
-    const handleUpload = (e:ChangeEvent<HTMLInputElement>)=>{
-        e.preventDefault();
-        const files = e.target.files;        
-        const fileListArray = files ? Array.from(files) as File[] : [];
-        const name = e.target.name;
+    // const handleUpload = (e:ChangeEvent<HTMLInputElement>)=>{
+    //     e.preventDefault();
+    //     const files = e.target.files;        
+    //     const fileListArray = files ? Array.from(files) as File[] : [];
+    //     const name = e.target.name;
 
-        if(!fileListArray || fileListArray.length === 0) return;
+    //     if(!fileListArray || fileListArray.length === 0) return;
         
-        //verifica o tamanho de cada imagem.
-        fileListArray.forEach(file => {
-            const fileSize = parseFloat(calcTotalFilesMB(file));
-            if(fileSize > 4){
-                alert("o tamanho máximo de um arquivo é de 4mb");
-                return;
-            }
-        });
+    //     //verifica o tamanho de cada imagem.
+    //     fileListArray.forEach(file => {
+    //         const fileSize = parseFloat(calcTotalFilesMB(file));
+    //         if(fileSize > 4){
+    //             alert("o tamanho máximo de um arquivo é de 4mb");
+    //             return;
+    //         }
+    //     });
 
-        let newData: FotosInspecaoType[] = data ? [...data] : [];
+    //     let newData: FotosInspecaoType[] = data ? [...data] : [];
         
-        for (const file of fileListArray) {
-            const match = newData?.find(doc=> doc.name === file.name);
-            if(match){
-                newData = newData.map(doc=>{
-                    if(doc.name === file.name){
-                        return{
-                            ...doc,
-                            doc: file
-                        }
-                    }else{
-                        return doc
-                    }
-                })
-            }else{
-                newData.push({ 
-                    doc: file, 
-                    name: file.name,
-                    description: '',
-                    title: ''
-                });
-            }                    
-        }
-    }
-    const handleRemoveUpload = (name:string)=>{
-        const newData = data.filter(doc=> doc.name !== name);
+    //     for (const file of fileListArray) {
+    //         const match = newData?.find(doc=> doc.name === file.name);
+    //         if(match){
+    //             newData = newData.map(doc=>{
+    //                 if(doc.name === file.name){
+    //                     return{
+    //                         ...doc,
+    //                         doc: file
+    //                     }
+    //                 }else{
+    //                     return doc
+    //                 }
+    //             })
+    //         }else{
+    //             newData.push({ 
+    //                 doc: file, 
+    //                 name: file.name,
+    //                 description: '',
+    //                 title: ''
+    //             });
+    //         }                    
+    //     }
+    // }
+    // const handleRemoveUpload = (name:string)=>{
+    //     const newData = data.filter(doc=> doc.name !== name);
 
-        updateContext(newData);
-    }
+    //     updateContext(newData);
+    // }
     //-----------------
     
     const updateContext = (newData:FormFotosInspecao[])=>{
@@ -310,9 +309,7 @@ export default function FotosInspecao(){
                                     <span><b>Descrição:</b> {foto.description}</span>
                                     <ImagePreview file={foto.doc as File} height={100} width={100}/>
                                 </div>
-                            ))
-
-                            }
+                            ))}
                         </div>
                     </div>
                 ))}
