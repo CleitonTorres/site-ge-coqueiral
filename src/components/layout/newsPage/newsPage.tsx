@@ -107,6 +107,9 @@ export default function NewsPage({idNews, dataNews}:Props) {
         }
     },[dataNews]);
 
+    useEffect(()=>{
+        console.log("componente", news)
+    },[news])
     if(!news) return <span>Nada para ler aqui</span>;
 
     return(

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './carrocel.module.css';
 import { IoIosArrowBack, IoIosArrowForward  } from "react-icons/io";
+import { handleUrl } from '@/scripts/globais';
 
 type Props = {
   customClass?: string[],
@@ -35,13 +36,13 @@ const Carrocel = ({customClass, urlImages}:Props) => {
     },[customClass]);
 
     // Troca automática de imagem a cada 5 segundos
-    useEffect(() => {
-    const interval = setInterval(() => {
-        goToNext(); // Chama a função para ir para o próximo post
-    }, 5000); // 5 segundos
+    useEffect(() => { 
+        const interval = setInterval(() => {
+            goToNext(); // Chama a função para ir para o próximo post
+        }, 5000); // 5 segundos
 
-    return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
-    }, []);
+        return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
+    }, [currentIndex]);
 
     return(
         <div className={`${styles.conteiner} ${customStyles}`}>
@@ -50,7 +51,7 @@ const Carrocel = ({customClass, urlImages}:Props) => {
                     {urlImages.map((post, idx) => (
                     <div className={styles.carouselItem} key={idx+'previewBanner'}>
                         <Image
-                            src={post}
+                            src={handleUrl(post)} 
                             alt={'Post do Instagram'}
                             width={200}
                             height={200}

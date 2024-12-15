@@ -308,3 +308,7 @@ export const handleTypeUrl = (dataNews:DataNews)=>{
         return isValidURL(dataNews.imageID[0]) ? dataNews.imageID[0] : isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
     }
 }
+export const handleUrl = (urlID:string)=>{
+    return isValidURL(urlID) ? urlID: isRelativeURL(urlID) ? urlID : `https://drive.google.com/uc?export=download&id=${urlID}`
+
+}

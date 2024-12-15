@@ -48,11 +48,12 @@
   
 .carouselWrapper {
     display: flex;
-    transition: transform 0.5s ease; /* Suaviza a transição entre os slides */
+    transition: transform 0.5s ease-in-out;
 }
 
 .carouselItem {
     min-width: 100%; /* Cada slide ocupa 100% da largura do container */
+    flex-shrink: 0;
     height: auto;
     box-sizing: border-box;
     display: flex;

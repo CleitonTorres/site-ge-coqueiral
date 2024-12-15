@@ -34,7 +34,8 @@ export default function Provider({children}:{children:ReactNode}){
       })
       .then((resp)=>{
         data = resp.data.news;
-        setDataNewsHome(data);
+
+        setDataNewsHome(data);        
       })
       .catch(err=> console.log(err))
     }    
