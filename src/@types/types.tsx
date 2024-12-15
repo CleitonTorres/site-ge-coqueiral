@@ -24,7 +24,7 @@ export interface ProfileProps {
 export interface DataNews {
     title: string,
     paragraph: string,
-    imageID: string,
+    imageID: string[],
     destaque: boolean,
     date: Date,
     evento?: boolean, //se não for evento é notícia.
@@ -63,7 +63,8 @@ export interface SAAE {
     infosPreliminares: InfosPreliminaresSaae[],
     dadosGerais: DadosGeraisSaae,
     inventarioRiscos: InventarioSaaeType[],
-    planoEmergencia: PlanoEmergenciaSaae
+    planoEmergencia: PlanoEmergenciaSaae,
+    fotosInspecao: FormFotosInspecao[]
 }
 
 export interface InventarioSaaeType{
@@ -173,6 +174,19 @@ export interface Docs {
     titulo: string,
     doc: string | File
 }
+export interface FormFotosInspecao {
+    title: string,
+    description: string,
+    fotos: FotosInspecaoType[];
+}
+
+export interface FotosInspecaoType {
+    title: string,
+    description: string,
+    name: string,
+    doc: string | File
+}
+
 export interface Veiculos {
     nomeMotorista: string,
     tipoVeiculo: string,

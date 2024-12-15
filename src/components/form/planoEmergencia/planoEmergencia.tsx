@@ -1240,7 +1240,7 @@ export default function PlanoEmergencia (){
             </div>
 
             {/* Acolhimento/Escuta */}
-            {['orange', 'red'].includes(context.dataSaae.grauRisco.color) ?
+            {['orange', 'red'].includes(context.dataSaae?.grauRisco?.color) ?
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Pessoa(s) do Acolhimento/Escuta</h3>
@@ -1562,7 +1562,7 @@ export default function PlanoEmergencia (){
             :null}
 
             {/* Veículo de Emergência/Apoio */}
-            {['orange', 'red'].includes(context.dataSaae.grauRisco.color) ?
+            {['orange', 'red'].includes(context.dataSaae?.grauRisco?.color) ?
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Veículo de Emergência/Apoio</h3>
@@ -2010,7 +2010,7 @@ export default function PlanoEmergencia (){
                 </>
             :null}
             {/* Profissional Resgate/Salvamento  */}
-            {['red'].includes(context.dataSaae.grauRisco.color) ?
+            {['red'].includes(context.dataSaae?.grauRisco?.color) ?
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Profissional Resgate/Salvamento</h3>

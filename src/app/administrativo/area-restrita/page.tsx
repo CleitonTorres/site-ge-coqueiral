@@ -19,7 +19,7 @@ export default function Page(){
     const [dataNews, setDataNews] = useState({} as DataNews);
 
     //arquivos anexados.
-    const [file, setFile] = useState({} as File);
+    const [file, setFile] = useState<File[]>([]);
 
     const handleData = (e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
@@ -61,32 +61,39 @@ export default function Page(){
     const handleUpload = (e:ChangeEvent<HTMLInputElement>)=>{
         e.preventDefault();
         const files = e.target.files;        
+        const fileListArray = files ? Array.from(files) as File[] : [];
 
-        if(files){
+        if(fileListArray){
             setFile((prev)=>{
-                const fileSize = parseFloat(calcTotalFilesMB(prev));
-                if(fileSize > 4){
-                    alert("o tamanho máximo de um arquivo é de 4mb");
-                    return prev;
-                }                 
-                return files[0]
+                for (const file of fileListArray) {
+                    const fileSize = parseFloat(calcTotalFilesMB(file));
+                    if(fileSize > 4){
+                        alert("o tamanho máximo de um arquivo é de 4mb");
+                        return prev;
+                    }
+                }                   
+
+                return fileListArray
             });
         }
     }
     
     const handleImageChange = () => {
-        if (file instanceof Blob) {
-          const reader = new FileReader();
-          reader.onload = () => {
+        for (let i= 0; i < file.length; i++) {
+            const match = file[i] instanceof Blob;
+            if(!match) break;
+            
+            const reader = new FileReader();
+            reader.onload = () => {
             setDataNews((prev)=>{
                 return{
                     ...prev,
-                    imageID: reader.result as string // Define a URL da imagem no estado
+                    imageID: prev.imageID ? [... prev.imageID, reader.result as string] : [reader.result as string] // Define a URL da imagem no estado
                 }
             })
-          };
-          reader.readAsDataURL(file); // Lê o arquivo como uma URL base64
-        }
+            };
+            reader.readAsDataURL(file[i]); // Lê o arquivo como uma URL base64   
+        }        
     }
 
     const handleActions = (id:number)=>{
@@ -136,28 +143,34 @@ export default function Page(){
 
         try{
             setShowModal(true);
-            let idImage= '';
-            const formData = new FormData();
+            
+            const idImage:string[]= [];
 
             //enviar os arquivos para nuvem.
-            if (file) {
-                //anexas os arquivos para serem enviados por e-mail.
-                formData.append(`file`, file, file.name);
-                formData.append('service', "upload");
+            if (file && file.length > 0)  {
                 
-                const respUpload = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/upload/`, formData,{
-                    headers:{
-                        'Authorization': `Bearer ${context.dataUser.token}`
-                    }
-                });
+                const formData = new FormData();
+                
+                for (let index = 0; index < file.length; index++) {
+                    //anexas os arquivos para serem enviados por e-mail.
+                    formData.append(`file`, file[index], file[index].name);
+                    formData.append('service', "upload");
+                    
+                    const respUpload = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/upload/`, formData,{
+                        headers:{
+                            'Authorization': `Bearer ${context.dataUser.token}`
+                        }
+                    });
 
-                if(respUpload && respUpload.data.idImagem){
-                    //recebe o id do arquivo salvo no google drive.
-                    idImage = respUpload.data.idImagem;
-                }else{
-                    alert("Ocorreu um erro ao tentar subir a imagem");
-                    setShowModal(false);
-                    return;
+                    if(respUpload && respUpload.data.idImagem){
+                        //recebe o id do arquivo salvo no google drive.
+                        idImage.push(respUpload.data.idImagem);
+                    }else{
+                        alert("Ocorreu um erro ao tentar subir a imagem");
+                        setShowModal(false);
+                        return;
+                    }
+                    
                 }
             }           
            
@@ -192,9 +205,7 @@ export default function Page(){
     },[]);
 
     useEffect(()=>{
-        if (file instanceof Blob){
             handleImageChange();
-        }
     },[file]);
     
     return(
@@ -410,6 +421,7 @@ export default function Page(){
                                 type="file" 
                                 name='upload' 
                                 accept='image/*'
+                                multiple
                                 onChange={(e)=>handleUpload(e)}
                             />
                         </div>

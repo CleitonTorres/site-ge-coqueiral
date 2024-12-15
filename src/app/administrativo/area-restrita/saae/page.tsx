@@ -9,6 +9,7 @@ import { Context } from "@/components/context/context";
 import InventarioSaae from "@/components/form/inventarioSaae/inputIA";
 import MatrizRisco from "@/components/form/matrizSaae/matrizRisco";
 import PlanoEmergencia from "@/components/form/planoEmergencia/planoEmergencia";
+import FotosInspecao from "@/components/form/fotosInspecao/fotosInspecao";
 
 export default function Page(){
     const context = useContext(Context);
@@ -27,6 +28,7 @@ export default function Page(){
                 {currenteSession === 2 ? <InventarioSaae /> : null}
                 {currenteSession === 3 ? <MatrizRisco /> : null}
                 {currenteSession === 4 ? <PlanoEmergencia /> : null}
+                {currenteSession === 5 ? <FotosInspecao /> : null}
 
                 <div className={styles.boxButtom}>
                     <IoIosArrowBack 

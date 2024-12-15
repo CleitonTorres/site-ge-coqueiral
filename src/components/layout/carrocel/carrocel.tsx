@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './carrocel.module.css';
-import { v4 } from 'uuid';
 import { IoIosArrowBack, IoIosArrowForward  } from "react-icons/io";
 
 type Props = {
@@ -15,12 +14,12 @@ const Carrocel = ({customClass, urlImages}:Props) => {
 
     // Função para navegar para o próximo post
     const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % urlImages.length); // Vai para o próximo post e loopa
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % urlImages.length); // Vai para o próximo post e loopa
     };
 
     // Função para navegar para o post anterior
     const goToPrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + urlImages.length) % urlImages.length); // Vai para o post anterior e loopa
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + urlImages.length) % urlImages.length); // Vai para o post anterior e loopa
     };
 
     useEffect(()=>{
@@ -47,26 +46,29 @@ const Carrocel = ({customClass, urlImages}:Props) => {
     return(
         <div className={`${styles.conteiner} ${customStyles}`}>
             <div className={styles.carousel}>
-            <div className={styles.carouselWrapper} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-                {urlImages.map((post) => (
-                <div className={styles.carouselItem} key={v4()}>
-                    <Image
-                        src={post}
-                        alt={'Post do Instagram'}
-                        width={200}
-                        height={200}
-                        priority
-                        quality={100}
-                    />
+                <div className={styles.carouselWrapper} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+                    {urlImages.map((post, idx) => (
+                    <div className={styles.carouselItem} key={idx+'previewBanner'}>
+                        <Image
+                            src={post}
+                            alt={'Post do Instagram'}
+                            width={200}
+                            height={200}
+                            priority
+                            quality={100}
+                        />
+                    </div>
+                    ))}
                 </div>
-                ))}
-            </div>
 
-            {/* Botões de Navegação */}
-            <div className={styles.navigation}>
-                <IoIosArrowBack onClick={goToPrev} className={styles.navButton} size={36}/>
-                <IoIosArrowForward onClick={goToNext} className={styles.navButton} size={36}/>
-            </div>
+                {/* Botões de Navegação */}
+                
+                {urlImages.length > 2 ?
+                    <div className={styles.navigation}>
+                        <IoIosArrowBack onClick={goToPrev} className={styles.navButton} size={36}/>
+                        <IoIosArrowForward onClick={goToNext} className={styles.navButton} size={36}/>
+                    </div>
+                :null}
             </div>
         </div>
     )

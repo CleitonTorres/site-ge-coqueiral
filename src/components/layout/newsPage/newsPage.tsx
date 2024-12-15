@@ -2,10 +2,11 @@
 import Section from '@/components/layout/sections/section';
 import styles from './newsPage.module.css';
 import Image from 'next/image';
-import { dateFormat3, isBase64, isRelativeURL, isValidURL } from '@/scripts/globais';
+import { dateFormat3 } from '@/scripts/globais';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '@/components/context/context';
 import { DataNews } from '@/@types/types';
+import Carrocel from '../carrocel/carrocel';
 
 type Props = {
     origem: 'cadastro' | 'view',
@@ -113,13 +114,15 @@ export default function NewsPage({idNews, dataNews}:Props) {
             <h1 className={styles.title}>{news.title}</h1>
             {news.imageID ? 
                 <div className={styles.conteinerImg}>
-                        <Image 
-                        alt=""
-                        width={970}
-                        height={350}
-                        src={isBase64(news.imageID) ? news.imageID : isValidURL(news.imageID) ? news.imageID : isRelativeURL(news.imageID) ? news.imageID : `https://drive.google.com/uc?export=download&id=${news.imageID}`}
-                        className={styles.image}
-                        decoding='auto'/>
+                        {/* <Image 
+                            alt=""
+                            width={970}
+                            height={350}
+                            src={isBase64(news.imageID) ? news.imageID : isValidURL(news.imageID) ? news.imageID : isRelativeURL(news.imageID) ? news.imageID : `https://drive.google.com/uc?export=download&id=${news.imageID}`}
+                            className={styles.image}
+                            decoding='auto'
+                        /> */}
+                        <Carrocel urlImages={typeof news.imageID === 'string' ? [news.imageID] : news.imageID}/>
                 </div>                
             :null}
             <div className={styles.dataLocal}>

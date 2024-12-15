@@ -51,6 +51,14 @@ const formatText = (text:string) => {
 };
 
 export default function Card({dataNews}:{dataNews:DataNews}){    
+
+    const handleTypeUrl = ()=>{
+        if(typeof dataNews.imageID === 'string') {
+            return isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
+        }else {
+            return isValidURL(dataNews.imageID[0]) ? dataNews.imageID[0] : isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
+        }
+    }
     return(
         <Link href={{
             pathname: '/news/',
@@ -64,7 +72,7 @@ export default function Card({dataNews}:{dataNews:DataNews}){
                     width={400}
                     height={150}
                     style={{objectFit: 'cover', width: '98%'}}
-                    src={isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`}
+                    src={handleTypeUrl()}
                 />
             :null}
             <h4>{dateFormat3(dataNews.date) || ''}</h4>
