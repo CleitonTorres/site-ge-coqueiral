@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from './card.module.css';
 import Link from "next/link";
 import { DataNews } from "@/@types/types";
-import { dateFormat3, isRelativeURL, isValidURL } from "@/scripts/globais";
+import { dateFormat3, handleTypeUrl } from "@/scripts/globais";
 
 const formatText = (text:string) => {
     if(!text) return<></>;
@@ -51,14 +51,6 @@ const formatText = (text:string) => {
 };
 
 export default function Card({dataNews}:{dataNews:DataNews}){    
-
-    const handleTypeUrl = ()=>{
-        if(typeof dataNews.imageID === 'string') {
-            return isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
-        }else {
-            return isValidURL(dataNews.imageID[0]) ? dataNews.imageID[0] : isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
-        }
-    }
     return(
         <Link href={{
             pathname: '/news/',
@@ -72,7 +64,7 @@ export default function Card({dataNews}:{dataNews:DataNews}){
                     width={400}
                     height={150}
                     style={{objectFit: 'cover', width: '98%'}}
-                    src={handleTypeUrl()}
+                    src={handleTypeUrl(dataNews)}
                 />
             :null}
             <h4>{dateFormat3(dataNews.date) || ''}</h4>

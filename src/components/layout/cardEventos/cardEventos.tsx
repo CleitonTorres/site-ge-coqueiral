@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import styles from './cardEventos.module.css';
 import { DataNews } from '@/@types/types';
-import { dateFormat2, dateFormat3, isBase64, isRelativeURL, isValidURL } from '@/scripts/globais';
+import { dateFormat2, dateFormat3, handleTypeUrl } from '@/scripts/globais';
 
 type Props = {
     dataNews: DataNews
@@ -14,9 +14,9 @@ export default function CardEventos({dataNews}:Props){
                 alt=''
                 width={200}
                 height={200}
-                src={isBase64(dataNews.imageID) ? dataNews.imageID : isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`}
+                src={handleTypeUrl(dataNews)}
                 className={styles.banner}
-            />
+            /> 
             <h1>{dataNews.title}</h1>
             <h5>{dateFormat3(dataNews.date)}</h5>
             <p>

@@ -1,4 +1,4 @@
-import { CEP, ProfileProps } from "@/@types/types";
+import { CEP, DataNews, ProfileProps } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { FaGlobe } from "react-icons/fa";
@@ -298,5 +298,13 @@ export const setColor = (nivelRisco: number | undefined)=>{
         return 'orange';
     }else{
         return 'red';
+    }
+}
+
+export const handleTypeUrl = (dataNews:DataNews)=>{
+    if(typeof dataNews.imageID === 'string') {
+        return isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
+    }else {
+        return isValidURL(dataNews.imageID[0]) ? dataNews.imageID[0] : isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
     }
 }
