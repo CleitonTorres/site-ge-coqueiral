@@ -64,7 +64,8 @@ export interface SAAE {
     dadosGerais: DadosGeraisSaae,
     inventarioRiscos: InventarioSaaeType[],
     planoEmergencia: PlanoEmergenciaSaae,
-    fotosInspecao: FormFotosInspecao[]
+    fotosInspecao: FormFotosInspecao[],
+    documentos: FormDocs[]
 }
 
 export interface InventarioSaaeType{
@@ -156,6 +157,22 @@ export interface PlanoEmergenciaSaae {
     atividadePorProfissional: AtividadeProfissional[]
     profSalvamento: Profissional[]
 }
+export interface FormFotosInspecao {
+    title: string,
+    description: string,
+    fotos: FotosInspecaoType[];
+}
+export interface FormDocs {
+    title: string,
+    description: string,
+    docs: FotosInspecaoType[];
+}
+
+export interface FormFotosInspecao {
+    title: string,
+    description: string,
+    fotos: FotosInspecaoType[];
+}
 
 export interface ContatosEmergencia{
     nome: string,
@@ -174,11 +191,7 @@ export interface Docs {
     titulo: string,
     doc: string | File
 }
-export interface FormFotosInspecao {
-    title: string,
-    description: string,
-    fotos: FotosInspecaoType[];
-}
+
 
 export interface FotosInspecaoType {
     title: string,

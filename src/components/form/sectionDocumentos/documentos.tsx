@@ -1,42 +1,78 @@
 'use client'
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
-import styles from './fotosInspecao.module.css';
+import styles from './documentos.module.css';
 import { calcTotalFilesMB } from '@/scripts/globais';
-import { FormFotosInspecao } from '@/@types/types';
+import { FormDocs } from '@/@types/types';
 import { Context } from '@/components/context/context';
 import Image from 'next/image';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
-
+import { getDocument } from 'pdfjs-dist';
 
 const ImagePreview = ({ file, width, height }:{file:File, width:number, height:number}) => {
     const [base64, setBase64] = useState('');
+    const [isPdf, setIsPdf] = useState(false);
 
-    const fileToBase64 = (file:File) => {
+    // Converte arquivos não PDF para Base64
+    const fileToBase64 = (file: File) => {
         return new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-    
-            reader.onload = () => resolve(reader.result as string); // Retorna apenas a string Base64
-            reader.onerror = (error) => reject(error);
-    
-            reader.readAsDataURL(file); // Lê o arquivo como uma string Base64
+        const reader = new FileReader();
+
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+
+        reader.readAsDataURL(file);
         });
     };
 
-    useEffect(() => {
-        if (file) {
-            fileToBase64(file).then((base64String) => {
-                setBase64(base64String); // Atualiza o estado com o Base64
-            }).catch((error) => {
-                console.error('Erro ao converter arquivo para Base64:', error);
-            });
+    // Converte a primeira página de um PDF para Base64
+    const pdfToImageBase64 = async (file: File): Promise<string> => {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await getDocument(arrayBuffer).promise;
+        const page = await pdf.getPage(1); // Obtém a primeira página do PDF
+
+        const viewport = page.getViewport({ scale: 1.5 }); // Define o tamanho da renderização
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        if (context) {
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        return canvas.toDataURL(); // Converte o conteúdo do canvas para Base64
         }
-    }, [file]);
+
+        throw new Error('Erro ao renderizar a página do PDF.');
+    };
+    
+    useEffect(() => {
+        const processFile = async () => {
+          try {
+            if (file.type === 'application/pdf') {
+              setIsPdf(true);
+              const base64String = await pdfToImageBase64(file);
+              setBase64(base64String);
+            } else {
+              setIsPdf(false);
+              const base64String = await fileToBase64(file);
+              setBase64(base64String);
+            }
+          } catch (error) {
+            console.error('Erro ao processar arquivo:', error);
+          }
+        };
+    
+        if (file) {
+          processFile();
+        }
+      }, [file]);
 
     if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
 
     return (
         <Image
-            alt=""
+            alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
             width={width}
             height={height}
             style={{ objectFit: 'contain', height: 'auto' }}
@@ -45,11 +81,11 @@ const ImagePreview = ({ file, width, height }:{file:File, width:number, height:n
     );
 };
 
-export default function FotosInspecao(){
+export default function SectionDocumentos(){
     const context = useContext(Context);
 
-    const [currentForm, setCurrentForm] = useState({} as FormFotosInspecao);
-    const [data, setData] = useState<FormFotosInspecao[]>([]);
+    const [currentForm, setCurrentForm] = useState({} as FormDocs);
+    const [data, setData] = useState<FormDocs[]>([]);
     
     const handleChangeCurrentForm = (
         e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -60,20 +96,20 @@ export default function FotosInspecao(){
         const value = e.target.value;
 
         setCurrentForm((prev)=>{
-            if(name.includes('fotos')){
+            if(name.includes('docs')){
                 const nameField = name.split('.')[1];
-                const newArray = prev.fotos.map((foto, idx)=>{
+                const newArray = prev.docs.map((doc, idx)=>{
                     if(index === idx){
                         return{
-                            ...foto,
+                            ...doc,
                             [nameField]: value
                         }
                     }else{
-                        return foto
+                        return doc
                     }
                 })
 
-                return {...prev, fotos: newArray};
+                return {...prev, docs: newArray};
             }else{
                 return {
                     ...prev,
@@ -95,22 +131,22 @@ export default function FotosInspecao(){
 
         let newData = data;
 
-        if(name.includes('fotos')){
+        if(name.includes('doc')){
             newData = newData.map((section, id)=>{
                 if(id === sectionId){
-                    const newFotos = section.fotos.map((foto, fidx)=>{
+                    const newDocs = section.docs.map((doc, fidx)=>{
                         if(fidx === fotoId){
                             return{
-                                ...foto,
+                                ...doc,
                                 [nameField[1]]: value
                             }
                         }else {
-                            return foto;
+                            return doc;
                         }
                     });
                     return {
                         ...section,
-                        fotos: newFotos
+                        docs: newDocs
                     }
                 }else {
                     return section;
@@ -134,7 +170,7 @@ export default function FotosInspecao(){
     }
 
     const addSectionFotos = ()=>{
-        if(currentForm.fotos?.length === 0 || !currentForm.title || !currentForm.description){
+        if(currentForm.docs?.length === 0 || !currentForm.title || !currentForm.description){
             alert("Campos obrigatórios estão vazios ou faltam fotos");
             return;
         };
@@ -143,7 +179,7 @@ export default function FotosInspecao(){
             ...data,
             currentForm
         ]
-        setCurrentForm({} as FormFotosInspecao)
+        setCurrentForm({} as FormDocs)
         updateContext(newData);
     }
     const removeSectionFotos = (index:number)=>{
@@ -163,8 +199,8 @@ export default function FotosInspecao(){
         //verifica o tamanho de cada imagem.
         fileListArray.forEach(file => {
             const fileSize = parseFloat(calcTotalFilesMB(file));
-            if(fileSize > 4){
-                alert("o tamanho máximo de um arquivo é de 4mb");
+            if(fileSize > 10){
+                alert("o tamanho máximo de um arquivo é de 10mb");
                 return;
             }
         });
@@ -172,9 +208,9 @@ export default function FotosInspecao(){
         setCurrentForm((prev)=>{
             let newData = prev;
             for (const file of fileListArray) {
-                const match = newData.fotos?.find(doc=> doc.name === file.name);
+                const match = newData.docs?.find(doc=> doc.name === file.name);
                 if(match){
-                    const newArray = newData.fotos.map(doc=>{
+                    const newArray = newData.docs.map(doc=>{
                         if(doc.name === file.name){
                             return{
                                 ...doc,
@@ -186,13 +222,13 @@ export default function FotosInspecao(){
                     })
                     newData ={
                         ...newData,
-                        fotos: newArray
+                        docs: newArray
                     }
                 }else{
                     newData= {
                         ...newData, 
-                        fotos: newData.fotos ? [
-                            ...newData.fotos,
+                        docs: newData.docs ? [
+                            ...newData.docs,
                             {
                                 title: '',
                                 description: '',
@@ -215,30 +251,30 @@ export default function FotosInspecao(){
     }
     const handleRemoveUploadCurrentFotos = (name:string)=>{
         setCurrentForm((prev)=>{
-            const newData = prev.fotos.filter(doc=> doc.name !== name);
+            const newData = prev.docs.filter(doc=> doc.name !== name);
             return {...prev, fotos: newData}
         })
     }
     //----------------
 
-    const updateContext = (newData:FormFotosInspecao[])=>{
+    const updateContext = (newData:FormDocs[])=>{
         setData(newData);
         context.setDataSaae((prev)=>{
             return{
                 ...prev,
-                fotosInspecao: newData
+                documentos: newData
             }
         })
     }
 
     return(
         <div className={styles.conteiner}>
-            <h2>6. Fotos do local/inspeção:</h2>
+            <h2>7. Documentos adicionais:</h2>
 
             <div className={styles.section}>
                 <div className={styles.subConteiner}>
                         <div className={styles.boxInput}>
-                            <label htmlFor="">Título da sessão de fotos</label>
+                            <label htmlFor="">Título da sessão de documentos</label>
                             <input
                                 type='text' 
                                 name='title'
@@ -252,16 +288,16 @@ export default function FotosInspecao(){
                                 name='description'
                                 value={currentForm.description || ''}
                                 onChange={(e)=>handleChangeCurrentForm(e)}
-                                placeholder='forneça informações sobre esse conjunto de imagens'
+                                placeholder='forneça informações sobre esse conjunto de documentos'
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="">Fotos</label>
+                            <label htmlFor="">Documentos</label>
                             <input
                                 type='file' 
-                                name='fotos'
+                                name='docs'
                                 multiple
-                                accept='image/*'
+                                accept='.pdf'
                                 onChange={(e)=>handleUploadCurrentForm(e)}
                             />
                         </div>
@@ -269,26 +305,26 @@ export default function FotosInspecao(){
                 </div>
             </div>
             <div className={styles.subConteiner}>
-                    {currentForm.fotos?.map((foto, idx)=>(
+                    {currentForm.docs?.map((doc, idx)=>(
                         <div key={idx+'viewCurrentFoto'} className={styles.viewerFotos}>
-                            <b onClick={()=>handleRemoveUploadCurrentFotos(foto.name)}>X</b>
+                            <b onClick={()=>handleRemoveUploadCurrentFotos(doc.name)}>X</b>
                             <div className={`${styles.subConteiner} ${styles.flexSpace}`}>
                                 <div className={`${styles.boxInput} ${styles.width200}`}>
                                     <label htmlFor="title">Rótulo da imagem</label>
                                     <input
-                                        name='fotos.title' 
-                                        value={foto.title || ''} 
+                                        name='doc.title' 
+                                        value={doc.title || ''} 
                                         onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
                                 </div>
                                 <div className={styles.boxInput}>
                                     <label htmlFor="title">Observações</label>
                                     <textarea 
-                                        name='fotos.description' 
-                                        value={foto.description || ''}
+                                        name='doc.description' 
+                                        value={doc.description || ''}
                                         onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
                                 </div>
                             </div>
-                            <ImagePreview file={foto.doc as File} height={600} width={600}/>
+                            <ImagePreview file={doc.doc as File} height={600} width={600}/>
                         </div>                        
                     ))}
             </div>
@@ -298,9 +334,9 @@ export default function FotosInspecao(){
                     <div 
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}
-                        key={idx+'dataFotos'}>
+                        key={idx+'dataDocumentos'}>
                         <div className={styles.boxInput}>
-                            <p>Título do conjunto de fotos:</p>
+                            <p>Título do conjunto de documentos:</p>
                             <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
                             <input 
                                 name='title'
@@ -309,7 +345,7 @@ export default function FotosInspecao(){
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderBlue}
                             />
-                            <p>Observações do conjunto de fotos:</p>
+                            <p>Observações do conjunto de documentos:</p>
                             <input 
                                 name='description'
                                 value={section.description || ''}
@@ -317,13 +353,13 @@ export default function FotosInspecao(){
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderBlue}
                             />
-                            {section.fotos?.map((foto, fIdx)=>(
+                            {section.docs?.map((doc, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
                                     <div>
-                                        <b>Título da imagem:</b> 
+                                        <b>Título da documento:</b> 
                                         <input 
                                             name='fotos.title'
-                                            value={foto.title || ''}
+                                            value={doc.title || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
                                         />
@@ -332,12 +368,12 @@ export default function FotosInspecao(){
                                         <b>Descrição:</b> 
                                         <input 
                                             name='fotos.description'
-                                            value={foto.description || ''}
+                                            value={doc.description || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
                                         />
                                     </div>
-                                    <ImagePreview file={foto.doc as File} height={100} width={100}/>
+                                    <ImagePreview file={doc.doc as File} height={100} width={100}/>
                                 </div>
                             ))}
                         </div>

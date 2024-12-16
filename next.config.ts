@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  productionBrowserSourceMaps: false,
+  productionBrowserSourceMaps: false
 };
 
 export default nextConfig;

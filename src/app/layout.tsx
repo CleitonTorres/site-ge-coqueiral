@@ -10,6 +10,10 @@ import Script from 'next/script';
 import Provider from '@/components/context/context';
 import Breadcrumb from '@/components/layout/breadcrumb/breadCrumb';
 
+import { GlobalWorkerOptions } from 'pdfjs-dist';
+
+GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
     const [animation, setAnimation] = useState('');
@@ -53,8 +57,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             <meta name="google-site-verification" content="c7o2q50eN9ml30c4yZ6gkc4a0Qd0C0eQMvSGzbaESo8" />
         </head>
         <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`}/>
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`}/>
+        <Script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`}/>
+
         <body 
             className='flexCollTop' 
             style={{ position: 'relative', minHeight: '100vh' }}
