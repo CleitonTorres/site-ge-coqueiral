@@ -63,12 +63,17 @@ export default function Page(){
         const files = e.target.files;        
         const fileListArray = files ? Array.from(files) as File[] : [];
 
+        if(fileListArray.length > 9){
+            alert("O limite de imagens é 9 imagens por notícia");
+            return;
+        }
+
         if(fileListArray){
             setFile((prev)=>{
                 for (const file of fileListArray) {
                     const fileSize = parseFloat(calcTotalFilesMB(file));
-                    if(fileSize > 4){
-                        alert("o tamanho máximo de um arquivo é de 4mb");
+                    if(fileSize > 9){
+                        alert("o tamanho máximo de um arquivo é de 9mb");
                         return prev;
                     }
                 }                   
@@ -144,7 +149,7 @@ export default function Page(){
         try{
             setShowModal(true);
             
-            const idImage:string[]= [];
+            let idImage:string[]= [];
 
             //enviar os arquivos para nuvem.
             if (file && file.length > 0)  {
@@ -152,28 +157,31 @@ export default function Page(){
                 const formData = new FormData();
                 
                 for (let index = 0; index < file.length; index++) {
-                    //anexas os arquivos para serem enviados por e-mail.
-                    formData.append(`file`, file[index], file[index].name);
-                    formData.append('service', "upload");
-                    
-                    const respUpload = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/upload/`, formData,{
-                        headers:{
-                            'Authorization': `Bearer ${context.dataUser.token}`
-                        }
-                    });
-
-                    if(respUpload && respUpload.data.idImagem){
-                        //recebe o id do arquivo salvo no google drive.
-                        idImage.push(respUpload.data.idImagem);
-                    }else{
-                        alert("Ocorreu um erro ao tentar subir a imagem");
-                        setShowModal(false);
-                        return;
-                    }
-                    
+                    formData.append(`file-${index}`, file[index], file[index].name);
                 }
+
+                //anexas os arquivos para serem enviados por e-mail.
+                formData.append('destinationFolder', "uploads-imagens-news");
+                formData.append('bucketName', "site-coqueiral-storage");
+
+                const respUpload = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/uploadImagens/`, formData,{
+                    headers:{
+                        'Authorization': `Bearer ${context.dataUser.token}`
+                    }
+                });
+
+                if(respUpload && respUpload.data.urlsImagens){
+                    //recebe o id do arquivo salvo no google drive.
+                    idImage= respUpload.data.urlsImagens as string[];
+                }else{
+                    console.log('erro ao subir imagem', respUpload);
+                    alert("Ocorreu um erro ao tentar subir a imagem");
+                    setShowModal(false);
+                }
+                
+                console.log('urls', idImage)
             }           
-           
+
             await axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,
                 {
                     service: 'news',

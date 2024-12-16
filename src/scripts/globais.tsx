@@ -303,12 +303,12 @@ export const setColor = (nivelRisco: number | undefined)=>{
 
 export const handleTypeUrl = (dataNews:DataNews)=>{
     if(typeof dataNews.imageID === 'string') {
-        return isValidURL(dataNews.imageID) ? dataNews.imageID : isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
+        return isBase64(dataNews.imageID) || isValidURL(dataNews.imageID) || isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
     }else {
-        return isValidURL(dataNews.imageID[0]) ? dataNews.imageID[0] : isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
+        return isBase64(dataNews.imageID[0]) || isValidURL(dataNews.imageID[0]) || isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
     }
 }
 export const handleUrl = (urlID:string)=>{
-    return isValidURL(urlID) ? urlID: isRelativeURL(urlID) ? urlID : `https://drive.google.com/uc?export=download&id=${urlID}`
+    return isBase64(urlID) || isValidURL(urlID) || isRelativeURL(urlID) ? urlID : `https://drive.google.com/uc?export=download&id=${urlID}`
 
 }

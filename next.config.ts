@@ -41,7 +41,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'scontent-iad3-1.cdninstagram.com',
         port: '',
-      },
+      },{
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: ''
+      }
     ],
   },
   productionBrowserSourceMaps: false

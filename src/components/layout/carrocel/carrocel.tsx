@@ -55,8 +55,8 @@ const Carrocel = ({customClass, urlImages}:Props) => {
                             alt={'Post do Instagram'}
                             width={200}
                             height={200}
-                            priority
-                            quality={100}
+                            placeholder='blur'
+                            blurDataURL={handleUrl(post)}
                         />
                     </div>
                     ))}
