@@ -5,6 +5,7 @@ import { Endereco } from "@/@types/types";
 type Props = {
     data?: Endereco,
     label: 'localInicio' | 'localFim',
+    readonly: boolean,
     setLatLong: (
         lat: number,
         lng: number,
@@ -12,7 +13,7 @@ type Props = {
         adress?: string
     ) => void
 }
-export default function MapsComponent ({label, data, setLatLong}:Props){
+export default function MapsComponent ({label, data, readonly, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
 
     const loadMapAddress = async()=>{
@@ -59,7 +60,8 @@ export default function MapsComponent ({label, data, setLatLong}:Props){
             }); 
         }
 
-        map.addListener("click", (e) => {
+        if(!readonly){
+            map.addListener("click", (e) => {
             const latLng = e.latLng;
 
             // Converte as coordenadas para um endereço
@@ -78,7 +80,8 @@ export default function MapsComponent ({label, data, setLatLong}:Props){
                 }
             });
             
-        });
+            });
+        }
     }
 
     useEffect(()=>{

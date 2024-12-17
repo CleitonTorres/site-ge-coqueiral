@@ -1,6 +1,8 @@
 .conteiner{
     display: flex;
     flex-direction: column;
+    transition: 0.4s;
+    animation: fadeIn 0.8s linear forwards;
 }
 .boxHead{
     display: flex;
@@ -114,6 +116,15 @@
 }
 .closeBtn:hover{
     cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
 }
 
 @media (max-width: 499px) {

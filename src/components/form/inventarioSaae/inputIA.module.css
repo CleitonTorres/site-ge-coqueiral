@@ -4,6 +4,8 @@
     flex-direction: column;
     width: 100vw;
     max-width: 1200px;
+    transition: 0.4s;
+    animation: fadeIn 0.8s linear forwards;
 }
 .conteiner h1{
     font-weight: 400;
@@ -165,6 +167,14 @@
     }
     100% {
         content: '.';
+    }
+}
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
     }
 }
 

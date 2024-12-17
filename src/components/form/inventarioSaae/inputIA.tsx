@@ -9,7 +9,11 @@ import { Context } from '@/components/context/context';
 import Texting from '@/components/layout/texting/texting';
 import { setColor } from '@/scripts/globais';
 
-const InventarioSaae = () => {
+type Props = {
+    readOnly: boolean
+}
+
+const InventarioSaae = ({readOnly}:Props) => {
     const context = useContext(Context);
     const [atividadeCorrente, setAtividadeCorrente] = useState({} as InventarioSaaeType);
 
@@ -92,7 +96,7 @@ const InventarioSaae = () => {
             }
         });
 
-        setInputForm(newData);
+        
         updateContext(newData);
     }
 
@@ -105,7 +109,8 @@ const InventarioSaae = () => {
 
         if(!value) return;
 
-        const verify = inputForm.find(ativ=> ativ.atividade === value);
+        const verify = inputForm.find(ativ=> ativ.atividade === atividadeCorrente.atividade);
+        console.log(verify);
         if(verify) return;
 
         setLoading(true);
@@ -137,16 +142,14 @@ const InventarioSaae = () => {
                     perigo: dados.perigo,
                     danos: dados.dano,
                     acoesMitigadoras: dados.acoesMitigadoras,
-                    controleOperacional: dados.controleOperacional
+                    controleOperacional: dados.controleOperacional,
+                    consequencia: 0,
+                    probabilidade: 0,
+                    nivelRisco: 0
                 } as InventarioSaaeType
             });           
             setCommentIA(Response.comment || '')
             
-            setInputForm([
-                ...inputForm,
-                ...newData
-            ]);
-
             updateContext([
                 ...inputForm,
                 ...newData
@@ -167,18 +170,19 @@ const InventarioSaae = () => {
             consequencia: !isNaN(atividadeCorrente.consequencia) ? atividadeCorrente.consequencia : 0,
             nivelRisco: !isNaN(atividadeCorrente.nivelRisco) ? atividadeCorrente.nivelRisco : 0
         } as InventarioSaaeType];
-        setInputForm(newDate);
+
         updateContext(newDate);
         setAtividadeCorrente({} as InventarioSaaeType)
     }
 
     const removeItem = (idx:number)=>{
         const newDate = inputForm.filter((ativ, i)=> i !== idx);
-        setInputForm(newDate);
+
         updateContext(newDate);
     }
 
     const updateContext = (newData:InventarioSaaeType[])=>{
+        setInputForm(newData);
         context.setDataSaae(inv=>{
             return{
                 ...inv,
@@ -210,18 +214,24 @@ const InventarioSaae = () => {
     //ordena os itens da lista e alimenta o contexto.
     useEffect(()=>{
         if(inputForm){
-            const maiorRisco = inputForm.sort((a,b)=>{
-                if(a.nivelRisco > b.nivelRisco){
-                return 1
-                }else if(a.nivelRisco < b.nivelRisco){
-                    return -1
-                }else{
-                    return 0
-                }
-            })[inputForm.length-1];
+            // const copy= inputForm;
+            // const maiorRisco = copy.sort((a,b)=>{
+            //     if(a.nivelRisco > b.nivelRisco){
+            //     return 1
+            //     }else if(a.nivelRisco < b.nivelRisco){
+            //         return -1
+            //     }else{
+            //         return 0
+            //     }
+            // })[inputForm.length-1];
+
+            const maiorRisco = inputForm.reduce((prev, current)=>{
+                return prev.nivelRisco > current.nivelRisco ? prev : current;
+            },inputForm[0]);
 
             if(!maiorRisco) return;
 
+            //console.log('reduce', prev)
             context.setDataSaae((prev)=>{
                 return{
                     ...prev,
@@ -242,7 +252,7 @@ const InventarioSaae = () => {
     },[]);
 
     return (
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             {useIA ?
                 <div className={styles.boxAvatar}> 
                     <Image 
@@ -256,7 +266,8 @@ const InventarioSaae = () => {
             :null}
             <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
             <h2>3. Inventário de Riscos:</h2>
-            <div className={styles.boxCheckIA}>
+            {!readOnly ?
+                <div className={styles.boxCheckIA}>
                 <label htmlFor="" style={{fontSize: '14px'}}>Usar IA Mathias?</label>
                 <input  
                     style={{position: 'relative', marginLeft: '10px'}}
@@ -264,24 +275,27 @@ const InventarioSaae = () => {
                     checked={useIA} 
                     onChange={()=>setUseIA(prev=> !prev)}
                 />
-            </div>
+                </div>
+            :null}
             <div className={styles.table}>
                 <div className={styles.content}>
                     <h1 className={styles.header}>
                         Etapa do Evento/Atividade
                     </h1>
-                    <div className={styles.collum}>
-                        {loading ? <span>gerando dados</span> : null}
-                        <input
-                            name='atividade'
-                            value={atividadeCorrente?.atividade || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            onBlur={(e)=>handleSubmit(e)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Exemplo: remada em caiaque"
-                            style={{border: 'none', height: 40}}
-                        />                       
-                    </div>
+                    {!readOnly ? 
+                        <div className={styles.collum}>
+                            {loading ? <span>gerando dados</span> : null}
+                            <input
+                                name='atividade'
+                                value={atividadeCorrente?.atividade || ''}
+                                onChange={(e) => handleCurrentAtivity(e)}
+                                onBlur={(e)=>handleSubmit(e)}
+                                onKeyDown={handleKeyDown}
+                                placeholder="Exemplo: remada em caiaque"
+                                style={{border: 'none', height: 40}}
+                            />                       
+                        </div>
+                    :null}
                     {inputForm?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-atividade`}
@@ -290,6 +304,7 @@ const InventarioSaae = () => {
                             onChange={(e) => handleForm(e, idx)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         /> 
                     ))}
                 </div>
@@ -297,13 +312,15 @@ const InventarioSaae = () => {
                     <h1 className={styles.header}>
                         Perigos
                     </h1>
-                    <textarea
-                        name='perigo'
-                        value={atividadeCorrente?.perigo || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        placeholder="Exemplo: insolação"
-                        className={`${styles.collum}`}
-                    />
+                    {!readOnly ?
+                        <textarea
+                            name='perigo'
+                            value={atividadeCorrente?.perigo || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            placeholder="Exemplo: insolação"
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                    />:null}
                     {inputForm?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-perigo`}
@@ -313,6 +330,7 @@ const InventarioSaae = () => {
                             onBlur={(e)=>handleSubmit(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
+                            readOnly={readOnly}
                         />
                     ))}
                 </div>
@@ -320,13 +338,15 @@ const InventarioSaae = () => {
                     <h1 className={styles.header}>
                         Danos
                     </h1>
-                    <textarea
-                        name='danos'
-                        value={atividadeCorrente?.danos || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        placeholder="Exemplo: nauseas, dor de cabeça, fraqueza, queimaduras na pele..."
-                        className={`${styles.collum} `}
-                    />
+                    {!readOnly ? 
+                        <textarea
+                            name='danos'
+                            value={atividadeCorrente?.danos || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            placeholder="Exemplo: nauseas, dor de cabeça, fraqueza, queimaduras na pele..."
+                            className={`${styles.collum} `}
+                        />
+                    :null}
                     {inputForm?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-danos`}
@@ -336,6 +356,7 @@ const InventarioSaae = () => {
                             onBlur={(e)=>handleSubmit(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
+                            readOnly={readOnly}
                         />
                     ))}
                 </div>
@@ -343,13 +364,15 @@ const InventarioSaae = () => {
                     <h1 className={styles.header}>
                         Controle Operacional
                     </h1>
-                    <textarea
-                        name='controleOperacional'
-                        value={atividadeCorrente?.controleOperacional || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        placeholder="Exemplo: orientação para usar roupas leves e adequadas para a atividade, usar cobertura de cabeça, se hidratar regularmente."
-                        className={`${styles.collum} `}
-                    />
+                    {!readOnly ?
+                        <textarea
+                            name='controleOperacional'
+                            value={atividadeCorrente?.controleOperacional || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            placeholder="Exemplo: orientação para usar roupas leves e adequadas para a atividade, usar cobertura de cabeça, se hidratar regularmente."
+                            className={`${styles.collum} `}
+                        />
+                    :null}
                     {inputForm?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-controleOperacional`}
@@ -359,6 +382,7 @@ const InventarioSaae = () => {
                             onBlur={(e)=>handleSubmit(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
+                            readOnly={readOnly}
                         />
                     ))}
                 </div>
@@ -366,13 +390,15 @@ const InventarioSaae = () => {
                     <h1 className={styles.header}>
                         Ações mitigadoras
                     </h1>
-                    <textarea
-                        name='acoesMitigadoras'
-                        value={atividadeCorrente?.acoesMitigadoras || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        placeholder="Exemplo: por o participante em repouso em local sombrado, oferecer hidratação lenta, umidecer nuca e o rosto."
-                        className={`${styles.collum} `}
-                    />
+                    {!readOnly ? 
+                        <textarea
+                            name='acoesMitigadoras'
+                            value={atividadeCorrente?.acoesMitigadoras || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            placeholder="Exemplo: por o participante em repouso em local sombrado, oferecer hidratação lenta, umidecer nuca e o rosto."
+                            className={`${styles.collum} `}
+                        />
+                    :null}
                     {inputForm?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-acoesMitigadoras`}
@@ -382,6 +408,7 @@ const InventarioSaae = () => {
                             onBlur={(e)=>handleSubmit(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
+                            readOnly={readOnly}
                         />
                     ))}
                 </div>
@@ -389,60 +416,12 @@ const InventarioSaae = () => {
                     <h1 className={`${styles.header} ${styles.width100}`} title='Probabilidade do perigo ocorrer'>
                         Probabilidade
                     </h1>
-                    <select
-                        name='probabilidade'
-                        value={atividadeCorrente?.probabilidade || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        className={`${styles.collum} ${styles.width100}`}
-                    >
-                        <option value=""></option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                    {inputForm?.map((item, idx)=>(
-                        <select 
-                            key={`${idx}-probabilidade`}
+                    {!readOnly ? 
+                        <select
                             name='probabilidade'
-                            className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
-                            value={item?.probabilidade}
-                            onChange={(e)=>handleForm(e, idx)}
-                        >
-                             <option value=""></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    ))}
-                </div>
-                <div className={styles.content}>
-                    <h1 className={`${styles.header} ${styles.width100}`} title='Consequência caso o perigo ocorra'>
-                        Consequência
-                    </h1>
-                    <select
-                        name='consequencia'
-                        value={atividadeCorrente?.consequencia || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        className={`${styles.collum} ${styles.width100}`}
-                    >
-                        <option value=""></option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                    {inputForm?.map((item, idx)=>(
-                        <select 
-                            key={`${idx}-consequencia`}
-                            name='consequencia'
-                            className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
-                            value={item?.consequencia}
-                            onChange={(e)=>handleForm(e, idx)}
+                            value={atividadeCorrente?.probabilidade || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            className={`${styles.collum} ${styles.width100}`}
                         >
                             <option value=""></option>
                             <option value="1">1</option>
@@ -451,40 +430,125 @@ const InventarioSaae = () => {
                             <option value="4">4</option>
                             <option value="5">5</option>
                         </select>
-                    ))}
+                    :null}
+                    {inputForm?.map((item, idx)=>{
+                        if(!readOnly){
+                            return <select 
+                                key={`${idx}-probabilidade`}
+                                name='probabilidade'
+                                className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
+                                value={item?.probabilidade}
+                                onChange={(e)=>handleForm(e, idx)}
+                            >
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        }else{
+                            return <input 
+                                key={`${idx}-probabilidade`}
+                                defaultValue={item?.probabilidade}
+                                readOnly={readOnly}
+                                className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
+                            />
+                        }
+                    })}
+                </div>
+                <div className={styles.content}>
+                    <h1 className={`${styles.header} ${styles.width100}`} title='Consequência caso o perigo ocorra'>
+                        Consequência
+                    </h1>
+                    {!readOnly ?
+                        <select
+                            name='consequencia'
+                            value={atividadeCorrente?.consequencia || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            className={`${styles.collum} ${styles.width100}`}
+                        >
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    : null}
+                    {inputForm?.map((item, idx)=>{
+                        if(!readOnly){
+                            return <select 
+                                key={`${idx}-consequencia`}
+                                name='consequencia'
+                                className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
+                                value={item?.consequencia}
+                                onChange={(e)=>handleForm(e, idx)}
+                            >
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        }else{
+                            return <input 
+                                key={`${idx}-consequencia`}
+                                defaultValue={item?.consequencia}
+                                className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
+                                readOnly={readOnly}
+                            />
+                        }
+                    })}
                 </div>
                 <div className={styles.content}>
                     <h1 className={`${styles.header} ${styles.width100}`} title='Consequência caso o perigo ocorra'>
                         Nível de Risco
                     </h1>
-                    <FaPlus 
-                        className={styles.addItem} 
-                        onClick={addItem} 
-                        aria-label='adicionar este item'
-                        title='adicionar este item'/>
-                    <select
-                        name='nivelRisco'
-                        value={atividadeCorrente.nivelRisco || ''}
-                        onChange={(e) => handleCurrentAtivity(e)}
-                        className={`${styles.collum} ${styles.width100}`}
-                    >
-                        <option value={atividadeCorrente.nivelRisco || ''}>{(atividadeCorrente?.probabilidade * atividadeCorrente?.consequencia) || ''}</option>
-                    </select>
+                    {!readOnly ?
+                        <FaPlus 
+                            className={styles.addItem} 
+                            onClick={addItem} 
+                            aria-label='adicionar este item'
+                            title='adicionar este item'/>
+                    :null}
+                    {!readOnly ?
+                        <select
+                            name='nivelRisco'
+                            value={atividadeCorrente.nivelRisco || ''}
+                            onChange={(e) => handleCurrentAtivity(e)}
+                            className={`${styles.collum} ${styles.width100}`}
+                        >
+                            <option value={atividadeCorrente.nivelRisco || ''}>{(atividadeCorrente?.probabilidade * atividadeCorrente?.consequencia) || ''}</option>
+                        </select>
+                        :
+                    null}
                     {inputForm?.map((item, idx)=>(
                         <div key={`${idx}-nivelRisco`} style={{position: 'relative'}}>
-                            <FaMinus 
-                                className={styles.removeItem} 
-                                onClick={()=>removeItem(idx)} 
-                                aria-label='remover este item'
-                                title='remover este item'/>
-                            <select                                
-                                name='nivelRisco'
-                                value={item?.nivelRisco || ''}
-                                onChange={(e) => handleForm(e, idx)}
-                                className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
-                            >
-                                <option value={item?.nivelRisco}>{item?.nivelRisco}</option>
-                            </select>
+                            {!readOnly ? 
+                                <FaMinus 
+                                    className={styles.removeItem} 
+                                    onClick={()=>removeItem(idx)} 
+                                    aria-label='remover este item'
+                                    title='remover este item'/>
+                            :null}
+                            {!readOnly ?
+                                <select                                
+                                    name='nivelRisco'
+                                    value={item?.nivelRisco || ''}
+                                    onChange={(e) => handleForm(e, idx)}
+                                    className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
+                                >
+                                    <option value={item?.nivelRisco}>{item?.nivelRisco}</option>
+                                </select>
+                                :
+                                <input 
+                                    defaultValue={item?.nivelRisco || ''}
+                                    readOnly={readOnly}
+                                    className={`${styles.collum} ${styles.width100} ${styles.alingLeftText}`}
+                                />
+                            }
                         </div>
                         
                     ))}

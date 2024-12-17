@@ -3,6 +3,8 @@
     flex-direction: column;
     width: 100vw;
     max-width: 1200px;
+    transition: 0.4s;
+    animation: fadeIn 0.8s linear forwards;
 }
 .conteiner h2{
     font-weight: 400;
@@ -145,6 +147,15 @@
     text-wrap: nowrap;
     margin-right: 20px;
     margin-left: 2px;
+}
+
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
 }
 
 @media (max-width: 499px) {

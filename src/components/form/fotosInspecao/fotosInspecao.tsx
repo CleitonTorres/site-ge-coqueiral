@@ -45,7 +45,10 @@ const ImagePreview = ({ file, width, height }:{file:File, width:number, height:n
     );
 };
 
-export default function FotosInspecao(){
+type Props = {
+    readOnly: boolean
+}
+export default function FotosInspecao({readOnly}:Props){
     const context = useContext(Context);
 
     const [currentForm, setCurrentForm] = useState({} as FormFotosInspecao);
@@ -232,66 +235,69 @@ export default function FotosInspecao(){
     }
 
     return(
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h2>6. Fotos do local/inspeção:</h2>
-
-            <div className={styles.section}>
-                <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Título da sessão de fotos</label>
-                            <input
-                                type='text' 
-                                name='title'
-                                value={currentForm.title || ''}
-                                onChange={(e)=>handleChangeCurrentForm(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Descrição</label>
-                            <textarea
-                                name='description'
-                                value={currentForm.description || ''}
-                                onChange={(e)=>handleChangeCurrentForm(e)}
-                                placeholder='forneça informações sobre esse conjunto de imagens'
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Fotos</label>
-                            <input
-                                type='file' 
-                                name='fotos'
-                                multiple
-                                accept='image/*'
-                                onChange={(e)=>handleUploadCurrentForm(e)}
-                            />
-                        </div>
-                        <FaPlus size={20} onClick={addSectionFotos} className={styles.addBtn}/>
-                </div>
-            </div>
-            <div className={styles.subConteiner}>
-                    {currentForm.fotos?.map((foto, idx)=>(
-                        <div key={idx+'viewCurrentFoto'} className={styles.viewerFotos}>
-                            <b onClick={()=>handleRemoveUploadCurrentFotos(foto.name)}>X</b>
-                            <div className={`${styles.subConteiner} ${styles.flexSpace}`}>
-                                <div className={`${styles.boxInput} ${styles.width200}`}>
-                                    <label htmlFor="title">Rótulo da imagem</label>
-                                    <input
-                                        name='fotos.title' 
-                                        value={foto.title || ''} 
-                                        onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
-                                </div>
-                                <div className={styles.boxInput}>
-                                    <label htmlFor="title">Observações</label>
-                                    <textarea 
-                                        name='fotos.description' 
-                                        value={foto.description || ''}
-                                        onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
-                                </div>
+            {!readOnly ?
+                <>
+                <div className={styles.section}>
+                    <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Título da sessão de fotos</label>
+                                <input
+                                    type='text' 
+                                    name='title'
+                                    value={currentForm.title || ''}
+                                    onChange={(e)=>handleChangeCurrentForm(e)}
+                                />
                             </div>
-                            <ImagePreview file={foto.doc as File} height={600} width={600}/>
-                        </div>                        
-                    ))}
-            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Descrição</label>
+                                <textarea
+                                    name='description'
+                                    value={currentForm.description || ''}
+                                    onChange={(e)=>handleChangeCurrentForm(e)}
+                                    placeholder='forneça informações sobre esse conjunto de imagens'
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Fotos</label>
+                                <input
+                                    type='file' 
+                                    name='fotos'
+                                    multiple
+                                    accept='image/*'
+                                    onChange={(e)=>handleUploadCurrentForm(e)}
+                                />
+                            </div>
+                            <FaPlus size={20} onClick={addSectionFotos} className={styles.addBtn}/>
+                    </div>
+                </div>
+                <div className={styles.subConteiner}>
+                        {currentForm.fotos?.map((foto, idx)=>(
+                            <div key={idx+'viewCurrentFoto'} className={styles.viewerFotos}>
+                                <b onClick={()=>handleRemoveUploadCurrentFotos(foto.name)}>X</b>
+                                <div className={`${styles.subConteiner} ${styles.flexSpace}`}>
+                                    <div className={`${styles.boxInput} ${styles.width200}`}>
+                                        <label htmlFor="title">Rótulo da imagem</label>
+                                        <input
+                                            name='fotos.title' 
+                                            value={foto.title || ''} 
+                                            onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
+                                    </div>
+                                    <div className={styles.boxInput}>
+                                        <label htmlFor="title">Observações</label>
+                                        <textarea 
+                                            name='fotos.description' 
+                                            value={foto.description || ''}
+                                            onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
+                                    </div>
+                                </div>
+                                <ImagePreview file={foto.doc as File} height={600} width={600}/>
+                            </div>                        
+                        ))}
+                </div>
+                </>
+            :null}
 
             <div className={styles.subConteiner}>
                 {data?.map((section, idx)=>(
@@ -301,13 +307,16 @@ export default function FotosInspecao(){
                         key={idx+'dataFotos'}>
                         <div className={styles.boxInput}>
                             <p>Título do conjunto de fotos:</p>
-                            <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
+                            {!readOnly ?
+                                <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
+                            :null}
                             <input 
                                 name='title'
                                 value={section.title || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderBlue}
+                                readOnly={readOnly}
                             />
                             <p>Observações do conjunto de fotos:</p>
                             <input 
@@ -316,6 +325,7 @@ export default function FotosInspecao(){
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderBlue}
+                                readOnly={readOnly}
                             />
                             {section.fotos?.map((foto, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
@@ -326,6 +336,7 @@ export default function FotosInspecao(){
                                             value={foto.title || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
+                                            readOnly={readOnly}
                                         />
                                     </div>
                                     <div>
@@ -335,6 +346,7 @@ export default function FotosInspecao(){
                                             value={foto.description || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
+                                            readOnly={readOnly}
                                         />
                                     </div>
                                     <ImagePreview file={foto.doc as File} height={100} width={100}/>

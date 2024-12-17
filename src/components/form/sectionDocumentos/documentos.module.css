@@ -4,6 +4,8 @@
     flex-direction: column;
     width: 100vw;
     max-width: 1232px;
+    transition: 0.4s;
+    animation: fadeIn 0.8s linear forwards;
 }
 .section{
     display: flex;
@@ -132,4 +134,15 @@
 }
 .borderBlue{
     border: 2px solid var(--blue) !important;
+}
+.borderGreen{
+    border: 2px solid var(--verde) !important;
+}
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
 }

@@ -3,11 +3,14 @@ import { useContext } from 'react';
 import styles from './matrizRisco.module.css';
 import { Context } from '@/components/context/context';
 
-export default function MatrizRisco (){
+type Props = {
+    readOnly: boolean
+}
+export default function MatrizRisco ({readOnly}:Props){
     const context = useContext(Context);
     
     return(
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h6>item 9.2 da Política Nacional de Gestão de Risco</h6>
             <h2>4. Matriz de risco</h2>
             <h3>Matriz de Probabilidade x Consequência</h3>

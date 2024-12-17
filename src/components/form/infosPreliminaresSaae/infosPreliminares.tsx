@@ -7,7 +7,11 @@ import { BsBagPlus } from "react-icons/bs";
 import { Context } from '@/components/context/context';
 import { dateFormat2 } from '@/scripts/globais';
 
-export default function InfosPreliminares (){
+type Props = {
+    readOnly: boolean
+}
+
+export default function InfosPreliminares ({readOnly}:Props){
     const context = useContext(Context);
     const [data, setData] = useState<InfosPreliminaresSaae[]>([]);
     const [showDicas, setShowDicas] = useState(false);
@@ -100,31 +104,41 @@ O evento/atividade vai acontecer das ${dadosGerais.horaInicio || ''} do dia ${da
     },[])
 
     return(
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h5>Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286</h5>
             <div className={styles.boxHead}>
                 <h1>2. Informações mínimas aos participantes do evento/atividade </h1> 
                 <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
             </div>
             
-            <div className={styles.addItem}>
-                <span>Adicionar informações básicas: </span>
-                <BsBagPlus title='infos básicas'  onClick={addDefaultItens}/>
-            </div>
-            <div className={styles.addItem}>
-                <span>Adicionar item: </span>
-                <FaPlus title='dicas de preenchimento'  onClick={addItem}/>
-            </div>
+            {!readOnly ? 
+                <div className={styles.addItem}>
+                    <span>Adicionar informações básicas: </span>
+                    <BsBagPlus title='infos básicas'  onClick={addDefaultItens}/>
+                </div>
+            :null}
+            {!readOnly ?
+                <div className={styles.addItem}>
+                    <span>Adicionar item: </span>
+                    <FaPlus title='dicas de preenchimento'  onClick={addItem}/>
+                </div>
+            :null}
             {data?.map((item, idx)=>(
                 <div key={item.item} className={styles.boxTextarea}>
-                    <h4>Item {item.item} <FaMinus 
-                        onClick={()=>removeItem((idx+1).toString())} 
-                        title='remover este item' 
-                        className={styles.removeItem}/></h4>                    
+                    <h4>Item {item.item} 
+                        {!readOnly ? 
+                        <FaMinus 
+                            onClick={()=>removeItem((idx+1).toString())} 
+                            title='remover este item' 
+                            className={styles.removeItem}
+                        />
+                        :null} 
+                    </h4>         
                     <textarea                     
                         name={item.item} 
                         value={item.text}
                         onChange={(e)=>handleChange(e)}
+                        readOnly={readOnly}
                     />
                 </div>                
             ))}

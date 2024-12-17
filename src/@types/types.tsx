@@ -55,6 +55,11 @@ export interface Endereco {
     coordenadas?: {lat: number, long: number}
 }
 
+export interface DataStorage {
+    dataSaae: SAAE,
+    user: ProfileProps,
+    id?: number
+}
 export interface SAAE {
     grauRisco: {
         color: 'green' | 'yellow' | 'orange' | 'red' | '',

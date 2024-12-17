@@ -10,7 +10,11 @@ import { Context } from '@/components/context/context';
 
 import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
 
-export default function DadosGerais(){
+type Props = {
+    readOnly: boolean
+}
+
+export default function DadosGerais({readOnly}:Props){
     const context = useContext(Context);
     const [data, setData] = useState({} as DadosGeraisSaae); 
 
@@ -125,7 +129,6 @@ export default function DadosGerais(){
             }
         }
 
-        setData(newData);  
         updateContext(newData);     
     }
 
@@ -174,8 +177,6 @@ export default function DadosGerais(){
             ...data,
             programacao: newProgragacao
         }
-
-        setData(newData);
         
         updateContext(newData);
 
@@ -201,7 +202,6 @@ export default function DadosGerais(){
             programacao: rename
         }
 
-        setData(newData);
         updateContext(newData);
     }
 
@@ -241,7 +241,6 @@ export default function DadosGerais(){
             newData= data
         }
 
-        setData(newData);
         updateContext(newData);
     }
 
@@ -277,7 +276,6 @@ export default function DadosGerais(){
                             uf: resp.uf
                         }
                     }
-                    setData(newData);
                     updateContext(newData);
                 }
             })
@@ -303,7 +301,6 @@ export default function DadosGerais(){
                 [name]: newArray
             }
 
-            setData(newData);
             updateContext(newData);
         }
         setAtividade(''); // Limpa o input
@@ -330,7 +327,6 @@ export default function DadosGerais(){
                     [name]: newArray
                 }
 
-                setData(newData);
                 updateContext(newData);
             }
             setAtividade(''); // Limpa o input
@@ -354,7 +350,6 @@ export default function DadosGerais(){
                     ...data,
                     [name]: newArray
                 }
-                setData(newData);
                 updateContext(newData);
             }
             setAtividade(''); // Limpa o input
@@ -370,7 +365,6 @@ export default function DadosGerais(){
             ...data,
             [name]: newArray
         }
-        setData(newData);
         updateContext(newData);
     };
 
@@ -449,11 +443,11 @@ export default function DadosGerais(){
                 }
             }
         }
-        setData(newData);
         updateContext(newData);
     }
 
     const updateContext = (newData:DadosGeraisSaae)=>{
+        setData(newData);
         context.setDataSaae(saae=>{
             return{
                 ...saae,
@@ -472,12 +466,22 @@ export default function DadosGerais(){
         //pega as infos salvas no contexto.
         // Atualiza o contexto e define o estado local após isso
         const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
-        console.log('dados contexto', dadosGerais)
         setData(dadosGerais);
     },[])
 
+    useEffect(()=>{
+        if(context.saaeEdit && context.saaeEdit !== 0){
+            const dadosGerais = context.dataStorage?.find(storage=> storage.id === context.saaeEdit);
+            if(dadosGerais?.dataSaae?.dadosGerais) {
+                setData(dadosGerais.dataSaae.dadosGerais)
+            }else{
+                setData({} as DadosGeraisSaae)
+            };
+        }
+    },[context.saaeEdit])
+
     return(
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h1>1. Dados gerais da atividade</h1>
 
             <div className={styles.table}>
@@ -496,6 +500,7 @@ export default function DadosGerais(){
                             onBlur={(e)=>getAtividade(e)}
                             placeholder="nome da atividade"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                         <datalist id='listAtividades'>
                             {atividadesList.map(ativ=> (
@@ -519,6 +524,7 @@ export default function DadosGerais(){
                             onKeyDown={handleKeyDown}
                             onBlur={handleKeyBlur}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                         <datalist id="options">
                             {tiposAtividade.sort((a,b)=> a.localeCompare(b)).map(ativ=> (
@@ -565,6 +571,7 @@ export default function DadosGerais(){
                             onKeyDown={handleKeyDown}
                             onBlur={handleKeyBlur}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                         <datalist id="optionsODS">
                             {Odss.sort((a,b)=>{
@@ -621,6 +628,7 @@ export default function DadosGerais(){
                             onKeyDown={handleKeyDown}
                             placeholder="precione Enter ou vírgula para inserir"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                         <datalist id='listRamos'>
                             <option value='Lobinho'>Lobinho</option>
@@ -657,37 +665,54 @@ export default function DadosGerais(){
                         <h1>
                             Atividade de Patrulha não supervisionada
                         </h1>
-                        <select
-                            name='atividadeNaoSupervisionada'
-                            value={data?.atividadeNaoSupervisionada || ''}
-                            onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select
+                                name='atividadeNaoSupervisionada'
+                                value={data?.atividadeNaoSupervisionada || ''}
+                                onChange={(e) => handleForm(e)}
+                                className={`${styles.collum}`}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data?.atividadeNaoSupervisionada || ''}
+                                className={`${styles.collum}`}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>  
                     <div className={`${styles.collum3} ${styles.width100}`}>
                         <h1>
                             Uso de transporte Intermunicipal (público ou privado)?
                         </h1>
-                        <select
-                            name='usoTransporteInterMunicipal'
-                            value={data?.usoTransporteInterMunicipal || ''}
-                            onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select
+                                name='usoTransporteInterMunicipal'
+                                value={data?.usoTransporteInterMunicipal || ''}
+                                onChange={(e) => handleForm(e)}
+                                className={`${styles.collum}`}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data?.usoTransporteInterMunicipal || ''}
+                                readOnly={readOnly}
+                                className={`${styles.collum}`}
+                            />
+                        }
                     </div>  
                              
                 </div>
                 
                 {/* local/endereço */}
                 <div className={`${styles.line} ${styles.margin0}`}>                    
+                    {!readOnly ? 
                     <div className={styles.boxCheck}>
                         <span title="Local onde será realizada?">
                             Local início é diferente do local fim?
@@ -697,22 +722,20 @@ export default function DadosGerais(){
                             name="inicio-fim" 
                             checked={inicioFim}
                             onChange={()=>{
-                                setInicioFim((prev)=>{
-                                    if(prev){
-                                        setData((prev)=>{
-                                            return{
-                                                ...prev,
-                                                localFim: undefined
-                                            }
-                                        })
-                                        return false
-                                    }else{
-                                        return true
-                                    }
-                                });
+                                if(inicioFim){
+                                    updateContext({
+                                        ...data,
+                                        localFim: undefined
+                                    })
+                                    setInicioFim(false);
+                                }else{
+                                    setInicioFim(true);
+                                }
                             }}
+                            readOnly={readOnly}
                         />
                     </div>
+                    :null}
                 </div>
                 <div className={styles.line}>
                     <div className={styles.collum}>
@@ -727,6 +750,7 @@ export default function DadosGerais(){
                             onBlur={(e)=>getCep(e)}
                             placeholder="CEP do local da atividade"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />  
                     </div>
                     <div className={styles.collum}>
@@ -739,6 +763,7 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             placeholder="logradouro"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -752,6 +777,7 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -765,6 +791,7 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -777,6 +804,7 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />   
                     </div>
                 </div>
@@ -794,6 +822,7 @@ export default function DadosGerais(){
                                 onBlur={(e)=>getCep(e)}
                                 placeholder="CEP do local da atividade"
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />  
                         </div>
                         <div className={styles.collum}>
@@ -806,6 +835,7 @@ export default function DadosGerais(){
                                 onChange={(e) => handleForm(e)}
                                 placeholder="logradouro"
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.collum}>
@@ -819,6 +849,7 @@ export default function DadosGerais(){
                                 onChange={(e) => handleForm(e)}
                                 placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.collum}>
@@ -832,6 +863,7 @@ export default function DadosGerais(){
                                 onChange={(e) => handleForm(e)}
                                 placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.collum}>
@@ -844,6 +876,7 @@ export default function DadosGerais(){
                                 onChange={(e) => handleForm(e)}
                                 placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />   
                         </div>
                     </div>
@@ -860,6 +893,7 @@ export default function DadosGerais(){
                             value={data?.metodologia || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum2}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum2}>
@@ -871,6 +905,7 @@ export default function DadosGerais(){
                             value={data?.objetivo || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum2}`}
+                            readOnly={readOnly}
                         />
                     </div>
                 </div>
@@ -884,9 +919,10 @@ export default function DadosGerais(){
                         <input
                             type='date'
                             name='dataInicio'
-                            datatype={dateFormat1(data?.dataInicio) || ''}
+                            value={dateFormat1(data?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -899,6 +935,7 @@ export default function DadosGerais(){
                             value={data?.horaInicio || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -910,6 +947,7 @@ export default function DadosGerais(){
                             value={data?.localSaida || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -921,6 +959,7 @@ export default function DadosGerais(){
                             value={data?.localChegada || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={`${styles.collum} ${styles.width120}`}>
@@ -930,9 +969,10 @@ export default function DadosGerais(){
                         <input
                             type='date'
                             name='dataFim'
-                            datatype={dateFormat1(data?.dataFim) || ''}
+                            value={dateFormat1(data?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -945,6 +985,7 @@ export default function DadosGerais(){
                             value={data?.horaFim || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>                  
                 </div>
@@ -961,6 +1002,7 @@ export default function DadosGerais(){
                             value={data?.meioTransporte || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -973,6 +1015,7 @@ export default function DadosGerais(){
                             value={data?.custoIndividual || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                 </div>
@@ -989,6 +1032,7 @@ export default function DadosGerais(){
                             value={data?.coordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -1001,6 +1045,7 @@ export default function DadosGerais(){
                             value={data?.regCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -1013,6 +1058,7 @@ export default function DadosGerais(){
                             value={data?.telCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
@@ -1025,22 +1071,31 @@ export default function DadosGerais(){
                             value={data?.emailCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum}>
                         <h1>
                             Nível de formação
                         </h1>
-                        <select
-                            name='nivelFormacaoCoordenador'
-                            value={data?.nivelFormacaoCoordenador || ''}
-                            onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
-                        >
-                            {
-                                ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
-                            }
-                        </select>
+                        {!readOnly ?
+                            <select
+                                name='nivelFormacaoCoordenador'
+                                value={data?.nivelFormacaoCoordenador || ''}
+                                onChange={(e) => handleForm(e)}
+                                className={`${styles.collum}`}
+                            >
+                                {
+                                    ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
+                                }
+                            </select>
+                        :
+                                <input 
+                                    defaultValue={data?.nivelFormacaoCoordenador || ''}
+                                    readOnly={readOnly}
+                                    className={`${styles.collum}`}
+                                />
+                        }
                     </div>
                 </div>
 
@@ -1058,6 +1113,7 @@ export default function DadosGerais(){
                                 value={data?.nomeSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.collum}>
@@ -1070,6 +1126,7 @@ export default function DadosGerais(){
                                 value={data?.regSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.collum}>
@@ -1082,22 +1139,31 @@ export default function DadosGerais(){
                                 value={data?.telSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.collum}>
                             <h1>
                                 Nível de formação do Supervisor
                             </h1>
-                            <select
-                                name='nivelFormacaoSupervisor'
-                                value={data?.nivelFormacaoSupervisor || ''}
-                                onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
-                            >
-                                {
-                                    ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
-                                }
-                            </select>
+                            {!readOnly ?
+                                <select
+                                    name='nivelFormacaoSupervisor'
+                                    value={data?.nivelFormacaoSupervisor || ''}
+                                    onChange={(e) => handleForm(e)}
+                                    className={`${styles.collum}`}
+                                >
+                                    {
+                                        ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
+                                    }
+                                </select>
+                                :
+                                <input 
+                                    defaultValue={data?.nivelFormacaoSupervisor || ''}
+                                    readOnly={readOnly}
+                                    className={`${styles.collum}`}
+                                />
+                            }
                         </div>                        
                     </div>
                 </>:null}
@@ -1114,6 +1180,7 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             placeholder="como chegar"
                             className={`${styles.collum2}`}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.collum2}>
@@ -1126,6 +1193,7 @@ export default function DadosGerais(){
                             onChange={(e) => handleForm(e)}
                             placeholder="sugestão: procure por google Earth Web e crie uma pasta com todas as rotas"
                             className={`${styles.collum2}`}
+                            readOnly={readOnly}
                         />
                     </div>                    
                 </div>
@@ -1142,6 +1210,7 @@ export default function DadosGerais(){
                         }}
                         placeholder="latitude"
                         style={{width: 200}}
+                        readOnly={readOnly}
                     />
                     <input
                         type='number'
@@ -1150,6 +1219,7 @@ export default function DadosGerais(){
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
+                        readOnly={readOnly}
                     />
                 </div>
                 <div className={styles.line}>
@@ -1158,6 +1228,7 @@ export default function DadosGerais(){
                             label='localInicio'
                             setLatLong={latLongSet}
                             data={data.localInicio}
+                            readonly={readOnly}
                         />
                     :null}                    
                 </div>
@@ -1176,6 +1247,7 @@ export default function DadosGerais(){
                         }}
                         placeholder="latitude"
                         style={{width: 200}}
+                        readOnly={readOnly}
                     />
                     <input
                         type='number'
@@ -1184,6 +1256,7 @@ export default function DadosGerais(){
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
+                        readOnly={readOnly}
                     />
                 </div>
 
@@ -1192,6 +1265,7 @@ export default function DadosGerais(){
                         label='localFim'
                         setLatLong={latLongSet}
                         data={data.localFim}
+                        readonly={readOnly}
                     />                   
                 </div>
                 </>                 
@@ -1212,13 +1286,16 @@ export default function DadosGerais(){
                                 {dateFormat2(prog?.data)}
                             </span>
                         ))}
-                        <input
-                            type='date'
-                            name='data'
-                            datatype={dateFormat1(currentProgramacao?.data) || ''}
-                            onChange={(e) => handleFormProgramacao(e)}
-                            className={`${styles.collum} ${styles.width120}`}
-                        />
+                        {!readOnly ? 
+                            <input
+                                type='date'
+                                name='data'
+                                value={dateFormat1(currentProgramacao?.data) || ''}
+                                onChange={(e) => handleFormProgramacao(e)}
+                                className={`${styles.collum} ${styles.width120}`}
+                                readOnly={readOnly}
+                            />
+                        :null}
                     </div>
                     <div className={`${styles.collum} ${styles.width100}`}>
                         <h1>
@@ -1229,13 +1306,16 @@ export default function DadosGerais(){
                                 {prog?.hora}
                             </span>
                         ))}
-                        <input
-                            type='text'
-                            name='hora'
-                            value={currentProgramacao?.hora || ''}
-                            onChange={(e) => handleFormProgramacao(e)}
-                            className={`${styles.collum} ${styles.width100} ${styles.textAlingCenter}`}
-                        />
+                        {!readOnly ? 
+                            <input
+                                type='text'
+                                name='hora'
+                                value={currentProgramacao?.hora || ''}
+                                onChange={(e) => handleFormProgramacao(e)}
+                                className={`${styles.collum} ${styles.width100} ${styles.textAlingCenter}`}
+                                readOnly={readOnly}
+                            />
+                        : null}
                     </div>
                     <div className={styles.collum}>
                         <h1>
@@ -1246,13 +1326,16 @@ export default function DadosGerais(){
                                 {prog?.duracao}
                             </span>
                         ))}
-                        <input
-                            type='text'
-                            name='duracao'
-                            value={currentProgramacao?.duracao || ''}
-                            onChange={(e) => handleFormProgramacao(e)}
-                            className={`${styles.collum} ${styles.textAlingCenter}`}
-                        />
+                        {!readOnly ? 
+                            <input
+                                type='text'
+                                name='duracao'
+                                value={currentProgramacao?.duracao || ''}
+                                onChange={(e) => handleFormProgramacao(e)}
+                                className={`${styles.collum} ${styles.textAlingCenter}`}
+                                readOnly={readOnly}
+                            />
+                        :null}
                     </div>
                     <div className={`${styles.collum} ${styles.width260}`}>
                         <h1>
@@ -1263,12 +1346,15 @@ export default function DadosGerais(){
                                 {prog?.descricao}
                             </span>
                         ))}
-                        <textarea
-                            name='descricao'
-                            value={currentProgramacao?.descricao || ''}
-                            onChange={(e) => handleFormProgramacao(e)}
-                            className={`${styles.collum} ${styles.width260}`}
-                        />
+                        {!readOnly ?
+                            <textarea
+                                name='descricao'
+                                value={currentProgramacao?.descricao || ''}
+                                onChange={(e) => handleFormProgramacao(e)}
+                                className={`${styles.collum} ${styles.width260}`}
+                                readOnly={readOnly}
+                            />
+                        :null}
                     </div>
                     <div className={styles.collum}>
                         <h1>
@@ -1279,13 +1365,16 @@ export default function DadosGerais(){
                                 {prog?.materialNecessario}
                             </span>
                         ))}
-                        <input
-                            type='text'
-                            name='materialNecessario'
-                            value={currentProgramacao?.materialNecessario || ''}
-                            onChange={(e) => handleFormProgramacao(e)}
-                            className={`${styles.collum}`}
-                        />
+                        {!readOnly ? 
+                            <input
+                                type='text'
+                                name='materialNecessario'
+                                value={currentProgramacao?.materialNecessario || ''}
+                                onChange={(e) => handleFormProgramacao(e)}
+                                className={`${styles.collum}`}
+                                readOnly={readOnly}
+                            />
+                        :null}
                     </div>
                     <div className={`${styles.collum} ${styles.width100}`}>
                         <h1>
@@ -1296,34 +1385,39 @@ export default function DadosGerais(){
                                 {prog?.responsavel}
                             </span>
                         ))}
-                        <input
-                            type='text'
-                            name='responsavel'
-                            value={currentProgramacao?.responsavel || ''}
-                            onChange={(e) => handleFormProgramacao(e)}
-                            className={`${styles.collum}`}
-                        />
-                    </div>
-                    <div className={`${styles.collum} ${styles.width100}`}>
-                        <h1>
-                            Add/Rem
-                        </h1>
-                        {data.programacao?.map((prog, idx)=>(
-                            <FaMinus  
-                                key={v4()}
-                                size={18} 
-                                className={styles.btnRemAtividade}
-                                onClick={()=>removeAtividade(idx+1)} 
-                                style={{height: 27}}                                   
+                        {!readOnly ? 
+                            <input
+                                type='text'
+                                name='responsavel'
+                                value={currentProgramacao?.responsavel || ''}
+                                onChange={(e) => handleFormProgramacao(e)}
+                                className={`${styles.collum}`}
+                                readOnly={readOnly}
                             />
-                        ))}
-                        <FaPlus
-                            size={18} 
-                            className={styles.btnAddAtividade}
-                            onClick={addAtividade}
-                            style={{height: 40}}  
-                        />
+                        :null}
                     </div>
+                    {!readOnly ? 
+                        <div className={`${styles.collum} ${styles.width100}`}>
+                            <h1>
+                                Add/Rem
+                            </h1>
+                            {data.programacao?.map((prog, idx)=>(
+                                <FaMinus  
+                                    key={v4()}
+                                    size={18} 
+                                    className={styles.btnRemAtividade}
+                                    onClick={()=>removeAtividade(idx+1)} 
+                                    style={{height: 27}}                                   
+                                />
+                            ))}
+                            <FaPlus
+                                size={18} 
+                                className={styles.btnAddAtividade}
+                                onClick={addAtividade}
+                                style={{height: 40}}  
+                            />
+                        </div>
+                    :null}
                 </div>
             </div>        
         </div>

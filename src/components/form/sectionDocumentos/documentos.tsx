@@ -81,7 +81,11 @@ const ImagePreview = ({ file, width, height }:{file:File, width:number, height:n
     );
 };
 
-export default function SectionDocumentos(){
+type Props = {
+    readOnly: boolean
+}
+
+export default function SectionDocumentos({readOnly}:Props){
     const context = useContext(Context);
 
     const [currentForm, setCurrentForm] = useState({} as FormDocs);
@@ -268,9 +272,11 @@ export default function SectionDocumentos(){
     }
 
     return(
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h2>7. Documentos adicionais:</h2>
 
+            {!readOnly ?
+            <>
             <div className={styles.section}>
                 <div className={styles.subConteiner}>
                         <div className={styles.boxInput}>
@@ -312,14 +318,14 @@ export default function SectionDocumentos(){
                                 <div className={`${styles.boxInput} ${styles.width200}`}>
                                     <label htmlFor="title">Rótulo da imagem</label>
                                     <input
-                                        name='doc.title' 
+                                        name='docs.title' 
                                         value={doc.title || ''} 
                                         onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
                                 </div>
                                 <div className={styles.boxInput}>
                                     <label htmlFor="title">Observações</label>
                                     <textarea 
-                                        name='doc.description' 
+                                        name='docs.description' 
                                         value={doc.description || ''}
                                         onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
                                 </div>
@@ -328,6 +334,8 @@ export default function SectionDocumentos(){
                         </div>                        
                     ))}
             </div>
+            </>
+            :null}
 
             <div className={styles.subConteiner}>
                 {data?.map((section, idx)=>(
@@ -337,13 +345,16 @@ export default function SectionDocumentos(){
                         key={idx+'dataDocumentos'}>
                         <div className={styles.boxInput}>
                             <p>Título do conjunto de documentos:</p>
-                            <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
+                            {!readOnly ?
+                                <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
+                            :null}
                             <input 
                                 name='title'
                                 value={section.title || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
-                                className={styles.borderBlue}
+                                className={styles.borderGreen}
+                                readOnly={readOnly}
                             />
                             <p>Observações do conjunto de documentos:</p>
                             <input 
@@ -351,26 +362,31 @@ export default function SectionDocumentos(){
                                 value={section.description || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
-                                className={styles.borderBlue}
+                                className={styles.borderGreen}
+                                readOnly={readOnly}
                             />
                             {section.docs?.map((doc, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
                                     <div>
                                         <b>Título da documento:</b> 
                                         <input 
-                                            name='fotos.title'
+                                            name='docs.title'
                                             value={doc.title || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
+                                            className={styles.borderGreen}
+                                            readOnly={readOnly}
                                         />
                                     </div>
                                     <div>
                                         <b>Descrição:</b> 
                                         <input 
-                                            name='fotos.description'
+                                            name='docs.description'
                                             value={doc.description || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
+                                            className={styles.borderGreen}
+                                            readOnly={readOnly}
                                         />
                                     </div>
                                     <ImagePreview file={doc.doc as File} height={100} width={100}/>

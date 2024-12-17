@@ -1,6 +1,7 @@
 'use client'
-import { DataNews, ProfileProps, SAAE } from "@/@types/types";
+import { DataNews, DataStorage, ProfileProps, SAAE } from "@/@types/types";
 import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
+import { createDb, getAllDataStorage, putNewData } from "@/scripts/indexedDB";
 import axios from "axios";
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 
@@ -10,7 +11,11 @@ type PropsContext ={
   recoverProfile: ()=>Promise<void>,
   verifySession: ()=>boolean,
   setDataSaae: Dispatch<SetStateAction<SAAE>>,
-  dataSaae: SAAE
+  dataSaae: SAAE,
+  setDataStorage: Dispatch<SetStateAction<DataStorage[]>>,
+  dataStorage: DataStorage[],
+  setSaaeEdit: Dispatch<SetStateAction<number | undefined>>,
+  saaeEdit: number | undefined
 }
 
 export const Context = createContext( {} as PropsContext );
@@ -19,6 +24,9 @@ export default function Provider({children}:{children:ReactNode}){
     const [dataNews, setDataNewsHome] = useState<DataNews[]>([]);
     const [dataUser, setDataUser] = useState({} as ProfileProps);
     const [dataSaae, setDataSaae] = useState({} as SAAE);
+
+    const [dataStorage, setDataStorage] = useState<DataStorage[]>([]);
+    const [saaeEdit, setSaaeEdit] = useState<number | undefined>();
 
     const getNews = async()=>{
       if(dataNews.length > 0) return;
@@ -81,17 +89,81 @@ export default function Provider({children}:{children:ReactNode}){
       return true;
     }
 
+    const updateStorage = async () => {
+      if(saaeEdit || saaeEdit !== 0){
+        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit});
+        setDataStorage((prev)=>{
+          const newData = prev.map(item=>{
+            if(item.id === saaeEdit){
+              return{
+                ...item,
+                dataSaae,
+                user: dataUser
+              }
+            }else{
+              return item;
+            }
+          });
+          return newData;
+        });
+      }else if(saaeEdit === 0){//cria uma nova SAAE
+        const key = await putNewData('saae',{dataSaae: {} as SAAE, user: dataUser});
+        console.log("criado nova saae", key);
+        setSaaeEdit(key as number);
+        setDataStorage((prev)=>{
+          return [
+            ...prev,
+            {dataSaae: {} as SAAE, user: dataUser, id: key as number}
+          ]
+        });
+      }
+    }
+
     useEffect(()=>{
         if(dataNews.length === 0) getNews();
+
+        async function getData() {
+          await createDb('saae')
+          .then(async()=>{
+              const data = await getAllDataStorage('saae')
+              setDataStorage(data);
+          })
+          
+      }
+      
+      getData();
     },[]);
 
-    //seta o nível de risco da SAAE.
     useEffect(()=>{
-      console.log("contexto: ", dataSaae);
-    },[dataSaae]);
+      console.log("contexto dataStorage: ", dataStorage);
+    },[dataStorage]);
+
+    useEffect(()=>{
+      console.log("contexto saaeEdit: ", saaeEdit);
+      if(saaeEdit || saaeEdit !== 0){
+        setDataSaae((prev)=>{
+          const newData = dataStorage.find(data=> data.id === saaeEdit);
+          if(newData){
+            return newData.dataSaae
+          }else{
+            return prev
+          }
+        });
+      }else if(saaeEdit === 0){
+        updateStorage();
+      }
+    },[saaeEdit]);
+
+    //atualiza o storage.
+    useEffect(()=>{
+      console.log("contexto dataSaae: ", dataSaae);
+      if(Object.keys(dataSaae).length > 0){updateStorage()}
+    },[dataSaae]);   
 
     return(
-        <Context.Provider value={{dataNews, dataUser, dataSaae, recoverProfile, verifySession, setDataSaae}}>
+        <Context.Provider value={{
+            dataNews, dataUser, dataSaae, dataStorage, saaeEdit,
+            recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit}}>
             {children}
         </Context.Provider>
     )

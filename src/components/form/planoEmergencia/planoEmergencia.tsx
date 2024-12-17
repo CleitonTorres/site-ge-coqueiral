@@ -6,7 +6,11 @@ import { calcTotalFilesMB, dateFormat2, masktel, setIconSocialMidia } from '@/sc
 import { Context } from '@/components/context/context';
 import { FaPlus } from 'react-icons/fa';
 
-export default function PlanoEmergencia (){
+type Props = {
+    readOnly: boolean
+}
+
+export default function PlanoEmergencia ({readOnly}:Props){
     const context = useContext(Context);
     const [data, setData] = useState({} as PlanoEmergenciaSaae);
     
@@ -946,7 +950,7 @@ export default function PlanoEmergencia (){
         })
     }
     return(
-        <div className={styles.conteiner}>
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h6>itens 7.5 e 9.1 da Política Nacional de Gestão de Risco</h6>
             <h2>5. Plano de Ação:</h2>
 
@@ -978,39 +982,60 @@ export default function PlanoEmergencia (){
                 <div className={styles.subConteiner}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Fichas médicas revisadas?</label>
-                        <select 
-                            name="fichaMedicaRevisada" 
-                            value={data.fichaMedicaRevisada || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select 
+                                name="fichaMedicaRevisada" 
+                                value={data.fichaMedicaRevisada || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.fichaMedicaRevisada || ''}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Kit primeiros socorros revisado?</label>
-                        <select 
-                            name="kitPrimeirosSocorros" 
-                            value={data.kitPrimeirosSocorros || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select 
+                                name="kitPrimeirosSocorros" 
+                                value={data.kitPrimeirosSocorros || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.kitPrimeirosSocorros || ''}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Feito inspeção no local?</label>
-                        <select 
-                            name="inspesaoLocal" 
-                            value={data.inspesaoLocal || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select 
+                                name="inspesaoLocal" 
+                                value={data.inspesaoLocal || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.inspesaoLocal || ''}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Data da inspeção?</label>
@@ -1019,6 +1044,7 @@ export default function PlanoEmergencia (){
                             name='dataInspecao'
                             datatype={dateFormat2(data.dataInspecao) || ''} 
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                 </div>                
@@ -1035,6 +1061,7 @@ export default function PlanoEmergencia (){
                             name='prontoSocorro.nome'
                             value={data.prontoSocorro?.nome || ''}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1044,6 +1071,7 @@ export default function PlanoEmergencia (){
                             name='prontoSocorro.contato'
                             value={data.prontoSocorro?.contato || ''}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1053,6 +1081,7 @@ export default function PlanoEmergencia (){
                             name='prontoSocorro.distancia'
                             value={data.prontoSocorro?.distancia || ''}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1062,6 +1091,7 @@ export default function PlanoEmergencia (){
                             name='prontoSocorro.local'
                             value={data.prontoSocorro?.local || ''}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                 </div>
@@ -1078,6 +1108,7 @@ export default function PlanoEmergencia (){
                             name='hospital.nome'
                             value={data.hospital?.nome || ""}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1087,6 +1118,7 @@ export default function PlanoEmergencia (){
                             name='hospital.contato'
                             value={data.hospital?.contato || ""}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1096,6 +1128,7 @@ export default function PlanoEmergencia (){
                             name='hospital.distancia'
                             value={data.hospital?.distancia || ""}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1105,6 +1138,7 @@ export default function PlanoEmergencia (){
                             name='hospital.local'
                             value={data.hospital?.local || ""}
                             onChange={(e)=>handleChangeData(e)}
+                            readOnly={readOnly}
                         />
                     </div>
                 </div>
@@ -1113,41 +1147,45 @@ export default function PlanoEmergencia (){
             {/* Contatos de Emergência */}
             <div className={`${styles.section} ${styles.bgGreen}`}>
                 <h3>Contatos de Emergência</h3>
-                <div className={styles.subConteiner}>
-                    <div className={styles.boxInput}>
-                        <label htmlFor="">Nome do contato</label>
-                        <input
-                            type='text' 
-                            name='nome'
-                            value={currentContatoEmerg.nome || ''}
-                            onChange={(e)=>{
-                                setCurrentContatoEmerg((prev)=>{
-                                    return{
-                                        ...prev,
-                                        nome: e.target.value
-                                    }
-                                })
-                            }}
-                        />
+               {!readOnly ?
+                    <div className={styles.subConteiner}>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Nome do contato</label>
+                            <input
+                                type='text' 
+                                name='nome'
+                                value={currentContatoEmerg.nome || ''}
+                                onChange={(e)=>{
+                                    setCurrentContatoEmerg((prev)=>{
+                                        return{
+                                            ...prev,
+                                            nome: e.target.value
+                                        }
+                                    })
+                                }}
+                                readOnly={readOnly}
+                            />
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="">Contato</label>
+                            <input
+                                type='text' 
+                                name='contato'
+                                value={currentContatoEmerg.contato || ''}
+                                onChange={(e)=>{
+                                    setCurrentContatoEmerg((prev)=>{
+                                        return{
+                                            ...prev,
+                                            contato: masktel(e.target.value)
+                                        }
+                                    })
+                                }}
+                                readOnly={readOnly}
+                            />
+                        </div>
+                        <FaPlus size={20} onClick={addContatoEmergencia} className={styles.addBtn}/>
                     </div>
-                    <div className={styles.boxInput}>
-                        <label htmlFor="">Contato</label>
-                        <input
-                            type='text' 
-                            name='contato'
-                            value={currentContatoEmerg.contato || ''}
-                            onChange={(e)=>{
-                                setCurrentContatoEmerg((prev)=>{
-                                    return{
-                                        ...prev,
-                                        contato: masktel(e.target.value)
-                                    }
-                                })
-                            }}
-                        />
-                    </div>
-                    <FaPlus size={20} onClick={addContatoEmergencia} className={styles.addBtn}/>
-                </div>
+                    :null}
             </div>
             {data.contatosEmergencia?.map((cont, idx)=>(
                 <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'contatosEmerg'}>
@@ -1158,6 +1196,7 @@ export default function PlanoEmergencia (){
                             name='contatosEmergencia.nome'
                             value={cont.nome || ''}
                             onChange={(e)=>handleChangeData(e, idx)}
+                            readOnly={readOnly}
                         />
                     </div>
                     <div className={styles.boxInput}>
@@ -1167,6 +1206,7 @@ export default function PlanoEmergencia (){
                             name='contatosEmergencia.contato'
                             value={cont.contato || ''}
                             onChange={(e)=>handleChangeData(e, idx)}
+                            readOnly={readOnly}
                         />
                     </div>
                 </div>
@@ -1178,63 +1218,98 @@ export default function PlanoEmergencia (){
                 <div className={`${styles.subConteiner}`}>
                     <div className={`${styles.boxInput} ${styles.minHeight}`}>
                         <label htmlFor="">As informações preliminares foram claramente passadas para os envolvios?</label>
-                        <select 
-                            name="espacosSeguros.infosPreliminares" 
-                            value={data.espacosSeguros?.infosPreliminares || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select 
+                                name="espacosSeguros.infosPreliminares" 
+                                value={data.espacosSeguros?.infosPreliminares || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.espacosSeguros?.infosPreliminares}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={`${styles.boxInput} ${styles.minHeight}`}>
                         <label htmlFor="">As informações médicas estão guardadas de forma confidencial e de fácil acesso ao coordenador  ou enfermaria da atividade?</label>
-                        <select 
-                            name="espacosSeguros.infosMedicas" 
-                            value={data.espacosSeguros?.infosMedicas || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select 
+                                name="espacosSeguros.infosMedicas" 
+                                value={data.espacosSeguros?.infosMedicas || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.espacosSeguros?.infosMedicas}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={`${styles.boxInput} ${styles.minHeight}`}>
                         <label htmlFor="">Os responsáveis pela atividade estão ciêntes que nenhuma informação pessoal dos participantes devem ser transmitida a terceiros ou utilizada sem a devida autorização expressa de seus responsáveis, exeto em caso de emergencia médica, policial ou por força de lei?</label>
-                        <select 
-                            name="espacosSeguros.protecaoDados" 
-                            value={data.espacosSeguros?.protecaoDados || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ? 
+                            <select 
+                                name="espacosSeguros.protecaoDados" 
+                                value={data.espacosSeguros?.protecaoDados || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.espacosSeguros?.protecaoDados}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={`${styles.boxInput} ${styles.minHeight}`}>
                         <label htmlFor="">O coordenador e os escotistas envolvidos possuem o curso de Proteção Infatojuvenil, Bullying e CyberBullying e Política Nacional de Espaço Seguro com validade de 1 ano?</label>
-                        <select 
-                            name="espacosSeguros.cursosEscotistas" 
-                            value={data.espacosSeguros?.cursosEscotistas || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ?
+                            <select 
+                                name="espacosSeguros.cursosEscotistas" 
+                                value={data.espacosSeguros?.cursosEscotistas || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.espacosSeguros?.cursosEscotistas}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                     <div className={`${styles.boxInput} ${styles.minHeight}`}>
                         <label htmlFor="">O canal de denúncias foi informado nas Informações Preliminares</label>
-                        <select 
-                            name="espacosSeguros.canalDenuncias" 
-                            value={data.espacosSeguros?.canalDenuncias || ''}
-                            onChange={(e)=>handleChangeData(e)}
-                        >
-                            <option value=""></option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
+                        {!readOnly ? 
+                            <select 
+                                name="espacosSeguros.canalDenuncias" 
+                                value={data.espacosSeguros?.canalDenuncias || ''}
+                                onChange={(e)=>handleChangeData(e)}
+                            >
+                                <option value=""></option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                            :
+                            <input 
+                                defaultValue={data.espacosSeguros?.canalDenuncias}
+                                readOnly={readOnly}
+                            />
+                        }
                     </div>
                 </div>
             </div>
@@ -1244,82 +1319,93 @@ export default function PlanoEmergencia (){
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Pessoa(s) do Acolhimento/Escuta</h3>
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Nome</label>
-                            <input
-                                type='text' 
-                                name='nome'
-                                value={currentProfAcolhimento.nome || ''}
-                                onChange={(e)=>handleChangeAcolhimento(e)}
-                            />
+                    {!readOnly ?
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Nome</label>
+                                <input
+                                    type='text' 
+                                    name='nome'
+                                    value={currentProfAcolhimento.nome || ''}
+                                    onChange={(e)=>handleChangeAcolhimento(e)}
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Contato</label>
+                                <input
+                                    type='text' 
+                                    name='contato'
+                                    value={currentProfAcolhimento.contato || ''}
+                                    onChange={(e)=>handleChangeAcolhimento(e)}
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Profissão</label>
+                                <input
+                                    type='text' 
+                                    name='profissao'
+                                    value={currentProfAcolhimento.profissao || ''}
+                                    onChange={(e)=>handleChangeAcolhimento(e)}
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Registro Escoteiro</label>
+                                <input
+                                    type='text' 
+                                    name='regEscoteiro'
+                                    value={currentProfAcolhimento.regEscoteiro || ''}
+                                    onChange={(e)=>handleChangeAcolhimento(e)}
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">CPF</label>
+                                <input
+                                    type='text' 
+                                    name='cpf'
+                                    value={currentProfAcolhimento.cpf || ''}
+                                    onChange={(e)=>handleChangeAcolhimento(e)}
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Nº Carteirinha de Classe</label>
+                                <input
+                                    type='text' 
+                                    name='numCarteirinhaClass'
+                                    value={currentProfAcolhimento.numCarteirinhaClass || ''}
+                                    onChange={(e)=>handleChangeAcolhimento(e)}
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                            <FaPlus size={20} onClick={addProfAcolhimento} className={styles.addBtn}/>
                         </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Contato</label>
-                            <input
-                                type='text' 
-                                name='contato'
-                                value={currentProfAcolhimento.contato || ''}
-                                onChange={(e)=>handleChangeAcolhimento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Profissão</label>
-                            <input
-                                type='text' 
-                                name='profissao'
-                                value={currentProfAcolhimento.profissao || ''}
-                                onChange={(e)=>handleChangeAcolhimento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Registro Escoteiro</label>
-                            <input
-                                type='text' 
-                                name='regEscoteiro'
-                                value={currentProfAcolhimento.regEscoteiro || ''}
-                                onChange={(e)=>handleChangeAcolhimento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">CPF</label>
-                            <input
-                                type='text' 
-                                name='cpf'
-                                value={currentProfAcolhimento.cpf || ''}
-                                onChange={(e)=>handleChangeAcolhimento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Nº Carteirinha de Classe</label>
-                            <input
-                                type='text' 
-                                name='numCarteirinhaClass'
-                                value={currentProfAcolhimento.numCarteirinhaClass || ''}
-                                onChange={(e)=>handleChangeAcolhimento(e)}
-                            />
-                        </div>
-                        <FaPlus size={20} onClick={addProfAcolhimento} className={styles.addBtn}/>
-                    </div>
+                    :null}
+
                     {/* docs viewer */}                
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Documentos</label>
-                            <input
-                                type='file' 
-                                name='acolhimento'
-                                multiple
-                                accept='image/*, .pdf'
-                                onChange={(e)=>handleUpload(e)}
-                            />
+                    {!readOnly ? 
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Documentos</label>
+                                <input
+                                    type='file' 
+                                    name='acolhimento'
+                                    multiple
+                                    accept='image/*, .pdf'
+                                    onChange={(e)=>handleUpload(e)}
+                                />
+                            </div>
+                            {currentProfAcolhimento?.docs?.map((doc, idx)=>(
+                                <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
+                                    {doc.titulo}
+                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimento')}>X</b>
+                                </span>
+                            ))}
                         </div>
-                        {currentProfAcolhimento?.docs?.map((doc, idx)=>(
-                            <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
-                                {doc.titulo}
-                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimento')}>X</b>
-                            </span>
-                        ))}
-                    </div>
+                    :null}
                 </div>
                 {data.espacosSeguros?.acolhimento?.map((acolh, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'acolhimento'}>
@@ -1330,6 +1416,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.acolhimento.nome'
                                 value={acolh.nome || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1339,6 +1426,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.acolhimento.contato'
                                 value={acolh.contato || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1348,6 +1436,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.acolhimento.profissao'
                                 value={acolh.profissao || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1357,6 +1446,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.acolhimento.regEscoteiro'
                                 value={acolh.regEscoteiro || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1366,6 +1456,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.acolhimento.cpf'
                                 value={acolh.cpf || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1375,24 +1466,30 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.acolhimento.numCarteirinhaClass'
                                 value={acolh.numCarteirinhaClass || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         {/* docs viewer */}                
                         <div className={styles.subConteiner}>
-                            <div className={styles.boxInput}>
-                                <label htmlFor="">Documentos</label>
-                                <input
-                                    type='file' 
-                                    name='espacosSeguros.acolhimento.docs'
-                                    multiple
-                                    accept='image/*, .pdf'
-                                    onChange={(e)=>handleChangeData(e, idx)}
-                                />
-                            </div>
+                            {!readOnly ?
+                                <div className={styles.boxInput}>
+                                    <label htmlFor="">Documentos</label>
+                                    <input
+                                        type='file' 
+                                        name='espacosSeguros.acolhimento.docs'
+                                        multiple
+                                        accept='image/*, .pdf'
+                                        onChange={(e)=>handleChangeData(e, idx)}
+                                    />
+                                </div>
+                            :null}
+
                             {acolh?.docs?.map((doc, idxDoc)=>(
                                 <span key={idxDoc+'docsAcolhimento'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimentoRemove', idx)}>X</b>
+                                    {!readOnly ? 
+                                        <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimentoRemove', idx)}>X</b>
+                                    :null}
                                 </span>
                             ))}
                         </div>
@@ -1402,83 +1499,87 @@ export default function PlanoEmergencia (){
                 {/* Enfermaria */}
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Pessoa(s) da Enfermaria</h3>
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Nome</label>
-                            <input
-                                type='text' 
-                                name='nome'
-                                value={currentProfEnfermaria.nome || ''}
-                                onChange={(e)=>handleChangeEnfermaria(e)}
-                            />
+                    {!readOnly ? 
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Nome</label>
+                                <input
+                                    type='text' 
+                                    name='nome'
+                                    value={currentProfEnfermaria.nome || ''}
+                                    onChange={(e)=>handleChangeEnfermaria(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Contato</label>
+                                <input
+                                    type='text' 
+                                    name='contato'
+                                    value={currentProfEnfermaria.contato || ''}
+                                    onChange={(e)=>handleChangeEnfermaria(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Profissão</label>
+                                <input
+                                    type='text' 
+                                    name='profissao'
+                                    value={currentProfEnfermaria.profissao || ''}
+                                    onChange={(e)=>handleChangeEnfermaria(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Registro Escoteiro</label>
+                                <input
+                                    type='text' 
+                                    name='regEscoteiro'
+                                    value={currentProfEnfermaria.regEscoteiro || ''}
+                                    onChange={(e)=>handleChangeEnfermaria(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">CPF</label>
+                                <input
+                                    type='text' 
+                                    name='cpf'
+                                    value={currentProfEnfermaria.cpf || ''}
+                                    onChange={(e)=>handleChangeEnfermaria(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Nº Carteirinha Classe</label>
+                                <input
+                                    type='text' 
+                                    name='numCarteirinhaClass'
+                                    value={currentProfEnfermaria.numCarteirinhaClass || ''}
+                                    onChange={(e)=>handleChangeEnfermaria(e)}
+                                />
+                            </div>
+                            <FaPlus size={20} onClick={addProfEnfermaria} className={styles.addBtn}/>
                         </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Contato</label>
-                            <input
-                                type='text' 
-                                name='contato'
-                                value={currentProfEnfermaria.contato || ''}
-                                onChange={(e)=>handleChangeEnfermaria(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Profissão</label>
-                            <input
-                                type='text' 
-                                name='profissao'
-                                value={currentProfEnfermaria.profissao || ''}
-                                onChange={(e)=>handleChangeEnfermaria(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Registro Escoteiro</label>
-                            <input
-                                type='text' 
-                                name='regEscoteiro'
-                                value={currentProfEnfermaria.regEscoteiro || ''}
-                                onChange={(e)=>handleChangeEnfermaria(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">CPF</label>
-                            <input
-                                type='text' 
-                                name='cpf'
-                                value={currentProfEnfermaria.cpf || ''}
-                                onChange={(e)=>handleChangeEnfermaria(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Nº Carteirinha Classe</label>
-                            <input
-                                type='text' 
-                                name='numCarteirinhaClass'
-                                value={currentProfEnfermaria.numCarteirinhaClass || ''}
-                                onChange={(e)=>handleChangeEnfermaria(e)}
-                            />
-                        </div>
-                        <FaPlus size={20} onClick={addProfEnfermaria} className={styles.addBtn}/>
-                    </div>
+                    :null}
 
                     {/* docs viewer */}                
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Documentos</label>
-                            <input
-                                type='file' 
-                                name='enfermaria'
-                                multiple
-                                accept='image/*, .pdf'
-                                onChange={(e)=>handleUpload(e)}
-                            />
+                    {!readOnly ?
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Documentos</label>
+                                <input
+                                    type='file' 
+                                    name='enfermaria'
+                                    multiple
+                                    accept='image/*, .pdf'
+                                    onChange={(e)=>handleUpload(e)}
+                                />
+                            </div>
+                            {currentProfEnfermaria?.docs?.map((doc, idx)=>(
+                                <span key={idx+'docsEnfermaria'} className={styles.removeDoc}>
+                                    {doc.titulo}
+                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermaria')}>X</b>
+                                </span>
+                            ))}
                         </div>
-                        {currentProfEnfermaria?.docs?.map((doc, idx)=>(
-                            <span key={idx+'docsEnfermaria'} className={styles.removeDoc}>
-                                {doc.titulo}
-                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermaria')}>X</b>
-                            </span>
-                        ))}
-                    </div>
+                    :null}
                 </div>
                 {data.espacosSeguros?.enfermaria?.map((enf, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'enfermaria'}>
@@ -1489,6 +1590,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.enfermaria.nome'
                                 value={enf.nome || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1498,6 +1600,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.enfermaria.contato'
                                 value={enf.contato || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1507,6 +1610,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.enfermaria.profissao'
                                 value={enf.profissao|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1516,6 +1620,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.enfermaria.regEscoteiro'
                                 value={enf.regEscoteiro || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1525,6 +1630,7 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.enfermaria.cpf'
                                 value={enf.cpf || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1534,25 +1640,30 @@ export default function PlanoEmergencia (){
                                 name='espacosSeguros.enfermaria.numCarteirinhaClass'
                                 value={enf.numCarteirinhaClass || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
 
                         {/* docs viewer */}                
                         <div className={styles.subConteiner}>
-                            <div className={styles.boxInput}>
-                                <label htmlFor="">Documentos</label>
-                                <input
-                                    type='file' 
-                                    name='espacosSeguros.enfermaria.docs'
-                                    multiple
-                                    accept='image/*, .pdf'
-                                    onChange={(e)=>handleChangeData(e, idx)}
-                                />
-                            </div>
+                            {!readOnly ? 
+                                <div className={styles.boxInput}>
+                                    <label htmlFor="">Documentos</label>
+                                    <input
+                                        type='file' 
+                                        name='espacosSeguros.enfermaria.docs'
+                                        multiple
+                                        accept='image/*, .pdf'
+                                        onChange={(e)=>handleChangeData(e, idx)}
+                                    />
+                                </div>
+                            :null}
                             {enf?.docs?.map((doc, idxDoc)=>(
                                 <span key={idxDoc+'docsEnfermaria'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermariaRemove', idx)}>X</b>
+                                    {!readOnly ?
+                                        <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermariaRemove', idx)}>X</b>
+                                    :null}
                                 </span>
                             ))}
                         </div>
@@ -1564,111 +1675,113 @@ export default function PlanoEmergencia (){
             {/* Veículo de Emergência/Apoio */}
             {['orange', 'red'].includes(context.dataSaae?.grauRisco?.color) ?
             <>
-                <div className={`${styles.section} ${styles.bgGreen}`}>
-                    <h3>Veículo de Emergência/Apoio</h3>
-                    <div className={styles.subConteiner}>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Tipo de veículo</label>
-                            <input
-                                type='text' 
-                                name='tipoVeiculo'
-                                placeholder='carro 5 pessoas, van, combi, ônibus...'
-                                value={currentVeiculo.tipoVeiculo || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Nome do condutor</label>
-                            <input
-                                type='text' 
-                                name='nomeMotorista'
-                                value={currentVeiculo.nomeMotorista || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Contato</label>
-                            <input
-                                type='text' 
-                                name='contato'
-                                value={currentVeiculo.contato || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Profissão</label>
-                            <input
-                                type='text' 
-                                name='profissao'
-                                value={currentVeiculo.profissao || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Reg. Escoteiro</label>
-                            <input
-                                type='text' 
-                                name='regEscoteiro'
-                                value={currentVeiculo.regEscoteiro || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Tipo/UF/Nº da Habilitação do condutor</label>
-                            <input
-                                type='text' 
-                                name='habilitacao'
-                                placeholder='CNH/ES/2121212121'
-                                value={currentVeiculo.habilitacao || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">CPF do condutor</label>
-                            <input
-                                type='text' 
-                                name='cpf'
-                                value={currentVeiculo.cpf || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            />
-                        </div>   
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Manutenção preventiva em dia?</label>
-                            <select
-                                name='manutencao'
-                                value={currentVeiculo.manutencao || ""}
-                                onChange={(e)=>handleChangeVeiculo(e)}
-                            >
-                                <option value=""></option>
-                                <option value="Sim">Sim</option>
-                                <option value="Não">Não</option>
-                            </select>
+                {!readOnly ?
+                    <div className={`${styles.section} ${styles.bgGreen}`}>
+                        <h3>Veículo de Emergência/Apoio</h3>
+                        <div className={styles.subConteiner}>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Tipo de veículo</label>
+                                <input
+                                    type='text' 
+                                    name='tipoVeiculo'
+                                    placeholder='carro 5 pessoas, van, combi, ônibus...'
+                                    value={currentVeiculo.tipoVeiculo || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Nome do condutor</label>
+                                <input
+                                    type='text' 
+                                    name='nomeMotorista'
+                                    value={currentVeiculo.nomeMotorista || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Contato</label>
+                                <input
+                                    type='text' 
+                                    name='contato'
+                                    value={currentVeiculo.contato || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Profissão</label>
+                                <input
+                                    type='text' 
+                                    name='profissao'
+                                    value={currentVeiculo.profissao || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Reg. Escoteiro</label>
+                                <input
+                                    type='text' 
+                                    name='regEscoteiro'
+                                    value={currentVeiculo.regEscoteiro || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Tipo/UF/Nº da Habilitação do condutor</label>
+                                <input
+                                    type='text' 
+                                    name='habilitacao'
+                                    placeholder='CNH/ES/2121212121'
+                                    value={currentVeiculo.habilitacao || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">CPF do condutor</label>
+                                <input
+                                    type='text' 
+                                    name='cpf'
+                                    value={currentVeiculo.cpf || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                />
+                            </div>   
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Manutenção preventiva em dia?</label>
+                                <select
+                                    name='manutencao'
+                                    value={currentVeiculo.manutencao || ""}
+                                    onChange={(e)=>handleChangeVeiculo(e)}
+                                >
+                                    <option value=""></option>
+                                    <option value="Sim">Sim</option>
+                                    <option value="Não">Não</option>
+                                </select>
+                            </div> 
+                            <FaPlus size={20} onClick={addVeiculo} className={styles.addBtn}/>
                         </div> 
-                        <FaPlus size={20} onClick={addVeiculo} className={styles.addBtn}/>
-                    </div> 
-                    {/* docs viewer */}                
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Documentos</label>
-                            <input
-                                type='file' 
-                                name='veiculos'
-                                multiple
-                                accept='image/*, .pdf'
-                                onChange={(e)=>handleUpload(e)}
-                            />
+                        {/* docs viewer */}                
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Documentos</label>
+                                <input
+                                    type='file' 
+                                    name='veiculos'
+                                    multiple
+                                    accept='image/*, .pdf'
+                                    onChange={(e)=>handleUpload(e)}
+                                />
+                            </div>
+                            {currentVeiculo?.docs?.map((doc, idx)=>(
+                                <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
+                                    {doc.titulo}
+                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculos')}>X</b>
+                                </span>
+                            ))}
                         </div>
-                        {currentVeiculo?.docs?.map((doc, idx)=>(
-                            <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
-                                {doc.titulo}
-                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculos')}>X</b>
-                            </span>
-                        ))}
+                        <h5>
+                            Obs.: Anexar documento de identidade do habilitação do condutor.
+                        </h5>      
                     </div>
-                    <h5>
-                        Obs.: Anexar documento de identidade do habilitação do condutor.
-                    </h5>      
-                </div>
+                :null}
                 {data.veiculos?.map((veic, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'veiculos'}>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1679,6 +1792,7 @@ export default function PlanoEmergencia (){
                                 placeholder='carro 5 pessoas, nan, combi, ônibus...'
                                 value={veic.tipoVeiculo || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1688,6 +1802,7 @@ export default function PlanoEmergencia (){
                                 name='veiculos.nomeMotorista'
                                 value={veic.nomeMotorista|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1697,6 +1812,7 @@ export default function PlanoEmergencia (){
                                 name='veiculos.contato'
                                 value={veic.contato|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1706,6 +1822,7 @@ export default function PlanoEmergencia (){
                                 name='veiculos.profissao'
                                 value={veic.profissao|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1715,6 +1832,7 @@ export default function PlanoEmergencia (){
                                 name='veiculos.regEscoteiro'
                                 value={veic.regEscoteiro|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1724,6 +1842,7 @@ export default function PlanoEmergencia (){
                                 name='veiculos.habilitacao'
                                 value={veic.habilitacao|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
@@ -1733,37 +1852,48 @@ export default function PlanoEmergencia (){
                                 name='veiculos.cpf'
                                 value={veic.cpf|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>   
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
                             <label htmlFor="">Manutenção preventiva em dia?</label>
-                            <select
-                                name='veiculos.manutencao'
-                                value={veic.manutencao|| ''}
-                                onChange={(e)=>handleChangeData(e, idx)}
-                            >
-                                <option value=""></option>
-                                <option value="Sim">Sim</option>
-                                <option value="Não">Não</option>
-                            </select>
+                            {!readOnly ? 
+                                <select
+                                    name='veiculos.manutencao'
+                                    value={veic.manutencao|| ''}
+                                    onChange={(e)=>handleChangeData(e, idx)}
+                                >
+                                    <option value=""></option>
+                                    <option value="Sim">Sim</option>
+                                    <option value="Não">Não</option>
+                                </select>
+                            :
+                            <input 
+                                defaultValue={veic.manutencao || ''}
+                                readOnly={readOnly}
+                            />}
                         </div>  
 
                         {/* docs viewer */}                
                         <div className={styles.subConteiner}>
-                            <div className={styles.boxInput}>
-                                <label htmlFor="">Documentos</label>
-                                <input
-                                    type='file' 
-                                    name='veiculos.docs'
-                                    multiple
-                                    accept='image/*, .pdf'
-                                    onChange={(e)=>handleChangeData(e, idx)}
-                                />
-                            </div>
+                            {!readOnly ? 
+                                <div className={styles.boxInput}>
+                                    <label htmlFor="">Documentos</label>
+                                    <input
+                                        type='file' 
+                                        name='veiculos.docs'
+                                        multiple
+                                        accept='image/*, .pdf'
+                                        onChange={(e)=>handleChangeData(e, idx)}
+                                    />
+                                </div>
+                            :null}
                             {veic?.docs?.map((doc, idxV)=>(
                                 <span key={idx+idxV+'docsVeiculos'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculosRemove', idx)}>X</b>
+                                    {!readOnly? 
+                                        <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculosRemove', idx)}>X</b>
+                                    :null}
                                 </span>
                             ))}
                         </div>      
@@ -1774,119 +1904,123 @@ export default function PlanoEmergencia (){
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Profissional</h3>
                     <h6>quando a atividade for conduzida por profissionais</h6>
-                    <div className={styles.subConteiner}>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Nome</label>
-                            <input
-                                type='text' 
-                                name='nomeProf'
-                                value={currentProfissional.nomeProf || ''}
-                                onChange={(e)=>handleChangeProfissional(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Profissão</label>
-                            <input
-                                type='text' 
-                                name='profissao'
-                                value={currentProfissional.profissao || ''}
-                                onChange={(e)=>handleChangeProfissional(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Registro Escoteiro</label>
-                            <input
-                                type='text' 
-                                name='regEscoteiro'
-                                value={currentProfissional.regEscoteiro || ''}
-                                onChange={(e)=>handleChangeProfissional(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">CPF</label>
-                            <input
-                                type='text' 
-                                name='cpf'
-                                value={currentProfissional.cpf || ''}
-                                onChange={(e)=>handleChangeProfissional(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Nº da Carteirinha de Classe</label>
-                            <input
-                                type='text' 
-                                name='numCarteirinha'
-                                value={currentProfissional.numCarteirinha || ''}
-                                onChange={(e)=>handleChangeProfissional(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Contato</label>
-                            <input
-                                type='text' 
-                                name='contato'
-                                value={currentProfissional.contato || ''}
-                                onChange={(e)=>handleChangeProfissional(e)}
-                            />
-                        </div>
-                        <div className={`${styles.boxInput} ${styles.minHeight90}`}>
-                            <label htmlFor="">Redes Sociais</label>
-                            <input
-                                type='text' 
-                                value={currentRedesSociaisProf}
-                                onChange={(e)=>setcurrentRedesSociaisProf(e.target.value)}
-                                placeholder='precione enter para inserir'
-                                onKeyDown={(e)=>handleAddTag(e)}
-                            />
-                            {currentRedesSociaisProfArray?.length > 0 ? 
-                            <div style={{
-                                display: 'flex', 
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
-                            }}>
-                                {currentRedesSociaisProfArray?.map((tag, index) => (
-                                    <a
-                                        key={index+'tags'}
-                                        className={styles.boxTags}
-                                        href={tag.includes('http://') ? tag : `http://${tag}`}
-                                        target='_blank'
-                                    >
-                                    {setIconSocialMidia(tag)}
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault(); 
-                                                handleRemoveTag(index)
-                                            }}
-                                        >
-                                            x
-                                        </button>
-                                    </a>
-                                ))}
+                    {!readOnly ? 
+                        <div className={styles.subConteiner}>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Nome</label>
+                                <input
+                                    type='text' 
+                                    name='nomeProf'
+                                    value={currentProfissional.nomeProf || ''}
+                                    onChange={(e)=>handleChangeProfissional(e)}
+                                />
                             </div>
-                            :null}
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Profissão</label>
+                                <input
+                                    type='text' 
+                                    name='profissao'
+                                    value={currentProfissional.profissao || ''}
+                                    onChange={(e)=>handleChangeProfissional(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Registro Escoteiro</label>
+                                <input
+                                    type='text' 
+                                    name='regEscoteiro'
+                                    value={currentProfissional.regEscoteiro || ''}
+                                    onChange={(e)=>handleChangeProfissional(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">CPF</label>
+                                <input
+                                    type='text' 
+                                    name='cpf'
+                                    value={currentProfissional.cpf || ''}
+                                    onChange={(e)=>handleChangeProfissional(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Nº da Carteirinha de Classe</label>
+                                <input
+                                    type='text' 
+                                    name='numCarteirinha'
+                                    value={currentProfissional.numCarteirinha || ''}
+                                    onChange={(e)=>handleChangeProfissional(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Contato</label>
+                                <input
+                                    type='text' 
+                                    name='contato'
+                                    value={currentProfissional.contato || ''}
+                                    onChange={(e)=>handleChangeProfissional(e)}
+                                />
+                            </div>
+                            <div className={`${styles.boxInput} ${styles.minHeight90}`}>
+                                <label htmlFor="">Redes Sociais</label>
+                                <input
+                                    type='text' 
+                                    value={currentRedesSociaisProf}
+                                    onChange={(e)=>setcurrentRedesSociaisProf(e.target.value)}
+                                    placeholder='precione enter para inserir'
+                                    onKeyDown={(e)=>handleAddTag(e)}
+                                />
+                                {currentRedesSociaisProfArray?.length > 0 ? 
+                                <div style={{
+                                    display: 'flex', 
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                }}>
+                                    {currentRedesSociaisProfArray?.map((tag, index) => (
+                                        <a
+                                            key={index+'tags'}
+                                            className={styles.boxTags}
+                                            href={tag.includes('http://') ? tag : `http://${tag}`}
+                                            target='_blank'
+                                        >
+                                        {setIconSocialMidia(tag)}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault(); 
+                                                    handleRemoveTag(index)
+                                                }}
+                                            >
+                                                x
+                                            </button>
+                                        </a>
+                                    ))}
+                                </div>
+                                :null}
+                            </div>
+                            <FaPlus size={20} onClick={addProfissional} className={styles.addBtn}/>
                         </div>
-                        <FaPlus size={20} onClick={addProfissional} className={styles.addBtn}/>
-                    </div>
+                    :null}
 
                     {/* docs viewer */}                
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Documentos</label>
-                            <input
-                                type='file' 
-                                name='profissional'
-                                multiple
-                                accept='image/*, .pdf'
-                                onChange={(e)=>handleUpload(e)}
-                            />
+                    {!readOnly ?
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Documentos</label>
+                                <input
+                                    type='file' 
+                                    name='profissional'
+                                    multiple
+                                    accept='image/*, .pdf'
+                                    onChange={(e)=>handleUpload(e)}
+                                />
+                            </div>
+                            {currentProfissional?.docs?.map((doc, idx)=>(
+                                <span key={idx+'docsProfissional'} className={styles.removeDoc}>
+                                    {doc.titulo}
+                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissional')}>X</b>
+                                </span>
+                            ))}
                         </div>
-                        {currentProfissional?.docs?.map((doc, idx)=>(
-                            <span key={idx+'docsProfissional'} className={styles.removeDoc}>
-                                {doc.titulo}
-                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissional')}>X</b>
-                            </span>
-                        ))}
-                    </div>
+                    :null}
                     <h5>
                         Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                     </h5>
@@ -1900,6 +2034,7 @@ export default function PlanoEmergencia (){
                                 name='atividadePorProfissional.nome'
                                 value={prof.nomeProf || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1909,6 +2044,7 @@ export default function PlanoEmergencia (){
                                 name='atividadePorProfissional.profissao'
                                 value={prof.profissao|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1918,6 +2054,7 @@ export default function PlanoEmergencia (){
                                 name='atividadePorProfissional.regEscoteiro'
                                 value={prof.regEscoteiro|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1927,6 +2064,7 @@ export default function PlanoEmergencia (){
                                 name='atividadePorProfissional.cpf'
                                 value={prof.cpf|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1936,6 +2074,7 @@ export default function PlanoEmergencia (){
                                 name='atividadePorProfissional.numCarteirinhaClass'
                                 value={prof.numCarteirinha|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1945,6 +2084,7 @@ export default function PlanoEmergencia (){
                                 name='atividadePorProfissional.contato'
                                 value={prof.contato|| ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -1956,6 +2096,7 @@ export default function PlanoEmergencia (){
                                     name='atividadePorProfissional.redesSociais'
                                     value={social || ''}
                                     onChange={(e)=>handleChangeData(e, idx, sIdx)}
+                                    readOnly={readOnly}
                                 />                                        
                             ))}
                             {prof.redesSociais?.length > 0 ? 
@@ -1988,20 +2129,26 @@ export default function PlanoEmergencia (){
 
                         {/* docs viewer */}                
                         <div className={styles.subConteiner}>
-                            <div className={styles.boxInput}>
-                                <label htmlFor="">Documentos</label>
-                                <input
-                                    type='file' 
-                                    name='atividadePorProfissional.docs'
-                                    multiple
-                                    accept='image/*, .pdf'
-                                    onChange={(e)=>handleChangeData(e, idx)}
-                                />
-                            </div>
+                            {!readOnly ? 
+                                <div className={styles.boxInput}>
+                                    <label htmlFor="">Documentos</label>
+                                    {!readOnly ?
+                                        <input
+                                            type='file' 
+                                            name='atividadePorProfissional.docs'
+                                            multiple
+                                            accept='image/*, .pdf'
+                                            onChange={(e)=>handleChangeData(e, idx)}
+                                        />
+                                    :null}
+                                </div>
+                            :null}
                             {prof?.docs?.map((doc, idxDoc)=>(
                                 <span key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissionalRemove', idx)}>X</b>
+                                    {!readOnly ?
+                                        <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissionalRemove', idx)}>X</b>
+                                    :null}
                                 </span>
                             ))}
                         </div>
@@ -2014,82 +2161,88 @@ export default function PlanoEmergencia (){
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Profissional Resgate/Salvamento</h3>
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Nome</label>
-                            <input
-                                type='text' 
-                                name='nome'
-                                value={currentProfSalvamento.nome || ''}
-                                onChange={(e)=>handleChangeSalvamento(e)}
-                            />
+                    {!readOnly ?
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Nome</label>
+                                <input
+                                    type='text' 
+                                    name='nome'
+                                    value={currentProfSalvamento.nome || ''}
+                                    onChange={(e)=>handleChangeSalvamento(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Profissão</label>
+                                <input
+                                    type='text' 
+                                    name='profissao'
+                                    value={currentProfSalvamento.profissao || ''}
+                                    onChange={(e)=>handleChangeSalvamento(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">CPF</label>
+                                <input
+                                    type='text' 
+                                    name='cpf'
+                                    value={currentProfSalvamento.cpf || ''}
+                                    onChange={(e)=>handleChangeSalvamento(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Nº Carteirinha Classe</label>
+                                <input
+                                    type='text' 
+                                    name='numCarteirinhaClass'
+                                    value={currentProfSalvamento.numCarteirinhaClass || ''}
+                                    onChange={(e)=>handleChangeSalvamento(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Registro Escoteiro</label>
+                                <input
+                                    type='text' 
+                                    name='regEscoteiro'
+                                    value={currentProfSalvamento.regEscoteiro || ''}
+                                    onChange={(e)=>handleChangeSalvamento(e)}
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Contato</label>
+                                <input
+                                    type='text' 
+                                    name='contato'
+                                    value={currentProfSalvamento.contato || ''}
+                                    onChange={(e)=>handleChangeSalvamento(e)}
+                                />
+                            </div>
+                            <FaPlus size={20} onClick={addProfSalvamento} className={styles.addBtn}/>
                         </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Profissão</label>
-                            <input
-                                type='text' 
-                                name='profissao'
-                                value={currentProfSalvamento.profissao || ''}
-                                onChange={(e)=>handleChangeSalvamento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">CPF</label>
-                            <input
-                                type='text' 
-                                name='cpf'
-                                value={currentProfSalvamento.cpf || ''}
-                                onChange={(e)=>handleChangeSalvamento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Nº Carteirinha Classe</label>
-                            <input
-                                type='text' 
-                                name='numCarteirinhaClass'
-                                value={currentProfSalvamento.numCarteirinhaClass || ''}
-                                onChange={(e)=>handleChangeSalvamento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Registro Escoteiro</label>
-                            <input
-                                type='text' 
-                                name='regEscoteiro'
-                                value={currentProfSalvamento.regEscoteiro || ''}
-                                onChange={(e)=>handleChangeSalvamento(e)}
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Contato</label>
-                            <input
-                                type='text' 
-                                name='contato'
-                                value={currentProfSalvamento.contato || ''}
-                                onChange={(e)=>handleChangeSalvamento(e)}
-                            />
-                        </div>
-                        <FaPlus size={20} onClick={addProfSalvamento} className={styles.addBtn}/>
-                    </div>
+                    :null}
                     {/* docs viewer */}                
-                    <div className={styles.subConteiner}>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="">Documentos</label>
-                            <input
-                                type='file' 
-                                name='salvamento'
-                                multiple
-                                accept='image/*, .pdf'
-                                onChange={(e)=>handleUpload(e)}
-                            />
+                    {!readOnly ? 
+                        <div className={styles.subConteiner}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="">Documentos</label>
+                                {!readOnly ?
+                                    <input
+                                        type='file' 
+                                        name='salvamento'
+                                        multiple
+                                        accept='image/*, .pdf'
+                                        onChange={(e)=>handleUpload(e)}
+                                    />
+                                :null}
+                            </div>
+                            {currentProfSalvamento?.docs?.map((doc, idx)=>(
+                                <span key={idx+'docsProfsalvamento'} className={styles.removeDoc}>
+                                    {doc.titulo}
+                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamento')}>X</b>
+                                </span>
+                            ))}
                         </div>
-                        {currentProfSalvamento?.docs?.map((doc, idx)=>(
-                            <span key={idx+'docsProfsalvamento'} className={styles.removeDoc}>
-                                {doc.titulo}
-                                <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamento')}>X</b>
-                            </span>
-                        ))}
-                    </div>
+                        :null}
                     <h5>
                         Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                     </h5>
@@ -2103,6 +2256,7 @@ export default function PlanoEmergencia (){
                                 name='profSalvamento.nome'
                                 value={salv.nome || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -2112,6 +2266,7 @@ export default function PlanoEmergencia (){
                                 name='profSalvamento.profissao'
                                 value={salv.profissao || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -2121,6 +2276,7 @@ export default function PlanoEmergencia (){
                                 name='profSalvamento.cpf'
                                 value={salv.cpf || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -2130,6 +2286,7 @@ export default function PlanoEmergencia (){
                                 name='profSalvamento.numCarteirinhaClass'
                                 value={salv.numCarteirinhaClass || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -2139,6 +2296,7 @@ export default function PlanoEmergencia (){
                                 name='profSalvamento.regEscoteiro'
                                 value={salv.regEscoteiro || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -2148,6 +2306,7 @@ export default function PlanoEmergencia (){
                                 name='profSalvamento.contato'
                                 value={salv.contato || ''}
                                 onChange={(e)=>handleChangeData(e, idx)}
+                                readOnly={readOnly}
                             />
                         </div>
 
@@ -2155,18 +2314,23 @@ export default function PlanoEmergencia (){
                         <div className={styles.subConteiner}>
                             <div className={styles.boxInput}>
                                 <label htmlFor="">Documentos</label>
+                               {!readOnly ? 
                                 <input
-                                    type='file' 
-                                    name='profSalvamento.docs'
-                                    multiple
-                                    accept='image/*, .pdf'
-                                    onChange={(e)=>handleChangeData(e, idx)}
-                                />
+                                        type='file' 
+                                        name='profSalvamento.docs'
+                                        multiple
+                                        accept='image/*, .pdf'
+                                        onChange={(e)=>handleChangeData(e, idx)}
+                                        readOnly={readOnly}
+                                    />
+                                :null}
                             </div>
                             {salv?.docs?.map((doc, idxDoc)=>(
                                 <span key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamentoRemove', idx)}>X</b>
+                                    {!readOnly ? 
+                                        <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamentoRemove', idx)}>X</b>
+                                    :null}
                                 </span>
                             ))}
                         </div>
