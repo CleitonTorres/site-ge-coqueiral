@@ -16,7 +16,6 @@ type Props = {
 
 export default function DadosGerais({readOnly}:Props){
     const context = useContext(Context);
-    const [data, setData] = useState({} as DadosGeraisSaae); 
 
     const [currentProgramacao, setCurrentProgramacao] = useState({} as ProgramacaoAtividade);
     const [atividade, setAtividade] = useState('');
@@ -31,105 +30,112 @@ export default function DadosGerais({readOnly}:Props){
         const name = e.target.name;
         const value= e.target.value;
 
-        let newData = {} as DadosGeraisSaae;
-        if(['horaInicio', 'horaFim'].includes(name)){
-            newData = {
-                ...data,
-                [name]: formatToHourMin(value)
-            }
-        }else if(name.includes("localInicio")){
-            //localInicio.coordenadas.long
-            if(name.includes('coordenadas')){
-                const nameSplit = name.split('.')[2] as 'lat' | 'long';
-                const coordenadas = data.localInicio?.coordenadas ? {
-                    ...data.localInicio.coordenadas,
-                    [nameSplit]: parseInt(value)
-                } : {
-                    [nameSplit]: parseInt(value)
-                } as unknown as {
-                    lat: number, long: number
-                }
-
+        context.setDataSaae((prev)=>{
+            let newData = prev.dadosGerais;
+            if(['horaInicio', 'horaFim'].includes(name)){
                 newData = {
-                    ...data,
-                    localInicio: {
-                        ...data.localInicio,
-                        coordenadas: coordenadas
+                    ...newData,
+                    [name]: formatToHourMin(value)
+                }
+            }else if(name.includes("localInicio")){
+                //localInicio.coordenadas.long
+                if(name.includes('coordenadas')){
+                    const nameSplit = name.split('.')[2] as 'lat' | 'long';
+                    const coordenadas = newData?.localInicio?.coordenadas ? {
+                        ...newData?.localInicio.coordenadas,
+                        [nameSplit]: parseInt(value)
+                    } : {
+                        [nameSplit]: parseInt(value)
+                    } as unknown as {
+                        lat: number, long: number
+                    }
+    
+                    newData = {
+                        ...newData,
+                        localInicio: {
+                            ...newData.localInicio,
+                            coordenadas: coordenadas
+                        }
+                    }
+                }else{
+                    const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
+                    const local:Endereco = newData.localInicio ? {
+                        ...newData.localInicio,
+                        [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                    } as Endereco: {
+                        [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                    } as unknown as  Endereco;
+    
+                    newData = {
+                        ...newData,
+                        localInicio: local
                     }
                 }
-            }else{
-                const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
-                const local:Endereco = data.localInicio ? {
-                    ...data.localInicio,
-                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                } as Endereco: {
-                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                } as unknown as  Endereco;
-
-                newData = {
-                    ...data,
-                    localInicio: local
-                }
-            }
-        }else if(name.includes("localFim")){
-            if(name.includes('coordenadas')){
-                const nameSplit = name.split('.')[2] as 'lat' | 'long';
-                const coordenadas = data.localFim?.coordenadas ? {
-                    ...data.localFim.coordenadas,
-                    [nameSplit]: parseInt(value)
-                } : {
-                    [nameSplit]: parseInt(value)
-                } as unknown as {
-                    lat: number, long: number
-                }
-
-                newData = {
-                    ...data,
-                    localFim: data.localFim ? {
-                        ...data.localFim,
-                        coordenadas: coordenadas
+            }else if(name.includes("localFim")){
+                if(name.includes('coordenadas')){
+                    const nameSplit = name.split('.')[2] as 'lat' | 'long';
+                    const coordenadas = newData.localFim?.coordenadas ? {
+                        ...newData.localFim.coordenadas,
+                        [nameSplit]: parseInt(value)
                     } : {
-                        coordenadas: coordenadas
-                    } as unknown as Endereco
+                        [nameSplit]: parseInt(value)
+                    } as unknown as {
+                        lat: number, long: number
+                    }
+    
+                    newData = {
+                        ...newData,
+                        localFim: newData.localFim ? {
+                            ...newData.localFim,
+                            coordenadas: coordenadas
+                        } : {
+                            coordenadas: coordenadas
+                        } as unknown as Endereco
+                    }
+                }else{
+                    const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
+                    const local:Endereco = newData.localFim ? {
+                        ...newData.localFim,
+                        [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                    } as Endereco: {
+                        [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
+                    } as unknown as  Endereco;
+    
+                    newData = {
+                        ...newData,
+                        localFim: local
+                    }
+                }
+            }else if(["dataInicio", 'dataFim'].includes(name)){
+                const date = new Date(value + 'T00:00');
+                newData = {
+                    ...newData,
+                    [name]: date
+                }
+            }else if(name.includes('custoIndividual')){
+                newData = {
+                    ...newData,
+                    [name]: maskMoeda(value)
+                }
+            }else if(['telCoordenador', 'telSupervisor'].includes(name)){
+                newData = {
+                    ...newData,
+                    [name]: masktel(value)
                 }
             }else{
-                const nameSplit = name.split('.')[1] as 'logradouro' | 'bairro' | 'municipio' | 'uf' | 'cep';
-                const local:Endereco = data.localFim ? {
-                    ...data.localFim,
-                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                } as Endereco: {
-                    [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                } as unknown as  Endereco;
-
                 newData = {
-                    ...data,
-                    localFim: local
+                    ...newData,
+                    [name]: value
                 }
             }
-        }else if(["dataInicio", 'dataFim'].includes(name)){
-            const date = new Date(value + 'T00:00');
-            newData = {
-                ...data,
-                [name]: date
-            }
-        }else if(name.includes('custoIndividual')){
-            newData = {
-                ...data,
-                [name]: maskMoeda(value)
-            }
-        }else if(['telCoordenador', 'telSupervisor'].includes(name)){
-            newData = {
-                ...data,
-                [name]: masktel(value)
-            }
-        }else{
-            newData = {
-                ...data,
-                [name]: value
-            }
-        }
 
-        updateContext(newData);     
+            return {
+                ...prev,
+                dadosGerais: newData
+            };
+        })        
+
+        //updateContext(newData);     
     }
 
     const handleFormProgramacao= (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
@@ -168,17 +174,23 @@ export default function DadosGerais({readOnly}:Props){
             return
         }
 
-        const newProgragacao = data.programacao ? [
-            ...data.programacao,
-            {...currentProgramacao, id: data.programacao.length+1}
-        ] : [{...currentProgramacao, id: 1}]
+        context.setDataSaae((prev)=>{
+            const newProgragacao = prev.dadosGerais.programacao ? [
+                ...prev.dadosGerais.programacao,
+                {...currentProgramacao, id: prev.dadosGerais.programacao.length+1}
+            ] : [{...currentProgramacao, id: 1}]
+
+            return{
+                ...prev,
+                dadosGerais: {
+                    ...prev.dadosGerais,
+                    programacao: newProgragacao
+                }
+            }
+        })
         
-        const newData = {
-            ...data,
-            programacao: newProgragacao
-        }
         
-        updateContext(newData);
+        //updateContext(newData);
 
         setCurrentProgramacao((prev)=>{
             return{
@@ -189,20 +201,26 @@ export default function DadosGerais({readOnly}:Props){
     }    
     
     const removeAtividade = (idx:number)=>{
-        const filter = data.programacao.filter(prog=> prog.id !== idx);
-        const rename = filter.map((prog, idx)=> {
+        context.setDataSaae((prev)=>{
+            const filter = prev.dadosGerais.programacao.filter(prog=> prog.id !== idx);
+            const rename = filter.map((prog, idx)=> {
+                return{
+                    ...prog,
+                    id: idx+1
+                } as ProgramacaoAtividade
+            });
+    
+            const dadosGerais= {
+                ...prev.dadosGerais, 
+                programacao: rename
+            }
+    
             return{
-                ...prog,
-                id: idx+1
-            } as ProgramacaoAtividade
-        });
-
-        const newData= {
-            ...data, 
-            programacao: rename
-        }
-
-        updateContext(newData);
+                ...prev,
+                dadosGerais
+            }
+        })
+        //updateContext(newData);
     }
 
     const getAtividade = (e: FocusEvent<HTMLInputElement, Element>)=>{
@@ -213,35 +231,41 @@ export default function DadosGerais({readOnly}:Props){
             return;
         }
 
-        const atividade = dataBaseSaae.find(ativ=> ativ.produto?.includes(value));
-        let newData= {} as DadosGeraisSaae;
-        if(atividade){
-            setInicioFim(atividade.localFim ? true : false);
-            newData = {
-                ...data,
-                nomeAtividade: atividade.produto,
-                tipoAtividade: atividade.atividade,
-                odss: atividade.ods,
-                localInicio: {
-                    logradouro: atividade.localInicio?.logradouro,
-                    bairro: atividade.localInicio?.bairro,
-                    municipio: atividade.localInicio.municipio,
-                    uf: atividade.localInicio.uf,
-                    cep: atividade.localInicio.cep
-                },
-                localFim: atividade.localFim ? {
-                    logradouro: atividade.localFim?.logradouro,
-                    bairro: atividade.localFim?.bairro,
-                    municipio: atividade.localFim.municipio,
-                    uf: atividade.localFim.uf,
-                    cep: atividade.localFim.cep
-                } : undefined
-            } as DadosGeraisSaae;
-        }else{
-            newData= data
-        }
+        context.setDataSaae((prev)=>{
+            const atividade = dataBaseSaae.find(ativ=> ativ.produto?.includes(value));
+            let newData= prev.dadosGerais;
+            
+            if(atividade){
+                setInicioFim(atividade.localFim ? true : false);
+                newData = {
+                    ...newData,
+                    nomeAtividade: atividade.produto,
+                    tipoAtividade: atividade.atividade,
+                    odss: atividade.ods,
+                    localInicio: {
+                        logradouro: atividade.localInicio?.logradouro,
+                        bairro: atividade.localInicio?.bairro,
+                        municipio: atividade.localInicio.municipio,
+                        uf: atividade.localInicio.uf,
+                        cep: atividade.localInicio.cep
+                    },
+                    localFim: atividade.localFim ? {
+                        logradouro: atividade.localFim?.logradouro,
+                        bairro: atividade.localFim?.bairro,
+                        municipio: atividade.localFim.municipio,
+                        uf: atividade.localFim.uf,
+                        cep: atividade.localFim.cep
+                    } : undefined
+                } as DadosGeraisSaae;
+            }
 
-        updateContext(newData);
+            return {
+                ...prev,
+                dadosGerais: newData
+            }
+        })        
+
+        //updateContext(newData);
     }
 
     //busca o endereço da empresa.
@@ -266,17 +290,24 @@ export default function DadosGerais({readOnly}:Props){
                 }
                 if(resp){
                     const logra = resp.complemento ? tipo_logradouro+ " " + logradouro + ', '+ resp.complemento : tipo_logradouro + " " + logradouro;
-                    const newData = {
-                        ...data,  
-                        [initialName]: {
-                            ...data[initialName],
-                            logradouro: logra,
-                            bairro: resp.bairro,
-                            municipio: resp.localidade,
-                            uf: resp.uf
+                    context.setDataSaae((prev)=>{
+                        const newData = {
+                            ...prev.dadosGerais,  
+                            [initialName]: {
+                                ...prev.dadosGerais[initialName],
+                                logradouro: logra,
+                                bairro: resp.bairro,
+                                municipio: resp.localidade,
+                                uf: resp.uf
+                            }
                         }
-                    }
-                    updateContext(newData);
+                        return {
+                            ...prev,
+                            dadosGerais: newData
+                        }
+                    })
+                    
+                    //updateContext(newData);
                 }
             })
             .catch(err=> console.log(err))
@@ -290,19 +321,27 @@ export default function DadosGerais({readOnly}:Props){
 
         // Adicionar o valor ao array se não for vazio e não for duplicado
         const trimmedValue = value.trim();
-        if (trimmedValue && !data[name]?.includes(trimmedValue)) {
-            const newArray = data[name] ? [
-                ...data[name],
-                trimmedValue
-            ] : [trimmedValue];
-
-            const newData= {
-                ...data,
-                [name]: newArray
+        context.setDataSaae((prev)=>{
+            if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+                const newArray = prev.dadosGerais[name] ? [
+                    ...prev.dadosGerais[name],
+                    trimmedValue
+                ] : [trimmedValue];
+    
+                const newData= {
+                    ...prev.dadosGerais,
+                    [name]: newArray
+                }
+                return{
+                    ...prev,
+                    dadosGerais: newData
+                }
+                //updateContext(newData);
+            }else{
+                return prev
             }
+        });
 
-            updateContext(newData);
-        }
         setAtividade(''); // Limpa o input
         setOdss(''); // Limpa o input
         setInputRamo('');
@@ -316,19 +355,27 @@ export default function DadosGerais({readOnly}:Props){
         if (value.includes(',')) {
             // Adicionar o valor ao array se não for vazio e não for duplicado
             const trimmedValue = value.trim();
-            if (trimmedValue && !data[name]?.includes(trimmedValue)) {
-                const newArray = data[name] ? [
-                    ...data[name],
-                    trimmedValue
-                ] : [trimmedValue];
-
-                const newData= {
-                    ...data,
-                    [name]: newArray
+            context.setDataSaae((prev)=>{
+                if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+                    const newArray = prev.dadosGerais[name] ? [
+                        ...prev.dadosGerais[name],
+                        trimmedValue
+                    ] : [trimmedValue];
+    
+                    const newData= {
+                        ...prev.dadosGerais,
+                        [name]: newArray
+                    }
+    
+                    //updateContext(newData);
+                    return{
+                        ...prev,
+                        dadosGerais: newData
+                    }
+                }else{
+                    return prev
                 }
-
-                updateContext(newData);
-            }
+            })
             setAtividade(''); // Limpa o input
             setOdss(''); // Limpa o input
             setInputRamo('');
@@ -340,18 +387,26 @@ export default function DadosGerais({readOnly}:Props){
         if (e.key === 'Enter') {
             // Adicionar o valor ao array se não for vazio e não for duplicado
             const trimmedValue = value.trim();
-            if (trimmedValue && !data[name]?.includes(trimmedValue)) {
-                const newArray = data[name] ? [
-                    ...data[name],
-                    trimmedValue
-                ] : [trimmedValue];
-
-                const newData= {
-                    ...data,
-                    [name]: newArray
+            context.setDataSaae((prev)=>{
+                if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+                    const newArray = prev.dadosGerais[name] ? [
+                        ...prev.dadosGerais[name],
+                        trimmedValue
+                    ] : [trimmedValue];
+    
+                    const newData= {
+                        ...prev.dadosGerais,
+                        [name]: newArray
+                    }
+                    //updateContext(newData);
+                    return{
+                        ...prev,
+                        dadosGerais: newData
+                    }
+                }else{
+                    return prev;
                 }
-                updateContext(newData);
-            }
+            })
             setAtividade(''); // Limpa o input
             setOdss(''); // Limpa o input
             setInputRamo('');
@@ -359,102 +414,107 @@ export default function DadosGerais({readOnly}:Props){
     };
 
     const handleRemoveTag = (index: number, name:'tipoAtividade' | 'odss' | 'ramo') => {
-        const newArray = data[name].filter((_, i) => i !== index)
+        context.setDataSaae((prev)=>{
+            const newArray = prev.dadosGerais[name].filter((_, i) => i !== index)
             
-        const newData= {
-            ...data,
-            [name]: newArray
-        }
-        updateContext(newData);
+            const newData= {
+                ...prev.dadosGerais,
+                [name]: newArray
+            }
+            return{
+                ...prev,
+                dadosGerais: newData
+            }
+        })
+        //updateContext(newData);        
     };
 
-    const latLongSet = (lat: number, lng: number, label: 'localInicio' | 'localFim', adress?: string)=>{
-        let newData = {} as DadosGeraisSaae;
-        if(adress){
-            const adressSplit = adress.split(',');
-            console.log("split", adressSplit);
+    const latLongSet = async (lat: number, lng: number, label: 'localInicio' | 'localFim', adress?: string)=>{
+        
+        context.setDataSaae((prev)=>{
+            let newData = prev.dadosGerais;
 
-            if(adressSplit.length === 5){
-                newData =  {
-                    ...data,
-                    [label]:{
-                        ...data[label],
-                        logradouro: adressSplit[0] + ", " + adressSplit[1].split('-')[0],
-                        bairro: adressSplit[1].split('-')[1],
-                        municipio: adressSplit[2].split('-')[0],
-                        uf: adressSplit[2].split('-')[1],
-                        cep:  adressSplit[3],
-                        coordenadas:{
-                            lat: lat,
-                            long: lng
+            if(adress){
+                const adressSplit = adress.split(',');
+                console.log("split", adressSplit);
+
+                if(adressSplit.length === 5){
+                    newData =  {
+                        ...newData,
+                        [label]:{
+                            ...newData[label],
+                            logradouro: adressSplit[0] + ", " + adressSplit[1].split('-')[0],
+                            bairro: adressSplit[1].split('-')[1] || '',
+                            municipio: adressSplit[2].split('-')[0] || '',
+                            uf: adressSplit[2].split('-')[1] || '',
+                            cep:  adressSplit[3] || '',
+                            coordenadas:{
+                                lat: lat,
+                                long: lng
+                            }
                         }
                     }
-                }
-            }else if(adressSplit.length === 3){
-                newData = {
-                    ...data,
-                    [label]:{
-                        ...data[label],
-                        logradouro: adressSplit[0].split(' ')[0],
-                        bairro: '',
-                        municipio: adressSplit[0].split(' ')[1],
-                        uf: adressSplit[1],
-                        cep:  '',
-                        coordenadas:{
-                            lat: lat,
-                            long: lng
+                }else if(adressSplit.length === 3){
+                    newData = {
+                        ...newData,
+                        [label]:{
+                            ...newData[label],
+                            logradouro: adressSplit[0].split(' ')[0],
+                            bairro: '',
+                            municipio: adressSplit[0].split(' ')[1] || '',
+                            uf: adressSplit[1] || '',
+                            cep:  '',
+                            coordenadas:{
+                                lat: lat,
+                                long: lng
+                            }
+                        }
+                    }
+                }else{
+                    newData = {
+                        ...newData,
+                        [label]:{
+                            ...newData[label],
+                            logradouro: adress,
+                            bairro: '',
+                            municipio: '',
+                            uf: '',
+                            cep:  '',
+                            coordenadas:{
+                                lat: lat,
+                                long: lng
+                            }
                         }
                     }
                 }
             }else{
-                newData = {
-                    ...data,
+                newData = newData[label] ? {
+                    ...newData,
                     [label]:{
-                        ...data[label],
-                        logradouro: adress,
-                        bairro: '',
-                        municipio: '',
-                        uf: '',
-                        cep:  '',
-                        coordenadas:{
+                        ...newData[label],
+                        coordenadas: {
+                            lat: lat,
+                            long: lng
+                        }
+                    }
+                } :{
+                    ...newData,
+                    [label]:{
+                        coordenadas: {
                             lat: lat,
                             long: lng
                         }
                     }
                 }
             }
-        }else{
-            newData = data[label] ? {
-                ...data,
-                [label]:{
-                    ...data[label],
-                    coordenadas: {
-                        lat: lat,
-                        long: lng
-                    }
-                }
-            } :{
-                ...data,
-                [label]:{
-                    coordenadas: {
-                        lat: lat,
-                        long: lng
-                    }
-                }
-            }
-        }
-        updateContext(newData);
-    }
 
-    const updateContext = (newData:DadosGeraisSaae)=>{
-        setData(newData);
-        context.setDataSaae(saae=>{
             return{
-                ...saae,
+                ...prev,
                 dadosGerais: newData
             }
-        });
-    };
+        })
+        //updateContext(newData);
+    }
 
     useEffect(()=>{
         //carrega a lista de atividades.
@@ -465,20 +525,9 @@ export default function DadosGerais({readOnly}:Props){
 
         //pega as infos salvas no contexto.
         // Atualiza o contexto e define o estado local após isso
-        const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
-        setData(dadosGerais);
+        // const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
+        // setData(dadosGerais);
     },[])
-
-    useEffect(()=>{
-        if(context.saaeEdit && context.saaeEdit !== 0){
-            const dadosGerais = context.dataStorage?.find(storage=> storage.id === context.saaeEdit);
-            if(dadosGerais?.dataSaae?.dadosGerais) {
-                setData(dadosGerais.dataSaae.dadosGerais)
-            }else{
-                setData({} as DadosGeraisSaae)
-            };
-        }
-    },[context.saaeEdit])
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
@@ -495,7 +544,7 @@ export default function DadosGerais({readOnly}:Props){
                             type='text'
                             name='nomeAtividade'
                             list='listAtividades'
-                            value={data?.nomeAtividade || ''}
+                            value={context.dataSaae?.dadosGerais?.nomeAtividade || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={(e)=>getAtividade(e)}
                             placeholder="nome da atividade"
@@ -537,7 +586,7 @@ export default function DadosGerais({readOnly}:Props){
                             flexDirection: 'row',
                             flexWrap: 'wrap',
                         }}>
-                            {data.tipoAtividade?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                            {context.dataSaae?.dadosGerais?.tipoAtividade?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
@@ -592,7 +641,7 @@ export default function DadosGerais({readOnly}:Props){
                             flexDirection: 'row',
                             flexWrap: 'wrap',
                         }}>
-                            {data.odss?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                            {context.dataSaae?.dadosGerais?.odss?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
@@ -643,7 +692,7 @@ export default function DadosGerais({readOnly}:Props){
                             flexDirection: 'row',
                             flexWrap: 'wrap',
                         }}>
-                            {data.ramo?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                            {context.dataSaae?.dadosGerais?.ramo?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
@@ -668,7 +717,7 @@ export default function DadosGerais({readOnly}:Props){
                         {!readOnly ?
                             <select
                                 name='atividadeNaoSupervisionada'
-                                value={data?.atividadeNaoSupervisionada || ''}
+                                value={context.dataSaae?.dadosGerais?.atividadeNaoSupervisionada || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                             >
@@ -678,7 +727,7 @@ export default function DadosGerais({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data?.atividadeNaoSupervisionada || ''}
+                                defaultValue={context.dataSaae?.dadosGerais?.atividadeNaoSupervisionada || ''}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
@@ -691,7 +740,7 @@ export default function DadosGerais({readOnly}:Props){
                         {!readOnly ?
                             <select
                                 name='usoTransporteInterMunicipal'
-                                value={data?.usoTransporteInterMunicipal || ''}
+                                value={context.dataSaae?.dadosGerais?.usoTransporteInterMunicipal || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                             >
@@ -701,7 +750,7 @@ export default function DadosGerais({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data?.usoTransporteInterMunicipal || ''}
+                                defaultValue={context.dataSaae?.dadosGerais?.usoTransporteInterMunicipal || ''}
                                 readOnly={readOnly}
                                 className={`${styles.collum}`}
                             />
@@ -723,10 +772,15 @@ export default function DadosGerais({readOnly}:Props){
                             checked={inicioFim}
                             onChange={()=>{
                                 if(inicioFim){
-                                    updateContext({
-                                        ...data,
-                                        localFim: undefined
-                                    })
+                                    context.setDataSaae((prev)=>{
+                                        return{
+                                            ...prev,
+                                            dadosGerais:{
+                                                ...prev.dadosGerais,
+                                                localFim: undefined
+                                            }
+                                        }
+                                    });
                                     setInicioFim(false);
                                 }else{
                                     setInicioFim(true);
@@ -745,7 +799,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='localInicio.cep'
-                            value={data?.localInicio?.cep || ''}
+                            value={context.dataSaae?.dadosGerais?.localInicio?.cep || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={(e)=>getCep(e)}
                             placeholder="CEP do local da atividade"
@@ -759,7 +813,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localInicio.logradouro'
-                            value={data?.localInicio?.logradouro || ''}
+                            value={context.dataSaae?.dadosGerais?.localInicio?.logradouro || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="logradouro"
                             className={`${styles.collum}`}
@@ -773,7 +827,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='localInicio.bairro'
-                            value={data?.localInicio?.bairro || ''}
+                            value={context.dataSaae?.dadosGerais?.localInicio?.bairro || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
@@ -787,7 +841,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='localInicio.municipio'
-                            value={data?.localInicio?.municipio || ''}
+                            value={context.dataSaae?.dadosGerais?.localInicio?.municipio || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
@@ -800,7 +854,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localInicio.uf'
-                            value={data?.localInicio?.uf || ''}
+                            value={context.dataSaae?.dadosGerais?.localInicio?.uf || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
@@ -808,7 +862,7 @@ export default function DadosGerais({readOnly}:Props){
                         />   
                     </div>
                 </div>
-                {inicioFim || data.localFim ?
+                {inicioFim || context.dataSaae?.dadosGerais?.localFim ?
                     <div className={styles.line}>
                         <div className={styles.collum}>
                             <h1>
@@ -817,7 +871,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='localFim.cep'
-                                value={data?.localFim?.cep || ''}
+                                value={context.dataSaae?.dadosGerais?.localFim?.cep || ''}
                                 onChange={(e) => handleForm(e)}
                                 onBlur={(e)=>getCep(e)}
                                 placeholder="CEP do local da atividade"
@@ -831,7 +885,7 @@ export default function DadosGerais({readOnly}:Props){
                             </h1>
                             <textarea
                                 name='localFim.logradouro'
-                                value={data?.localFim?.logradouro || ''}
+                                value={context.dataSaae?.dadosGerais?.localFim?.logradouro || ''}
                                 onChange={(e) => handleForm(e)}
                                 placeholder="logradouro"
                                 className={`${styles.collum}`}
@@ -845,7 +899,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='localFim.bairro'
-                                value={data?.localFim?.bairro || ''}
+                                value={context.dataSaae?.dadosGerais?.localFim?.bairro || ''}
                                 onChange={(e) => handleForm(e)}
                                 placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
@@ -859,7 +913,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='localFim.municipio'
-                                value={data?.localFim?.municipio || ''}
+                                value={context.dataSaae?.dadosGerais?.localFim?.municipio || ''}
                                 onChange={(e) => handleForm(e)}
                                 placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
@@ -872,7 +926,7 @@ export default function DadosGerais({readOnly}:Props){
                             </h1>
                             <textarea
                                 name='localFim.uf'
-                                value={data?.localFim?.uf || ''}
+                                value={context.dataSaae?.dadosGerais?.localFim?.uf || ''}
                                 onChange={(e) => handleForm(e)}
                                 placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
@@ -890,7 +944,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='metodologia'
-                            value={data?.metodologia || ''}
+                            value={context.dataSaae?.dadosGerais?.metodologia || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum2}`}
                             readOnly={readOnly}
@@ -902,7 +956,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='objetivo'
-                            value={data?.objetivo || ''}
+                            value={context.dataSaae?.dadosGerais?.objetivo || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum2}`}
                             readOnly={readOnly}
@@ -919,7 +973,8 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='date'
                             name='dataInicio'
-                            value={dateFormat1(data?.dataInicio) || ''}
+                            defaultValue={dateFormat1(context.dataSaae?.dadosGerais?.dataInicio) || ''}
+                            datatype={dateFormat1(context.dataSaae?.dadosGerais?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -932,7 +987,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='horaInicio'
-                            value={data?.horaInicio || ''}
+                            value={context.dataSaae?.dadosGerais?.horaInicio || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -944,7 +999,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localSaida'
-                            value={data?.localSaida || ''}
+                            value={context.dataSaae?.dadosGerais?.localSaida || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -956,7 +1011,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localChegada'
-                            value={data?.localChegada || ''}
+                            value={context.dataSaae?.dadosGerais?.localChegada || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -969,7 +1024,8 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='date'
                             name='dataFim'
-                            value={dateFormat1(data?.dataFim) || ''}
+                            defaultValue={dateFormat1(context.dataSaae?.dadosGerais?.dataFim) || ''}
+                            datatype={dateFormat1(context.dataSaae?.dadosGerais?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -982,7 +1038,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='horaFim'
-                            value={data?.horaFim || ''}
+                            value={context.dataSaae?.dadosGerais?.horaFim || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -999,7 +1055,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='meioTransporte'
-                            value={data?.meioTransporte || ''}
+                            value={context.dataSaae?.dadosGerais?.meioTransporte || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1012,7 +1068,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='custoIndividual'
-                            value={data?.custoIndividual || ''}
+                            value={context.dataSaae?.dadosGerais?.custoIndividual || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1029,7 +1085,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='coordenador'
-                            value={data?.coordenador || ''}
+                            value={context.dataSaae?.dadosGerais?.coordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1042,7 +1098,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='regCoordenador'
-                            value={data?.regCoordenador || ''}
+                            value={context.dataSaae?.dadosGerais?.regCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1055,7 +1111,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='telCoordenador'
-                            value={data?.telCoordenador || ''}
+                            value={context.dataSaae?.dadosGerais?.telCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1068,7 +1124,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='emailCoordenador'
-                            value={data?.emailCoordenador || ''}
+                            value={context.dataSaae?.dadosGerais?.emailCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1081,7 +1137,7 @@ export default function DadosGerais({readOnly}:Props){
                         {!readOnly ?
                             <select
                                 name='nivelFormacaoCoordenador'
-                                value={data?.nivelFormacaoCoordenador || ''}
+                                value={context.dataSaae?.dadosGerais?.nivelFormacaoCoordenador || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                             >
@@ -1091,7 +1147,7 @@ export default function DadosGerais({readOnly}:Props){
                             </select>
                         :
                                 <input 
-                                    defaultValue={data?.nivelFormacaoCoordenador || ''}
+                                    defaultValue={context.dataSaae?.dadosGerais?.nivelFormacaoCoordenador || ''}
                                     readOnly={readOnly}
                                     className={`${styles.collum}`}
                                 />
@@ -1100,7 +1156,7 @@ export default function DadosGerais({readOnly}:Props){
                 </div>
 
                 {/* supervisão */}
-                {data.nivelFormacaoCoordenador === "Preliminar" ? 
+                {context.dataSaae?.dadosGerais?.nivelFormacaoCoordenador === "Preliminar" ? 
                 <>
                     <div className={styles.line}>
                         <div className={styles.collum}>
@@ -1110,7 +1166,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='nomeSupervisor'
-                                value={data?.nomeSupervisor || ''}
+                                value={context.dataSaae?.dadosGerais?.nomeSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1123,7 +1179,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='regSupervisor'
-                                value={data?.regSupervisor || ''}
+                                value={context.dataSaae?.dadosGerais?.regSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1136,7 +1192,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='telSupervisor'
-                                value={data?.telSupervisor || ''}
+                                value={context.dataSaae?.dadosGerais?.telSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1149,7 +1205,7 @@ export default function DadosGerais({readOnly}:Props){
                             {!readOnly ?
                                 <select
                                     name='nivelFormacaoSupervisor'
-                                    value={data?.nivelFormacaoSupervisor || ''}
+                                    value={context.dataSaae?.dadosGerais?.nivelFormacaoSupervisor || ''}
                                     onChange={(e) => handleForm(e)}
                                     className={`${styles.collum}`}
                                 >
@@ -1159,7 +1215,7 @@ export default function DadosGerais({readOnly}:Props){
                                 </select>
                                 :
                                 <input 
-                                    defaultValue={data?.nivelFormacaoSupervisor || ''}
+                                    defaultValue={context.dataSaae?.dadosGerais?.nivelFormacaoSupervisor || ''}
                                     readOnly={readOnly}
                                     className={`${styles.collum}`}
                                 />
@@ -1176,7 +1232,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='comoChegar'
-                            value={data?.comoChegar || ''}
+                            value={context.dataSaae?.dadosGerais?.comoChegar || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="como chegar"
                             className={`${styles.collum2}`}
@@ -1189,7 +1245,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='linkMapa'
-                            value={data?.linkMapa || ''}
+                            value={context.dataSaae?.dadosGerais?.linkMapa || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="sugestão: procure por google Earth Web e crie uma pasta com todas as rotas"
                             className={`${styles.collum2}`}
@@ -1204,7 +1260,7 @@ export default function DadosGerais({readOnly}:Props){
                     <input
                         type='number'
                         name='localInicio.coordenadas.lat'
-                        value={data.localInicio?.coordenadas?.lat || ''}
+                        value={context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat || ''}
                         onChange={(e) => {
                             handleForm(e)
                         }}
@@ -1215,7 +1271,7 @@ export default function DadosGerais({readOnly}:Props){
                     <input
                         type='number'
                         name='localInicio.coordenadas.long'
-                        value={data.localInicio?.coordenadas?.long || ''}
+                        value={context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long || ''}
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
@@ -1223,16 +1279,16 @@ export default function DadosGerais({readOnly}:Props){
                     />
                 </div>
                 <div className={styles.line}>
-                    {(data.localInicio?.logradouro && data.localInicio?.bairro) || (data.localInicio?.coordenadas?.lat && data.localInicio?.coordenadas?.long) ?
+                    {(context.dataSaae?.dadosGerais?.localInicio?.logradouro && context.dataSaae?.dadosGerais?.localInicio?.bairro) || (context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat && context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long) ?
                         <MapsComponent 
                             label='localInicio'
                             setLatLong={latLongSet}
-                            data={data.localInicio}
+                            data={context.dataSaae?.dadosGerais?.localInicio}
                             readonly={readOnly}
                         />
                     :null}                    
                 </div>
-                {(data.localFim?.logradouro && data.localFim?.bairro) || data.localFim?.coordenadas ?
+                {(context.dataSaae?.dadosGerais?.localFim?.logradouro && context.dataSaae?.dadosGerais?.localFim?.bairro) || context.dataSaae?.dadosGerais?.localFim?.coordenadas ?
                 <>
                 <div>
                     <h2>
@@ -1241,7 +1297,7 @@ export default function DadosGerais({readOnly}:Props){
                     <input
                         type='number'
                         name='localFim.coordenadas.lat'
-                        value={data.localFim?.coordenadas?.lat || ''}
+                        value={context.dataSaae?.dadosGerais?.localFim?.coordenadas?.lat || ''}
                         onChange={(e) => {
                             handleForm(e)
                         }}
@@ -1252,7 +1308,7 @@ export default function DadosGerais({readOnly}:Props){
                     <input
                         type='number'
                         name='localFim.coordenadas.long'
-                        value={data.localFim?.coordenadas?.long || ''}
+                        value={context.dataSaae?.dadosGerais?.localFim?.coordenadas?.long || ''}
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
@@ -1264,7 +1320,7 @@ export default function DadosGerais({readOnly}:Props){
                     <MapsComponent 
                         label='localFim'
                         setLatLong={latLongSet}
-                        data={data.localFim}
+                        data={context.dataSaae?.dadosGerais?.localFim}
                         readonly={readOnly}
                     />                   
                 </div>
@@ -1281,7 +1337,7 @@ export default function DadosGerais({readOnly}:Props){
                         <h1 >
                             Data
                         </h1>
-                        {data.programacao?.map((prog)=>(
+                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
                             <span className={styles.borderBottom} key={v4()}>
                                 {dateFormat2(prog?.data)}
                             </span>
@@ -1290,7 +1346,8 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='date'
                                 name='data'
-                                value={dateFormat1(currentProgramacao?.data) || ''}
+                                defaultValue={dateFormat1(currentProgramacao?.data) || ''}
+                                datatype={dateFormat1(currentProgramacao?.data) || ''}
                                 onChange={(e) => handleFormProgramacao(e)}
                                 className={`${styles.collum} ${styles.width120}`}
                                 readOnly={readOnly}
@@ -1301,7 +1358,7 @@ export default function DadosGerais({readOnly}:Props){
                         <h1>
                             Hora
                         </h1>
-                        {data.programacao?.map((prog)=>(
+                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
                             <span className={styles.borderBottom} key={v4()}>
                                 {prog?.hora}
                             </span>
@@ -1321,7 +1378,7 @@ export default function DadosGerais({readOnly}:Props){
                         <h1>
                             Duração (em minutos)
                         </h1>
-                        {data.programacao?.map((prog)=>(
+                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
                             <span className={styles.borderBottom} key={v4()}>
                                 {prog?.duracao}
                             </span>
@@ -1341,7 +1398,7 @@ export default function DadosGerais({readOnly}:Props){
                         <h1>
                             Descrição
                         </h1>
-                        {data.programacao?.map((prog)=>(
+                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
                             <span className={styles.borderBottom} key={v4()}>
                                 {prog?.descricao}
                             </span>
@@ -1360,7 +1417,7 @@ export default function DadosGerais({readOnly}:Props){
                         <h1>
                             Material Necessário
                         </h1>
-                        {data.programacao?.map((prog)=>(
+                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
                             <span className={styles.borderBottom} key={v4()}>
                                 {prog?.materialNecessario}
                             </span>
@@ -1380,7 +1437,7 @@ export default function DadosGerais({readOnly}:Props){
                         <h1>
                             Responsável
                         </h1>
-                        {data.programacao?.map((prog)=>(
+                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
                             <span className={styles.borderBottom} key={v4()}>
                                 {prog?.responsavel}
                             </span>
@@ -1401,7 +1458,7 @@ export default function DadosGerais({readOnly}:Props){
                             <h1>
                                 Add/Rem
                             </h1>
-                            {data.programacao?.map((prog, idx)=>(
+                            {context.dataSaae?.dadosGerais?.programacao?.map((prog, idx)=>(
                                 <FaMinus  
                                     key={v4()}
                                     size={18} 

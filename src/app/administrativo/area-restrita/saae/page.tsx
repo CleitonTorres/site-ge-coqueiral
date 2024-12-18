@@ -1,7 +1,7 @@
 'use client'
 import Section from "@/components/layout/sections/section";
 import styles from './page.module.css';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import InfosPreliminares from "@/components/form/infosPreliminaresSaae/infosPreliminares";
 import DadosGerais from "@/components/form/dadosGeraisSaae/dadosGerais";
 import { IoIosArrowForward, IoIosArrowBack  } from "react-icons/io";
@@ -18,10 +18,6 @@ import { deleteDataStorage } from "@/scripts/indexedDB";
 export default function Page(){
     const context = useContext(Context);
     const [currenteSession, setCurrentSession] = useState(0);
-    
-    useEffect(()=>{
-        context.recoverProfile();
-    },[]);
     
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
@@ -47,6 +43,7 @@ export default function Page(){
                                         type="radio"
                                         name="indexSaae"
                                         checked={storage.id === context.saaeEdit}
+                                        onChange={()=>{}}
                                         onClick={()=>context.setSaaeEdit((prev)=>{
                                             if(prev !== storage.id){
                                                 return storage.id

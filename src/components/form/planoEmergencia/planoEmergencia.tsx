@@ -12,7 +12,6 @@ type Props = {
 
 export default function PlanoEmergencia ({readOnly}:Props){
     const context = useContext(Context);
-    const [data, setData] = useState({} as PlanoEmergenciaSaae);
     
     const [currentContatoEmerg, setCurrentContatoEmerg] = useState({} as ContatosEmergencia);
     const [currentProfAcolhimento, setCurrentProfAcolhimento] = useState({} as Profissional);
@@ -33,58 +32,145 @@ export default function PlanoEmergencia ({readOnly}:Props){
         const name = e.target.name;
         const value = e.target.value;
 
-        let newData = {} as PlanoEmergenciaSaae;
+        context.setDataSaae((prev)=>{
+            let newData = prev.planoEmergencia || {} as PlanoEmergenciaSaae;
 
-        if(name.includes('dataInspecao')){
-            newData = {
-                ...data,
-                dataInspecao: new  Date(value + 'T00:00')
-            }
+            if(name.includes('dataInspecao')){
+                newData = {
+                    ...newData,
+                    dataInspecao: new  Date(value + 'T00:00')
+                }
 
-        }else if(name.includes('prontoSocorro')){
-            const nameSplit = name.split('.')[1] as 'nome' | 'local' | 'distancia' | 'contato';
-            newData= {
-                ...data,
-                prontoSocorro:{
-                    ...data.prontoSocorro,
-                    [nameSplit]: nameSplit === "contato" ? masktel(value) : value
+            }else if(name.includes('prontoSocorro')){
+                const nameSplit = name.split('.')[1] as 'nome' | 'local' | 'distancia' | 'contato';
+                newData= {
+                    ...newData,
+                    prontoSocorro:{
+                        ...newData.prontoSocorro,
+                        [nameSplit]: nameSplit === "contato" ? masktel(value) : value
+                    }
                 }
-            }
-        }else if(name.includes('hospital')){
-            const nameField = name.split('.')[1] as 'nome' | 'local' | 'distancia' | 'contato';
-            newData= {
-                ...data,
-                hospital:{
-                    ...data.hospital,
-                    [nameField]: nameField === "contato" ? masktel(value) : value
-                }
-            }
-        }else if(name.includes('contatosEmergencia')){
-            const nameField = name.split('.')[1] as 'nome' | 'contato';
-            const newContacts = data.contatosEmergencia?.map((cont, index)=> {
-                if(idx === index){
-                    return{
-                        ...cont,
+            }else if(name.includes('hospital')){
+                const nameField = name.split('.')[1] as 'nome' | 'local' | 'distancia' | 'contato';
+                newData= {
+                    ...newData,
+                    hospital:{
+                        ...newData.hospital,
                         [nameField]: nameField === "contato" ? masktel(value) : value
                     }
-                }else{
-                    return cont
                 }
-            });
+            }else if(name.includes('contatosEmergencia')){
+                const nameField = name.split('.')[1] as 'nome' | 'contato';
+                const newContacts = newData.contatosEmergencia?.map((cont, index)=> {
+                    if(idx === index){
+                        return{
+                            ...cont,
+                            [nameField]: nameField === "contato" ? masktel(value) : value
+                        }
+                    }else{
+                        return cont
+                    }
+                });
 
-            newData= {
-                ...data,
-                contatosEmergencia: newContacts
-            }
-        }else if(name.includes('espacosSeguros')){
-            //espacosSeguros.enfermaria.field
-            const nameSplit = name.split('.')[1] as 'infosPreliminares' | 'infosMedicas' | 'protecaoDados' | 
-                'cursosEscotistas' | 'canalDenuncias' | 'acolhimento' | 'enfermaria'; 
-            if(['acolhimento', 'enfermaria'].includes(nameSplit)){
-                const label = name.split('.')[1] as 'acolhimento' | 'enfermaria'; 
-                const nameField = name.split('.')[2] as 'nome' | 'contato' | 'profissao' | 'numCarteirinhaClass' | 'cpf' | 'regEscoteiro' | 'docs'; 
+                newData= {
+                    ...newData,
+                    contatosEmergencia: newContacts
+                }
+            }else if(name.includes('espacosSeguros')){
+                //espacosSeguros.enfermaria.field
+                const nameSplit = name.split('.')[1] as 'infosPreliminares' | 'infosMedicas' | 'protecaoDados' | 
+                    'cursosEscotistas' | 'canalDenuncias' | 'acolhimento' | 'enfermaria'; 
+                if(['acolhimento', 'enfermaria'].includes(nameSplit)){
+                    const label = name.split('.')[1] as 'acolhimento' | 'enfermaria'; 
+                    const nameField = name.split('.')[2] as 'nome' | 'contato' | 'profissao' | 'numCarteirinhaClass' | 'cpf' | 'regEscoteiro' | 'docs'; 
+                    
+                    if(nameField === 'docs'){
+                        const target = e.target as unknown as HTMLInputElement;
+                        const files = target.files;        
+                        const fileListArray = files ? Array.from(files) as File[] : [];
+                        
+                        fileListArray.forEach(file => {
+                            const fileSize = parseFloat(calcTotalFilesMB(file));
+                            if(fileSize > 4){
+                                alert("o tamanho máximo de um arquivo é de 4mb");
+                                return prev;
+                            }
+                        });
+                        
+                        if(idx === undefined) return prev;
+                        const newArray = newData.espacosSeguros[label]?.map((prof, index)=> {
+                            if(idx === index){
+                                let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
+                                for (const file of fileListArray) {
+                                    const match = newFiles?.find(doc=> doc.titulo === file.name);
+                                    if(match){
+                                        newFiles = newFiles.map(doc=>{
+                                            if(doc.titulo === file.name){
+                                                return{
+                                                    ...doc,
+                                                    doc: file
+                                                }
+                                            }else{
+                                                return doc
+                                            }
+                                        })
+                                    }else{
+                                        newFiles.push({ doc: file, titulo: file.name });
+                                    }                    
+                                }
+
+                                return{
+                                    ...prof,
+                                    [nameField]: newFiles
+                                }
+                            }else{
+                                console.log("não encontrou",idx, label, nameField);
+                                return prof
+                            }
+                        });
+
+                        newData= {
+                            ...newData,
+                            espacosSeguros: {
+                                ...newData.espacosSeguros,
+                                [label]: newArray
+                            }
+                        }
+                    }else{
+                        const newArray = newData.espacosSeguros[label]?.map((prof, index)=> {
+                            if(idx === index){
+                                return{
+                                    ...prof,
+                                    [nameField]: nameField === "contato" ? masktel(value) : value
+                                }
+                            }else{
+                                return prof
+                            }
+                        });
+
+                        newData = {
+                            ...newData,
+                            espacosSeguros:{
+                                ...newData.espacosSeguros,
+                                [label]: newArray
+                            }
+                        }
+                    }
+                }else{
+                    newData = {
+                        ...newData,
+                        espacosSeguros:{
+                            ...newData.espacosSeguros,
+                            [nameSplit]: value
+                        }
+                    }
+                }
+            }else if(name.includes('veiculos')){
+                //veiculos.manutencao
+                const nameField = name.split('.')[1] as 'nomeMotorista' | 'tipoVeiculo' | 'contato' | 'profissao' 
+                | 'habilitacao' | 'cpf' | 'regEscoteiro' | 'manutencao' | 'docs'; 
                 
-                if(nameField === 'docs'){
+                if(nameField === "docs"){
                     const target = e.target as unknown as HTMLInputElement;
                     const files = target.files;        
                     const fileListArray = files ? Array.from(files) as File[] : [];
@@ -93,15 +179,105 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         const fileSize = parseFloat(calcTotalFilesMB(file));
                         if(fileSize > 4){
                             alert("o tamanho máximo de um arquivo é de 4mb");
-                            return;
+                            return prev;
                         }
                     });
                     
-                    console.log("entrou", idx, label, nameField);
-                    if(idx === undefined) return;
-                    const newArray = data.espacosSeguros[label]?.map((prof, index)=> {
+                    if(idx === undefined) return prev;
+                    const newArray = newData.veiculos?.map((veic, index)=> {
                         if(idx === index){
-                            console.log("encontrou", label, nameField);
+                            let newFiles: Docs[] = veic.docs? [...veic.docs] : [];
+                            for (const file of fileListArray) {
+                                const match = newFiles?.find(doc=> doc.titulo === file.name);
+                                if(match){
+                                    newFiles = newFiles.map(doc=>{
+                                        if(doc.titulo === file.name){
+                                            return{
+                                                ...doc,
+                                                doc: file
+                                            }
+                                        }else{
+                                            return doc
+                                        }
+                                    })
+                                }else{
+                                    newFiles.push({ doc: file, titulo: file.name });
+                                }                    
+                            }
+
+                            return{
+                                ...veic,
+                                [nameField]: newFiles
+                            }
+                        }else{
+                            return veic
+                        }
+                    });
+
+                    newData= {
+                        ...newData,
+                        veiculos: newArray
+                    }
+                }else{
+                    const newArray = newData.veiculos?.map((veic, index)=> {
+                        if(idx === index){
+                            return{
+                                ...veic,
+                                [nameField]: nameField === "contato" ? masktel(value) : value
+                            }
+                        }else{
+                            return veic
+                        }
+                    });
+
+                    newData = {
+                        ...newData,
+                        veiculos: newArray
+                    }
+                } 
+            }else if(name.includes('atividadePorProfissional')){
+                const nameField = name.split('.')[1] as 'nomeProf' | 'contato' | 'profissao' | 'numCarteirinha'
+                | 'regEscoteiro' | 'cpf' | 'redesSociais' | 'docs'; 
+                //atividadePorProfissional.redesSociais
+                if(nameField === "redesSociais"){
+                    const newArray = newData.atividadePorProfissional?.map((prof, index)=> {
+                        if(idx === index){
+                            const newSocialMidia = prof.redesSociais.map((social, sIdx)=>{
+                                if(sIdx === socialMidiaIdx){
+                                    return value
+                                }else{
+                                    return social
+                                }
+                            });
+
+                            return{
+                                ...prof,
+                                redesSociais: newSocialMidia
+                            }
+                        }else{
+                            return prof
+                        }
+                    });
+                    newData = {
+                        ...newData,
+                        atividadePorProfissional: newArray
+                    }
+                }else if(nameField === 'docs'){
+                    const target = e.target as unknown as HTMLInputElement;
+                    const files = target.files;        
+                    const fileListArray = files ? Array.from(files) as File[] : [];
+                    
+                    fileListArray.forEach(file => {
+                        const fileSize = parseFloat(calcTotalFilesMB(file));
+                        if(fileSize > 4){
+                            alert("o tamanho máximo de um arquivo é de 4mb");
+                            return prev;
+                        }
+                    });
+                    
+                    if(idx === undefined) return prev;
+                    const newArray = newData.atividadePorProfissional?.map((prof, index)=> {
+                        if(idx === index){
                             let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
                             for (const file of fileListArray) {
                                 const match = newFiles?.find(doc=> doc.titulo === file.name);
@@ -126,20 +302,84 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 [nameField]: newFiles
                             }
                         }else{
-                            console.log("não encontrou",idx, label, nameField);
                             return prof
                         }
                     });
 
                     newData= {
-                        ...data,
-                        espacosSeguros: {
-                            ...data.espacosSeguros,
-                            [label]: newArray
-                        }
+                        ...newData,
+                        atividadePorProfissional: newArray
                     }
                 }else{
-                    const newArray = data.espacosSeguros[label]?.map((prof, index)=> {
+                    const newArray = newData.atividadePorProfissional?.map((prof, index)=> {
+                        if(idx === index){
+                            return{
+                                ...prof,
+                                [nameField]: nameField === "contato" ? masktel(value) : value
+                            }
+                        }else{
+                            return prof
+                        }
+                    });
+                    newData= {
+                        ...newData,
+                        atividadePorProfissional: newArray
+                    }
+                }
+            }else if(name.includes('profSalvamento')){
+                //profSalvamento.nome
+                const nameField = name.split('.')[1] as 'nome' | 'contato' | 'profissao' | 
+                    'numCarteirinhaClass' | 'cpf' | 'regEscoteiro' | 'docs'; 
+                if(nameField === 'docs'){
+                    const target = e.target as unknown as HTMLInputElement;
+                    const files = target.files;        
+                    const fileListArray = files ? Array.from(files) as File[] : [];
+                    
+                    fileListArray.forEach(file => {
+                        const fileSize = parseFloat(calcTotalFilesMB(file));
+                        if(fileSize > 4){
+                            alert("o tamanho máximo de um arquivo é de 4mb");
+                            return prev;
+                        }
+                    });
+                    
+                    if(idx === undefined) return prev;
+                    const newArray = newData.profSalvamento?.map((prof, index)=> {
+                        if(idx === index){
+                            let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
+                            for (const file of fileListArray) {
+                                const match = newFiles?.find(doc=> doc.titulo === file.name);
+                                if(match){
+                                    newFiles = newFiles.map(doc=>{
+                                        if(doc.titulo === file.name){
+                                            return{
+                                                ...doc,
+                                                doc: file
+                                            }
+                                        }else{
+                                            return doc
+                                        }
+                                    })
+                                }else{
+                                    newFiles.push({ doc: file, titulo: file.name });
+                                }                    
+                            }
+
+                            return{
+                                ...prof,
+                                [nameField]: newFiles
+                            }
+                        }else{
+                            return prof
+                        }
+                    });
+
+                    newData= {
+                        ...newData,
+                        profSalvamento: newArray
+                    }
+                }else{
+                    const newArray = newData.profSalvamento?.map((prof, index)=> {
                         if(idx === index){
                             return{
                                 ...prof,
@@ -151,261 +391,22 @@ export default function PlanoEmergencia ({readOnly}:Props){
                     });
 
                     newData = {
-                        ...data,
-                        espacosSeguros:{
-                            ...data.espacosSeguros,
-                            [label]: newArray
-                        }
+                        ...newData,
+                        profSalvamento: newArray
                     }
                 }
             }else{
-                newData = {
-                    ...data,
-                    espacosSeguros:{
-                        ...data.espacosSeguros,
-                        [nameSplit]: value
-                    }
+                newData= {
+                    ...newData,
+                    [name]: name === "contato" ? masktel(value) : value
                 }
             }
-        }else if(name.includes('veiculos')){
-            //veiculos.manutencao
-            const nameField = name.split('.')[1] as 'nomeMotorista' | 'tipoVeiculo' | 'contato' | 'profissao' 
-            | 'habilitacao' | 'cpf' | 'regEscoteiro' | 'manutencao' | 'docs'; 
-            
-            if(nameField === "docs"){
-                const target = e.target as unknown as HTMLInputElement;
-                const files = target.files;        
-                const fileListArray = files ? Array.from(files) as File[] : [];
-                
-                fileListArray.forEach(file => {
-                    const fileSize = parseFloat(calcTotalFilesMB(file));
-                    if(fileSize > 4){
-                        alert("o tamanho máximo de um arquivo é de 4mb");
-                        return;
-                    }
-                });
-                
-                if(idx === undefined) return;
-                const newArray = data.veiculos?.map((veic, index)=> {
-                    if(idx === index){
-                        let newFiles: Docs[] = veic.docs? [...veic.docs] : [];
-                        for (const file of fileListArray) {
-                            const match = newFiles?.find(doc=> doc.titulo === file.name);
-                            if(match){
-                                newFiles = newFiles.map(doc=>{
-                                    if(doc.titulo === file.name){
-                                        return{
-                                            ...doc,
-                                            doc: file
-                                        }
-                                    }else{
-                                        return doc
-                                    }
-                                })
-                            }else{
-                                newFiles.push({ doc: file, titulo: file.name });
-                            }                    
-                        }
 
-                        return{
-                            ...veic,
-                            [nameField]: newFiles
-                        }
-                    }else{
-                        return veic
-                    }
-                });
-
-                newData= {
-                    ...data,
-                    veiculos: newArray
-                }
-            }else{
-                const newArray = data.veiculos?.map((veic, index)=> {
-                    if(idx === index){
-                        return{
-                            ...veic,
-                            [nameField]: nameField === "contato" ? masktel(value) : value
-                        }
-                    }else{
-                        return veic
-                    }
-                });
-
-                newData = {
-                    ...data,
-                    veiculos: newArray
-                }
-            } 
-        }else if(name.includes('atividadePorProfissional')){
-            const nameField = name.split('.')[1] as 'nomeProf' | 'contato' | 'profissao' | 'numCarteirinha'
-            | 'regEscoteiro' | 'cpf' | 'redesSociais' | 'docs'; 
-            //atividadePorProfissional.redesSociais
-            if(nameField === "redesSociais"){
-                const newArray = data.atividadePorProfissional?.map((prof, index)=> {
-                    if(idx === index){
-                        const newSocialMidia = prof.redesSociais.map((social, sIdx)=>{
-                            if(sIdx === socialMidiaIdx){
-                                return value
-                            }else{
-                                return social
-                            }
-                        });
-
-                        return{
-                            ...prof,
-                            redesSociais: newSocialMidia
-                        }
-                    }else{
-                        return prof
-                    }
-                });
-                newData = {
-                    ...data,
-                    atividadePorProfissional: newArray
-                }
-            }else if(nameField === 'docs'){
-                const target = e.target as unknown as HTMLInputElement;
-                const files = target.files;        
-                const fileListArray = files ? Array.from(files) as File[] : [];
-                
-                fileListArray.forEach(file => {
-                    const fileSize = parseFloat(calcTotalFilesMB(file));
-                    if(fileSize > 4){
-                        alert("o tamanho máximo de um arquivo é de 4mb");
-                        return;
-                    }
-                });
-                
-                if(idx === undefined) return;
-                const newArray = data.atividadePorProfissional?.map((prof, index)=> {
-                    if(idx === index){
-                        let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
-                        for (const file of fileListArray) {
-                            const match = newFiles?.find(doc=> doc.titulo === file.name);
-                            if(match){
-                                newFiles = newFiles.map(doc=>{
-                                    if(doc.titulo === file.name){
-                                        return{
-                                            ...doc,
-                                            doc: file
-                                        }
-                                    }else{
-                                        return doc
-                                    }
-                                })
-                            }else{
-                                newFiles.push({ doc: file, titulo: file.name });
-                            }                    
-                        }
-
-                        return{
-                            ...prof,
-                            [nameField]: newFiles
-                        }
-                    }else{
-                        return prof
-                    }
-                });
-
-                newData= {
-                    ...data,
-                    atividadePorProfissional: newArray
-                }
-            }else{
-                const newArray = data.atividadePorProfissional?.map((prof, index)=> {
-                    if(idx === index){
-                        return{
-                            ...prof,
-                            [nameField]: nameField === "contato" ? masktel(value) : value
-                        }
-                    }else{
-                        return prof
-                    }
-                });
-                newData= {
-                    ...data,
-                    atividadePorProfissional: newArray
-                }
+            return {
+                ...prev,
+                planoEmergencia: newData
             }
-        }else if(name.includes('profSalvamento')){
-            //profSalvamento.nome
-            const nameField = name.split('.')[1] as 'nome' | 'contato' | 'profissao' | 
-                'numCarteirinhaClass' | 'cpf' | 'regEscoteiro' | 'docs'; 
-            if(nameField === 'docs'){
-                const target = e.target as unknown as HTMLInputElement;
-                const files = target.files;        
-                const fileListArray = files ? Array.from(files) as File[] : [];
-                
-                fileListArray.forEach(file => {
-                    const fileSize = parseFloat(calcTotalFilesMB(file));
-                    if(fileSize > 4){
-                        alert("o tamanho máximo de um arquivo é de 4mb");
-                        return;
-                    }
-                });
-                
-                if(idx === undefined) return;
-                const newArray = data.profSalvamento?.map((prof, index)=> {
-                    if(idx === index){
-                        let newFiles: Docs[] = prof.docs? [...prof.docs] : [];
-                        for (const file of fileListArray) {
-                            const match = newFiles?.find(doc=> doc.titulo === file.name);
-                            if(match){
-                                newFiles = newFiles.map(doc=>{
-                                    if(doc.titulo === file.name){
-                                        return{
-                                            ...doc,
-                                            doc: file
-                                        }
-                                    }else{
-                                        return doc
-                                    }
-                                })
-                            }else{
-                                newFiles.push({ doc: file, titulo: file.name });
-                            }                    
-                        }
-
-                        return{
-                            ...prof,
-                            [nameField]: newFiles
-                        }
-                    }else{
-                        return prof
-                    }
-                });
-
-                newData= {
-                    ...data,
-                    profSalvamento: newArray
-                }
-            }else{
-                const newArray = data.profSalvamento?.map((prof, index)=> {
-                    if(idx === index){
-                        return{
-                            ...prof,
-                            [nameField]: nameField === "contato" ? masktel(value) : value
-                        }
-                    }else{
-                        return prof
-                    }
-                });
-
-                newData = {
-                    ...data,
-                    profSalvamento: newArray
-                }
-            }
-        }else{
-            newData= {
-                ...data,
-                [name]: name === "contato" ? masktel(value) : value
-            }
-        }
-
-        setData(newData);
-        updateContext(newData);
+        });
     
     }
 
@@ -659,51 +660,58 @@ export default function PlanoEmergencia ({readOnly}:Props){
                 return {...prev, docs: newData};
             });
         }else if(field === 'acolhimentoRemove'){
-            let newData = {} as PlanoEmergenciaSaae;
-            const newProf = data.espacosSeguros.acolhimento.map((acol, index)=>{
-                if(index === idxProfissional){
-                    return{
-                        ...acol,
-                        docs: acol.docs.filter(doc=> doc.titulo !== title)
+            context.setDataSaae((prev)=>{
+                let newData = prev.planoEmergencia || {} as PlanoEmergenciaSaae;
+                const newProf = newData.espacosSeguros.acolhimento.map((acol, index)=>{
+                    if(index === idxProfissional){
+                        return{
+                            ...acol,
+                            docs: acol.docs.filter(doc=> doc.titulo !== title)
+                        }
+                    }else{
+                        return acol
                     }
-                }else{
-                    return acol
-                }
-            });
+                });
 
-            newData= {
-                ...data, 
-                espacosSeguros: {
-                    ...data.espacosSeguros,
-                    acolhimento: newProf
-                }
-            };
+                newData= {
+                    ...newData, 
+                    espacosSeguros: {
+                        ...newData.espacosSeguros,
+                        acolhimento: newProf
+                    }
+                };
 
-            setData(newData);
-            updateContext(newData);
+                return{
+                    ...prev,
+                    planoEmergencia: newData
+                }
+            })
         }else if(field === 'enfermariaRemove'){
-            let newData = {} as PlanoEmergenciaSaae;
-            const newProf = data.espacosSeguros.enfermaria.map((enf, index)=>{
-                if(index === idxProfissional){
-                    return{
-                        ...enf,
-                        docs: enf.docs.filter(doc=> doc.titulo !== title)
+            context.setDataSaae((prev)=>{
+                let newData = prev.planoEmergencia || {} as PlanoEmergenciaSaae;
+                const newProf = newData.espacosSeguros.enfermaria.map((enf, index)=>{
+                    if(index === idxProfissional){
+                        return{
+                            ...enf,
+                            docs: enf.docs.filter(doc=> doc.titulo !== title)
+                        }
+                    }else{
+                        return enf
                     }
-                }else{
-                    return enf
-                }
-            });
+                });
 
-            newData= {
-                ...data, 
-                espacosSeguros: {
-                    ...data.espacosSeguros,
-                    enfermaria: newProf
-                }
-            };
-
-            setData(newData);
-            updateContext(newData);
+                newData= {
+                    ...newData, 
+                    espacosSeguros: {
+                        ...newData.espacosSeguros,
+                        enfermaria: newProf
+                    }
+                };
+                return {
+                    ...prev,
+                    planoEmergencia: newData
+                };
+            })
         }else if(field === 'enfermaria'){
             setCurrentProfEnfermaria((prev)=>{
                 const newData = prev.docs.filter(doc=> doc.titulo !== title);
@@ -717,25 +725,29 @@ export default function PlanoEmergencia ({readOnly}:Props){
                 return {...prev, docs: newData};
             });
         }else if(field === 'veiculosRemove'){
-            let newData = {} as PlanoEmergenciaSaae;
-            const newVeiculos = data.veiculos.map((veic, index)=>{
-                if(index === idxProfissional){
-                    return{
-                        ...veic,
-                        docs: veic.docs.filter(doc=> doc.titulo !== title)
+            context.setDataSaae((prev)=>{
+                let newData = prev.planoEmergencia || {} as PlanoEmergenciaSaae;
+                const newVeiculos = newData.veiculos.map((veic, index)=>{
+                    if(index === idxProfissional){
+                        return{
+                            ...veic,
+                            docs: veic.docs.filter(doc=> doc.titulo !== title)
+                        }
+                    }else{
+                        return veic
                     }
-                }else{
-                    return veic
+                });
+
+                newData= {
+                    ...newData, 
+                    veiculos: newVeiculos
+                };
+
+                return{
+                    ...prev,
+                    planoEmergencia: newData
                 }
-            });
-
-            newData= {
-                ...data, 
-                veiculos: newVeiculos
-            };
-
-            setData(newData);
-            updateContext(newData);
+            })
         }else if(field === 'profissional'){
             setCurrentProfissional((prev)=>{
                 const newData = prev.docs.filter(doc=> doc.titulo !== title);
@@ -743,25 +755,29 @@ export default function PlanoEmergencia ({readOnly}:Props){
                 return {...prev, docs: newData};
             });
         }else if(field === 'profissionalRemove'){
-            let newData = {} as PlanoEmergenciaSaae;
-            const newProf = data.atividadePorProfissional.map((prof, index)=>{
-                if(index === idxProfissional){
-                    return{
-                        ...prof,
-                        docs: prof.docs.filter(doc=> doc.titulo !== title)
+            context.setDataSaae((prev)=>{
+                let newData = prev.planoEmergencia || {} as PlanoEmergenciaSaae;
+                const newProf = newData.atividadePorProfissional.map((prof, index)=>{
+                    if(index === idxProfissional){
+                        return{
+                            ...prof,
+                            docs: prof.docs.filter(doc=> doc.titulo !== title)
+                        }
+                    }else{
+                        return prof
                     }
-                }else{
-                    return prof
+                });
+
+                newData= {
+                    ...newData, 
+                    atividadePorProfissional: newProf
+                };
+
+                return {
+                    ...prev,
+                    planoEmergencia: newData
                 }
-            });
-
-            newData= {
-                ...data, 
-                atividadePorProfissional: newProf
-            };
-
-            setData(newData);
-            updateContext(newData);
+            })
         }else if(field === 'salvamento'){
             setCurrentProfSalvamento((prev)=>{
                 const newData = prev.docs.filter(doc=> doc.titulo !== title);
@@ -769,25 +785,29 @@ export default function PlanoEmergencia ({readOnly}:Props){
                 return {...prev, docs: newData};
             });
         }else if(field === 'salvamentoRemove'){
-            let newData = {} as PlanoEmergenciaSaae;
-            const newProf = data.profSalvamento.map((prof, index)=>{
-                if(index === idxProfissional){
-                    return{
-                        ...prof,
-                        docs: prof.docs.filter(doc=> doc.titulo !== title)
+            context.setDataSaae((prev)=>{
+                let newData = {} as PlanoEmergenciaSaae;
+                const newProf = newData.profSalvamento.map((prof, index)=>{
+                    if(index === idxProfissional){
+                        return{
+                            ...prof,
+                            docs: prof.docs.filter(doc=> doc.titulo !== title)
+                        }
+                    }else{
+                        return prof
                     }
-                }else{
-                    return prof
+                });
+
+                newData= {
+                    ...newData, 
+                    profSalvamento: newProf
+                };
+
+                return{
+                    ...prev,
+                    planoEmergencia: newData
                 }
-            });
-
-            newData= {
-                ...data, 
-                profSalvamento: newProf
-            };
-
-            setData(newData);
-            updateContext(newData);
+            })
         }
     }
     //-----------------
@@ -797,17 +817,20 @@ export default function PlanoEmergencia ({readOnly}:Props){
             alert("Faltam campos obrigatórios");
             return;
         }
-        const newData = {
-            ...data,
-            contatosEmergencia: data.contatosEmergencia ? 
-                [...data.contatosEmergencia, currentContatoEmerg] : [currentContatoEmerg]
-        } as PlanoEmergenciaSaae;
+        context.setDataSaae((prev)=>{
+            const newData = {
+                ...prev.planoEmergencia,
+                contatosEmergencia: prev.planoEmergencia.contatosEmergencia ? 
+                    [...prev.planoEmergencia.contatosEmergencia, currentContatoEmerg] : [currentContatoEmerg]
+            };
+
+            return{
+                ...prev,
+                planoEmergencia: newData
+            }
+        })
 
         setCurrentContatoEmerg({} as ContatosEmergencia);
-
-        setData(newData);
-        updateContext(newData)
-
     }
 
     const addProfAcolhimento = ()=>{
@@ -817,20 +840,25 @@ export default function PlanoEmergencia ({readOnly}:Props){
             alert("Faltam campos obrigatórios");
             return;
         }
-        const newData = {
-            ...data,
-            espacosSeguros: {
-                ...data.espacosSeguros,
-                acolhimento: data.espacosSeguros?.acolhimento ? 
-                    [data.espacosSeguros.acolhimento, currentProfAcolhimento] : [currentProfAcolhimento]
+        
+        context.setDataSaae((prev)=>{
+            const newData = {
+                ...prev.planoEmergencia,
+                espacosSeguros: {
+                    ...prev.planoEmergencia.espacosSeguros,
+                    acolhimento: prev.planoEmergencia.espacosSeguros?.acolhimento ? 
+                        [...prev.planoEmergencia.espacosSeguros.acolhimento, currentProfAcolhimento] : [currentProfAcolhimento]
+                }
+            };
+
+            return {
+                ...prev,
+                planoEmergencia: newData
             }
-        } as PlanoEmergenciaSaae;
+
+        })
 
         setCurrentProfAcolhimento({} as Profissional);
-
-        setData(newData);
-        updateContext(newData)
-
     }
 
     const addProfEnfermaria = ()=>{
@@ -841,20 +869,23 @@ export default function PlanoEmergencia ({readOnly}:Props){
             return;
         }
 
-        const newData = {
-            ...data,
-            espacosSeguros: {
-                ...data.espacosSeguros,
-                enfermaria: data.espacosSeguros?.enfermaria ? 
-                    [data.espacosSeguros.enfermaria, currentProfEnfermaria] : [currentProfEnfermaria]
+        context.setDataSaae((prev)=>{
+            const newData = {
+                ...prev.planoEmergencia,
+                espacosSeguros: {
+                    ...prev.planoEmergencia.espacosSeguros,
+                    enfermaria: prev.planoEmergencia.espacosSeguros?.enfermaria ? 
+                        [...prev.planoEmergencia.espacosSeguros.enfermaria, currentProfEnfermaria] : [currentProfEnfermaria]
+                }
+            };
+
+            return{
+                ...prev,
+                planoEmergencia: newData
             }
-        } as PlanoEmergenciaSaae;
+        })
 
         setCurrentProfEnfermaria({} as Profissional);
-
-        setData(newData);
-        updateContext(newData)
-
     }
 
     const addProfSalvamento = ()=>{
@@ -865,17 +896,20 @@ export default function PlanoEmergencia ({readOnly}:Props){
             return;
         }
 
-        const newData = {
-            ...data,
-            profSalvamento: data.profSalvamento ? 
-                [...data.profSalvamento, currentProfSalvamento] : [currentProfSalvamento]
-        } as PlanoEmergenciaSaae;
+        context.setDataSaae((prev)=>{
+            const newData = {
+                ...prev.planoEmergencia,
+                profSalvamento: prev.planoEmergencia.profSalvamento ? 
+                    [...prev.planoEmergencia.profSalvamento, currentProfSalvamento] : [currentProfSalvamento]
+            };
+
+            return{
+                ...prev,
+                planoEmergencia: newData
+            }
+        })
 
         setCurrentProfSalvamento({} as Profissional);
-
-        setData(newData);
-        updateContext(newData)
-
     }
     const addProfissional = ()=>{
         if(!currentProfissional.nomeProf || !currentProfissional.contato || !currentProfissional.cpf
@@ -885,19 +919,22 @@ export default function PlanoEmergencia ({readOnly}:Props){
             return;
         }
 
-        const newData = {
-            ...data,
-            atividadePorProfissional: data.atividadePorProfissional ? 
-                [...data.atividadePorProfissional, {...currentProfissional, redesSociais: currentRedesSociaisProfArray}] 
-                    : [{...currentProfissional, redesSociais: currentRedesSociaisProfArray}]
-        } as PlanoEmergenciaSaae;
+        context.setDataSaae((prev)=>{
+            const newData = {
+                ...prev.planoEmergencia,
+                atividadePorProfissional: prev.planoEmergencia.atividadePorProfissional ? 
+                    [...prev.planoEmergencia.atividadePorProfissional, {...currentProfissional, redesSociais: currentRedesSociaisProfArray}] 
+                        : [{...currentProfissional, redesSociais: currentRedesSociaisProfArray}]
+            };
+
+            return{
+                ...prev,
+                planoEmergencia: newData
+            }
+        })
 
         setCurrentProfissional({} as AtividadeProfissional);
         setcurrentRedesSociaisProfArray([]);
-
-        setData(newData);
-        updateContext(newData)
-
     }
     const addVeiculo = ()=>{
         if(!currentVeiculo.contato || !currentVeiculo.cpf || !currentVeiculo.habilitacao
@@ -908,16 +945,19 @@ export default function PlanoEmergencia ({readOnly}:Props){
             return;
         }
 
-        const newData = {
-            ...data,
-            veiculos: data.veiculos ? [...data.veiculos, currentVeiculo] : [currentVeiculo]
-        } as PlanoEmergenciaSaae;
+        context.setDataSaae((prev)=>{
+            const newData = {
+                ...prev.planoEmergencia,
+                veiculos: prev.planoEmergencia.veiculos ? [...prev.planoEmergencia.veiculos, currentVeiculo] : [currentVeiculo]
+            };
+
+            return{
+                ...prev,
+                planoEmergencia: newData
+            }
+        })
 
         setCurrentVeiculo({} as Veiculos);
-
-        setData(newData);
-        updateContext(newData)
-
     }
 
     const handleAddTag = (e: KeyboardEvent<HTMLInputElement>)=>{
@@ -941,14 +981,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
             return newData;
         })
     }
-    const updateContext = (newDate: PlanoEmergenciaSaae)=>{
-        context.setDataSaae((saae)=>{
-            return{
-                ...saae,
-                planoEmergencia: newDate
-            }
-        })
-    }
+
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h6>itens 7.5 e 9.1 da Política Nacional de Gestão de Risco</h6>
@@ -985,7 +1018,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="fichaMedicaRevisada" 
-                                value={data.fichaMedicaRevisada || ''}
+                                value={context.dataSaae?.planoEmergencia?.fichaMedicaRevisada || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -994,7 +1027,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.fichaMedicaRevisada || ''}
+                                defaultValue={context.dataSaae?.planoEmergencia?.fichaMedicaRevisada || ''}
                                 readOnly={readOnly}
                             />
                         }
@@ -1004,7 +1037,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="kitPrimeirosSocorros" 
-                                value={data.kitPrimeirosSocorros || ''}
+                                value={context.dataSaae?.planoEmergencia?.kitPrimeirosSocorros || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1013,7 +1046,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.kitPrimeirosSocorros || ''}
+                                defaultValue={context.dataSaae?.planoEmergencia?.kitPrimeirosSocorros || ''}
                                 readOnly={readOnly}
                             />
                         }
@@ -1023,7 +1056,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="inspesaoLocal" 
-                                value={data.inspesaoLocal || ''}
+                                value={context.dataSaae?.planoEmergencia?.inspesaoLocal || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1032,7 +1065,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.inspesaoLocal || ''}
+                                defaultValue={context.dataSaae?.planoEmergencia?.inspesaoLocal || ''}
                                 readOnly={readOnly}
                             />
                         }
@@ -1042,7 +1075,8 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input 
                             type="date"
                             name='dataInspecao'
-                            datatype={dateFormat2(data.dataInspecao) || ''} 
+                            defaultValue={dateFormat2(context.dataSaae?.planoEmergencia?.dataInspecao) || ''}
+                            datatype={dateFormat2(context.dataSaae?.planoEmergencia?.dataInspecao) || ''} 
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1059,7 +1093,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.nome'
-                            value={data.prontoSocorro?.nome || ''}
+                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.nome || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1069,7 +1103,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.contato'
-                            value={data.prontoSocorro?.contato || ''}
+                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.contato || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1079,7 +1113,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.distancia'
-                            value={data.prontoSocorro?.distancia || ''}
+                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.distancia || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1089,7 +1123,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.local'
-                            value={data.prontoSocorro?.local || ''}
+                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.local || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1106,7 +1140,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.nome'
-                            value={data.hospital?.nome || ""}
+                            value={context.dataSaae?.planoEmergencia?.hospital?.nome || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1116,7 +1150,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.contato'
-                            value={data.hospital?.contato || ""}
+                            value={context.dataSaae?.planoEmergencia?.hospital?.contato || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1126,7 +1160,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.distancia'
-                            value={data.hospital?.distancia || ""}
+                            value={context.dataSaae?.planoEmergencia?.hospital?.distancia || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1136,7 +1170,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.local'
-                            value={data.hospital?.local || ""}
+                            value={context.dataSaae?.planoEmergencia?.hospital?.local || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1187,7 +1221,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                     </div>
                     :null}
             </div>
-            {data.contatosEmergencia?.map((cont, idx)=>(
+            {context.dataSaae?.planoEmergencia?.contatosEmergencia?.map((cont, idx)=>(
                 <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'contatosEmerg'}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome do contato</label>
@@ -1221,7 +1255,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.infosPreliminares" 
-                                value={data.espacosSeguros?.infosPreliminares || ''}
+                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosPreliminares || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1230,7 +1264,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.espacosSeguros?.infosPreliminares}
+                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosPreliminares}
                                 readOnly={readOnly}
                             />
                         }
@@ -1240,7 +1274,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.infosMedicas" 
-                                value={data.espacosSeguros?.infosMedicas || ''}
+                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosMedicas || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1249,7 +1283,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.espacosSeguros?.infosMedicas}
+                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosMedicas}
                                 readOnly={readOnly}
                             />
                         }
@@ -1259,7 +1293,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ? 
                             <select 
                                 name="espacosSeguros.protecaoDados" 
-                                value={data.espacosSeguros?.protecaoDados || ''}
+                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.protecaoDados || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1268,7 +1302,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.espacosSeguros?.protecaoDados}
+                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.protecaoDados}
                                 readOnly={readOnly}
                             />
                         }
@@ -1278,7 +1312,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.cursosEscotistas" 
-                                value={data.espacosSeguros?.cursosEscotistas || ''}
+                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.cursosEscotistas || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1287,7 +1321,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.espacosSeguros?.cursosEscotistas}
+                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.cursosEscotistas}
                                 readOnly={readOnly}
                             />
                         }
@@ -1297,7 +1331,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ? 
                             <select 
                                 name="espacosSeguros.canalDenuncias" 
-                                value={data.espacosSeguros?.canalDenuncias || ''}
+                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.canalDenuncias || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1306,7 +1340,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={data.espacosSeguros?.canalDenuncias}
+                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.canalDenuncias}
                                 readOnly={readOnly}
                             />
                         }
@@ -1407,7 +1441,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         </div>
                     :null}
                 </div>
-                {data.espacosSeguros?.acolhimento?.map((acolh, idx)=>(
+                {context.dataSaae?.planoEmergencia?.espacosSeguros?.acolhimento?.map((acolh, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'acolhimento'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>
@@ -1581,7 +1615,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         </div>
                     :null}
                 </div>
-                {data.espacosSeguros?.enfermaria?.map((enf, idx)=>(
+                {context.dataSaae?.planoEmergencia?.espacosSeguros?.enfermaria?.map((enf, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'enfermaria'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>
@@ -1782,7 +1816,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         </h5>      
                     </div>
                 :null}
-                {data.veiculos?.map((veic, idx)=>(
+                {context.dataSaae?.planoEmergencia?.veiculos?.map((veic, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'veiculos'}>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
                             <label htmlFor="">Tipo de veículo</label>
@@ -2025,7 +2059,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                     </h5>
                 </div>
-                {data.atividadePorProfissional?.map((prof, idx)=>(
+                {context.dataSaae?.planoEmergencia?.atividadePorProfissional?.map((prof, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'ativProf'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>
@@ -2247,7 +2281,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                     </h5>
                 </div>
-                {data.profSalvamento?.map((salv, idx)=>(
+                {context.dataSaae?.planoEmergencia?.profSalvamento?.map((salv, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'salvamento'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>

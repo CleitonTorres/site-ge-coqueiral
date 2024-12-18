@@ -157,6 +157,7 @@ export default function Provider({children}:{children:ReactNode}){
     //atualiza o storage.
     useEffect(()=>{
       console.log("contexto dataSaae: ", dataSaae);
+
       if(Object.keys(dataSaae).length > 0){updateStorage()}
     },[dataSaae]);   
 

@@ -1,7 +1,6 @@
 'use client'
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import styles from './infosPreliminares.module.css';
-import { InfosPreliminaresSaae } from '@/@types/types';
 import { FaPlus, FaMinus, FaInfo } from "react-icons/fa";
 import { BsBagPlus } from "react-icons/bs";
 import { Context } from '@/components/context/context';
@@ -13,95 +12,95 @@ type Props = {
 
 export default function InfosPreliminares ({readOnly}:Props){
     const context = useContext(Context);
-    const [data, setData] = useState<InfosPreliminaresSaae[]>([]);
+    //const [data, setData] = useState<InfosPreliminaresSaae[]>([]);
     const [showDicas, setShowDicas] = useState(false);
 
     const handleChange = async (e: ChangeEvent<HTMLTextAreaElement>)=>{
         e.preventDefault();
         const name = e.target.name;
         const value = e.target.value;
-
-        const newData = data.map((info)=>{
-            if(info.item === name){
-                return{
-                    ...info,
-                    text: value
+        
+        context.setDataSaae((prev)=>{
+            const newData = prev.infosPreliminares.map((info)=>{
+                if(info.item === name){
+                    return{
+                        ...info,
+                        text: value
+                    }
+                }else{
+                    return info
                 }
-            }else{
-                return info
+            });
+
+            return {
+                ...prev,
+                infosPreliminares: newData
             }
         });
-        setData(newData); 
-        updateContext(newData);       
     }
 
     const addItem = ()=>{
-        setData((prev)=>{
-            return [
-                ...prev, 
-                {
-                    item: `${prev.length+1}`,
-                    text: ''
-                }
-            ]
+        context.setDataSaae((prev)=>{
+            return{ 
+                ...prev,
+                infosPreliminares:[
+                    ...prev.infosPreliminares, 
+                    {
+                        item: `${prev.infosPreliminares.length+1}`,
+                        text: ''
+                    }
+                ]
+            }
         })
     }
     const addDefaultItens = ()=>{
         //pega as infos salvas no contexto.
         // Atualiza o contexto e define o estado local após isso
-        let newData = data;
-        const dadosGerais = context.dataSaae?.dadosGerais;
-        newData = [
-            ...newData,
-            {
-                item: `${newData.length+1}`,
-                text: `A coordenação do evento/atividade ${dadosGerais?.nomeAtividade || '...'} torna público as informações preliminares e de segurança adotadas pela coordenação ou que devem ser adotadas pelos participantes.
-O evento/atividade vai acontecer das ${dadosGerais.horaInicio || ''} do dia ${dateFormat2(dadosGerais?.dataInicio) || ''}, ${dadosGerais?.dataFim ? `às ${dadosGerais.horaFim || ''} do dia ${dateFormat2(dadosGerais.dataFim)}` : ''} no local ${dadosGerais?.localInicio?.logradouro || ''}, ${dadosGerais?.localInicio?.bairro || ''}, ${dadosGerais?.localInicio?.municipio || ''}, ${dadosGerais?.localInicio?.municipio || ''}, ${dadosGerais?.localInicio?.cep || ''}, coordenadas ${dadosGerais?.localInicio?.coordenadas?.lat || ''}, ${dadosGerais?.localInicio.coordenadas?.long || ''}.`
-            },
-            {
-                item: `${newData.length+2}`,
-                text: `O evento/atividade será direcionada ao(s) ramo(s) ${dadosGerais?.ramo?.toString() || '...'} e terá o custo de ${dadosGerais?.custoIndividual || '...'}.`
-            },
-            {
-                item: `${newData.length+3}`,
-                text: `Os participantes nunca devem guardar ou prometer guardar segredos nos quais o bem-estar seu ou de outra pessoa está comprometido. Entretanto, toda a informação relacionada a abusos, é ser considerada confidencial. Denuncie https://www.escoteiros.org.br/canal-de-conduta/ ou ainda diretamente a diretoria do seu grupo escoteiro.`
-            },
-            {
-                item: `${newData.length+4}`,
-                text: `Nenhuma informação pessoal dos participantes devem será transmitida a terceiros ou utilizada sem a devida autorização expressa de seus responsáveis, exceto em caso de emergência médica, policial ou por força de lei.`
-            }
-        ]
+        context.setDataSaae((prev)=>{
+            let newData = prev.infosPreliminares || [];
+            const dadosGerais = prev.dadosGerais;
+            newData = [
+                ...newData,
+                {
+                    item: `${newData.length+1}`,
+                    text: `A coordenação do evento/atividade ${dadosGerais?.nomeAtividade || '...'} torna público as informações preliminares e de segurança adotadas pela coordenação ou que devem ser adotadas pelos participantes.
+    O evento/atividade vai acontecer das ${dadosGerais.horaInicio || ''} do dia ${dateFormat2(dadosGerais?.dataInicio) || ''}, ${dadosGerais?.dataFim ? `às ${dadosGerais.horaFim || ''} do dia ${dateFormat2(dadosGerais.dataFim)}` : ''} no local ${dadosGerais?.localInicio?.logradouro || ''}, ${dadosGerais?.localInicio?.bairro || ''}, ${dadosGerais?.localInicio?.municipio || ''}, ${dadosGerais?.localInicio?.municipio || ''}, ${dadosGerais?.localInicio?.cep || ''}, coordenadas ${dadosGerais?.localInicio?.coordenadas?.lat || ''}, ${dadosGerais?.localInicio.coordenadas?.long || ''}.`
+                },
+                {
+                    item: `${newData.length+2}`,
+                    text: `O evento/atividade será direcionada ao(s) ramo(s) ${dadosGerais?.ramo?.toString() || '...'} e terá o custo de ${dadosGerais?.custoIndividual || '...'}.`
+                },
+                {
+                    item: `${newData.length+3}`,
+                    text: `Os participantes nunca devem guardar ou prometer guardar segredos nos quais o bem-estar seu ou de outra pessoa está comprometido. Entretanto, toda a informação relacionada a abusos, é ser considerada confidencial. Denuncie https://www.escoteiros.org.br/canal-de-conduta/ ou ainda diretamente a diretoria do seu grupo escoteiro.`
+                },
+                {
+                    item: `${newData.length+4}`,
+                    text: `Nenhuma informação pessoal dos participantes devem será transmitida a terceiros ou utilizada sem a devida autorização expressa de seus responsáveis, exceto em caso de emergência médica, policial ou por força de lei.`
+                }
+            ];
 
-        setData(newData);
-        updateContext(newData)
-    }
-    const removeItem = (idx:string)=>{
-        const filter = data.filter(infos=> infos.item !== idx)
-        const rename = filter.map((infos, idx)=> {
             return{
-                ...infos,
-                item: `${idx+1}`
-            }
-        })
-        setData(rename)
-        updateContext(rename)
-    }
-
-    const updateContext = (newData:InfosPreliminaresSaae[])=>{
-        context.setDataSaae(saae=>{
-            return{
-                ...saae,
+                ...prev,
                 infosPreliminares: newData
             }
-        });
-    };
-
-    useEffect(()=>{
-        //pega as infos salvas no contexto.
-        // Atualiza o contexto e define o estado local após isso
-        const infosPreliminares = context.dataSaae?.infosPreliminares || []; // Dados iniciais
-        setData(infosPreliminares);
-    },[])
+        })
+    }
+    const removeItem = (idx:string)=>{
+        context.setDataSaae((prev)=>{
+            const filter = prev.infosPreliminares.filter(infos=> infos.item !== idx)
+            const rename = filter.map((infos, idx)=> {
+                return{
+                    ...infos,
+                    item: `${idx+1}`
+                }
+            });
+            return{
+                ...prev,
+                infosPreliminares: rename
+            }
+        })
+    }
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
@@ -123,7 +122,7 @@ O evento/atividade vai acontecer das ${dadosGerais.horaInicio || ''} do dia ${da
                     <FaPlus title='dicas de preenchimento'  onClick={addItem}/>
                 </div>
             :null}
-            {data?.map((item, idx)=>(
+            {context.dataSaae?.infosPreliminares?.map((item, idx)=>(
                 <div key={item.item} className={styles.boxTextarea}>
                     <h4>Item {item.item} 
                         {!readOnly ? 

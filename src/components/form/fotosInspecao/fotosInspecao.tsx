@@ -52,7 +52,6 @@ export default function FotosInspecao({readOnly}:Props){
     const context = useContext(Context);
 
     const [currentForm, setCurrentForm] = useState({} as FormFotosInspecao);
-    const [data, setData] = useState<FormFotosInspecao[]>([]);
     
     const handleChangeCurrentForm = (
         e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -96,44 +95,48 @@ export default function FotosInspecao({readOnly}:Props){
         const value = e.target.value;
         const nameField = name.split('.');
 
-        let newData = data;
+        context.setDataSaae((prev)=>{
+            let newData = prev.fotosInspecao;
 
-        if(name.includes('fotos')){
-            newData = newData.map((section, id)=>{
-                if(id === sectionId){
-                    const newFotos = section.fotos.map((foto, fidx)=>{
-                        if(fidx === fotoId){
-                            return{
-                                ...foto,
-                                [nameField[1]]: value
+            if(name.includes('fotos')){
+                newData = newData.map((section, id)=>{
+                    if(id === sectionId){
+                        const newFotos = section.fotos.map((foto, fidx)=>{
+                            if(fidx === fotoId){
+                                return{
+                                    ...foto,
+                                    [nameField[1]]: value
+                                }
+                            }else {
+                                return foto;
                             }
-                        }else {
-                            return foto;
+                        });
+                        return {
+                            ...section,
+                            fotos: newFotos
                         }
-                    });
-                    return {
-                        ...section,
-                        fotos: newFotos
+                    }else {
+                        return section;
                     }
-                }else {
-                    return section;
-                }
-            });
-        }else{
-            newData = newData.map((section, id)=>{
-                if(id === sectionId){
-                    return {
-                        ...section,
-                        [name]: value
+                });
+            }else{
+                newData = newData.map((section, id)=>{
+                    if(id === sectionId){
+                        return {
+                            ...section,
+                            [name]: value
+                        }
+                    }else {
+                        return section;
                     }
-                }else {
-                    return section;
-                }
-            });
-        }
+                });
+            }
 
-        updateContext(newData);
-
+            return{
+                ...prev,
+                fotosInspecao: newData
+            }
+        })
     }
 
     const addSectionFotos = ()=>{
@@ -142,17 +145,28 @@ export default function FotosInspecao({readOnly}:Props){
             return;
         };
 
-        const newData = [
-            ...data,
-            currentForm
-        ]
-        setCurrentForm({} as FormFotosInspecao)
-        updateContext(newData);
+        context.setDataSaae((prev)=>{
+            const newData = [
+                ...prev.fotosInspecao,
+                currentForm
+            ]
+
+            return{
+                ...prev,
+                fotosInspecao: newData
+            }
+        })
+        setCurrentForm({} as FormFotosInspecao);
     }
     const removeSectionFotos = (index:number)=>{
-        const newData = data.filter((section, idx)=> idx !== index)
-        
-        updateContext(newData);
+        context.setDataSaae((prev)=>{
+            const newData = prev.fotosInspecao.filter((section, idx)=> idx !== index)
+
+            return{
+                ...prev,
+                fotosInspecao: newData
+            }
+        })
     }
 
     //lida com arquivos
@@ -166,8 +180,8 @@ export default function FotosInspecao({readOnly}:Props){
         //verifica o tamanho de cada imagem.
         fileListArray.forEach(file => {
             const fileSize = parseFloat(calcTotalFilesMB(file));
-            if(fileSize > 4){
-                alert("o tamanho máximo de um arquivo é de 4mb");
+            if(fileSize > 10){
+                alert("o tamanho máximo de um arquivo é de 10mb");
                 return;
             }
         });
@@ -223,16 +237,6 @@ export default function FotosInspecao({readOnly}:Props){
         })
     }
     //----------------
-
-    const updateContext = (newData:FormFotosInspecao[])=>{
-        setData(newData);
-        context.setDataSaae((prev)=>{
-            return{
-                ...prev,
-                fotosInspecao: newData
-            }
-        })
-    }
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
@@ -300,7 +304,7 @@ export default function FotosInspecao({readOnly}:Props){
             :null}
 
             <div className={styles.subConteiner}>
-                {data?.map((section, idx)=>(
+                {context.dataSaae?.fotosInspecao?.map((section, idx)=>(
                     <div 
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}

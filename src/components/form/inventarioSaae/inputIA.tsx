@@ -17,7 +17,6 @@ const InventarioSaae = ({readOnly}:Props) => {
     const context = useContext(Context);
     const [atividadeCorrente, setAtividadeCorrente] = useState({} as InventarioSaaeType);
 
-    const [inputForm, setInputForm] = useState<InventarioSaaeType[]>([]);
     const [loading, setLoading] = useState(false);
     const [useIA, setUseIA] = useState(false);
     const [commentIA, setCommentIA] = useState("Sempre Alerta chefe! Por favor, digite uma atividade para que eu possa lhe ajudar!");
@@ -64,40 +63,47 @@ const InventarioSaae = ({readOnly}:Props) => {
         const name = e.target.name;
         const value = e.target.value;
 
-        const newData = inputForm.map((ativ, index)=>{
-            if(index === idx){
-                if(['probabilidade', 'consequencia', 'nivelRisco'].includes(name)){
-                    if(name === 'probabilidade'){
-                        return{
-                            ...ativ,
-                            probabilidade: JSON.parse(value),
-                            nivelRisco: JSON.parse(value) * (ativ.consequencia || 0)
-                        }
-                    }else if(name === 'consequencia'){
-                        return{
-                            ...ativ,
-                            consequencia: JSON.parse(value),
-                            nivelRisco: JSON.parse(value) * (ativ.probabilidade || 0)
-                        }
-                    }else{
-                        return{
-                            ...ativ,
-                            nivelRisco: JSON.parse(value),
+        context.setDataSaae((prev)=>{
+            const newData = prev.inventarioRiscos.map((ativ, index)=>{
+                if(index === idx){
+                    if(['probabilidade', 'consequencia', 'nivelRisco'].includes(name)){
+                        if(name === 'probabilidade'){
+                            return{
+                                ...ativ,
+                                probabilidade: JSON.parse(value),
+                                nivelRisco: JSON.parse(value) * (ativ.consequencia || 0)
+                            }
+                        }else if(name === 'consequencia'){
+                            return{
+                                ...ativ,
+                                consequencia: JSON.parse(value),
+                                nivelRisco: JSON.parse(value) * (ativ.probabilidade || 0)
+                            }
+                        }else{
+                            return{
+                                ...ativ,
+                                nivelRisco: JSON.parse(value),
+                            }
                         }
                     }
+    
+                    return{
+                        ...ativ,
+                        [name]: value
+                    }
+                }else{
+                    return ativ
                 }
+            });
 
-                return{
-                    ...ativ,
-                    [name]: value
-                }
-            }else{
-                return ativ
+            const nivelRisco = calcNivelRisco(newData)
+
+            return{
+                ...prev,
+                grauRisco: nivelRisco,
+                inventarioRiscos: newData
             }
-        });
-
-        
-        updateContext(newData);
+        })        
     }
 
     const handleSubmit = async (e?: FocusEvent<HTMLTextAreaElement> | FocusEvent<HTMLInputElement>, valor?: string ) => {
@@ -109,7 +115,7 @@ const InventarioSaae = ({readOnly}:Props) => {
 
         if(!value) return;
 
-        const verify = inputForm.find(ativ=> ativ.atividade === atividadeCorrente.atividade);
+        const verify = context.dataSaae.inventarioRiscos.find(ativ=> ativ.atividade === atividadeCorrente.atividade);
         console.log(verify);
         if(verify) return;
 
@@ -150,10 +156,19 @@ const InventarioSaae = ({readOnly}:Props) => {
             });           
             setCommentIA(Response.comment || '')
             
-            updateContext([
-                ...inputForm,
-                ...newData
-            ]);
+            context.setDataSaae((prev)=>{
+                const data = [
+                    ...prev.inventarioRiscos,
+                    ...newData
+                ];
+                const nivelRisco = calcNivelRisco(data);
+                
+                return{
+                    ...prev,
+                    grauRisco: nivelRisco,
+                    inventarioRiscos: data
+                }
+            })
 
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
@@ -164,32 +179,36 @@ const InventarioSaae = ({readOnly}:Props) => {
     };
 
     const addItem = ()=>{
-        const newDate = [...inputForm, {
-            ...atividadeCorrente,
-            probabilidade: !isNaN(atividadeCorrente.probabilidade) ? atividadeCorrente.probabilidade : 0,
-            consequencia: !isNaN(atividadeCorrente.consequencia) ? atividadeCorrente.consequencia : 0,
-            nivelRisco: !isNaN(atividadeCorrente.nivelRisco) ? atividadeCorrente.nivelRisco : 0
-        } as InventarioSaaeType];
+        context.setDataSaae((prev)=>{
+            const newData = [
+                ...prev.inventarioRiscos || [], {
+                ...atividadeCorrente,
+                probabilidade: !isNaN(atividadeCorrente.probabilidade) ? atividadeCorrente.probabilidade : 0,
+                consequencia: !isNaN(atividadeCorrente.consequencia) ? atividadeCorrente.consequencia : 0,
+                nivelRisco: !isNaN(atividadeCorrente.nivelRisco) ? atividadeCorrente.nivelRisco : 0
+            } as InventarioSaaeType];
 
-        updateContext(newDate);
+            const nivelRisco = calcNivelRisco(newData)
+            
+            return {
+                ...prev,
+                inventarioRiscos: newData,
+                grauRisco: nivelRisco
+            }
+        })
+
         setAtividadeCorrente({} as InventarioSaaeType)
     }
 
     const removeItem = (idx:number)=>{
-        const newDate = inputForm.filter((ativ, i)=> i !== idx);
-
-        updateContext(newDate);
-    }
-
-    const updateContext = (newData:InventarioSaaeType[])=>{
-        setInputForm(newData);
-        context.setDataSaae(inv=>{
+        context.setDataSaae((prev)=>{
+            const newData = prev.inventarioRiscos.filter((ativ, i)=> i !== idx);
             return{
-                ...inv,
+                ...prev,
                 inventarioRiscos: newData
             }
-        });
-    };
+        })
+    }
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
@@ -200,6 +219,29 @@ const InventarioSaae = ({readOnly}:Props) => {
         }
     };
 
+    const calcNivelRisco = (data:InventarioSaaeType[])=>{
+        if(data){
+            const maiorRisco = data.reduce((prev, current)=>{
+                return prev.nivelRisco > current.nivelRisco ? prev : current;
+            },data[0]);
+  
+            if(!maiorRisco) return {
+                color: '' as  "" | "green" | "yellow" | "orange" | "red",
+                value: 0
+            };
+  
+            return {
+                color: setColor(maiorRisco.nivelRisco) as  "" | "green" | "yellow" | "orange" | "red",
+                value: maiorRisco.nivelRisco
+            }
+        }else{
+            return {
+                color: '' as  "" | "green" | "yellow" | "orange" | "red",
+                value: 0
+            };
+        }
+    }
+
     useEffect(()=>{
         const value = atividadeCorrente.probabilidade * atividadeCorrente.consequencia;
         setAtividadeCorrente((prev)=>{
@@ -209,47 +251,6 @@ const InventarioSaae = ({readOnly}:Props) => {
             }
         });
     },[atividadeCorrente.probabilidade, atividadeCorrente.consequencia])
-    
-
-    //ordena os itens da lista e alimenta o contexto.
-    useEffect(()=>{
-        if(inputForm){
-            // const copy= inputForm;
-            // const maiorRisco = copy.sort((a,b)=>{
-            //     if(a.nivelRisco > b.nivelRisco){
-            //     return 1
-            //     }else if(a.nivelRisco < b.nivelRisco){
-            //         return -1
-            //     }else{
-            //         return 0
-            //     }
-            // })[inputForm.length-1];
-
-            const maiorRisco = inputForm.reduce((prev, current)=>{
-                return prev.nivelRisco > current.nivelRisco ? prev : current;
-            },inputForm[0]);
-
-            if(!maiorRisco) return;
-
-            //console.log('reduce', prev)
-            context.setDataSaae((prev)=>{
-                return{
-                    ...prev,
-                    grauRisco: {
-                        color: setColor(maiorRisco.nivelRisco),
-                        value: maiorRisco.nivelRisco
-                    }
-                }
-            });
-        }
-    },[inputForm])
-
-    useEffect(()=>{
-        //pega as infos salvas no contexto.
-        // Atualiza o contexto e define o estado local após isso
-        const inventario = context.dataSaae?.inventarioRiscos || []; // Dados iniciais
-        setInputForm(inventario);
-    },[]);
 
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
@@ -296,7 +297,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             />                       
                         </div>
                     :null}
-                    {inputForm?.map((item, idx)=>(
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-atividade`}
                             name='atividade'
@@ -321,7 +322,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                     />:null}
-                    {inputForm?.map((item, idx)=>(
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-perigo`}
                             name='perigo'
@@ -347,7 +348,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             className={`${styles.collum} `}
                         />
                     :null}
-                    {inputForm?.map((item, idx)=>(
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-danos`}
                             name='danos'
@@ -373,7 +374,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             className={`${styles.collum} `}
                         />
                     :null}
-                    {inputForm?.map((item, idx)=>(
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-controleOperacional`}
                             name='controleOperacional'
@@ -399,7 +400,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             className={`${styles.collum} `}
                         />
                     :null}
-                    {inputForm?.map((item, idx)=>(
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>(
                         <textarea
                             key={`${idx}-acoesMitigadoras`}
                             name='acoesMitigadoras'
@@ -431,7 +432,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             <option value="5">5</option>
                         </select>
                     :null}
-                    {inputForm?.map((item, idx)=>{
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>{
                         if(!readOnly){
                             return <select 
                                 key={`${idx}-probabilidade`}
@@ -476,7 +477,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                             <option value="5">5</option>
                         </select>
                     : null}
-                    {inputForm?.map((item, idx)=>{
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>{
                         if(!readOnly){
                             return <select 
                                 key={`${idx}-consequencia`}
@@ -524,7 +525,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                         </select>
                         :
                     null}
-                    {inputForm?.map((item, idx)=>(
+                    {context.dataSaae?.inventarioRiscos?.map((item, idx)=>(
                         <div key={`${idx}-nivelRisco`} style={{position: 'relative'}}>
                             {!readOnly ? 
                                 <FaMinus 

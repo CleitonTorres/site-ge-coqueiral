@@ -89,7 +89,6 @@ export default function SectionDocumentos({readOnly}:Props){
     const context = useContext(Context);
 
     const [currentForm, setCurrentForm] = useState({} as FormDocs);
-    const [data, setData] = useState<FormDocs[]>([]);
     
     const handleChangeCurrentForm = (
         e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -133,44 +132,48 @@ export default function SectionDocumentos({readOnly}:Props){
         const value = e.target.value;
         const nameField = name.split('.');
 
-        let newData = data;
+        context.setDataSaae((prev)=>{
+            let newData = prev.documentos;
 
-        if(name.includes('doc')){
-            newData = newData.map((section, id)=>{
-                if(id === sectionId){
-                    const newDocs = section.docs.map((doc, fidx)=>{
-                        if(fidx === fotoId){
-                            return{
-                                ...doc,
-                                [nameField[1]]: value
+            if(name.includes('doc')){
+                newData = newData.map((section, id)=>{
+                    if(id === sectionId){
+                        const newDocs = section.docs.map((doc, fidx)=>{
+                            if(fidx === fotoId){
+                                return{
+                                    ...doc,
+                                    [nameField[1]]: value
+                                }
+                            }else {
+                                return doc;
                             }
-                        }else {
-                            return doc;
+                        });
+                        return {
+                            ...section,
+                            docs: newDocs
                         }
-                    });
-                    return {
-                        ...section,
-                        docs: newDocs
+                    }else {
+                        return section;
                     }
-                }else {
-                    return section;
-                }
-            });
-        }else{
-            newData = newData.map((section, id)=>{
-                if(id === sectionId){
-                    return {
-                        ...section,
-                        [name]: value
+                });
+            }else{
+                newData = newData.map((section, id)=>{
+                    if(id === sectionId){
+                        return {
+                            ...section,
+                            [name]: value
+                        }
+                    }else {
+                        return section;
                     }
-                }else {
-                    return section;
-                }
-            });
-        }
+                });
+            }
 
-        updateContext(newData);
-
+            return{
+                ...prev,
+                documentos: newData
+            }
+        })
     }
 
     const addSectionFotos = ()=>{
@@ -179,17 +182,28 @@ export default function SectionDocumentos({readOnly}:Props){
             return;
         };
 
-        const newData = [
-            ...data,
-            currentForm
-        ]
+        context.setDataSaae((prev)=>{
+            const newData = [
+                ...prev.documentos,
+                currentForm
+            ]
+
+            return {
+                ...prev,
+                documentos: newData
+            }
+        })        
         setCurrentForm({} as FormDocs)
-        updateContext(newData);
     }
     const removeSectionFotos = (index:number)=>{
-        const newData = data.filter((section, idx)=> idx !== index)
-        
-        updateContext(newData);
+        context.setDataSaae((prev)=>{
+            const newData = prev.documentos.filter((section, idx)=> idx !== index)
+
+            return{
+                ...prev,
+                documentos: newData
+            }
+        })
     }
 
     //lida com arquivos
@@ -261,16 +275,6 @@ export default function SectionDocumentos({readOnly}:Props){
     }
     //----------------
 
-    const updateContext = (newData:FormDocs[])=>{
-        setData(newData);
-        context.setDataSaae((prev)=>{
-            return{
-                ...prev,
-                documentos: newData
-            }
-        })
-    }
-
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h2>7. Documentos adicionais:</h2>
@@ -316,7 +320,7 @@ export default function SectionDocumentos({readOnly}:Props){
                             <b onClick={()=>handleRemoveUploadCurrentFotos(doc.name)}>X</b>
                             <div className={`${styles.subConteiner} ${styles.flexSpace}`}>
                                 <div className={`${styles.boxInput} ${styles.width200}`}>
-                                    <label htmlFor="title">Rótulo da imagem</label>
+                                    <label htmlFor="title">Título do documento</label>
                                     <input
                                         name='docs.title' 
                                         value={doc.title || ''} 
@@ -330,7 +334,7 @@ export default function SectionDocumentos({readOnly}:Props){
                                         onChange={(e)=>handleChangeCurrentForm(e, idx)}/>
                                 </div>
                             </div>
-                            <ImagePreview file={doc.doc as File} height={600} width={600}/>
+                            <ImagePreview file={doc.doc as File} height={600} width={596}/>
                         </div>                        
                     ))}
             </div>
@@ -338,7 +342,7 @@ export default function SectionDocumentos({readOnly}:Props){
             :null}
 
             <div className={styles.subConteiner}>
-                {data?.map((section, idx)=>(
+                {context.dataSaae?.documentos?.map((section, idx)=>(
                     <div 
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}

@@ -117,6 +117,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         <li className='link'>
                                             <a href="/administrativo">Acesso administrativo</a>
                                         </li>
+                                        <li className='link'>
+                                            <a href="/administrativo/area-restrita/saae">SAAE</a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li className='dropItemMenuBox' onClick={()=>navigate('http://escoteiroses.org.br/', '_blanck')}>
@@ -459,6 +462,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <li className='link textColorWhite'>
                                         <a href="/administrativo">Acesso administrativo</a>
                                     </li>
+                                    <li className='link textColorWhite'>
+                                        <a href="/administrativo/area-restrita/saae">SAAE</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li 
@@ -496,4 +502,4 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         </body>
       </html>
     )
-  }
+}
