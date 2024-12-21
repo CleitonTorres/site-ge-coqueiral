@@ -1,0 +1,65 @@
+.conteiner{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100vw;
+    min-width: var(--minWidth);
+    max-width: var(--widthLarge);
+}
+.subConteiner{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 20px 0px;
+    width: 100%
+}
+.title{
+    background-color: var(--azul-claro);
+    height: 80px;
+    color: var(--white);
+    font-style: normal;
+    font-weight: normal;
+    font-size: 34px;
+    padding: 14px;
+    width: 100%;
+    max-width: var(--widthLarge);
+    min-width: var(--minWidth);
+}
+.subConteiner label, .subConteiner input, .subConteiner button{
+    width: 100vw;
+    max-width: 360px;
+    margin: 10px;
+    text-align: center;
+    height: 30px;
+}
+.subConteiner label{
+    height: auto;
+    margin: auto;
+}
+.subConteiner button{
+    height: 40px;
+    background-color: var(--verde);
+    color: var(--white);
+    font-weight: 600;
+}
+.subConteiner button:hover{
+    cursor: pointer;
+    opacity: 0.8;
+}
+@media (max-width: 991px){
+    .title{
+        font-size: 24px;
+    }
+    .subTitle{
+        margin-left: 20px;
+    }
+    .paragraph{
+        padding: 20px;
+    }
+    .recuo{
+        padding-left: 0px;
+        margin-left: 10px;
+    }
+}

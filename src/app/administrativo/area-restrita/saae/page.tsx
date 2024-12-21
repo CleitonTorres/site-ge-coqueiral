@@ -17,8 +17,8 @@ import { deleteDataStorage } from "@/scripts/indexedDB";
 import Modal from "@/components/layout/modal/modal";
 import axios from "axios";
 import { ProfileProps, SAAE } from "@/@types/types";
-import { FormLogin } from "../../page";
 import { userTest } from "@/components/data-training/data-training";
+import FormLogin from "@/components/form/formLogin/formLogin";
 
 /**
  * Componente que gerencia os modulos de uma SAAE para prenchimento.
