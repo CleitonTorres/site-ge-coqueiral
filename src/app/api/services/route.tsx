@@ -23,7 +23,7 @@ interface ServiceAccountCredentials {
     client_x509_cert_url: string;
 }
 
-export const credentials = {
+const credentials = {
     type: `${process.env.NEXT_PUBLIC_TYPE}`,
     project_id: `${process.env.NEXT_PUBLIC_PROJECT_ID}`,
     private_key_id: `${process.env.NEXT_PUBLIC_PRIVATE_KEY_ID}`,
