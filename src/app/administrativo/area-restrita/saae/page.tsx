@@ -184,7 +184,7 @@ export default function Page(){
             
             {context.saaeEdit && 
                 (tester || Object.keys(context.dataUser).length > 0) && 
-                ['enviada', 'aprovada'].includes(context.dataSaae.status)?
+                !['enviada', 'aprovada'].includes(context.dataSaae.status)?
                 <div className={styles.conteiner}>
                 {currenteSession === 0 ? <DadosGerais readOnly={false}/> : null}
                 {currenteSession === 1 ? <InfosPreliminares readOnly={false}/> : null}
