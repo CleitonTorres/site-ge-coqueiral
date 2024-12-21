@@ -177,7 +177,13 @@ export default function DadosGerais({readOnly}:Props){
         context.setDataSaae((prev)=>{
             const newProgragacao = prev.dadosGerais.programacao ? [
                 ...prev.dadosGerais.programacao,
-                {...currentProgramacao, id: prev.dadosGerais.programacao.length+1}
+                {
+                    ...currentProgramacao, 
+                    descricao: currentProgramacao.descricao || '',
+                    responsavel: currentProgramacao.responsavel || '',
+                    materialNecessario: currentProgramacao.materialNecessario || '',
+                    id: prev.dadosGerais.programacao.length+1,
+                } as ProgramacaoAtividade
             ] : [{...currentProgramacao, id: 1}]
 
             return{
@@ -592,14 +598,16 @@ export default function DadosGerais({readOnly}:Props){
                                     className={styles.boxTags}
                                 >
                                 {tag}
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault(); 
-                                            handleRemoveTag(index, 'tipoAtividade')
-                                        }}
-                                    >
-                                        x
-                                    </button>
+                                    {!readOnly ? 
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault(); 
+                                                handleRemoveTag(index, 'tipoAtividade')
+                                            }}
+                                        >
+                                            x
+                                        </button>
+                                    :null}
                                 </div>
                             ))}
                         </div>
@@ -647,6 +655,7 @@ export default function DadosGerais({readOnly}:Props){
                                     className={styles.boxTags}
                                 >
                                 {tag}
+                                {!readOnly ? 
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault(); 
@@ -655,7 +664,8 @@ export default function DadosGerais({readOnly}:Props){
                                     >
                                         x
                                     </button>
-                                </div>
+                                :null}
+                                </div>                                
                             ))}
                         </div>
                     </div>      
@@ -698,6 +708,7 @@ export default function DadosGerais({readOnly}:Props){
                                     className={styles.boxTags}
                                 >
                                 {tag}
+                                {!readOnly ?
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault(); 
@@ -706,6 +717,7 @@ export default function DadosGerais({readOnly}:Props){
                                     >
                                         x
                                     </button>
+                                :null}
                                 </div>
                             ))}
                         </div>
@@ -829,7 +841,6 @@ export default function DadosGerais({readOnly}:Props){
                             name='localInicio.bairro'
                             value={context.dataSaae?.dadosGerais?.localInicio?.bairro || ''}
                             onChange={(e) => handleForm(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
@@ -843,7 +854,6 @@ export default function DadosGerais({readOnly}:Props){
                             name='localInicio.municipio'
                             value={context.dataSaae?.dadosGerais?.localInicio?.municipio || ''}
                             onChange={(e) => handleForm(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
@@ -856,7 +866,6 @@ export default function DadosGerais({readOnly}:Props){
                             name='localInicio.uf'
                             value={context.dataSaae?.dadosGerais?.localInicio?.uf || ''}
                             onChange={(e) => handleForm(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />   
@@ -901,7 +910,6 @@ export default function DadosGerais({readOnly}:Props){
                                 name='localFim.bairro'
                                 value={context.dataSaae?.dadosGerais?.localFim?.bairro || ''}
                                 onChange={(e) => handleForm(e)}
-                                placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
@@ -915,7 +923,6 @@ export default function DadosGerais({readOnly}:Props){
                                 name='localFim.municipio'
                                 value={context.dataSaae?.dadosGerais?.localFim?.municipio || ''}
                                 onChange={(e) => handleForm(e)}
-                                placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
@@ -928,7 +935,6 @@ export default function DadosGerais({readOnly}:Props){
                                 name='localFim.uf'
                                 value={context.dataSaae?.dadosGerais?.localFim?.uf || ''}
                                 onChange={(e) => handleForm(e)}
-                                placeholder="Exemplo: remada em caiaque"
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />   
@@ -946,7 +952,6 @@ export default function DadosGerais({readOnly}:Props){
                             name='metodologia'
                             value={context.dataSaae?.dadosGerais?.metodologia || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum2}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -958,7 +963,6 @@ export default function DadosGerais({readOnly}:Props){
                             name='objetivo'
                             value={context.dataSaae?.dadosGerais?.objetivo || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum2}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1399,9 +1403,9 @@ export default function DadosGerais({readOnly}:Props){
                             Descrição
                         </h1>
                         {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <span className={styles.borderBottom} key={v4()}>
+                            <p className={styles.borderBottom} key={v4()}>
                                 {prog?.descricao}
-                            </span>
+                            </p>
                         ))}
                         {!readOnly ?
                             <textarea
@@ -1418,9 +1422,9 @@ export default function DadosGerais({readOnly}:Props){
                             Material Necessário
                         </h1>
                         {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <span className={styles.borderBottom} key={v4()}>
+                            <p className={styles.borderBottom} key={v4()}>
                                 {prog?.materialNecessario}
-                            </span>
+                            </p>
                         ))}
                         {!readOnly ? 
                             <input
@@ -1438,9 +1442,9 @@ export default function DadosGerais({readOnly}:Props){
                             Responsável
                         </h1>
                         {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <span className={styles.borderBottom} key={v4()}>
+                            <p className={styles.borderBottom} key={v4()}>
                                 {prog?.responsavel}
-                            </span>
+                            </p>
                         ))}
                         {!readOnly ? 
                             <input

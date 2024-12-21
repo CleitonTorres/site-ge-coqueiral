@@ -2,9 +2,10 @@
 import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import styles from './planoEmergencia.module.css';
 import { AtividadeProfissional, ContatosEmergencia, Docs, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
-import { calcTotalFilesMB, dateFormat2, masktel, setIconSocialMidia } from '@/scripts/globais';
+import { calcTotalFilesMB, dateFormat1, masktel, setIconSocialMidia } from '@/scripts/globais';
 import { Context } from '@/components/context/context';
 import { FaPlus } from 'react-icons/fa';
+import { ImagePreview } from '../sectionDocumentos/documentos';
 
 type Props = {
     readOnly: boolean
@@ -810,7 +811,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
             })
         }
     }
-    //-----------------
+    //------------------
 
     const addContatoEmergencia = ()=>{
         if(!currentContatoEmerg.contato || !currentContatoEmerg.contato){
@@ -1075,8 +1076,8 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input 
                             type="date"
                             name='dataInspecao'
-                            defaultValue={dateFormat2(context.dataSaae?.planoEmergencia?.dataInspecao) || ''}
-                            datatype={dateFormat2(context.dataSaae?.planoEmergencia?.dataInspecao) || ''} 
+                            defaultValue={dateFormat1(context.dataSaae?.planoEmergencia?.dataInspecao) || ''}
+                            datatype={dateFormat1(context.dataSaae?.planoEmergencia?.dataInspecao) || ''} 
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1435,6 +1436,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             {currentProfAcolhimento?.docs?.map((doc, idx)=>(
                                 <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimento')}>X</b>
                                 </span>
                             ))}
@@ -1519,12 +1521,16 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             :null}
 
                             {acolh?.docs?.map((doc, idxDoc)=>(
-                                <span key={idxDoc+'docsAcolhimento'} className={styles.removeDoc}>
+                                <div 
+                                    key={idxDoc+'docsAcolhimento'} 
+                                    className={styles.removeDoc}
+                                >
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/> 
                                     {!readOnly ? 
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimentoRemove', idx)}>X</b>
                                     :null}
-                                </span>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -1607,10 +1613,11 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 />
                             </div>
                             {currentProfEnfermaria?.docs?.map((doc, idx)=>(
-                                <span key={idx+'docsEnfermaria'} className={styles.removeDoc}>
+                                <div key={idx+'docsEnfermaria'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermaria')}>X</b>
-                                </span>
+                                </div>
                             ))}
                         </div>
                     :null}
@@ -1693,12 +1700,15 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 </div>
                             :null}
                             {enf?.docs?.map((doc, idxDoc)=>(
-                                <span key={idxDoc+'docsEnfermaria'} className={styles.removeDoc}>
+                                <div 
+                                    key={idxDoc+'docsEnfermaria'} 
+                                    className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     {!readOnly ?
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermariaRemove', idx)}>X</b>
                                     :null}
-                                </span>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -1805,10 +1815,11 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 />
                             </div>
                             {currentVeiculo?.docs?.map((doc, idx)=>(
-                                <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
+                                <div key={idx+'docsAcolhimento'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculos')}>X</b>
-                                </span>
+                                </div>
                             ))}
                         </div>
                         <h5>
@@ -1923,12 +1934,13 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 </div>
                             :null}
                             {veic?.docs?.map((doc, idxV)=>(
-                                <span key={idx+idxV+'docsVeiculos'} className={styles.removeDoc}>
+                                <div key={idx+idxV+'docsVeiculos'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     {!readOnly? 
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculosRemove', idx)}>X</b>
                                     :null}
-                                </span>
+                                </div>
                             ))}
                         </div>      
                     </div>
@@ -2048,10 +2060,11 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 />
                             </div>
                             {currentProfissional?.docs?.map((doc, idx)=>(
-                                <span key={idx+'docsProfissional'} className={styles.removeDoc}>
+                                <div key={idx+'docsProfissional'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissional')}>X</b>
-                                </span>
+                                </div>
                             ))}
                         </div>
                     :null}
@@ -2178,12 +2191,13 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 </div>
                             :null}
                             {prof?.docs?.map((doc, idxDoc)=>(
-                                <span key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
+                                <div key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     {!readOnly ?
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissionalRemove', idx)}>X</b>
                                     :null}
-                                </span>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -2270,10 +2284,11 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 :null}
                             </div>
                             {currentProfSalvamento?.docs?.map((doc, idx)=>(
-                                <span key={idx+'docsProfsalvamento'} className={styles.removeDoc}>
+                                <div key={idx+'docsProfsalvamento'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamento')}>X</b>
-                                </span>
+                                </div>
                             ))}
                         </div>
                         :null}
@@ -2360,12 +2375,13 @@ export default function PlanoEmergencia ({readOnly}:Props){
                                 :null}
                             </div>
                             {salv?.docs?.map((doc, idxDoc)=>(
-                                <span key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
+                                <div key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
                                     {doc.titulo}
+                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
                                     {!readOnly ? 
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamentoRemove', idx)}>X</b>
                                     :null}
-                                </span>
+                                </div>
                             ))}
                         </div>
                     </div>

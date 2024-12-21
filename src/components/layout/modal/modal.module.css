@@ -7,9 +7,8 @@
     align-items: center;
     width: 100%;
     height: 100vh;
-    background-color: rgba(var(--primaryColorAzul), 0.9);
     z-index: 1000;
-    padding-top: 20px;
+    overflow-y: scroll;
 }
 .content {
     display: flex;
@@ -18,9 +17,9 @@
     width: 100%;
     align-items: center;
     justify-content: flex-start;
-    color: rgb(var(--primaryColorBranco));
     font-weight: 300;
     font-size: 18px;
+    padding: 20px;
 }
 
 /* //custom */
@@ -45,6 +44,10 @@
 }
 .hideScroll{
     overflow-y: hidden;
+}
+
+.backgroundWhite{
+    background-color: var(--white);
 }
 @page {
     margin: 2cm;

@@ -117,15 +117,7 @@ export default function NewsPage({idNews, dataNews}:Props) {
             <h1 className={styles.title}>{news.title}</h1>
             {news.imageID ? 
                 <div className={styles.conteinerImg}>
-                        {/* <Image 
-                            alt=""
-                            width={970}
-                            height={350}
-                            src={isBase64(news.imageID) ? news.imageID : isValidURL(news.imageID) ? news.imageID : isRelativeURL(news.imageID) ? news.imageID : `https://drive.google.com/uc?export=download&id=${news.imageID}`}
-                            className={styles.image}
-                            decoding='auto'
-                        /> */}
-                        <Carrocel urlImages={typeof news.imageID === 'string' ? [news.imageID] : news.imageID}/>
+                    <Carrocel urlImages={typeof news.imageID === 'string' ? [news.imageID] : news.imageID}/>
                 </div>                
             :null}
             <div className={styles.dataLocal}>

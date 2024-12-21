@@ -5,26 +5,43 @@ import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { MessageContent } from "openai/resources/beta/threads/messages.mjs";
-// import { zodResponseFormat } from "openai/helpers/zod";
-// import { z } from "zod";
+
+import { Storage } from "@google-cloud/storage";
+import { parseGoogleStorageUrl } from "@/scripts/globais";
+
+
+interface ServiceAccountCredentials {
+    type: string;
+    project_id: string;
+    private_key_id: string;
+    private_key: string;
+    client_email: string;
+    client_id: string;
+    auth_uri: string;
+    token_uri: string;
+    auth_provider_x509_cert_url: string;
+    client_x509_cert_url: string;
+}
+
+export const credentials = {
+    type: `${process.env.NEXT_PUBLIC_TYPE}`,
+    project_id: `${process.env.NEXT_PUBLIC_PROJECT_ID}`,
+    private_key_id: `${process.env.NEXT_PUBLIC_PRIVATE_KEY_ID}`,
+    private_key: process.env.NEXT_PUBLIC_PRIVATE_KEY?.split(String.raw`\n`).join('\n'),
+    client_email: `${process.env.NEXT_PUBLIC_CLIENT_EMAIL}`,
+    client_id: `${process.env.NEXT_PUBLIC_CLIENT_ID}`,
+    auth_uri: `${process.env.NEXT_PUBLIC_AUTH_URI}`,
+    token_uri: `${process.env.NEXT_PUBLIC_TOKEN_URI}`,
+    auth_provider_x509_cert_url: `${process.env.NEXT_PUBLIC_AUTH_PROVIDER}`,
+    client_x509_cert_url: `${process.env.NEXT_PUBLIC_CLIENT_CERT}`,
+    universe_domain: `${process.env.NEXT_PUBLIC_UNIVERSE_DOMAIN}`
+} as ServiceAccountCredentials;
 
 export const config = {
     api: {
         bodyParser: false,
     },
 };
-
-// const responseIADataAtividade = z.object({
-//     perigo: z.string(),
-//     danos: z.string(),
-//     controleOperacional: z.string(),
-//     acoesMitigadoras: z.string()
-// });
-
-// const responseIA = z.object({
-//     atividade: z.string(),
-//     dados: z.array(responseIADataAtividade)    
-// });
 
 const getInstagramFeed = async (limit?:string) => {
   const url = limit ? `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
@@ -39,9 +56,17 @@ const getInstagramFeed = async (limit?:string) => {
 };
 
 export async function GET(req: NextRequest) {
+    const authorization = req.headers.get('Authorization');
+    const matchAuth = authorization === `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+    
+    if (!matchAuth) {
+        return NextResponse.json({ error: 'Acess Token inválido' }, { status: 401 });
+    }
+    
     // Parseando os parâmetros da URL (query params)
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
-    const service = url.searchParams.get("service") as "me" | "users" | "news";
+    const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey'
+    | 'proxyPDF';
 
     if(service === 'news'){
         const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/news"); 
@@ -54,6 +79,73 @@ export async function GET(req: NextRequest) {
         closeDatabase();
 
         return NextResponse.json({news}, {status: 200});         
+    }else if(service === 'getSaae'){
+        const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/getSaae"); 
+        const collection = db.collection('saae');
+    
+        const data = collection.find({});
+        const saaes = await data.toArray()
+    
+        //fecha o DB.
+        closeDatabase();
+
+        return NextResponse.json({saaes}, {status: 200});         
+    }else if(service === 'getUrlKey'){
+        const fileUrl = url.searchParams.get('fileUrl');
+        const expiresInMs: number= parseInt(url.searchParams.get('expiresIn') || '1') * 60 * 60 * 1000
+
+        try {
+
+            if(!fileUrl) {
+                throw new Error("URL não informada");
+            }
+
+            const storage = new Storage({
+              credentials: credentials,
+              projectId: "ge-coqueiral-1732713383827",
+            });
+        
+            const {bucketName, filePath} = parseGoogleStorageUrl(fileUrl);
+            const [url] = await storage
+              .bucket(bucketName)
+              .file(filePath)
+              .getSignedUrl({
+                action: 'read', // Ação permitida
+                expires: Date.now() + expiresInMs, // Tempo de expiração
+            });
+        
+            return NextResponse.json({url}, { status: 200 });
+          } catch (err) {
+            console.error('Erro ao gerar Signed URL:', err);
+            throw err;
+          }
+    }else if (service === 'proxyPDF') {
+        const fileUrl = url.searchParams.get('fileUrl');
+    
+        try {
+            if (!fileUrl) {
+                throw new Error("URL não informada");
+            }
+    
+            const response = await fetch(fileUrl);
+    
+            if (!response.ok) {
+                throw new Error('Erro ao buscar o PDF.');
+            }
+    
+            const contentType = response.headers.get('content-type') || 'application/octet-stream';
+            const buffer = await response.arrayBuffer();
+    
+            return new NextResponse(buffer, {
+                status: 200,
+                headers: {
+                    'Content-Type': contentType,
+                },
+            });
+        } catch (err) {
+            console.error('Erro ao buscar o PDF via proxy:', err);
+            return NextResponse.json({ error: 'Erro ao buscar o arquivo' }, { status: 500 });
+        }
     }else{
         return NextResponse.json({ error: "Requisição não reconhecida." }, { status: 405 });
     }

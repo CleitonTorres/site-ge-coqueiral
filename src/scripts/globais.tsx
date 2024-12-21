@@ -1,6 +1,7 @@
 import { CEP, DataNews, ProfileProps } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { getDocument } from 'pdfjs-dist';
 import { FaGlobe } from "react-icons/fa";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa6";
 
@@ -308,7 +309,81 @@ export const handleTypeUrl = (dataNews:DataNews)=>{
         return isBase64(dataNews.imageID[0]) || isValidURL(dataNews.imageID[0]) || isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
     }
 }
+
 export const handleUrl = (urlID:string)=>{
     return isBase64(urlID) || isValidURL(urlID) || isRelativeURL(urlID) ? urlID : `https://drive.google.com/uc?export=download&id=${urlID}`
 
 }
+export const parseGoogleStorageUrl = (url: string) => {
+    const baseUrl = "https://storage.googleapis.com/";
+    if (!url.startsWith(baseUrl)) {
+      throw new Error("A URL fornecida não é uma URL válida do Google Cloud Storage.");
+    }
+  
+    const relativePath = url.replace(baseUrl, ""); // Remove a parte base da URL
+    const [bucketName, ...filePathParts] = relativePath.split("/"); // Divide o caminho pelo "/"
+    const filePath = filePathParts.join("/"); // Junta o restante como o `filePath`
+  
+    return { bucketName, filePath };
+};
+export const signedURL = async(fileUrl:string)=>{
+    try{
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+            params: {
+                service: 'getUrlKey',
+                fileUrl: fileUrl,
+                expiresInMs: 2
+            },
+            headers: {
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+            }
+        });
+
+        const data = response.data.url as string
+
+        if(!data) throw new Error("Erro ao assinar URL");
+
+        return data;
+    }catch(error){
+        if (axios.isAxiosError(error)) {
+            // Se o erro for gerado pelo Axios
+            console.error("Erro Axios:", error.response?.data || error.message);
+            
+            // Capturando os detalhes da resposta
+            if (error.response) {
+            console.error("Status:", error.response.status);
+            console.error("Dados:", error.response.data);
+            }
+        } else {
+            // Se for outro tipo de erro
+            console.error("Erro inesperado:", error);
+        }
+
+        alert("Ocorreu um erro ao tentar recuperar a lista de SAAEs")
+    }
+}
+
+/**
+ * Converte a primeira página no PDF para imagem Base64
+*/
+export const pdfToImageBase64 = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await getDocument(arrayBuffer).promise;
+    const page = await pdf.getPage(1); // Obtém a primeira página do PDF
+
+    const viewport = page.getViewport({ scale: 1.5 }); // Define o tamanho da renderização
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    if (context) {
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        return canvas.toDataURL(); // Converte o conteúdo do canvas para Base64
+    }
+
+    throw new Error('Erro ao renderizar a página do PDF.');
+};
+

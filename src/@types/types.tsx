@@ -14,7 +14,7 @@ export interface ProfileProps {
     registro: string,
     tel: string,
     email: string, 
-    nivelAcess: "Escotista" | "Dirigente" | "Admin"
+    nivelAcess: "Escotista" | "Dirigente" | "Admin" | 'Tester'
     token: string,    
     user: string,
     password: string,
@@ -70,7 +70,9 @@ export interface SAAE {
     inventarioRiscos: InventarioSaaeType[],
     planoEmergencia: PlanoEmergenciaSaae,
     fotosInspecao: FormFotosInspecao[],
-    documentos: FormDocs[]
+    documentos: FormDocs[],
+    status: string,
+    _id: string
 }
 
 export interface InventarioSaaeType{
@@ -173,12 +175,6 @@ export interface FormDocs {
     docs: FotosInspecaoType[];
 }
 
-export interface FormFotosInspecao {
-    title: string,
-    description: string,
-    fotos: FotosInspecaoType[];
-}
-
 export interface ContatosEmergencia{
     nome: string,
     contato: string
@@ -192,19 +188,26 @@ export interface Profissional{
     regEscoteiro: string,
     docs: Docs[]
 }
+export interface AtividadeProfissional {
+    nomeProf: string,
+    contato: string,
+    profissao: string,
+    numCarteirinha: string,
+    regEscoteiro: string,
+    cpf: string,
+    redesSociais:  string[],
+    docs: Docs[]
+}
 export interface Docs {
     titulo: string,
     doc: string | File
 }
-
-
 export interface FotosInspecaoType {
     title: string,
     description: string,
     name: string,
     doc: string | File
 }
-
 export interface Veiculos {
     nomeMotorista: string,
     tipoVeiculo: string,
@@ -216,6 +219,7 @@ export interface Veiculos {
     manutencao: 'Sim' | 'Não',
     docs: Docs[]
 }
+
 export interface ResponseDataIA {
     atividade: string,
     perigo: string,
@@ -226,16 +230,7 @@ export interface ResponseDataIA {
 export interface RequestDataIA {
     input: string;
 };
-export interface AtividadeProfissional {
-    nomeProf: string,
-    contato: string,
-    profissao: string,
-    numCarteirinha: string,
-    regEscoteiro: string,
-    cpf: string,
-    redesSociais:  string[],
-    docs: Docs[]
-}
+
 export interface CEP{
     bairro: string,
     cep: string,

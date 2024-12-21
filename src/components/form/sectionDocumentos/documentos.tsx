@@ -1,16 +1,17 @@
 'use client'
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './documentos.module.css';
-import { calcTotalFilesMB } from '@/scripts/globais';
+import { calcTotalFilesMB, pdfToImageBase64, signedURL } from '@/scripts/globais';
 import { FormDocs } from '@/@types/types';
 import { Context } from '@/components/context/context';
 import Image from 'next/image';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
-import { getDocument } from 'pdfjs-dist';
+import axios from 'axios';
 
-const ImagePreview = ({ file, width, height }:{file:File, width:number, height:number}) => {
+export const ImagePreview = ({ file, width, height }:{file:File | string, width:number, height:number}) => {
     const [base64, setBase64] = useState('');
     const [isPdf, setIsPdf] = useState(false);
+    const [urlSigned, setUrlSiged] = useState('');
 
     // Converte arquivos não PDF para Base64
     const fileToBase64 = (file: File) => {
@@ -23,61 +24,85 @@ const ImagePreview = ({ file, width, height }:{file:File, width:number, height:n
         reader.readAsDataURL(file);
         });
     };
-
-    // Converte a primeira página de um PDF para Base64
-    const pdfToImageBase64 = async (file: File): Promise<string> => {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await getDocument(arrayBuffer).promise;
-        const page = await pdf.getPage(1); // Obtém a primeira página do PDF
-
-        const viewport = page.getViewport({ scale: 1.5 }); // Define o tamanho da renderização
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-
-        if (context) {
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        return canvas.toDataURL(); // Converte o conteúdo do canvas para Base64
-        }
-
-        throw new Error('Erro ao renderizar a página do PDF.');
-    };
     
+    const getSignedUrl = async(url:string)=>{
+        const data = await signedURL(url);
+        if(!data) return;
+        
+        setUrlSiged(data);
+        const isPDF = data?.includes('.pdf') ? true : false;
+
+        if(data && isPDF){
+            // Busca o PDF utilizando a URL assinada
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+                params:{
+                    service: 'proxyPDF',
+                    fileUrl: data
+                },
+                headers:{
+                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                },
+                responseType: 'arraybuffer' // Define o tipo de resposta como Blob
+            });
+            
+            //console.log("blob data", response.data)
+            if(!(response.data instanceof ArrayBuffer)) return;
+
+            // Converte o ArrayBuffer para Blob
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            // Converte o conteúdo do PDF para um objeto File
+            const file = new File([blob], "preview.pdf", { type: "application/pdf" });
+
+            // Gera a visualização da primeira página em Base64
+            const previewBase64 = await pdfToImageBase64(file);
+            setBase64(previewBase64);
+        }else if(data && !isPDF){
+            setBase64(data);
+        }
+    }
+
     useEffect(() => {
         const processFile = async () => {
           try {
-            if (file.type === 'application/pdf') {
-              setIsPdf(true);
-              const base64String = await pdfToImageBase64(file);
-              setBase64(base64String);
-            } else {
-              setIsPdf(false);
-              const base64String = await fileToBase64(file);
-              setBase64(base64String);
+            if(file instanceof Blob){
+                if (file.type === 'application/pdf') {
+                setIsPdf(true);
+                const base64String = await pdfToImageBase64(file);
+                setBase64(base64String);
+                } else {
+                setIsPdf(false);
+                const base64String = await fileToBase64(file);
+                setBase64(base64String);
+                }
             }
           } catch (error) {
             console.error('Erro ao processar arquivo:', error);
           }
         };
     
-        if (file) {
+        if (file instanceof Blob) {
           processFile();
+        }else if( typeof file === 'string'){
+            getSignedUrl(file);
         }
-      }, [file]);
+      }, [file]); 
 
     if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
 
     return (
-        <Image
-            alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
-            width={width}
-            height={height}
-            style={{ objectFit: 'contain', height: 'auto' }}
-            src={base64} // Usa o Base64 gerado como src
-        />
+        <>            
+            <Image
+                alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
+                width={width}
+                height={height}
+                className='cursorPointers'
+                style={{ objectFit: 'contain', height: 'auto'}}
+                src={base64} // Usa o Base64 gerado como src
+                onClick={()=>{
+                    window?.open(urlSigned, '_blank')
+                }}
+            />
+        </>
     );
 };
 
@@ -133,7 +158,7 @@ export default function SectionDocumentos({readOnly}:Props){
         const nameField = name.split('.');
 
         context.setDataSaae((prev)=>{
-            let newData = prev.documentos;
+            let newData = prev.documentos || [];
 
             if(name.includes('doc')){
                 newData = newData.map((section, id)=>{
@@ -184,7 +209,7 @@ export default function SectionDocumentos({readOnly}:Props){
 
         context.setDataSaae((prev)=>{
             const newData = [
-                ...prev.documentos,
+                ...prev.documentos || [],
                 currentForm
             ]
 

@@ -5,21 +5,26 @@
 .subConteiner{
     display: flex;
     flex-direction: column;
-    width: 330px;
+    width: 340px;
 }
-.boxInput{
+.boxInput, .header{
     position: relative;
     display: flex;
     width: auto;
     justify-content: space-between;
     align-items: center;
 }
-.boxInput label{
+.boxInput label, .header h4{
     line-height: 20px;
+    padding: 2px;
 }
 .boxInput:hover{
     cursor: pointer;
     background-color: var(--blue);
+    color: var(--white);
+}
+.boxInput:hover label{
+    color: var(--white);
 }
 .boxInput input {
     margin: 6px 30px;
@@ -102,4 +107,39 @@
 
 .btnRemAtividade path{
     color: red;
+}
+
+.box{
+    display: flex;
+    flex-direction: row;
+}
+.box .subConteiner{
+    border: 2px solid var(--blue);
+    margin: 6px;
+    padding: 6px;
+    max-width: 300px;
+    overflow-y: scroll;
+}
+
+.btnClose{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    z-index: 100;
+    border-radius: 50%;
+    font-size: 16px;
+    width: 18px;
+    height: 18px;
+    transition: 0.5s;
+    padding: 3px;
+}
+.btnClose span{
+    line-height: 10px;
+}
+.btnClose:hover{
+    cursor: pointer;
+    background-color: var(--verde);
 }

@@ -6,6 +6,10 @@ type Props ={
     customClass?: string[],
 }
 
+/**
+ * Componente usado para exibir sobre posições.
+ * @returns 
+ */
 export default function Modal ({children, customClass}:Props){
     const [customStyles, setCustomStyles] = useState(''); 
 

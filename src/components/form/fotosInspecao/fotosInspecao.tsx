@@ -1,49 +1,92 @@
 'use client'
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import styles from './fotosInspecao.module.css';
 import { calcTotalFilesMB } from '@/scripts/globais';
 import { FormFotosInspecao } from '@/@types/types';
 import { Context } from '@/components/context/context';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
+import { ImagePreview } from '../sectionDocumentos/documentos';
+// import axios from 'axios';
 
+// const ImagePreview = ({ file, width, height }:{file:File | string, width:number, height:number}) => {
+//     const [base64, setBase64] = useState('');
+//     const [urlSigned, setUrlSiged] = useState('');
 
-const ImagePreview = ({ file, width, height }:{file:File, width:number, height:number}) => {
-    const [base64, setBase64] = useState('');
-
-    const fileToBase64 = (file:File) => {
-        return new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
+//     const fileToBase64 = (file:File) => {
+//         return new Promise<string>((resolve, reject) => {
+//             const reader = new FileReader();
     
-            reader.onload = () => resolve(reader.result as string); // Retorna apenas a string Base64
-            reader.onerror = (error) => reject(error);
+//             reader.onload = () => resolve(reader.result as string); // Retorna apenas a string Base64
+//             reader.onerror = (error) => reject(error);
     
-            reader.readAsDataURL(file); // Lê o arquivo como uma string Base64
-        });
-    };
+//             reader.readAsDataURL(file); // Lê o arquivo como uma string Base64
+//         });
+//     };
 
-    useEffect(() => {
-        if (file) {
-            fileToBase64(file).then((base64String) => {
-                setBase64(base64String); // Atualiza o estado com o Base64
-            }).catch((error) => {
-                console.error('Erro ao converter arquivo para Base64:', error);
-            });
-        }
-    }, [file]);
+//     const getSignedUrl = async(url:string)=>{
+//         const data = await signedURL(url);
+//         if(!data) return;
 
-    if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
+//         setUrlSiged(data);
 
-    return (
-        <Image
-            alt=""
-            width={width}
-            height={height}
-            style={{ objectFit: 'contain', height: 'auto' }}
-            src={base64} // Usa o Base64 gerado como src
-        />
-    );
-};
+//         const isPDF = data?.includes('.pdf') ? true : false;
+
+//         if(data && isPDF){
+//             // Busca o PDF utilizando a URL assinada
+//             const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+//                 params:{
+//                     service: 'proxyPDF',
+//                     fileUrl: data
+//                 },
+//                 headers:{
+//                     'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+//                 },
+//                 responseType: 'arraybuffer' // Define o tipo de resposta como Blob
+//             });
+            
+//             //console.log("blob data", response.data)
+//             if(!(response.data instanceof ArrayBuffer)) return;
+
+//             // Converte o ArrayBuffer para Blob
+//             const blob = new Blob([response.data], { type: 'application/pdf' });
+//             // Converte o conteúdo do PDF para um objeto File
+//             const file = new File([blob], "preview.pdf", { type: "application/pdf" });
+
+//             // Gera a visualização da primeira página em Base64
+//             const previewBase64 = await pdfToImageBase64(file);
+//             setBase64(previewBase64);
+//         }else if(data && !isPDF){
+//             setBase64(data);
+//         }
+//     }
+
+//     useEffect(() => {
+//         if(!file) return;
+        
+//         if (file instanceof Blob) {
+//             fileToBase64(file).then((base64String) => {
+//                 setBase64(base64String); // Atualiza o estado com o Base64
+//             }).catch((error) => {
+//                 console.error('Erro ao converter arquivo para Base64:', error);
+//             });
+//         }else{
+//             getSignedUrl(file);
+//         }
+//     }, [file]);
+
+//     if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
+
+//     return (
+//         <Image
+//             alt=""
+//             width={width}
+//             height={height}
+//             style={{ objectFit: 'contain', height: 'auto' }}
+//             src={base64} // Usa o Base64 gerado como src
+//         />
+//     );
+// };
 
 type Props = {
     readOnly: boolean
@@ -96,7 +139,7 @@ export default function FotosInspecao({readOnly}:Props){
         const nameField = name.split('.');
 
         context.setDataSaae((prev)=>{
-            let newData = prev.fotosInspecao;
+            let newData = prev.fotosInspecao || [];
 
             if(name.includes('fotos')){
                 newData = newData.map((section, id)=>{
@@ -147,7 +190,7 @@ export default function FotosInspecao({readOnly}:Props){
 
         context.setDataSaae((prev)=>{
             const newData = [
-                ...prev.fotosInspecao,
+                ...prev.fotosInspecao || [],
                 currentForm
             ]
 

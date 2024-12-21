@@ -9,6 +9,41 @@ import { createCookie, encryptPassword } from '@/scripts/globais';
 import { ResponseRecaptcha } from '@/@types/types';
 import { Context } from '@/components/context/context';
 
+type PropsFormLogin = {
+    handleData: (e: ChangeEvent<HTMLInputElement>) => void,
+    dataForm: {
+        user: string;
+        password: string;
+    },
+    submit: (e: FormEvent<HTMLButtonElement>) => void
+}
+
+export const FormLogin = ({handleData, submit, dataForm}:PropsFormLogin)=>{
+    return(
+        <form className={styles.subConteiner} method='POST'>
+            <label htmlFor="user">Usuário</label>                   
+            <input 
+                type="text" 
+                name='user' 
+                onChange={(e)=>handleData(e)}
+                value={dataForm.user || '' }
+                placeholder='Nome de usuário'
+            />
+            <label htmlFor="user">Senha</label>       
+            <input 
+                type="password" 
+                name='password'
+                placeholder='senha'
+                onChange={(e)=>handleData(e)}
+                value={dataForm.password || '' }
+            />   
+            <button onClick={(e)=>submit(e)}>
+                Ok
+            </button>  
+        </form>
+    )
+}
+
 export default function Page(){
     const context = useContext(Context);
     const [dataForm, setData] = useState({} as {user: string, password: string});
@@ -93,27 +128,7 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Recursos administrativos</h1>
             <div className={styles.conteiner}>
-                <form className={styles.subConteiner} method='POST'>
-                    <label htmlFor="user">Usuário</label>                   
-                    <input 
-                        type="text" 
-                        name='user' 
-                        onChange={(e)=>handleData(e)}
-                        value={dataForm.user || '' }
-                        placeholder='Nome de usuário'
-                    />
-                    <label htmlFor="user">Senha</label>       
-                    <input 
-                        type="password" 
-                        name='password'
-                        placeholder='senha'
-                        onChange={(e)=>handleData(e)}
-                        value={dataForm.password || '' }
-                    />   
-                    <button onClick={(e)=>submit(e)}>
-                        Ok
-                    </button>  
-                </form>
+                <FormLogin dataForm={dataForm} handleData={handleData} submit={submit}/>
             </div>
 
             {showModal ?

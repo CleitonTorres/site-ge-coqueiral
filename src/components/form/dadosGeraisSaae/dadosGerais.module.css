@@ -73,6 +73,7 @@
     width: 98%;
     min-height: 40px;
     resize: vertical;
+    font-weight: 300;
 }
 
 .btnAddAtividade:hover, .btnRemAtividade:hover{
@@ -91,6 +92,9 @@
 .borderBottom{
     border-bottom: 1px solid var(--dark);
     line-height: 27px;
+    min-height: 27px;
+    padding: 6px;
+    text-align: center !important;
 }
 .width100{
     width: 100px;
