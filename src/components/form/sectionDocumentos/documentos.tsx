@@ -302,7 +302,7 @@ export default function SectionDocumentos({readOnly}:Props){
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h2>7. Documentos adicionais:</h2>
+            <h1 className={styles.bgGreen}>7. Documentos adicionais:</h1>
 
             {!readOnly ?
             <>

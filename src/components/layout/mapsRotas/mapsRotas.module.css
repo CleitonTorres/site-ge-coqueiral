@@ -1,0 +1,14 @@
+.closeBtn{
+    position: absolute; 
+    right: 40px; 
+    top: 10px;
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 50%;
+    z-index: 1000;
+}
+.closeBtn:hover{
+    cursor: pointer;
+    background-color: var(--verde);
+}

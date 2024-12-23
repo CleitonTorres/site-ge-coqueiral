@@ -115,7 +115,7 @@ const InventarioSaae = ({readOnly}:Props) => {
 
         if(!value) return;
 
-        const verify = context.dataSaae.inventarioRiscos.find(ativ=> ativ.atividade === atividadeCorrente.atividade);
+        const verify = context.dataSaae?.inventarioRiscos?.find(ativ=> ativ.atividade === atividadeCorrente.atividade);
         console.log(verify);
         if(verify) return;
 
@@ -254,19 +254,21 @@ const InventarioSaae = ({readOnly}:Props) => {
 
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            {useIA ?
-                <div className={styles.boxAvatar}> 
-                    <Image 
-                        alt='assistente Mathias'
-                        width={90}
-                        height={90}
-                        src={'/icons/assistente-mathias.png'}
-                    />
-                    <Texting text={commentIA} speed={100}/>
-                </div>
-            :null}
-            <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
-            <h2>3. Inventário de Riscos:</h2>
+            <div className={`${styles.boxHead} ${styles.bgGreen}`}>
+                {useIA ?
+                    <div className={styles.boxAvatar}> 
+                        <Image 
+                            alt='assistente Mathias'
+                            width={90}
+                            height={90}
+                            src={'/icons/assistente-mathias.png'}
+                        />
+                        <Texting text={commentIA} speed={100}/>
+                    </div>
+                :null}
+                <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
+                <h1>3. Inventário de Riscos:</h1>
+            </div>
             {!readOnly ?
                 <div className={styles.boxCheckIA}>
                 <label htmlFor="" style={{fontSize: '14px'}}>Usar IA Mathias?</label>
@@ -278,7 +280,7 @@ const InventarioSaae = ({readOnly}:Props) => {
                 />
                 </div>
             :null}
-            <div className={styles.table}>
+            <div className={styles.table}> 
                 <div className={styles.content}>
                     <h1 className={styles.header}>
                         Etapa do Evento/Atividade
@@ -303,7 +305,6 @@ const InventarioSaae = ({readOnly}:Props) => {
                             name='atividade'
                             value={item?.atividade || ''}
                             onChange={(e) => handleForm(e, idx)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> 
@@ -329,7 +330,6 @@ const InventarioSaae = ({readOnly}:Props) => {
                             value={item?.perigo || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
                             readOnly={readOnly}
                         />
@@ -355,7 +355,6 @@ const InventarioSaae = ({readOnly}:Props) => {
                             value={item?.danos || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
                             readOnly={readOnly}
                         />
@@ -381,7 +380,6 @@ const InventarioSaae = ({readOnly}:Props) => {
                             value={item?.controleOperacional || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
                             readOnly={readOnly}
                         />
@@ -407,7 +405,6 @@ const InventarioSaae = ({readOnly}:Props) => {
                             value={item?.acoesMitigadoras || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            placeholder="Exemplo: remada em caiaque"
                             className={`${styles.collum} ${styles.alingLeftText}`}
                             readOnly={readOnly}
                         />

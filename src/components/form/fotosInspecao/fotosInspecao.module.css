@@ -2,8 +2,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100vw;
-    max-width: 1232px;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
 }
@@ -134,6 +132,11 @@
 }
 .borderBlue{
     border: 2px solid var(--blue) !important;
+}
+.bgGreen{
+    background-color: var(--verde);
+    margin-top: 20px;
+    padding-left: 10px;
 }
 
 @keyframes fadeIn {

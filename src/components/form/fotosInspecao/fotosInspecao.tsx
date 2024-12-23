@@ -283,7 +283,7 @@ export default function FotosInspecao({readOnly}:Props){
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h2>6. Fotos do local/inspeção:</h2>
+            <h1 className={styles.bgGreen}>6. Fotos do local/inspeção:</h1>
             {!readOnly ?
                 <>
                 <div className={styles.section}>

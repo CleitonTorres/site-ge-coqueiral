@@ -5,14 +5,23 @@ import { getDocument } from 'pdfjs-dist';
 import { FaGlobe } from "react-icons/fa";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa6";
 
-// Função para criptografar a senha
+/**
+ * Função para criptografar a senha
+ * @param {string} password - Senha a ser criptografada 
+ * @returns {string} - Senha criptografada
+ */
 export const encryptPassword = (password:string)=> {
     const key = `${process.env.NEXT_PUBLIC_TOKEN_APP}`; // Chave para a criptografia
     const encrypted = CryptoJS.AES.encrypt(password, key).toString();
 
     return encrypted;
 }
-// Função para descriptografar a senha
+
+/**
+ * Função para descriptografar a senha
+ * @param {string} encryptedPassword - Senha criptografada
+ * @returns {string} senha descriptografada
+ */
 export const decryptPassword = (encryptedPassword:string)=> {
     const key = `${process.env.NEXT_PUBLIC_TOKEN_APP}`;
 
@@ -25,6 +34,11 @@ export const decryptPassword = (encryptedPassword:string)=> {
     }
 }
 
+/**
+ * Função para criar o cookie de sessão do usuário
+ * @param {ProfileProps} dataProfile - Dados do usuário
+ * @returns {Promise<boolean>}
+ */
 export const createCookie = async (dataProfile:ProfileProps) => {
     try{
         //destroi algum cookie que tenha sido configurado antes.
@@ -45,6 +59,10 @@ export const createCookie = async (dataProfile:ProfileProps) => {
     }
 }
 
+/**
+ * Função para verificar se o cookie de sessão do usuário existe, se existir ela retorna os dados do usuário
+ * @returns {ProfileProps | boolean} - Retorna os dados do usuário ou false caso o cookie não exista
+ */
 export const getCookie = () => {
     const sessionData = sessionStorage.getItem("coqueiralSite");
     if(!sessionData){
@@ -66,10 +84,19 @@ export const getCookie = () => {
     return cookieData;
 }
 
+/**
+ * Função para destruir o cookie de sessão do usuário
+ * @param {string} token - Token do cookie
+ */
 export const destroyCookie = (token:string) => {
     sessionStorage.removeItem(token)
 }
 
+/**
+ * Função para calcular o tamanho de um arquivo em MB
+ * @param {File} files - Arquivo a ser calculado
+ * @returns {string}
+ */
 export const calcTotalFilesMB = (files:File)=>{
     // Função para converter bytes para megabytes
     const bytesToMegabytes = (bytes:number) => {
@@ -81,24 +108,44 @@ export const calcTotalFilesMB = (files:File)=>{
     const formattedTotalSize = bytesToMegabytes(totalSizeInMB).toFixed(2);
     return formattedTotalSize;
 }
+
+/**
+ * Função para verificar se uma string é uma URL válida
+ * @param {string} string - Array de arquivos
+ * @returns {boolean}
+ */
 export const isValidURL = (string: string): boolean => {
     // Regex para verificar URL
     const regex = /^(https?:\/\/|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+.*$/;
     return regex.test(string);
 };
 
+/**
+ * Função para verificar se uma string é um caminho relativo
+ * @param {string} string - string a ser verificada
+ * @returns {boolean}
+ */
 export const isRelativeURL = (string: string): boolean => {
     // Verifica se é um caminho relativo (começa com "/")
     return /^\/[a-zA-Z0-9-_.]+/.test(string);
 };
 
+/**
+ * Função para verificar se uma string é um base64
+ * @param {string} string - string a ser verificada
+ * @returns {boolean}
+ */
 export const isBase64 = (string:string)=>{
     const verify = string.includes('base64');
 
     return verify;
 }
 
-//data de saída aaaa-mm-dd
+/**
+ * Função que retorna a data no formato "yyyy-mm-dd"
+ * @param {Date | undefined} date - data a ser formatada
+ * @returns {string}
+ */
 export function dateFormat1(date:Date | undefined){
     if(!date){
         return ''
@@ -116,7 +163,11 @@ export function dateFormat1(date:Date | undefined){
     }
 }
 
-//data de saída dd/mm/aaaa
+/**
+ * Função que retorna a data no formato "dd/mm/yyyy"
+ * @param {Date | undefined} date - data a ser formatada 
+ * @returns {string}
+ */
 export function dateFormat2(date:Date | undefined){
     if(!date){
         return ''
@@ -134,7 +185,11 @@ export function dateFormat2(date:Date | undefined){
     }
 }
 
-// Formatar data no formato "22 de fevereiro de 2024"
+/**
+ * Função que retorna a data no formato "dia do mês do ano"
+ * @param {Date | undefined} input - data a ser formatada 
+ * @returns {string}
+ */
 export function dateFormat3(input: Date | undefined): string {
     if (!input) {
         return '';
@@ -156,6 +211,11 @@ export function dateFormat3(input: Date | undefined): string {
     return `${dia} de ${monthNames[mes]} de ${ano}`;
 }
 
+/**
+ * Função que retorna a hora no formato hh:mm
+ * @param {string} text - data a ser formatada 
+ * @returns {string}
+ */
 export function formatToHourMin(text:string) {
     // Remove tudo que não é número
     const onlyNumbers = text.replace(/\D/g, "");
@@ -171,6 +231,12 @@ export function formatToHourMin(text:string) {
     return hours + (minutes ? `:${minutes}` : "");
 }
 
+/**
+ * Função que adiciona um tempo a um horário inicial
+ * @param {string} initialTime 
+ * @param {string} addedTime 
+ * @returns {string}
+ */
 export function addTime(initialTime:string, addedTime:string) {
     // Verifica se o formato inicial está correto (HH:MM)
     const timePattern = /^(\d{1,2}):(\d{2})$/;
@@ -203,6 +269,11 @@ export function addTime(initialTime:string, addedTime:string) {
     return `${formattedHours}:${formattedMinutes}`;
 }
 
+/**
+ * Função que remove valores não numéricos de uma string e retorna uma string no formato de CEP
+ * @param {string} v - texto a ser formatado 
+ * @returns {string}
+ */
 export function maskcep(v:string){
     if(!v){return ''}
     
@@ -211,6 +282,11 @@ export function maskcep(v:string){
     return v;
 }
 
+/**
+ * Função que busca dados de um endereco a partir de um CEP
+ * @param {string} cep - texto a ser formatado 
+ * @returns {Promise<CEP>}
+ */
 export async function getDadosCEP(cep:string):Promise<CEP> {
     const cepCleam = cleamText(cep);
     let data = {} as CEP;
@@ -227,16 +303,31 @@ export async function getDadosCEP(cep:string):Promise<CEP> {
     return data;
 }
 
+/**
+ * Função que remove caracteres especiais de uma string
+ * @param {string} value 
+ * @returns {string} string sem caracteres especiais
+ */
 export function cleamText(value:string){
     if(!value){return ""}
     return value.replace(/[^a-zA-Z0-9]/g, "").toLowerCase().trim();
 }
 
+/**
+ * Função que verifica se uma string contém apenas números
+ * @param {string} str 
+ * @returns {boolean}
+ */
 export function temApenasNumeros(str:string) {
     // Testa se a string contém apenas números
     return /^\d+$/.test(str);
 }
 
+/**
+ * Função que formata uma string para o formato de moeda
+ * @param {string | number} value 
+ * @returns {boolean} string formatada
+ */
 export function maskMoeda(value:string | number) {
     if(!value) {return "0"}
     let v = '';
@@ -253,6 +344,11 @@ export function maskMoeda(value:string | number) {
     return  "R$ " + v;
 }
 
+/**
+ * Função que remove o cifrão de uma string
+ * @param {string} str 
+ * @returns {string} string sem o cifrão
+ */
 export function removeCifrao(str:string) { 
     if(!str) return "0";
     if(typeof str !== "string") return "0";
@@ -267,6 +363,11 @@ export function removeCifrao(str:string) {
     return numerosFormatados;
 }
 
+/**
+ * Função que formata uma string para o formato de telefone
+ * @param {string} v 
+ * @returns {string} string formatada
+ */
 export function masktel(v:string){
     if(!v){return ""}
     v= v.replace(/\D/g,"");
@@ -275,6 +376,11 @@ export function masktel(v:string){
     return v;
 }
 
+/**
+ * Função que retorna um icone de acordo com a rede social
+ * @param {string} link 
+ * @returns {JSX.Element | undefined} icone da rede social
+ */
 export function setIconSocialMidia(link:string){
     if(!link) return;
     if(link.includes('facebook')){
@@ -288,6 +394,11 @@ export function setIconSocialMidia(link:string){
     }
 }
 
+/**
+ * Função que retorna a cor de acordo com o nivel de risco
+ * @param {number | undefined} nivelRisco 
+ * @returns {string} cor
+ */
 export const setColor = (nivelRisco: number | undefined)=>{
     if(nivelRisco === undefined) return '';
 
@@ -302,6 +413,11 @@ export const setColor = (nivelRisco: number | undefined)=>{
     }
 }
 
+/**
+ * Função que verifica se a string é uma URL válida ou um ID do google drive
+ * @param {DataNews} dataNews 
+ * @returns {string} url da imagem
+ */
 export const handleTypeUrl = (dataNews:DataNews)=>{
     if(typeof dataNews.imageID === 'string') {
         return isBase64(dataNews.imageID) || isValidURL(dataNews.imageID) || isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
@@ -310,10 +426,21 @@ export const handleTypeUrl = (dataNews:DataNews)=>{
     }
 }
 
+/**
+ * Função que verifica se a string é uma URL válida ou um ID do google drive
+ * @param {string} urlID 
+ * @returns {string} url da imagem
+ */
 export const handleUrl = (urlID:string)=>{
     return isBase64(urlID) || isValidURL(urlID) || isRelativeURL(urlID) ? urlID : `https://drive.google.com/uc?export=download&id=${urlID}`
 
 }
+
+/**
+ * Função que verifica se a string é uma URL do google storage e retorna o bucketName e o filePath
+ * @param {string} urlID 
+ * @returns {{bucketName: string; filePath: string;}} bucketName e o filePath
+ */
 export const parseGoogleStorageUrl = (url: string) => {
     const baseUrl = "https://storage.googleapis.com/";
     if (!url.startsWith(baseUrl)) {
@@ -326,6 +453,12 @@ export const parseGoogleStorageUrl = (url: string) => {
   
     return { bucketName, filePath };
 };
+
+/**
+ * Função que assina uma URL do Google Cloud Storage
+ * @param {string} fileUrl - URL pública do arquivo mp google storage a ser assinado
+ * @returns {Promise<string | undefined>} URL assinada
+ */
 export const signedURL = async(fileUrl:string)=>{
     try{
         const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{

@@ -984,10 +984,12 @@ export default function PlanoEmergencia ({readOnly}:Props){
     }
 
     return(
-        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h6>itens 7.5 e 9.1 da Política Nacional de Gestão de Risco</h6>
-            <h2>5. Plano de Ação:</h2>
-
+        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}> 
+            <div className={`${styles.boxHead} ${styles.bgGreen}`}>
+                <h6>itens 7.5 e 9.1 da Política Nacional de Gestão de Risco</h6>
+                <h2>5. Plano de Ação:</h2>
+            </div>
+            
             {/* Dados básicos */}
             <div className={styles.section}>
                 <h3>Dados básicos</h3>
@@ -1084,7 +1086,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                     </div>
                 </div>                
             </div>
-
+            
             {/* Pronto Socorro mais próximo */}
             <div className={styles.section}>
                 <h3>Pronto Socorro mais próximo</h3>
@@ -1177,7 +1179,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         />
                     </div>
                 </div>
-            </div>
+            </div> 
 
             {/* Contatos de Emergência */}
             <div className={`${styles.section} ${styles.bgGreen}`}>

@@ -1,7 +1,7 @@
 'use client'
-import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, FocusEvent, Fragment, KeyboardEvent, useContext, useEffect, useState } from 'react';
 import styles from './dadosGerais.module.css';
-import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types';
+import { DadosGeraisSaae, Endereco, ProgramacaoAtividade, Rota } from '@/@types/types';
 import { v4 } from 'uuid';
 import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
 import { FaMinus, FaPlus } from "react-icons/fa";
@@ -9,6 +9,8 @@ import { dataBaseSaae, Odss, tiposAtividade } from '@/components/data-training/d
 import { Context } from '@/components/context/context';
 
 import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
+import RouteMapComponent from '@/components/layout/mapsRotas/mapsRotas';
+import { FaTrash } from 'react-icons/fa6';
 
 type Props = {
     readOnly: boolean
@@ -24,7 +26,7 @@ export default function DadosGerais({readOnly}:Props){
 
     const [atividadesList, setAtividadesList] = useState<string[]>([]);
     const [inicioFim, setInicioFim] = useState(false);
-
+    
     const handleForm = (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
         const name = e.target.name;
@@ -122,6 +124,25 @@ export default function DadosGerais({readOnly}:Props){
                     ...newData,
                     [name]: masktel(value)
                 }
+            }else if(name === 'coordenador'){
+                const responsavel = context.tester || context.dataUser;
+                const verify = value === responsavel.name;
+                if(verify){
+                    newData = {
+                        ...newData,
+                        coordenador: value,
+                        regCoordenador: responsavel.registro ||'',
+                        telCoordenador: masktel(responsavel.tel ||''),
+                        emailCoordenador: responsavel.email ||'',
+                        nivelFormacaoCoordenador: responsavel.nivelFormacao  as "Preliminar" | "Intermediário" | "Avançado", 
+                    }
+                }else{
+                    newData= {
+                        ...newData,
+                        [name]: value
+                    }
+                }
+
             }else{
                 newData = {
                     ...newData,
@@ -156,7 +177,6 @@ export default function DadosGerais({readOnly}:Props){
                     [name]: formatToHourMin(value)
                 }
             }
-
             return{
                 ...prev,
                 [name]: value
@@ -522,6 +542,23 @@ export default function DadosGerais({readOnly}:Props){
         //updateContext(newData);
     }
 
+    const handleRotas = (rotas:Rota)=>{
+        context.setDataSaae((prev)=>{
+            if(rotas){
+                const newData = prev.dadosGerais.rotas ? [...prev.dadosGerais.rotas, rotas] : [rotas];
+                return{
+                    ...prev,
+                    dadosGerais:{
+                        ...prev.dadosGerais,
+                        rotas: newData
+                    }
+                }
+            }else{
+                return prev;
+            }
+        })
+    }
+
     useEffect(()=>{
         //carrega a lista de atividades.
         setAtividadesList(()=>{
@@ -536,8 +573,11 @@ export default function DadosGerais({readOnly}:Props){
     },[])
 
     return(
-        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h1>1. Dados gerais da atividade</h1>
+        <div 
+            className={`${styles.conteiner}`} 
+            style={{marginTop: readOnly ? '30px' : '0px'}}
+        >
+            <h1 className={styles.bgGreen}>1. Dados gerais da atividade</h1>
 
             <div className={styles.table}>
                 {/* nome/tipo/ods */}
@@ -1089,11 +1129,17 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='coordenador'
+                            list='listResponsaveis'
                             value={context.dataSaae?.dadosGerais?.coordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
+                        <datalist id='listResponsaveis'>
+                            <option value={context.dataUser.name || context.tester?.name}>
+                                {context.dataUser.name || context.tester?.name}
+                            </option>
+                        </datalist>
                     </div>
                     <div className={styles.collum}>
                         <h1>
@@ -1239,7 +1285,6 @@ export default function DadosGerais({readOnly}:Props){
                             value={context.dataSaae?.dadosGerais?.comoChegar || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="como chegar"
-                            className={`${styles.collum2}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1252,11 +1297,90 @@ export default function DadosGerais({readOnly}:Props){
                             value={context.dataSaae?.dadosGerais?.linkMapa || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="sugestão: procure por google Earth Web e crie uma pasta com todas as rotas"
-                            className={`${styles.collum2}`}
                             readOnly={readOnly}
                         />
                     </div>                    
                 </div>
+
+                {/* rotas do local */}
+                <div className={styles.line}>
+                    {!readOnly ?
+                        <div className={styles.collum} style={{flexDirection: 'row', padding: '6px'}}>
+                            <label htmlFor='rotas'>Criar rotas?</label>
+                            <FaPlus 
+                                className={styles.btnAddAtividade}
+                                onClick={()=>{
+                                    context.setShowModal(
+                                        <RouteMapComponent 
+                                            initialPosition={
+                                                context.dataSaae.dadosGerais.localInicio.coordenadas ?
+                                                {
+                                                    lat: context.dataSaae.dadosGerais.localInicio.coordenadas?.lat,
+                                                    lng: context.dataSaae.dadosGerais.localInicio.coordenadas?.long
+                                                } : undefined
+                                            }
+                                            handleRotas={handleRotas}
+                                        />
+                                    )
+                            }}/>
+                        </div>
+                    :null}
+                    <div className={styles.boxRotas} style={{padding: '6px'}}>
+                        {context.dataSaae?.dadosGerais?.rotas?.map((rota, index)=>(
+                            <div key={v4()}>
+                                <span style={{width: 80}}>
+                                    <b>Título:</b> 
+                                    {rota.title}
+                                </span>
+                                <span style={{width: 120}}>
+                                    <b>Descrição:</b> 
+                                    {rota.description}
+                                </span>
+                                <span><b>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
+                                <span 
+                                    className='cursorPointer' 
+                                    style={{textDecoration: 'underline', color: 'blue'}}
+                                    onClick={()=>{
+                                        context.setShowModal(
+                                            <RouteMapComponent 
+                                                readonly={true}
+                                                initialRota={rota}
+                                                initialPosition={
+                                                    rota ?
+                                                    {
+                                                        lat: rota.points[0].lat,
+                                                        lng: rota.points[0].lng
+                                                    } : undefined
+                                                }
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <b>Visualizar</b>
+                                </span>
+                                <FaTrash 
+                                    className={styles.btnRemAtividade}
+                                    onClick={()=>{
+                                        context.setDataSaae((prev)=>{
+                                            const newArray = prev.dadosGerais.rotas?.filter((_, i) => i !== index)
+                                            
+                                            const newData= {
+                                                ...prev.dadosGerais,
+                                                rotas: newArray
+                                            }
+                                            return{
+                                                ...prev,
+                                                dadosGerais: newData
+                                            }
+                                        })
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                {/* coordenadas do local */}
                 <div>
                     <h2>
                         Coordenadas do local Início (opcional)
@@ -1336,17 +1460,81 @@ export default function DadosGerais({readOnly}:Props){
                     <span>Programação da atividade</span>
                 </div>
 
+                {/* cabeçalho da programação */}
                 <div className={styles.line}>
                     <div className={`${styles.collum} ${styles.width120}`}>
                         <h1 >
                             Data
                         </h1>
-                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <span className={styles.borderBottom} key={v4()}>
-                                {dateFormat2(prog?.data)}
-                            </span>
-                        ))}
-                        {!readOnly ? 
+                    </div>
+                    <div className={`${styles.collum} ${styles.width100}`}>
+                        <h1>
+                            Hora
+                        </h1>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Duração (no formato hora)
+                        </h1>
+                    </div>
+                    <div className={`${styles.collum} ${styles.width260}`}>
+                        <h1>
+                            Descrição
+                        </h1>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Material Necessário
+                        </h1>
+                    </div>
+                    <div className={`${styles.collum} ${styles.width100}`}>
+                        <h1>
+                            Responsável
+                        </h1>
+                    </div> 
+                        <div className={`${styles.collum} ${styles.width100}`}>
+                            <h1>
+                                Add/Rem
+                            </h1>
+                        </div>
+                </div>
+
+                {/* dados adicionados à programação */}
+                {context.dataSaae?.dadosGerais?.programacao?.map((prog, idx)=>(
+                    <div key={v4()} className={styles.line}>
+                        <div className={`${styles.collum} ${styles.width120}`}>
+                            <span>{dateFormat2(prog?.data)}</span>
+                        </div>
+                        <div  className={`${styles.collum} ${styles.width100}`}>
+                            <span>{prog?.hora}</span>
+                        </div>
+                        <div className={styles.collum}>
+                            <span>{prog?.duracao}</span>
+                        </div>
+                        <div className={`${styles.collum} ${styles.width260}`}>
+                            <p>{prog?.descricao}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <p>{prog?.materialNecessario}</p>
+                        </div>
+                        <div className={`${styles.collum} ${styles.width100}`}>
+                            <p>{prog?.responsavel}</p>
+                        </div>
+                        {!readOnly ?
+                            <div className={`${styles.collum} ${styles.width100}`}>
+                                <FaMinus  
+                                    size={18} 
+                                    className={`${styles.btnRemAtividade}`}
+                                    onClick={()=>removeAtividade(idx+1)} 
+                                />
+                            </div>
+                        :null}
+                    </div>
+                ))}
+
+                {!readOnly ? 
+                    <div className={styles.line}>
+                        <div className={`${styles.collum} ${styles.width120}`}>
                             <input
                                 type='date'
                                 name='data'
@@ -1356,18 +1544,8 @@ export default function DadosGerais({readOnly}:Props){
                                 className={`${styles.collum} ${styles.width120}`}
                                 readOnly={readOnly}
                             />
-                        :null}
-                    </div>
-                    <div className={`${styles.collum} ${styles.width100}`}>
-                        <h1>
-                            Hora
-                        </h1>
-                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <span className={styles.borderBottom} key={v4()}>
-                                {prog?.hora}
-                            </span>
-                        ))}
-                        {!readOnly ? 
+                        </div>
+                        <div className={`${styles.collum} ${styles.width100}`}>
                             <input
                                 type='text'
                                 name='hora'
@@ -1376,18 +1554,8 @@ export default function DadosGerais({readOnly}:Props){
                                 className={`${styles.collum} ${styles.width100} ${styles.textAlingCenter}`}
                                 readOnly={readOnly}
                             />
-                        : null}
-                    </div>
-                    <div className={styles.collum}>
-                        <h1>
-                            Duração (em minutos)
-                        </h1>
-                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <span className={styles.borderBottom} key={v4()}>
-                                {prog?.duracao}
-                            </span>
-                        ))}
-                        {!readOnly ? 
+                        </div>
+                        <div className={styles.collum}>
                             <input
                                 type='text'
                                 name='duracao'
@@ -1396,18 +1564,8 @@ export default function DadosGerais({readOnly}:Props){
                                 className={`${styles.collum} ${styles.textAlingCenter}`}
                                 readOnly={readOnly}
                             />
-                        :null}
-                    </div>
-                    <div className={`${styles.collum} ${styles.width260}`}>
-                        <h1>
-                            Descrição
-                        </h1>
-                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <p className={styles.borderBottom} key={v4()}>
-                                {prog?.descricao}
-                            </p>
-                        ))}
-                        {!readOnly ?
+                        </div>
+                        <div className={`${styles.collum} ${styles.width260}`}>
                             <textarea
                                 name='descricao'
                                 value={currentProgramacao?.descricao || ''}
@@ -1415,18 +1573,8 @@ export default function DadosGerais({readOnly}:Props){
                                 className={`${styles.collum} ${styles.width260}`}
                                 readOnly={readOnly}
                             />
-                        :null}
-                    </div>
-                    <div className={styles.collum}>
-                        <h1>
-                            Material Necessário
-                        </h1>
-                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <p className={styles.borderBottom} key={v4()}>
-                                {prog?.materialNecessario}
-                            </p>
-                        ))}
-                        {!readOnly ? 
+                        </div>
+                        <div className={styles.collum}>
                             <input
                                 type='text'
                                 name='materialNecessario'
@@ -1435,18 +1583,8 @@ export default function DadosGerais({readOnly}:Props){
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
-                        :null}
-                    </div>
-                    <div className={`${styles.collum} ${styles.width100}`}>
-                        <h1>
-                            Responsável
-                        </h1>
-                        {context.dataSaae?.dadosGerais?.programacao?.map((prog)=>(
-                            <p className={styles.borderBottom} key={v4()}>
-                                {prog?.responsavel}
-                            </p>
-                        ))}
-                        {!readOnly ? 
+                        </div>
+                        <div className={`${styles.collum} ${styles.width100}`}>
                             <input
                                 type='text'
                                 name='responsavel'
@@ -1455,31 +1593,17 @@ export default function DadosGerais({readOnly}:Props){
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
-                        :null}
-                    </div>
-                    {!readOnly ? 
+                        </div>
                         <div className={`${styles.collum} ${styles.width100}`}>
-                            <h1>
-                                Add/Rem
-                            </h1>
-                            {context.dataSaae?.dadosGerais?.programacao?.map((prog, idx)=>(
-                                <FaMinus  
-                                    key={v4()}
-                                    size={18} 
-                                    className={styles.btnRemAtividade}
-                                    onClick={()=>removeAtividade(idx+1)} 
-                                    style={{height: 27}}                                   
-                                />
-                            ))}
                             <FaPlus
                                 size={18} 
                                 className={styles.btnAddAtividade}
                                 onClick={addAtividade}
-                                style={{height: 40}}  
+                                style={{height: 50}}
                             />
                         </div>
-                    :null}
-                </div>
+                    </div>
+                :null}
             </div>        
         </div>
     )

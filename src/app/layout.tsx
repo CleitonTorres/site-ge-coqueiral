@@ -57,7 +57,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             <meta name="google-site-verification" content="c7o2q50eN9ml30c4yZ6gkc4a0Qd0C0eQMvSGzbaESo8" />
         </head>
         <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`}/>
-        <Script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`}/>
+        <Script 
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}&libraries=geometry`}
+            async
+        />
 
         <body 
             className='flexCollTop' 

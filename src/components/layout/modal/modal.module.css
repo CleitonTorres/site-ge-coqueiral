@@ -7,7 +7,7 @@
     align-items: center;
     width: 100%;
     height: 100vh;
-    z-index: 1000;
+    z-index: 9999 !important;
     overflow-y: scroll;
 }
 .content {
@@ -20,6 +20,7 @@
     font-weight: 300;
     font-size: 18px;
     padding: 20px;
+    z-index: 10000 !important;
 }
 
 /* //custom */
@@ -45,7 +46,9 @@
 .hideScroll{
     overflow-y: hidden;
 }
-
+.paddin30{
+    padding: 30px;
+}
 .backgroundWhite{
     background-color: var(--white);
 }

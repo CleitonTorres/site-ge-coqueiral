@@ -16,7 +16,7 @@ import { FaMinus } from "react-icons/fa6";
 import { deleteDataStorage } from "@/scripts/indexedDB";
 import Modal from "@/components/layout/modal/modal";
 import axios from "axios";
-import { ProfileProps, SAAE } from "@/@types/types";
+import { SAAE } from "@/@types/types";
 import { userTest } from "@/components/data-training/data-training";
 import FormLogin from "@/components/form/formLogin/formLogin";
 
@@ -28,7 +28,6 @@ export default function Page(){
     const context = useContext(Context);
     const [currenteSession, setCurrentSession] = useState(0);
     const [showSaae, setShowSaae]= useState(false);
-    const [tester, setTester] = useState<ProfileProps>();
 
     //provisório
     const [dataForm, setData] = useState({} as {user: string, password: string});
@@ -56,7 +55,7 @@ export default function Page(){
         const verify = dataForm.user === userTest.user && dataForm.password === userTest.password;
 
         if(verify){
-            setTester(userTest);
+            context.setTester(userTest);
         }else{
             alert("Os dados de acesso não conferem!")
         }
@@ -103,7 +102,7 @@ export default function Page(){
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>SAAE</h1>
-                {tester || Object.keys(context.dataUser).length > 0 ?
+                {context.tester || Object.keys(context.dataUser).length > 0 ?
                     <div className={`${styles.conteiner} ${styles.box}`}>
                     <div className={`${styles.subConteiner} `}>
                         <h4>Rascunhos de SAAEs (não enviadas)</h4>
@@ -183,18 +182,16 @@ export default function Page(){
                 }
             
             {context.saaeEdit && 
-                (tester || Object.keys(context.dataUser).length > 0) && 
-                !['enviada', 'aprovada'].includes(context.dataSaae.status)?
+                (context.tester || Object.keys(context.dataUser).length > 0) ?
                 <div className={styles.conteiner}>
-                {currenteSession === 0 ? <DadosGerais readOnly={false}/> : null}
-                {currenteSession === 1 ? <InfosPreliminares readOnly={false}/> : null}
-                {currenteSession === 2 ? <InventarioSaae readOnly={false}/> : null}
-                {currenteSession === 3 ? <MatrizRisco readOnly={false}/> : null}
-                {currenteSession === 4 ? <PlanoEmergencia readOnly={false}/> : null}
-                {currenteSession === 5 ? <FotosInspecao readOnly={false}/> : null}
-                {currenteSession === 6 ? <SectionDocumentos readOnly={false}/> : null}
-                {currenteSession === 7 ? <SaaeResumo /> : null}
-
+                    {currenteSession === 0 ? <DadosGerais readOnly={false}/> : null}
+                    {currenteSession === 1 ? <InfosPreliminares readOnly={false}/> : null}
+                    {currenteSession === 2 ? <InventarioSaae readOnly={false}/> : null}
+                    {currenteSession === 3 ? <MatrizRisco readOnly={false}/> : null}
+                    {currenteSession === 4 ? <PlanoEmergencia readOnly={false}/> : null}
+                    {currenteSession === 5 ? <FotosInspecao readOnly={false}/> : null}
+                    {currenteSession === 6 ? <SectionDocumentos readOnly={false}/> : null}
+                    {currenteSession === 7 ? <SaaeResumo /> : null}
                 <div className={styles.boxButtom}>
                     <IoIosArrowBack 
                         size={40}
@@ -309,6 +306,7 @@ export default function Page(){
                             window.scrollTo(0, 0);
                         }}
                     />
+                
                 </div>                
                 </div>
             :null}
@@ -319,7 +317,7 @@ export default function Page(){
                         context.setSaaeEdit(undefined);
                         setShowSaae(false);
                     }} className={styles.btnClose}>
-                        <span>x</span>
+                        x
                     </div>
                     <SaaeResumo hiddeButton={true}/>
                 </Modal>

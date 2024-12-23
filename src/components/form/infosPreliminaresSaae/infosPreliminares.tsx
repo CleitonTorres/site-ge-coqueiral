@@ -104,8 +104,8 @@ export default function InfosPreliminares ({readOnly}:Props){
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h5>Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286</h5>
-            <div className={styles.boxHead}>
+            <div className={`${styles.boxHead} ${styles.bgGreen}`}>
+                <h5>Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286</h5>
                 <h1>2. Informações mínimas aos participantes do evento/atividade </h1> 
                 <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
             </div>

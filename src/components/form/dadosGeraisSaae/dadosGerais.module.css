@@ -1,8 +1,6 @@
 .conteiner{
     display: flex;
     flex-direction: column;
-    width: 100vw;
-    max-width: 1200px;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
 }
@@ -45,8 +43,8 @@
     text-align: justify;
     border: 1px solid;
     margin: 3px;
+    padding: 2px;
 }
-
 .collum svg{
     vertical-align: middle;
 }
@@ -60,11 +58,44 @@
     text-align: justify;
     border: 1px solid;
     margin: 3px;
+    padding: 2px;
 }
 .collum3{
     width: auto;
     min-width: 200px;
     max-width: 420px;
+}
+.boxRotas{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 380px;
+    font-size: 12px;
+    text-align: justify;
+    border: 1px solid;
+    margin: 3px;
+}
+.boxRotas div{
+    width: 100%;
+    min-height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 4px;
+}
+.boxRotas span {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    font-weight: 300;
+    text-align: left;
+    max-width: 120px;
+    height: 100%;
+    border: 1px solid var(--verde);
+    margin: 2px;
+    padding: 3px;
 }
 .line textarea, .line select, .line input{
     padding: 6px;
@@ -75,14 +106,37 @@
     resize: vertical;
     font-weight: 300;
 }
-
+.closeBtn{
+    position: absolute; 
+    right: 40px; 
+    top: 10px;
+    width: 20px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 50%;
+    z-index: 1000;
+}
+.closeBtn:hover{
+    cursor: pointer;
+    background-color: var(--verde);
+}
+.btnAddAtividade{
+    margin-left: 5px;
+}
 .btnAddAtividade:hover, .btnRemAtividade:hover{
     cursor: pointer;
 }
 .btnAddAtividade:active, .btnRemAtividade:active{
     padding: 4px;
 }
-
+.borderGreen{
+    border: 4px solid var(--verde);
+}
+.bgGreen{
+    background-color: var(--verde);
+    margin-top: 20px;
+    padding-left: 10px;
+}
 .btnRemAtividade path{
     color: red;
 }
@@ -90,8 +144,12 @@
     color: blue;
 }
 .borderBottom{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     border-bottom: 1px solid var(--dark);
     line-height: 27px;
+    height: 100%;
     min-height: 27px;
     padding: 6px;
     text-align: center !important;
@@ -151,6 +209,9 @@
     text-wrap: nowrap;
     margin-right: 20px;
     margin-left: 2px;
+}
+.noScroll {
+    overflow: hidden;
 }
 
 @keyframes fadeIn {

@@ -2,10 +2,17 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100vw;
     max-width: 1232px;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
+}
+.boxHead{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    min-height: 50px;
+    padding-left: 10px;
 }
 .section{
     display: flex;

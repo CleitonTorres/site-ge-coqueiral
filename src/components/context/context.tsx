@@ -4,6 +4,8 @@ import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
 import { createDb, getAllDataStorage, putNewData } from "@/scripts/indexedDB";
 import axios from "axios";
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
+import Modal from "../layout/modal/modal";
+import LoadIcon from "../layout/loadIcon/loadIcon";
 
 type PropsContext ={
   dataNews: DataNews[],
@@ -18,7 +20,10 @@ type PropsContext ={
   saaeEdit: number | string | undefined,
   sendSaae: (saae:SAAE)=>void,
   listSaaes: SAAE[],
-  setListSaaes: Dispatch<SetStateAction<SAAE[]>>
+  setListSaaes: Dispatch<SetStateAction<SAAE[]>>,
+  setTester: Dispatch<SetStateAction<ProfileProps | undefined>>,
+  tester: ProfileProps | undefined,
+  setShowModal: Dispatch<SetStateAction<JSX.Element | null>>,
 }
 
 
@@ -38,6 +43,7 @@ type PropsContext ={
  * @param {(saae:SAAE)=>void} sendSaae - envia a SAAE em edição para a Região e o DB.
  * @param {SAAE[]} listSaaes - lista de SAAEs enviadas para a Região.
  * @param {Dispatch<SetStateAction<SAAE[]>>} setListSaaes - acessa o estado da lista de SAAEs enviadas para a Região.
+ * @param {Dispatch<SetStateAction<JSX.Element | null>>} setShowModal - acessa o estado do modal de carregamento.
  * @returns
 */
 export const Context = createContext( {} as PropsContext );
@@ -45,6 +51,7 @@ export const Context = createContext( {} as PropsContext );
 export default function Provider({children}:{children:ReactNode}){
     const [dataNews, setDataNewsHome] = useState<DataNews[]>([]);
     const [dataUser, setDataUser] = useState({} as ProfileProps);
+    const [tester, setTester] = useState<ProfileProps>();
 
     //SAAEs em edição
     const [dataSaae, setDataSaae] = useState({} as SAAE);
@@ -56,6 +63,8 @@ export default function Provider({children}:{children:ReactNode}){
     const [dataStorage, setDataStorage] = useState<DataStorage[]>([]);
     //identificação da SAAE salva em rascunhos no armazenamento local.
     const [saaeEdit, setSaaeEdit] = useState<number | string | undefined>();
+
+    const [showModal, setShowModal] = useState<JSX.Element | null>(null);
 
     const getNews = async()=>{
       if(dataNews.length > 0) return;
@@ -153,6 +162,8 @@ export default function Provider({children}:{children:ReactNode}){
     const sendSaae= async(data:SAAE)=>{
       if(!data.dadosGerais || !data.planoEmergencia) return;
 
+      setShowModal(<LoadIcon showHide/>);
+
       const formData = new FormData();
       formData.append('bucketName', 'site-coqueiral-saae');
       formData.append('destinationFolder', 'saaes');
@@ -213,10 +224,11 @@ export default function Provider({children}:{children:ReactNode}){
         const result = response.data as {message: string, insertId:string};
         console.log(result);
 
-        setListSaaes((prev)=> [...prev, {...data, _id: result.insertId}]);
+        setListSaaes((prev)=> [...prev, {...data, _id: result.insertId, status: 'enviada'}]);
         // setDataSaae({} as SAAE);
         // deleteDataStorage('saae', saaeEdit!)
         setSaaeEdit(undefined)
+        setShowModal(null);
       }catch(error){
         if (axios.isAxiosError(error)) {
           // Se o erro for gerado pelo Axios
@@ -231,6 +243,7 @@ export default function Provider({children}:{children:ReactNode}){
           // Se for outro tipo de erro
           console.error("Erro inesperado:", error);
         }
+        setShowModal(null);
         alert("Ocorreu um erro ao tentar enviar sua SAAE")
       }
     }
@@ -295,9 +308,14 @@ export default function Provider({children}:{children:ReactNode}){
 
     return(
         <Context.Provider value={{
-            dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, sendSaae,
-            recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes}}>
+            dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, sendSaae, setTester, tester,
+            recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes, setShowModal}}>
             {children}
+            {showModal ?
+              <Modal customClass={['alingCenter', 'backgroundWhite']}>
+                  {showModal}
+              </Modal>
+            :null}
         </Context.Provider>
     )
 }

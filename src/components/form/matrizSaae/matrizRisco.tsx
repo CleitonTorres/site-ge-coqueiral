@@ -11,8 +11,10 @@ export default function MatrizRisco ({readOnly}:Props){
     
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h6>item 9.2 da Política Nacional de Gestão de Risco</h6>
-            <h2>4. Matriz de risco</h2>
+            <div className={`${styles.boxHead} ${styles.bgGreen}`}>
+                <h6>item 9.2 da Política Nacional de Gestão de Risco</h6>
+                <h1>4. Matriz de risco</h1>
+            </div>
             <h3>Matriz de Probabilidade x Consequência</h3>
             
             <div className={`${styles.resultado}`}>
@@ -237,21 +239,25 @@ export default function MatrizRisco ({readOnly}:Props){
                     Catastrófica
                 </span>
             </div>
+            
+            <p className={styles.paragraph}>
+                <b>Obs.:</b> as orientações abaixo são orientações mínimas para norte do preenchimento do Plano de Ação, o <b>nível de risco</b> deve ser efetivamente avaliado no Inventário de Risco de acordo com as nuances da 1. atividade (esforço físico, esforço mental), 2. do local (fauna e flora), 3. dos participantes (alergias e condicionamento físico), 4. da mobilidade (local de dificil acesso) e 5. das condições de clima e histórico de incidentes do local. 
+            </p>
 
             <p className={styles.paragraph}>
-                Nível <b style={{color: 'white', backgroundColor: 'green', padding: '0 3px'}}>Verde</b> são plenamente aceitaveis, não dependem de autorização da Região Escoteira, mas sim do Presidente da UEL. São atividade de cunho cívico, comunitário local, ambiental local, campanhas financeiras locais, ou de simples reuniões como palestras ou divulgação do movimento escoteiro. Mas precisa preencher o Plano de Emergência do item 1 ao 3. 
+                Nível <b style={{color: 'white', backgroundColor: 'green', padding: '0 3px'}}>Verde</b> são plenamente aceitaveis, não dependem de autorização da Região Escoteira, mas sim do Presidente da UEL. São atividade de cunho cívico, comunitário local, ambiental local, campanhas financeiras locais, ou de simples reuniões como palestras ou divulgação do movimento escoteiro. 
             </p>
             <br />
             <p className={styles.paragraph}>
-                Nível <b style={{ backgroundColor: 'yellow', padding: '0 3px'}}>Amarelo</b> são aceitáveis desde que as colunas Controle Operacional e Ações Mitigadoras estejam preenchida de forma coerente. E os itens de 1 a 4 do Plano de Emergência. Dependem de autorização da Região Escoteira.
+                Nível <b style={{ backgroundColor: 'yellow', padding: '0 3px'}}>Amarelo</b> são atividades de grupo como acampamentos, caminhadas eventos anuais como MUTECO, MUTCON, Educação Escoteira etc. Que não envolvam grupos convidados ou atividade de alto risco como rapel, escalada, atividades aquáticas. São aceitáveis desde que as colunas Controle Operacional e Ações Mitigadoras estejam preenchida de forma coerente. Dependem de autorização da Região Escoteira.
             </p>
             <br />
             <p className={styles.paragraph}>
-                Nível <b style={{backgroundColor: 'orange', padding: '0 3px'}}>Laranja</b> são aceitaveis apenas se as colunas  <b>Controle Operacional</b> e <b>Ações Mitigadoras</b>  estiverem preenchidas de forma coerente. Incluindo a presença de um profissional da saúde/salvamento/especialista durante a atividade, quando aplicavel. E os itens de 1 a 6 do Plano de Emergência preenchidos. Dependem de autorização da Região Escoteira.
+                Nível <b style={{backgroundColor: 'orange', padding: '0 3px'}}>Laranja</b> são atividades como acampamentos intergrupos, ou de grupo ou patrulha que envolvam atividades de carater mais esportivo como enduros/caminhas longas, escalaminhadas, montanhismo, travessias, jornadas, bivaques, acampamento volante etc. São aceitaveis apenas se as colunas  <b>Controle Operacional</b> e <b>Ações Mitigadoras</b>  estiverem preenchidas de forma coerente. Em casos de acampamentos intergrupos inclui necessidade da instalação de um espaço de escuta e enfermaria. Dependem de autorização da Região Escoteira.
             </p>
             <br />
             <p className={styles.paragraph}>
-                Nível <b style={{backgroundColor: 'red', padding: '0 3px'}}>Vermelho</b> são toleraveis, após análise da documentação pela Região Escoteira, sendo obrigatória a presença de profissionais da saúde/salvamento/especialista e o Plano de Emergencia completamente preenchido incluindo veículo e formas de comunicação para emergência. O Local de pronto socorro mais próximo não pode estar a mais de 50 KM de distância do local da atividade.
+                Nível <b style={{backgroundColor: 'red', padding: '0 3px'}}>Vermelho</b> São atividade complexas com mais de 2 dois dias de duração, ou que incluam atividade de carater radical (rapel, escalada, rafting, remada, corrida, excurções, natação) ou exposição a intempéries do tempo ou ameaças de animais selvagens (acampamentos, jornadas e trilhas em floresta nativa). São toleraveis, após análise da documentação pela Região Escoteira, sendo obrigatória a presença de profissionais da saúde/salvamento/especialista e o Plano de Emergencia completamente preenchido incluindo veículo e formas de comunicação para emergência. O Local de pronto socorro mais próximo não pode estar a mais de 50 KM de distância do local da atividade.
             </p>
         </div>
     )

@@ -120,7 +120,14 @@ export interface DadosGeraisSaae {
     nivelFormacaoSupervisor?: string,
     comoChegar: string,
     linkMapa: string,
+    rotas?:Rota[],
     programacao: ProgramacaoAtividade[]
+}
+export interface Rota {
+    title: string,
+    description: string,
+    distance: number,
+    points: { lat: number, lng: number }[]
 }
 export interface ProgramacaoAtividade {
     data: Date,
