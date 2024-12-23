@@ -90,13 +90,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         id='drop01'
                                         style={{display: activeMenu === 'drop01' ? 'flex' : 'none'}}
                                     >
-                                        <li className='link'>
+                                        <li> 
                                             <a href='https://www.escoteiros.org.br/especialidades/' target='_blank'>Especialidades</a>
                                         </li>
-                                        <li className='link'>
+                                        <li>
                                             <a href='/progressao' target='_self'>Progressão</a>
                                         </li>
-                                        <li className='link'>
+                                        <li>
                                             <a href='/tribo-da-terra' target='_self'>Tribo da Terra</a>
                                         </li>
                                     </ul>
@@ -111,16 +111,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         id='drop02'
                                         style={{display: activeMenu === 'drop02' ? 'flex' : 'none'}}
                                     >
-                                        <li className='link'>
+                                        <li>
                                             <a href="/ciclo-vida">Ciclo de vida</a>
                                         </li>
-                                        <li className='link'>
+                                        <li>
                                             <a href="/campo-escola">Campo Escola Virtual</a>
                                         </li>
-                                        <li className='link'>
+                                        <li>
                                             <a href="/administrativo">Acesso administrativo</a>
                                         </li>
-                                        <li className='link'>
+                                        <li>
                                             <a href="/administrativo/area-restrita/saae">SAAE</a>
                                         </li>
                                     </ul>
@@ -456,16 +456,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <b>Voluntário</b>
                                 </span>
                                 <ul className='footerMenu'>
-                                    <li className='link textColorWhite'>
+                                    <li className='textColorWhite'>
                                         <a href="/ciclo-vida">Ciclo de vida</a>
                                     </li>
-                                    <li className='link textColorWhite'>
+                                    <li className='textColorWhite'>
                                         <a href="/campo-escola">Campo Escola Virtual</a>
                                     </li>
-                                    <li className='link textColorWhite'>
+                                    <li className='textColorWhite'>
                                         <a href="/administrativo">Acesso administrativo</a>
                                     </li>
-                                    <li className='link textColorWhite'>
+                                    <li className='textColorWhite'>
                                         <a href="/administrativo/area-restrita/saae">SAAE</a>
                                     </li>
                                 </ul>
