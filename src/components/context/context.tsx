@@ -309,13 +309,14 @@ export default function Provider({children}:{children:ReactNode}){
     return(
         <Context.Provider value={{
             dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, sendSaae, setTester, tester,
-            recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes, setShowModal}}>
-            {children}
-            {showModal ?
-              <Modal customClass={['alingCenter', 'backgroundWhite']}>
-                  {showModal}
-              </Modal>
-            :null}
+            recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes, setShowModal,
+        }}>
+          {children}
+          {showModal ?
+            <Modal customClass={['alingCenter', 'backgroundWhite']}>
+                {showModal}
+            </Modal>
+          :null}
         </Context.Provider>
     )
 }

@@ -319,6 +319,13 @@
   cursor: pointer;
 }
 
+@media print{
+  .conteinerAreaAssociado, .menu, .boxIconMenu, .boxSubItens, .dropItemMenuBoxFooter, .footer,
+  .subItemList, .titleItem, .iconClose, #bottons, .linhaDoeAgora, .footerMenu, .menuFooter{
+    display: none !important;
+  }
+}
+
 @keyframes show {
   0%{
       width: 0px;

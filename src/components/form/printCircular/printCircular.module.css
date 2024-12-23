@@ -1,0 +1,67 @@
+.conteiner{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.conteiner svg path{
+    fill: #007bff;
+    transition: 0.5s;
+}
+.conteiner svg:hover{
+    scale: 1.1;
+}
+.conteiner h1{
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.conteiner p, .conteiner div p{
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.conteiner div{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 1rem;
+
+}
+.conteiner div h2{
+    font-size: 1rem;
+    font-weight: 400;
+    margin-right: 10px;
+}
+.conteiner button{
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+@media print{
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    .conteiner svg {
+        display: none;
+    }
+    .conteiner h1{
+        font-size: 14px;
+    }
+    .conteiner p, .conteiner div p{
+        font-size: 12px;
+        text-align: justify;
+    }
+    .conteiner div{
+        padding-left: 50px;
+    }
+}

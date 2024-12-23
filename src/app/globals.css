@@ -172,7 +172,10 @@ body {
   -moz-box-shadow: 2px 6px 14px 0px rgba(0,0,0,0.75);
   box-shadow: 2px 6px 14px 0px rgba(0,0,0,0.75);
 }
-
+.link{
+  cursor: pointer;
+  text-decoration: underline var(--blue);
+}
 @keyframes slide {
   0%{
     width: 0;
@@ -188,5 +191,10 @@ body {
   }
   .destaquesImg{
     width: 96%;
+  }
+}
+@media print{
+  body{
+    display: none;
   }
 }

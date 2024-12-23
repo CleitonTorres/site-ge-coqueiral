@@ -235,7 +235,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
     },[initialRota, mapRef?.current]);
 
     return (
-        <div style={{ width: "100%", marginTop: "30px", zIndex: 10, padding: 20 }}>
+        <div className={styles.conteiner}>
             <div 
                 onClick={()=>{
                     context.setShowModal(null)
@@ -270,7 +270,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 />
             </div>
             <p>Distância total: {formRota.distance?.toFixed(2)} km</p>
-            <FaSave 
+            {!readonly && <FaSave 
                 onClick={()=>{
                     if(handleRotas)
                         handleRotas(formRota);
@@ -278,14 +278,9 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                     } 
                 }
                 size={20}
-                color="blue"
-                style={{ 
-                    position: "absolute",
-                    right: 80,
-                    top: 10,
-                    cursor: "pointer", 
-                }}
-            />
+                fill="blue"
+                title="Salvar rota"
+            />}
             <div ref={mapRef} style={{ height: "500px", width: "100%" }}></div>
         </div>
     );

@@ -1325,7 +1325,7 @@ export default function DadosGerais({readOnly}:Props){
                             }}/>
                         </div>
                     :null}
-                    <div className={styles.boxRotas} style={{padding: '6px'}}>
+                    {context.dataSaae?.dadosGerais?.rotas && <div className={styles.boxRotas} style={{padding: '6px'}}>
                         {context.dataSaae?.dadosGerais?.rotas?.map((rota, index)=>(
                             <div key={v4()}>
                                 <span style={{width: 80}}>
@@ -1377,7 +1377,7 @@ export default function DadosGerais({readOnly}:Props){
                                 />
                             </div>
                         ))}
-                    </div>
+                    </div>}
                 </div>
                 
                 {/* coordenadas do local */}

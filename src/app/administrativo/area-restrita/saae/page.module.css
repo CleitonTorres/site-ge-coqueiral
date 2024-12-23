@@ -140,3 +140,9 @@
     cursor: pointer;
     background-color: var(--verde);
 }
+
+@media print{
+    .conteiner, .title{
+      display: none !important;
+    }
+}

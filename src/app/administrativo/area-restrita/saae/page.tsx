@@ -312,14 +312,11 @@ export default function Page(){
             :null}
 
             {showSaae ?
-                <Modal customClass={['backgroundWhite']}>
-                    <div onClick={()=>{
-                        context.setSaaeEdit(undefined);
-                        setShowSaae(false);
-                    }} className={styles.btnClose}>
-                        x
-                    </div>
-                    <SaaeResumo hiddeButton={true}/>
+                <Modal customClass={['backgroundWhite']} actionClose={()=>{
+                    context.setSaaeEdit(undefined);
+                    setShowSaae(false);
+                }}> 
+                    <SaaeResumo hiddeButton={true} />
                 </Modal>
             :null}
         </Section>

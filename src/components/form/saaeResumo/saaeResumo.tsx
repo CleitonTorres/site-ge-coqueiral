@@ -10,6 +10,7 @@ import SectionDocumentos from '../sectionDocumentos/documentos';
 import Botton from '../botton/botton';
 import { useContext } from 'react';
 import { Context } from '@/components/context/context';
+import PrintCircular from '../printCircular/printCircular';
 
 type Props= {
     hiddeButton?: boolean
@@ -23,6 +24,14 @@ export default function SaaeResumo ({hiddeButton}:Props){
     return(
         <div className={styles.conteiner}>
             <h2>8. Resumo da sua SAAE</h2>
+            <span 
+                className='link'
+                onClick={()=>{
+                    context.setShowModal(
+                        <PrintCircular dataSaae={context.dataSaae}
+                    />);
+                }}
+            > imprimir circular preliminar</span>
             <DadosGerais readOnly/>
             <InfosPreliminares readOnly/>
             <InventarioSaae readOnly/>
@@ -34,6 +43,9 @@ export default function SaaeResumo ({hiddeButton}:Props){
             <div className={styles.subConteiner}>
                 <Botton title='Preparar e Enviar' action={()=>{
                     context.sendSaae(context.dataSaae);
+                    context.setShowModal(
+                    <PrintCircular dataSaae={context.dataSaae}
+                />);
                 }}/>
             </div>
             :null}
