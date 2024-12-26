@@ -1,0 +1,119 @@
+.conteiner {
+    display: flex;
+    width: 100vw;
+    max-width: 1200px;
+    flex-wrap: wrap;
+
+}
+.subConteiner{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--blue);
+    margin: 6px;
+    padding: 6px;
+    max-width: 300px;
+    overflow-y: scroll;
+}
+.subConteinerRegional{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    border: 2px solid var(--blue);
+    margin: 6px;
+    padding: 6px;
+    overflow-y: scroll;
+}
+.title{
+    margin-top: 30px;
+}
+.header{
+    position: relative;
+    display: flex;
+    width: auto;
+    justify-content: space-between;
+    align-items: center;
+}
+.collum01{
+    width: 205px;
+    padding: 3px;
+}
+.collum02{
+    width: 140px;
+    padding: 3px;
+}
+.collum03{
+    width: 100px;
+    padding: 3px;
+}
+.boxInput, .header{
+    position: relative;
+    display: flex;
+    width: auto;
+    justify-content: space-between;
+    align-items: center;
+}
+.boxInput label, .header h4{
+    line-height: 20px;
+    padding: 2px;
+}
+.boxInput:hover{
+    cursor: pointer;
+    background-color: var(--blue);
+    color: var(--white);
+}
+.boxInput:hover label{
+    color: var(--white);
+}
+.boxInput input {
+    margin: 6px 30px;
+}
+.boxInput input[type="radio"]{
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 50%; /* Deixa redondo */
+    outline: none;
+    cursor: pointer;
+    background-color: #f0f0f0; /* Cor de fundo padrão */
+    transition: background-color 0.3s ease;
+}
+.boxInput input[type="radio"]:checked {
+    background-color: var(--verde); /* Cor do fundo quando selecionado */
+    border-color: var(--verde); /* Cor da borda */
+}
+.subConteinerRegional .boxInput:hover select{
+    color: var(--white);
+}
+.btnRemAtividade{
+    position: absolute;
+    right: 3px;
+}
+.btnRemAtividade:hover{
+    cursor: pointer;
+}
+.btnRemAtividade:active{
+    padding: 4px;
+}
+.btnRemAtividade path{
+    color: red;
+}
+.cursorPointer:hover{
+    cursor: pointer;
+    text-decoration: underline var(--white);
+}
+.obs{
+    width: 300px;
+    max-width: 586px ;
+    height: 150px;
+    text-wrap: wrap;
+    border: none;
+    border-radius: 20px;
+    padding: 6px;
+    resize: horizontal;
+}
+@media print{
+    .conteiner, .title{
+      display: none !important;
+    }
+}

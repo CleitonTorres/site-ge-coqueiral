@@ -1,18 +1,33 @@
 import { DataBaseSaae, ProfileProps } from "@/@types/types"
 
-export const userTest = {
-    _id: '001',
-    cargo: 'Tester',
-    email: 'emailtester@gmail.com',
-    name: 'Tester Gusmão',
-    nivelAcess: 'Tester',
-    nivelFormacao: 'Preliminar',
-    password: `${process.env.NEXT_PUBLIC_PASSWORD}`,
-    ramo: 'Sênior',
-    registro: '0019',
-    tel: '27 6563-2522',
-    user: 'tester'
-} as ProfileProps;
+export const userTest = [
+    {
+        _id: '001',
+        cargo: 'Tester',
+        email: 'emailtester@gmail.com',
+        name: 'Tester Gusmão',
+        nivelAcess: 'Tester',
+        nivelFormacao: 'Preliminar',
+        password: `${process.env.NEXT_PUBLIC_PASSWORD}`,
+        ramo: 'Sênior',
+        registro: '0019',
+        tel: '27 6563-2522',
+        user: 'tester'
+    } as ProfileProps,
+    {
+        _id: '002',
+        cargo: 'Coordenador',
+        email: 'emailtester@gmail.com',
+        name: 'Tester Gusmão',
+        nivelAcess: 'Regional-admin',
+        nivelFormacao: 'Preliminar',
+        password: `${process.env.NEXT_PUBLIC_PASSWORD}`,
+        ramo: 'Diretoria',
+        registro: '0019',
+        tel: '27 6563-2522',
+        user: 'tester-admin'
+    } as ProfileProps
+];
 
 interface DataTypeIA {
     input: string,

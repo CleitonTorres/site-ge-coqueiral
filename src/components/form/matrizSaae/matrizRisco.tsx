@@ -253,7 +253,7 @@ export default function MatrizRisco ({readOnly}:Props){
             </p>
             <br />
             <p className={styles.paragraph}>
-                Nível <b style={{backgroundColor: 'orange', padding: '0 3px'}}>Laranja</b> são atividades como acampamentos intergrupos, ou de grupo ou patrulha que envolvam atividades de carater mais esportivo como enduros/caminhas longas, escalaminhadas, montanhismo, travessias, jornadas, bivaques, acampamento volante etc. São aceitaveis apenas se as colunas  <b>Controle Operacional</b> e <b>Ações Mitigadoras</b>  estiverem preenchidas de forma coerente. Em casos de acampamentos intergrupos inclui necessidade da instalação de um espaço de escuta e enfermaria. Dependem de autorização da Região Escoteira.
+                Nível <b style={{backgroundColor: 'orange', padding: '0 3px'}}>Laranja</b> são atividades como acampamentos intergrupos, ou de grupo ou patrulha que envolvam atividades de carater mais esportivo como enduros/caminhas longas, escalaminhadas, montanhismo, travessias, jornadas, bivaques, acampamento volante etc. São aceitaveis apenas se as colunas  <b>Controle Operacional</b> e <b>Ações Mitigadoras</b>  estiverem preenchidas de forma coerente. Em casos de acampamentos intergrupos inclui a necessidade da instalação de um espaço de escuta e enfermaria. Dependem de autorização da Região Escoteira.
             </p>
             <br />
             <p className={styles.paragraph}>

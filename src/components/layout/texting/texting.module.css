@@ -34,6 +34,17 @@
     animation: slidOut 0.2s linear forwards;
 }
 
+.center{
+    right: 50%;
+}
+.center.slideIn{
+    animation: slideInCenter 0.2s linear forwards;
+
+}
+.center.slideOut{
+    animation: slidOutCenter 0.2s linear forwards;
+}
+
 @keyframes blink {
     0% { opacity: 1; }
     100% { opacity: 0; }
@@ -54,6 +65,21 @@
         height: auto;
     }
 }
+@keyframes slideInCenter {
+    0%{
+        right: 36.7%;
+        top: 300px;
+        width: 10px;
+        height: 10px;
+    }
+    100%{
+        right: 42%;
+        top: 230px;
+        width: auto;
+        max-width: 200px;
+        height: auto;
+    }
+}
 
 @keyframes slidOut {
     0%{
@@ -64,6 +90,19 @@
     100%{
         right: 170px;
         top: 210px;
+        width: 10px;
+        height: 10px;
+    }
+}
+@keyframes slidOutCenter {
+    0%{
+        right: 40%;
+        top: 230px;
+        width: 200px;
+    }
+    100%{
+        right: 42%;
+        top: 300px;
         width: 10px;
         height: 10px;
     }

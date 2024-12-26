@@ -4,10 +4,9 @@ import axios from 'axios';
 import { InventarioSaaeType } from '@/@types/types';
 import styles from './inputIA.module.css';
 import { FaPlus, FaMinus } from "react-icons/fa";
-import Image from 'next/image';
 import { Context } from '@/components/context/context';
-import Texting from '@/components/layout/texting/texting';
 import { setColor } from '@/scripts/globais';
+import Mathias from '@/components/layout/mathias/mathias';
 
 type Props = {
     readOnly: boolean
@@ -255,17 +254,9 @@ const InventarioSaae = ({readOnly}:Props) => {
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>
-                {useIA ?
-                    <div className={styles.boxAvatar}> 
-                        <Image 
-                            alt='assistente Mathias'
-                            width={90}
-                            height={90}
-                            src={'/icons/assistente-mathias.png'}
-                        />
-                        <Texting text={commentIA} speed={100}/>
-                    </div>
-                :null}
+                
+                <Mathias text={commentIA} show={useIA}/>
+                
                 <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
                 <h1>3. Inventário de Riscos:</h1>
             </div>

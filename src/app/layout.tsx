@@ -63,7 +63,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         />
 
         <body 
-            className='flexCollTop' 
+            className='flexCollSpace' 
             style={{ position: 'relative', minHeight: '100vh' }}
         >
             <Provider>

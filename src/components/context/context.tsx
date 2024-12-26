@@ -23,7 +23,7 @@ type PropsContext ={
   setListSaaes: Dispatch<SetStateAction<SAAE[]>>,
   setTester: Dispatch<SetStateAction<ProfileProps | undefined>>,
   tester: ProfileProps | undefined,
-  setShowModal: Dispatch<SetStateAction<JSX.Element | null>>,
+  setShowModal: Dispatch<SetStateAction<{element: JSX.Element, styles?: string[]} | null>>,
 }
 
 
@@ -43,7 +43,7 @@ type PropsContext ={
  * @param {(saae:SAAE)=>void} sendSaae - envia a SAAE em edição para a Região e o DB.
  * @param {SAAE[]} listSaaes - lista de SAAEs enviadas para a Região.
  * @param {Dispatch<SetStateAction<SAAE[]>>} setListSaaes - acessa o estado da lista de SAAEs enviadas para a Região.
- * @param {Dispatch<SetStateAction<JSX.Element | null>>} setShowModal - acessa o estado do modal de carregamento.
+ * @param {Dispatch<SetStateAction<{element: JSX.Element, styles?: string[]} | null>>} setShowModal - acessa o estado do modal de carregamento.
  * @returns
 */
 export const Context = createContext( {} as PropsContext );
@@ -64,7 +64,7 @@ export default function Provider({children}:{children:ReactNode}){
     //identificação da SAAE salva em rascunhos no armazenamento local.
     const [saaeEdit, setSaaeEdit] = useState<number | string | undefined>();
 
-    const [showModal, setShowModal] = useState<JSX.Element | null>(null);
+    const [showModal, setShowModal] = useState<{element: JSX.Element, styles?: string[]} | null>(null);
 
     const getNews = async()=>{
       if(dataNews.length > 0) return;
@@ -162,7 +162,7 @@ export default function Provider({children}:{children:ReactNode}){
     const sendSaae= async(data:SAAE)=>{
       if(!data.dadosGerais || !data.planoEmergencia) return;
 
-      setShowModal(<LoadIcon showHide/>);
+      setShowModal({element: <LoadIcon showHide/>});
 
       const formData = new FormData();
       formData.append('bucketName', 'site-coqueiral-saae');
@@ -283,16 +283,11 @@ export default function Provider({children}:{children:ReactNode}){
       }else if(typeof saaeEdit === 'number' && saaeEdit === 0){
         updateStorage();
       }else if(typeof saaeEdit === 'string'){
-        setDataSaae((prev)=>{
+        setDataSaae(()=>{
           const newData = listSaaes.find(data=> data._id === saaeEdit);
           console.log("encontrou", newData);
-
-          //se a SAAE estiver com algum desses status ela não será habilitada para edição.
-          if(!newData || !['enviada', 'aprovada'].includes(`${newData?.status}`)){
-            return prev;
-          }else{
-            return newData
-          }
+          
+          return newData ? newData : {} as SAAE;
         });
       }
     },[saaeEdit]);
@@ -306,6 +301,9 @@ export default function Provider({children}:{children:ReactNode}){
       }
     },[dataSaae]);   
 
+    useEffect(()=>{
+      console.log('lista  de SAAEs', listSaaes)
+    },[listSaaes])
     return(
         <Context.Provider value={{
             dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, sendSaae, setTester, tester,
@@ -313,8 +311,8 @@ export default function Provider({children}:{children:ReactNode}){
         }}>
           {children}
           {showModal ?
-            <Modal customClass={['alingCenter', 'backgroundWhite']}>
-                {showModal}
+            <Modal customClass={showModal.styles ? [...showModal.styles, 'alingCenter'] : ['alingCenter']}>
+                {showModal.element}
             </Modal>
           :null}
         </Context.Provider>

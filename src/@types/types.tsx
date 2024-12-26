@@ -12,9 +12,11 @@ export interface ProfileProps {
     ramo: string,
     nivelFormacao: string,
     registro: string,
+    numUel: number,
+    nameUel: string,
     tel: string,
     email: string, 
-    nivelAcess: "Escotista" | "Dirigente" | "Admin" | 'Tester'
+    nivelAcess: "Escotista" | "Dirigente" | "Admin" | 'Tester' | 'Regional-admin',
     token: string,    
     user: string,
     password: string,
@@ -61,6 +63,7 @@ export interface DataStorage {
     id?: number
 }
 export interface SAAE {
+    solicitante: ProfileProps,
     grauRisco: {
         color: 'green' | 'yellow' | 'orange' | 'red' | '',
         value: number
@@ -72,6 +75,7 @@ export interface SAAE {
     fotosInspecao: FormFotosInspecao[],
     documentos: FormDocs[],
     status: string,
+    obs?: string,
     _id: string
 }
 

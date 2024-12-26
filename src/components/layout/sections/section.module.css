@@ -40,6 +40,9 @@
 .minWidth{
     min-width: var(--minWidth);
 }
+.minHeight{
+    min-height: 50vh;
+}
 .colorGrennDark{
     background-color: var(--sejaescoteiro);
 }

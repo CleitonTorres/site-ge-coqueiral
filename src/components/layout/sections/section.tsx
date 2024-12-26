@@ -4,9 +4,10 @@ import styles from './section.module.css';
 
 type Props = {
     children:React.ReactNode
-    customClass?: string[]
+    customClass?: string[],
+    title?: string
 }
-export default function Section({children, customClass}:Props){
+export default function Section({title, children, customClass}:Props){
     const [customStyles, setCustomStyles] = useState('');
 
     useEffect(()=>{
@@ -22,7 +23,9 @@ export default function Section({children, customClass}:Props){
     },[customClass]);
     
     return(
-        <section className={`${styles.conteiner} flexCollCenter ${customStyles}`}>
+        <section 
+            className={`${styles.conteiner} flexCollCenter ${customStyles}`}
+            title={title}>
             {children}
         </section>
     )

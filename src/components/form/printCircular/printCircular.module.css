@@ -3,6 +3,8 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    animation: fadeIn 0.5s linear forwards;
+    width: 800px;
 }
 .conteiner svg path{
     fill: #007bff;
@@ -20,7 +22,7 @@
     font-size: 1rem;
     font-weight: 400;
     margin-bottom: 1rem;
-    text-align: left;
+    text-align: justify;
 }
 .conteiner div{
     display: flex;
@@ -46,6 +48,24 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
+.boxData input{
+    width: 200px;
+    border: var(--white);
+    font-size: 16px;
+    background: 'none';
+}
+.boxData input:nth-child(2){
+    margin-left: 10px;
+}
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
 @media print{
     @page {
         size: A4;

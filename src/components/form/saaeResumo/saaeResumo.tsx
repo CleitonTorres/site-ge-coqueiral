@@ -27,9 +27,10 @@ export default function SaaeResumo ({hiddeButton}:Props){
             <span 
                 className='link'
                 onClick={()=>{
-                    context.setShowModal(
-                        <PrintCircular dataSaae={context.dataSaae}
-                    />);
+                    context.setShowModal({
+                        element: <PrintCircular dataSaae={context.dataSaae}/>,
+                        styles:['backgroundWhite']
+                });
                 }}
             > imprimir circular preliminar</span>
             <DadosGerais readOnly/>
@@ -41,11 +42,12 @@ export default function SaaeResumo ({hiddeButton}:Props){
             <SectionDocumentos readOnly/>
             {!hiddeButton ? 
             <div className={styles.subConteiner}>
-                <Botton title='Preparar e Enviar' action={()=>{
+                <Botton title='Enviar' action={()=>{
                     context.sendSaae(context.dataSaae);
-                    context.setShowModal(
-                    <PrintCircular dataSaae={context.dataSaae}
-                />);
+                    context.setShowModal({
+                        element: <PrintCircular dataSaae={context.dataSaae}/>,
+                        styles:['backgroundWhite']
+                    });
                 }}/>
             </div>
             :null}

@@ -27,6 +27,12 @@ export default function Page(){
         const value = e.target.value;
 
         setDataNewUser((prev)=>{
+            if(name === 'numUel'){
+                return{
+                    ...prev,
+                    [name]: parseInt(value)
+                }
+            }
             return{
                 ...prev,
                 [name]: value
@@ -258,6 +264,26 @@ export default function Page(){
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.name || '' }
                                 placeholder='Nome'
+                            />
+                        </div>
+                        <div className={styles.boxInput}> 
+                            <label htmlFor="user">Numeral da UEL</label>                   
+                            <input 
+                                type="number" 
+                                name='numUel' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.numUel || '' }
+                                placeholder='numeral da UEL'
+                            />
+                        </div>
+                        <div className={styles.boxInput}> 
+                            <label htmlFor="user">Nome da UEL</label>                   
+                            <input 
+                                type="text" 
+                                name='nameUel' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.nameUel || '' }
+                                placeholder='nome da UEL'
                             />
                         </div>
                         <div className={styles.boxInput}>

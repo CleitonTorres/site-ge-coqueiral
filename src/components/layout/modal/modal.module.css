@@ -6,6 +6,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    min-width: 1200px;
     height: 100vh;
     z-index: 999 !important;
     overflow-y: scroll;
@@ -52,7 +53,9 @@
 .backgroundWhite{
     background-color: var(--white);
 }
-
+.backgroundBlue{
+    background-color: rgba(0, 123, 255, 0.7);
+}
 .closeBtn{
     position: absolute; 
     right: 40px; 

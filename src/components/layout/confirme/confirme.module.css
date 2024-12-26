@@ -1,0 +1,24 @@
+.conteiner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+    height: 100%;
+}
+.conteiner button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    border: 1px solid var(--blue);
+    border-radius: 20px;
+    background-color: var(--white);
+    font-weight: 700;
+    text-align: center;
+}
+
+.conteiner button:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}

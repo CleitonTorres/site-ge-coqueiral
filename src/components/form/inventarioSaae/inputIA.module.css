@@ -11,24 +11,7 @@
     flex-direction: column;
     min-height: 50px;
 }
-.boxAvatar{
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    right: 100px;
-    top: 200px;
-    width: 100px;
-    height: 100px;
-    z-index: 1;
-    background-color: var(--blue);
-    border: none;
-    border-radius: 50%;
-}
-.boxAvatar img{
-    border: none;
-    border-radius: 50%;
-}
+
 .content{
     position: relative;
 }

@@ -166,6 +166,9 @@ export async function POST(req: NextRequest) {
         const token = body.token as string;
         const limit = body.limit as string;
         const input = body.input as string;
+        const status = body.status as string;
+        const idSaae = body.idSaae as string;
+        const obs = body.obs as string;
 
         if(service === 'recatptcha'){
             const response = await axios.post('https://www.google.com/recaptcha/api/siteverify',
@@ -313,6 +316,24 @@ export async function POST(req: NextRequest) {
                 console.log("Run Details:", run.last_error);
                 return NextResponse.json({error: "Ocorreu uma falha no processamento"}, {status: 500});
             }
+        }else if(service === 'saaeResposta'){
+            if(!status || !idSaae)  return NextResponse.json({error: "Falta dados para a atualização"}, {status: 500});
+
+            // Conectando ao banco de dados
+            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postUser");
+            const collection = db.collection('saae');
+
+            const resp = await collection.updateOne({_id: new ObjectId(idSaae)},
+                {
+                    $set: {
+                        status,
+                        obs
+                    }
+                }
+            );
+
+            return NextResponse.json(resp, {status: 200});
+            
         }else{
             return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
         }

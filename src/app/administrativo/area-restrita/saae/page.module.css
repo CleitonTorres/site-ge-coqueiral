@@ -7,6 +7,15 @@
     flex-direction: column;
     width: 340px;
 }
+.subConteinerRegional{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    border: 2px solid var(--blue);
+    margin: 6px;
+    padding: 6px;
+    overflow-y: scroll;
+}
 .boxInput, .header{
     position: relative;
     display: flex;
@@ -140,7 +149,18 @@
     cursor: pointer;
     background-color: var(--verde);
 }
-
+.collum01{
+    width: 200px;
+    padding: 3px;
+}
+.collum02{
+    width: 100px;
+    padding: 3px;
+}
+.collum03{
+    width: 62px;
+    padding: 3px;
+}
 @media print{
     .conteiner, .title{
       display: none !important;

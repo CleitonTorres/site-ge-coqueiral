@@ -68,7 +68,10 @@ export default function InfosPreliminares ({readOnly}:Props){
                 },
                 {
                     item: `${newData.length+2}`,
-                    text: `O evento/atividade será direcionada ao(s) ramo(s) ${dadosGerais?.ramo?.toString() || '...'} e terá o custo de ${dadosGerais?.custoIndividual || '...'}.`
+                    text: `O evento/atividade será direcionada ao(s) ramo(s) ${dadosGerais?.ramo?.map((r, i, a)=> {
+                        if(i+1 === a.length) return ` e ${r}, `;
+                        else return `${r}, `
+                    }) || '...'} e terá o custo de ${dadosGerais?.custoIndividual || '...'}.`
                 },
                 {
                     item: `${newData.length+3}`,

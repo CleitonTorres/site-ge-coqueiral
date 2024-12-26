@@ -580,6 +580,11 @@ export default function DadosGerais({readOnly}:Props){
             <h1 className={styles.bgGreen}>1. Dados gerais da atividade</h1>
 
             <div className={styles.table}>
+                {context.dataSaae?.obs ?
+                    <div className={styles.line}>
+                        <p>Resposta da sua SAAE: {context.dataSaae?.status?.toUpperCase()} -  {context.dataSaae?.obs || ''}</p>
+                    </div>
+                :null}
                 {/* nome/tipo/ods */}
                 <div className={styles.line}>
                     <div className={styles.collum}>
@@ -1310,18 +1315,20 @@ export default function DadosGerais({readOnly}:Props){
                             <FaPlus 
                                 className={styles.btnAddAtividade}
                                 onClick={()=>{
-                                    context.setShowModal(
-                                        <RouteMapComponent 
-                                            initialPosition={
-                                                context.dataSaae.dadosGerais.localInicio.coordenadas ?
-                                                {
-                                                    lat: context.dataSaae.dadosGerais.localInicio.coordenadas?.lat,
-                                                    lng: context.dataSaae.dadosGerais.localInicio.coordenadas?.long
-                                                } : undefined
-                                            }
-                                            handleRotas={handleRotas}
-                                        />
-                                    )
+                                    context.setShowModal({
+                                        element:
+                                            <RouteMapComponent 
+                                                initialPosition={
+                                                    context.dataSaae.dadosGerais.localInicio.coordenadas ?
+                                                    {
+                                                        lat: context.dataSaae.dadosGerais.localInicio.coordenadas?.lat,
+                                                        lng: context.dataSaae.dadosGerais.localInicio.coordenadas?.long
+                                                    } : undefined
+                                                }
+                                                handleRotas={handleRotas}
+                                            />,
+                                        styles:['backgroundWhite']
+                                    })
                             }}/>
                         </div>
                     :null}
@@ -1341,19 +1348,21 @@ export default function DadosGerais({readOnly}:Props){
                                     className='cursorPointer' 
                                     style={{textDecoration: 'underline', color: 'blue'}}
                                     onClick={()=>{
-                                        context.setShowModal(
-                                            <RouteMapComponent 
-                                                readonly={true}
-                                                initialRota={rota}
-                                                initialPosition={
-                                                    rota ?
-                                                    {
-                                                        lat: rota.points[0].lat,
-                                                        lng: rota.points[0].lng
-                                                    } : undefined
-                                                }
-                                            />
-                                        )
+                                        context.setShowModal({
+                                            element:
+                                                <RouteMapComponent 
+                                                    readonly={true}
+                                                    initialRota={rota}
+                                                    initialPosition={
+                                                        rota ?
+                                                        {
+                                                            lat: rota.points[0].lat,
+                                                            lng: rota.points[0].lng
+                                                        } : undefined
+                                                    }
+                                                />,
+                                            styles:['backgroundWhite']
+                                        })
                                     }}
                                 >
                                     <b>Visualizar</b>
