@@ -1,10 +1,13 @@
+.conteiner{
+    position: relative;
+}
 .boxAvatar{
-    position: fixed;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    right: 100px;
-    top: 200px;
+    right:10px;
+    top: -50px;
     width: 100px;
     height: 100px;
     z-index: 1;
@@ -17,6 +20,6 @@
     border-radius: 50%;
 }
 .center {
-    right: 37%;
-    top:  30%;
+    right: 0px;
+    top:  -150px;
 }

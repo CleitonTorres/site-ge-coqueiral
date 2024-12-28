@@ -27,14 +27,17 @@ export default function Mathias ({text, show, customClass}:Props){
     if(!show) return null;
     
     return(
-        <div className={`${styles.boxAvatar} ${customStyles}`}> 
-            <Image 
-                alt='assistente Mathias'
-                width={90}
-                height={90}
-                src={'/icons/assistente-mathias.png'}
-            />
-            <Texting text={text} speed={100} customClass={customClass}/>
+        <div className={styles.conteiner}> 
+                <div className={`${styles.boxAvatar} ${customStyles}`}>
+                    <Image 
+                        alt='assistente Mathias'
+                        width={90}
+                        height={90}
+                        src={'/icons/assistente-mathias.png'}
+                    />
+                    <Texting text={text} speed={100} customClass={customClass}/>
+                </div>
+            
         </div>
     )
 }

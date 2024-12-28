@@ -1,5 +1,5 @@
 .conteiner{
-    position: fixed;
+    position: absolute;
     right: 170px;
     top: 210px;
     width: auto;
@@ -11,6 +11,7 @@
     font-size: 14px;
     font-weight: 300;
     overflow: hidden;
+    border: 2px solid var(--blue);
 }
 
 .startTaping::after {
@@ -34,9 +35,6 @@
     animation: slidOut 0.2s linear forwards;
 }
 
-.center{
-    right: 50%;
-}
 .center.slideIn{
     animation: slideInCenter 0.2s linear forwards;
 
@@ -52,57 +50,55 @@
 
 @keyframes slideIn {
     0%{
-        right: 170px;
-        top: 210px;
+        right: 80px;
+        top: 20px;
         width: 10px;
         height: 10px;
     }
     100%{
-        right: 200px;
-        top: 150px;
-        width: auto;
-        max-width: 200px;
+        right: 100px;
+        top: -30px;
+        width: 200px;
         height: auto;
     }
 }
 @keyframes slideInCenter {
     0%{
-        right: 36.7%;
-        top: 300px;
+        right: 10px;
+        top: 20px;
         width: 10px;
         height: 10px;
     }
     100%{
-        right: 42%;
-        top: 230px;
-        width: auto;
-        max-width: 200px;
+        right: -210px;
+        top: -50px;
+        width: 200px;
         height: auto;
     }
 }
 
 @keyframes slidOut {
     0%{
-        right: 200px;
-        top: 150px;
+        right: 100px;
+        top: -30px;
         width: 200px;
     }
     100%{
-        right: 170px;
-        top: 210px;
+        right: 80px;
+        top: 20px;
         width: 10px;
         height: 10px;
     }
 }
 @keyframes slidOutCenter {
     0%{
-        right: 40%;
-        top: 230px;
+        right: -210px;
+        top: -50px;
         width: 200px;
     }
     100%{
-        right: 42%;
-        top: 300px;
+        right: 10px;
+        top: 20px;
         width: 10px;
         height: 10px;
     }

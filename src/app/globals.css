@@ -216,7 +216,7 @@ body {
   }
 }
 @media print{
-  body, .grecaptcha-badge{
+  .grecaptcha-badge{
     display: none !important;
   }
 }

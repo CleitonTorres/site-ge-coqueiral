@@ -140,7 +140,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                         <h4 className={styles.collum02}>UEL</h4> 
                         <h4 className={styles.collum03}>Status</h4>  
                     </div>                                                            
-                    {context.listSaaes?.map((saae, idx)=>(
+                    {context.listSaaes?.filter(s=> !s.status.includes('aprovada'))?.map((saae, idx)=>(
                         <div key={idx+'listaSAAEs'} 
                             className={`${styles.boxInput}`}>
                             <label 
@@ -185,7 +185,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     ))}
                 </div>
             </div>
-            {currentSAAEResponse?.status ?
+            {currentSAAEResponse?.status && currentSAAEResponse.status !== context.listSaaes.find(s=> s._id === currentSAAEResponse._id)?.status ?
                 <div className={`${styles.conteiner} flexRowButton`}>
                     <div className={`${styles.subConteinerRegional}`}>
                         <b>Enviar resposta:</b>

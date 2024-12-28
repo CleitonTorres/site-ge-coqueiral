@@ -11,6 +11,7 @@ import Botton from '../botton/botton';
 import { useContext } from 'react';
 import { Context } from '@/components/context/context';
 import PrintCircular from '../printCircular/printCircular';
+import Confirme from '@/components/layout/confirme/confirme';
 
 type Props= {
     hiddeButton?: boolean
@@ -30,7 +31,7 @@ export default function SaaeResumo ({hiddeButton}:Props){
                     context.setShowModal({
                         element: <PrintCircular dataSaae={context.dataSaae}/>,
                         styles:['backgroundWhite']
-                });
+                }); 
                 }}
             > imprimir circular preliminar</span>
             <DadosGerais readOnly/>
@@ -43,11 +44,16 @@ export default function SaaeResumo ({hiddeButton}:Props){
             {!hiddeButton ? 
             <div className={styles.subConteiner}>
                 <Botton title='Enviar' action={()=>{
-                    context.sendSaae(context.dataSaae);
                     context.setShowModal({
-                        element: <PrintCircular dataSaae={context.dataSaae}/>,
-                        styles:['backgroundWhite']
-                    });
+                        element: <Confirme 
+                            message='Deseja enviar sua SAAE para análise?'
+                            confirme={async()=>{
+                                return await context.sendSaae(context.dataSaae);
+                            }}
+                            cancele={()=> context.setShowModal(null)}
+                        />,
+                        styles:['backgroundBlue']
+                    })
                 }}/>
             </div>
             :null}

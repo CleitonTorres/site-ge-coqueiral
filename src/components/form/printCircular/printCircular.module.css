@@ -67,9 +67,9 @@
 }
 
 @media print{
-    @page {
-        size: A4;
-        margin: 0;
+    .conteiner{
+        display: flex;
+        flex: 1;
     }
     .conteiner svg {
         display: none;

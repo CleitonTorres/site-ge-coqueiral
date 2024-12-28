@@ -1,11 +1,10 @@
 'use client'
 import { DataNews, DataStorage, ProfileProps, SAAE } from "@/@types/types";
 import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
-import { createDb, getAllDataStorage, putNewData } from "@/scripts/indexedDB";
+import { createDb, deleteDataStorage, getAllDataStorage, putNewData } from "@/scripts/indexedDB";
 import axios from "axios";
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 import Modal from "../layout/modal/modal";
-import LoadIcon from "../layout/loadIcon/loadIcon";
 
 type PropsContext ={
   dataNews: DataNews[],
@@ -18,7 +17,10 @@ type PropsContext ={
   dataStorage: DataStorage[],
   setSaaeEdit: Dispatch<SetStateAction<number | string | undefined>>,
   saaeEdit: number | string | undefined,
-  sendSaae: (saae:SAAE)=>void,
+  sendSaae: (saae:SAAE)=>Promise<{
+    bool: boolean | undefined,
+    text: string
+  }>,
   listSaaes: SAAE[],
   setListSaaes: Dispatch<SetStateAction<SAAE[]>>,
   setTester: Dispatch<SetStateAction<ProfileProps | undefined>>,
@@ -40,7 +42,7 @@ type PropsContext ={
  * @param {DataStorage[]} dataStorage - lista de SAAEs salvas em rascunhos no armazenamento local do navegador.
  * @param {Dispatch<SetStateAction<number | string | undefined>>} setSaaeEdit - acessa o estado do id da SAAE em edição.
  * @param {number} saaeEdit - o ID da SAAE em edição.
- * @param {(saae:SAAE)=>void} sendSaae - envia a SAAE em edição para a Região e o DB.
+ * @param {(saae:SAAE)=>Promise<{bool: boolean | undefined, text: string}>} sendSaae - envia a SAAE em edição para a Região e o DB.
  * @param {SAAE[]} listSaaes - lista de SAAEs enviadas para a Região.
  * @param {Dispatch<SetStateAction<SAAE[]>>} setListSaaes - acessa o estado da lista de SAAEs enviadas para a Região.
  * @param {Dispatch<SetStateAction<{element: JSX.Element, styles?: string[]} | null>>} setShowModal - acessa o estado do modal de carregamento.
@@ -160,9 +162,12 @@ export default function Provider({children}:{children:ReactNode}){
     }
 
     const sendSaae= async(data:SAAE)=>{
-      if(!data.dadosGerais || !data.planoEmergencia) return;
-
-      setShowModal({element: <LoadIcon showHide/>});
+      if(!data.dadosGerais || !data.planoEmergencia){ 
+        return{
+          bool: undefined,
+          text: 'Faltam dados para enviar sua SAAE!'
+        }
+      };
 
       const formData = new FormData();
       formData.append('bucketName', 'site-coqueiral-saae');
@@ -225,10 +230,14 @@ export default function Provider({children}:{children:ReactNode}){
         console.log(result);
 
         setListSaaes((prev)=> [...prev, {...data, _id: result.insertId, status: 'enviada'}]);
-        // setDataSaae({} as SAAE);
-        // deleteDataStorage('saae', saaeEdit!)
-        setSaaeEdit(undefined)
-        setShowModal(null);
+        setDataSaae({} as SAAE);
+        deleteDataStorage('saae', saaeEdit! as number)
+        setSaaeEdit(undefined);
+
+        return{
+          bool: true,
+          text: 'SAAE enviada com sucesso!'
+        }
       }catch(error){
         if (axios.isAxiosError(error)) {
           // Se o erro for gerado pelo Axios
@@ -243,8 +252,10 @@ export default function Provider({children}:{children:ReactNode}){
           // Se for outro tipo de erro
           console.error("Erro inesperado:", error);
         }
-        setShowModal(null);
-        alert("Ocorreu um erro ao tentar enviar sua SAAE")
+        return{
+          bool: true,
+          text: 'Ocorreu um erro ao tentar enviar sua SAAE!'
+        }
       }
     }
 
