@@ -1,6 +1,6 @@
 'use client'
 import { DataNews, DataStorage, ProfileProps, SAAE } from "@/@types/types";
-import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
+import { createCookie, destroyCookie, getCookie, verifyObjSAAE } from "@/scripts/globais";
 import { createDb, deleteDataStorage, getAllDataStorage, putNewData } from "@/scripts/indexedDB";
 import axios from "axios";
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
@@ -17,7 +17,7 @@ type PropsContext ={
   dataStorage: DataStorage[],
   setSaaeEdit: Dispatch<SetStateAction<number | string | undefined>>,
   saaeEdit: number | string | undefined,
-  sendSaae: (saae:SAAE)=>Promise<{
+  handleSendSaae: (saae:SAAE)=>Promise<{
     bool: boolean | undefined,
     text: string
   }>,
@@ -161,6 +161,33 @@ export default function Provider({children}:{children:ReactNode}){
       }
     }
 
+    const handleSendSaae = async (data:SAAE)=>{
+      try{
+        if(data._id && typeof data._id === 'string'){
+          return await sendEditSaae(data);
+        }else{
+          return await sendSaae(data)
+        }
+      }catch(e){
+        if (axios.isAxiosError(e)) {
+          // Se o erro for gerado pelo Axios
+          console.error("Erro Axios:", e.response?.data || e.message);
+          
+          // Capturando os detalhes da resposta
+          if (e.response) {
+            console.error("Status:", e.response.status);
+            console.error("Dados:", e.response.data);
+          }
+        } else {
+          // Se for outro tipo de erro
+          console.error("Erro inesperado:", e);
+        }
+        return{
+          bool: true,
+          text: 'Ocorreu um erro ao tentar enviar a correção da sua SAAE!'
+        }
+      }
+    }
     const sendSaae= async(data:SAAE)=>{
       if(!data.dadosGerais || !data.planoEmergencia){ 
         return{
@@ -259,6 +286,66 @@ export default function Provider({children}:{children:ReactNode}){
       }
     }
 
+    const sendEditSaae= async(data:SAAE)=>{
+      try{
+        if(!data.dadosGerais || !data.planoEmergencia){ 
+          return{
+            bool: undefined,
+            text: 'Faltam dados para enviar sua SAAE!'
+          }
+        };
+
+        const locationOriginalSAAE = listSaaes.find(s=> s._id === data._id);
+
+        if(!locationOriginalSAAE) return{
+          bool: undefined,
+          text: 'Desculpe, mas não consegui encontrar a SAAE Original.'
+        }
+
+        console.log('encontro original', locationOriginalSAAE);
+        console.log("SAAE editada", data)
+
+        const verify = verifyObjSAAE(locationOriginalSAAE, data);
+
+        console.log(verify);
+        if(verify.length === 0){
+          return{
+            bool: false,
+            text: 'Não encontrei atualização de dados para enviar, por favor revise os dados.'
+          }
+        }
+
+        const objUpdate = verify.map(v=> {
+          return {[v]: data[v]}
+        });
+
+        console.log('objetoUpdate', objUpdate);
+
+        return{
+          bool: true,
+          text: 'Teste de edição de SAAE feito com sucesso!'
+        }
+      }catch(e){
+        if (axios.isAxiosError(e)) {
+          // Se o erro for gerado pelo Axios
+          console.error("Erro Axios:", e.response?.data || e.message);
+          
+          // Capturando os detalhes da resposta
+          if (e.response) {
+            console.error("Status:", e.response.status);
+            console.error("Dados:", e.response.data);
+          }
+        } else {
+          // Se for outro tipo de erro
+          console.error("Erro inesperado:", e);
+        }
+        return{
+          bool: true,
+          text: 'Ocorreu um erro ao tentar enviar a correção da sua SAAE!'
+        }
+      }
+    }
+
     useEffect(()=>{
         if(dataNews.length === 0) getNews();
 
@@ -317,7 +404,7 @@ export default function Provider({children}:{children:ReactNode}){
     },[listSaaes])
     return(
         <Context.Provider value={{
-            dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, sendSaae, setTester, tester,
+            dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, handleSendSaae, setTester, tester,
             recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes, setShowModal,
         }}>
           {children}

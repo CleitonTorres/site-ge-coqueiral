@@ -1,0 +1,45 @@
+.boxButtom{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+.boxButtom svg{    
+    width: 50%;
+    min-width: 10%;
+    max-width: 50%;
+    margin-top: 30px;
+}
+.boxButtom svg:hover{
+    cursor: pointer;
+}
+.boxButtom svg:active{
+    padding: 4px;
+}
+.boxBtnNav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+.boxBtnNav div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    background-color: var(--blue);
+    border-radius: 50%;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 6px;
+    transition: 0.2s;
+}
+.boxBtnNav div:hover{
+    cursor: pointer;
+    scale: 1.3;
+}
+.boxBtnNav div:active{
+    scale: 1.2;
+}

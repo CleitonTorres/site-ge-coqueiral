@@ -65,13 +65,17 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
             const latLng = e.latLng;
 
             // Converte as coordenadas para um endereço
-            geocoder.geocode({ location: latLng }, (results, status) => {
+            const coord = {lat: parseFloat(latLng.lat()), lng: parseFloat(latLng.lng())};
+
+            console.log('coordenadas clicada', coord)
+            geocoder.geocode({ location: coord, language: 'pt-BR', region: 'BR' }, (results, status) => {
                 if (status === "OK") {
                     if (results && results[0]) {
                         const clickedAddress = results[0].formatted_address;
 
                         // Atualiza o estado ou faz algo com o endereço encontrado
-                        setLatLong(e.latLng.lat(), e.latLng.lng(), label, clickedAddress);
+                        console.log('endereço', clickedAddress)
+                        setLatLong(coord.lat, coord.lng, label, clickedAddress);
                     } else {
                         console.warn("Nenhum endereço encontrado para esta localização.");
                     }

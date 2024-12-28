@@ -1,4 +1,4 @@
-import { CEP, DataNews, ProfileProps } from "@/@types/types";
+import { CEP, DataNews, ProfileProps, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -283,6 +283,23 @@ export function maskcep(v:string){
 }
 
 /**
+ * Formata um número para o modelo de coordenadas geográficas.
+ * @param {string} coord - coordenadas a ser formatada.
+ * @returns {string}
+ */
+export function maskCoordenadas(coord:string) {
+    const regex = /^-?\d+(\.\d+)?$/;
+    
+    const coordenada = coord.toString();
+    if (regex.test(coordenada)) {
+        // É uma coordenada válida
+        return parseFloat(coordenada).toFixed(14); // Formata para 14 casas decimais
+    } else {
+        return "";
+    }
+}
+
+/**
  * Função que busca dados de um endereco a partir de um CEP
  * @param {string} cep - texto a ser formatado 
  * @returns {Promise<CEP>}
@@ -519,4 +536,33 @@ export const pdfToImageBase64 = async (file: File): Promise<string> => {
 
     throw new Error('Erro ao renderizar a página do PDF.');
 };
+
+export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE)=>{
+    const keysOriginal = Object.keys(objetoOriginal);
+    const keysEditado = Object.keys(objetoEditado);
+
+    const result:string[] = [];
+
+    //verifica fields primarias;
+    //verifica se existe fields no objeto editado que não existe no original.
+    if(keysEditado.length > keysOriginal.length){
+        keysEditado.forEach(k=>{
+            const verify = JSON.stringify(objetoEditado[k]) !== JSON.stringify(objetoOriginal[k]);
+            if(verify) result.push(k);
+        })
+
+    }else if(keysEditado.length < keysOriginal.length){ //verifica se existe fields no objeto original que não existe no editado.
+        keysOriginal.forEach(k=>{
+            const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
+            if(verify) result.push(k);
+        })
+    }else{ //se o número de fields dos objetos é igual.
+        keysOriginal.forEach(k=>{
+            const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
+            if(verify) result.push(k)
+        })
+    }
+
+    return result
+}
 

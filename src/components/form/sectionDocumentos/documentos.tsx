@@ -9,6 +9,7 @@ import { FaMinus, FaPlus } from 'react-icons/fa6';
 import axios from 'axios';
 
 export const ImagePreview = ({ file, width, height }:{file:File | string, width:number, height:number}) => {
+    const context = useContext(Context);
     const [base64, setBase64] = useState('');
     const [isPdf, setIsPdf] = useState(false);
     const [urlSigned, setUrlSiged] = useState('');
@@ -96,10 +97,24 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
                 width={width}
                 height={height}
                 className='cursorPointers'
-                style={{ objectFit: 'contain', height: 'auto'}}
+                style={{ objectFit: 'contain', height: 'auto', cursor: 'pointer'}}
                 src={base64} // Usa o Base64 gerado como src
                 onClick={()=>{
-                    window?.open(urlSigned, '_blank')
+                    if(file instanceof Blob){
+                        context.setShowModal({
+                            element: <Image
+                                alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
+                                width={600}
+                                height={600}
+                                className='cursorPointers'
+                                style={{ objectFit: 'contain', height: 'auto'}}
+                                src={base64} // Usa o Base64 gerado como src
+                            />,
+                            styles:['backgroundWhite']
+                        })
+                    }else{
+                        window?.open(urlSigned, '_blank')
+                    }
                 }}
             />
         </>

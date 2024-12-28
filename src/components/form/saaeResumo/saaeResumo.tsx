@@ -43,12 +43,15 @@ export default function SaaeResumo ({hiddeButton}:Props){
             <SectionDocumentos readOnly/>
             {!hiddeButton ? 
             <div className={styles.subConteiner}>
-                <Botton title='Enviar' action={()=>{
+                <Botton 
+                    customClass={['marginTop20']}
+                    title='Enviar' 
+                    action={()=>{
                     context.setShowModal({
                         element: <Confirme 
                             message='Deseja enviar sua SAAE para análise?'
                             confirme={async()=>{
-                                return await context.sendSaae(context.dataSaae);
+                                return await context.handleSendSaae(context.dataSaae);
                             }}
                             cancele={()=> context.setShowModal(null)}
                         />,

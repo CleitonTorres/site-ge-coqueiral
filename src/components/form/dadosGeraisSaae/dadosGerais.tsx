@@ -45,9 +45,9 @@ export default function DadosGerais({readOnly}:Props){
                     const nameSplit = name.split('.')[2] as 'lat' | 'long';
                     const coordenadas = newData?.localInicio?.coordenadas ? {
                         ...newData?.localInicio.coordenadas,
-                        [nameSplit]: parseInt(value)
+                        [nameSplit]: value ? parseFloat(value) : ''
                     } : {
-                        [nameSplit]: parseInt(value)
+                        [nameSplit]: value ? parseFloat(value) : ''
                     } as unknown as {
                         lat: number, long: number
                     }
@@ -1394,8 +1394,12 @@ export default function DadosGerais({readOnly}:Props){
                     <h2>
                         Coordenadas do local Início (opcional)
                     </h2>
-                    <input
-                        type='number'
+                    <label htmlFor="">
+                       {`${context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat || ''},  
+                       ${context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long || ''}`}
+                    </label>
+                    {/* <input
+                        type='text'
                         name='localInicio.coordenadas.lat'
                         value={context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat || ''}
                         onChange={(e) => {
@@ -1406,14 +1410,14 @@ export default function DadosGerais({readOnly}:Props){
                         readOnly={readOnly}
                     />
                     <input
-                        type='number'
+                        type='text'
                         name='localInicio.coordenadas.long'
                         value={context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long || ''}
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
                         readOnly={readOnly}
-                    />
+                    /> */}
                 </div>
                 <div className={styles.line}>
                     {(context.dataSaae?.dadosGerais?.localInicio?.logradouro && context.dataSaae?.dadosGerais?.localInicio?.bairro) || (context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat && context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long) ?
@@ -1431,7 +1435,11 @@ export default function DadosGerais({readOnly}:Props){
                     <h2>
                         Coordenadas do local Fim (opcional)
                     </h2>
-                    <input
+                    <label htmlFor="">
+                       {`${context.dataSaae?.dadosGerais?.localFim?.coordenadas?.lat || ''},  
+                       ${context.dataSaae?.dadosGerais?.localFim?.coordenadas?.long || ''}`}
+                    </label>
+                    {/* <input
                         type='number'
                         name='localFim.coordenadas.lat'
                         value={context.dataSaae?.dadosGerais?.localFim?.coordenadas?.lat || ''}
@@ -1441,8 +1449,8 @@ export default function DadosGerais({readOnly}:Props){
                         placeholder="latitude"
                         style={{width: 200}}
                         readOnly={readOnly}
-                    />
-                    <input
+                    /> */}
+                    {/* <input
                         type='number'
                         name='localFim.coordenadas.long'
                         value={context.dataSaae?.dadosGerais?.localFim?.coordenadas?.long || ''}
@@ -1450,7 +1458,7 @@ export default function DadosGerais({readOnly}:Props){
                         placeholder="longitude"
                         style={{width: 200}}
                         readOnly={readOnly}
-                    />
+                    /> */}
                 </div>
 
                 <div className={styles.line}>

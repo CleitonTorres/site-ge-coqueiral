@@ -4,7 +4,6 @@ import styles from './page.module.css';
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import InfosPreliminares from "@/components/form/infosPreliminaresSaae/infosPreliminares";
 import DadosGerais from "@/components/form/dadosGeraisSaae/dadosGerais";
-import { IoIosArrowForward, IoIosArrowBack  } from "react-icons/io";
 import { Context } from "@/components/context/context";
 import InventarioSaae from "@/components/form/inventarioSaae/inputIA";
 import MatrizRisco from "@/components/form/matrizSaae/matrizRisco";
@@ -17,6 +16,7 @@ import { SAAE } from "@/@types/types";
 import { userTest } from "@/components/data-training/data-training";
 import FormLogin from "@/components/form/formLogin/formLogin";
 import ViewSaaes from "@/components/layout/viewSaaes/listSaaes";
+import NavButoomsSaae from "@/components/layout/navButtomsSaae/navButtomsSaae";
 
 /**
  * Componente que gerencia os modulos de uma SAAE para prenchimento.
@@ -110,6 +110,8 @@ export default function Page(){
             {context.saaeEdit && !['enviada', 'aprovada'].includes(context.dataSaae.status) && 
                 (context.tester || Object.keys(context.dataUser).length > 0) ?
                 <div className={styles.conteiner}>
+                    <NavButoomsSaae currenteSession={currenteSession} setCurrentSession={setCurrentSession}/>                
+                    
                     {currenteSession === 0 ? <DadosGerais readOnly={false}/> : null}
                     {currenteSession === 1 ? <InfosPreliminares readOnly={false}/> : null}
                     {currenteSession === 2 ? <InventarioSaae readOnly={false}/> : null}
@@ -118,122 +120,8 @@ export default function Page(){
                     {currenteSession === 5 ? <FotosInspecao readOnly={false}/> : null}
                     {currenteSession === 6 ? <SectionDocumentos readOnly={false}/> : null}
                     {currenteSession === 7 ? <SaaeResumo /> : null}
-                    <div className={styles.boxButtom}>
-                        <IoIosArrowBack 
-                            size={40}
-                            onClick={()=>{
-                                setCurrentSession((prev)=> {
-                                if(prev === 0){
-                                    return 7
-                                }else{
-                                    return prev-1
-                                }
-                                });
-                                window.scrollTo(0, 0);
-                            }}
-                        />
-                        <div className={styles.boxBtnNav}>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(0);
-                                    window.scrollTo(0, 0);
-                                }} 
-                                style={{
-                                    border: currenteSession === 0 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 0 ? 'var(--verde)' : '',
-                                    color: currenteSession === 0 ? 'var(--dark)' : 'var(--white)'
-                                }}>1</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(1);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 1 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 1 ? 'var(--verde)' : '',
-                                    color: currenteSession === 1 ? 'var(--dark)' : 'var(--white)'
-                                }}>2</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(2);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 2 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 2 ? 'var(--verde)' : '',
-                                    color: currenteSession === 2 ? 'var(--dark)' : 'var(--white)'
-                                }}
-                            >3</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(3);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 3 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 3 ? 'var(--verde)' : '',
-                                    color: currenteSession === 3 ? 'var(--dark)' : 'var(--white)'
-                                }}
-                            >4</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(4);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 4 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 4 ? 'var(--verde)' : '',
-                                    color: currenteSession === 4 ? 'var(--dark)' : 'var(--white)'
-                                }}
-                            >5</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(5);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 5 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 5 ? 'var(--verde)' : '',
-                                    color: currenteSession === 5 ? 'var(--dark)' : 'var(--white)'
-                                }}
-                            >6</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(6);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 6 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 6 ? 'var(--verde)' : '',
-                                    color: currenteSession === 6 ? 'var(--dark)' : 'var(--white)'
-                                }}
-                            >7</div>
-                            <div 
-                                onClick={()=>{
-                                    setCurrentSession(7);
-                                    window.scrollTo(0, 0);
-                                }}
-                                style={{
-                                    border: currenteSession === 7 ? '2px solid var(--dark)' : '',
-                                    backgroundColor: currenteSession === 7 ? 'var(--verde)' : '',
-                                    color: currenteSession === 7 ? 'var(--dark)' : 'var(--white)'
-                                }}
-                            >R</div>
-                        </div>
-                        <IoIosArrowForward 
-                            size={40}
-                            onClick={()=>{setCurrentSession((prev)=> {
-                                if(prev === 7){
-                                    return 0
-                                }else{
-                                    return prev+1
-                                }
-                                });
-                                window.scrollTo(0, 0);
-                            }}
-                        />
                     
-                    </div>                
+                    <NavButoomsSaae currenteSession={currenteSession} setCurrentSession={setCurrentSession}/>                
                 </div>
             :null}
 
