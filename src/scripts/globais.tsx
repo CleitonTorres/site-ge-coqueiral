@@ -235,7 +235,7 @@ export function formatToHourMin(text:string) {
  * Função que adiciona um tempo a um horário inicial
  * @param {string} initialTime 
  * @param {string} addedTime 
- * @returns {string}
+ * @returns hora inicial mais hora adicionada
  */
 export function addTime(initialTime:string, addedTime:string) {
     // Verifica se o formato inicial está correto (HH:MM)
@@ -245,7 +245,7 @@ export function addTime(initialTime:string, addedTime:string) {
     const matchAddTime = addedTime.match(timePattern);
 
     if (!match || !matchAddTime) {
-        return ''
+        return {time: '', dayChange: 0}
     }
 
     // Extrai horas e minutos da string inicial
@@ -259,14 +259,18 @@ export function addTime(initialTime:string, addedTime:string) {
     const totalMinutes = initialHours * 60 + initialMinutes + (addHours * 60 + addMinutes);
 
     // Converte minutos de volta para horas e minutos
+    const totalHours = Math.floor(totalMinutes / 60);
     const resultHours = Math.floor(totalMinutes / 60) % 24; // Garantir que as horas fiquem dentro de 24
     const resultMinutes = totalMinutes % 60;
+
+    // Calcula a mudança de dias
+    const dayChange = Math.floor(totalHours / 24);
 
     // Formata o resultado com dois dígitos
     const formattedHours = String(resultHours).padStart(2, "0");
     const formattedMinutes = String(resultMinutes).padStart(2, "0");
 
-    return `${formattedHours}:${formattedMinutes}`;
+    return {time: `${formattedHours}:${formattedMinutes}`, dayChange};
 }
 
 /**

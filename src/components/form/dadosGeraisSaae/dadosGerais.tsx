@@ -166,7 +166,7 @@ export default function DadosGerais({readOnly}:Props){
 
         setCurrentProgramacao((prev)=>{
             if(name === "data"){
-                const date = new Date(value + 'T00:00');
+                const date = new Date(value + `T00:00`);
                 return{
                     ...prev,
                     data: date
@@ -184,7 +184,7 @@ export default function DadosGerais({readOnly}:Props){
         })
     }
 
-    const addAtividade = ()=>{
+    const addAtividade = async()=>{
         if(!currentProgramacao.data || !currentProgramacao.duracao || !currentProgramacao.hora || !currentProgramacao.descricao){
             alert("Faltam campos obrigatórios na programação!")
             return;
@@ -194,38 +194,43 @@ export default function DadosGerais({readOnly}:Props){
             return
         }
 
-        context.setDataSaae((prev)=>{
-            const newProgragacao = prev.dadosGerais.programacao ? [
-                ...prev.dadosGerais.programacao,
-                {
-                    ...currentProgramacao, 
-                    descricao: currentProgramacao.descricao || '',
-                    responsavel: currentProgramacao.responsavel || '',
-                    materialNecessario: currentProgramacao.materialNecessario || '',
-                    id: prev.dadosGerais.programacao.length+1,
-                } as ProgramacaoAtividade
-            ] : [{...currentProgramacao, id: 1}]
-
-            return{
-                ...prev,
-                dadosGerais: {
-                    ...prev.dadosGerais,
-                    programacao: newProgragacao
-                }
-            }
-        })
-        
-        
-        //updateContext(newData);
+        await updateContext(currentProgramacao)
 
         setCurrentProgramacao((prev)=>{
+            const { time } = addTime(prev.hora, prev.duracao);
             return{
-                data: new Date(),
-                hora: addTime(prev.hora, prev.duracao)
+                data: prev.data || '',
+                hora: time
             } as ProgramacaoAtividade
         });
     }    
     
+    const updateContext = async (programacao:ProgramacaoAtividade)=>{
+        try{
+            context.setDataSaae((prev)=>{
+                const newProgragacao = prev.dadosGerais.programacao ? [
+                    ...prev.dadosGerais.programacao,
+                    {
+                        ...programacao, 
+                        descricao: programacao.descricao || '',
+                        responsavel: programacao.responsavel || '',
+                        materialNecessario: programacao.materialNecessario || '',
+                        id: prev.dadosGerais.programacao.length+1,
+                    } as ProgramacaoAtividade
+                ] : [{...programacao, id: 1}]
+    
+                return{
+                    ...prev,
+                    dadosGerais: {
+                        ...prev.dadosGerais,
+                        programacao: newProgragacao
+                    }
+                }
+            });
+        }catch(e){
+            console.log(e);
+        }
+    }
     const removeAtividade = (idx:number)=>{
         context.setDataSaae((prev)=>{
             const filter = prev.dadosGerais.programacao.filter(prog=> prog.id !== idx);
@@ -565,11 +570,6 @@ export default function DadosGerais({readOnly}:Props){
             const newData = dataBaseSaae?.map(ativ=> `${ativ.produto}`)
             return newData
         });
-
-        //pega as infos salvas no contexto.
-        // Atualiza o contexto e define o estado local após isso
-        // const dadosGerais = context.dataSaae?.dadosGerais || {} as DadosGeraisSaae; // Dados iniciais
-        // setData(dadosGerais);
     },[])
 
     return(
