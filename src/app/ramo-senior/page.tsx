@@ -5,7 +5,7 @@ import Image from 'next/image';
 export default function Page(){
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
-            <h1 className={styles.title}>Ramo Pioneiro</h1>
+            <h1 className={styles.title}>Ramo Sênior</h1>
             <div className={styles.conteiner}>
                 <div className={styles.subConteiner}>
                     <Image 
