@@ -21,7 +21,11 @@ export default function Page(){
                     <br />
                     <div className={styles.coluna}>
                         <p className={`${styles.paragraph} ${styles.widthAuto}`}>
-                            Venha fazer parte dessa fraternidade mundial! <b>Temos vagas para pessoas de baixa renda, com descontos em registro, traje e outras vantagens.</b>
+                            Venha fazer parte dessa fraternidade mundial! 
+                            <b>
+                                Temos vagas! Os Escoteiros do Brasil oferecem condições de isenção de taxa de registro
+                                para famílias de baixa renda, descontos na aquisição de traje e outras vantagens.
+                            </b>
                         </p>
                         <ul className={`${styles.boxLinks} ${styles.widthAuto}`}>
                             <li>
