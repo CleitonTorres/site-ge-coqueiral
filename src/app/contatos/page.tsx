@@ -21,9 +21,9 @@ export default function Page(){
                     <br />
                     <div className={styles.coluna}>
                         <p className={`${styles.paragraph} ${styles.widthAuto}`}>
-                            Venha fazer parte dessa fraternidade mundial! 
+                            Venha fazer parte dessa fraternidade mundial! <br/> 
                             <b>
-                                Temos vagas! Os Escoteiros do Brasil oferecem condições de isenção de taxa de registro
+                                 Os Escoteiros do Brasil oferecem condições de isenção de taxa de registro
                                 para famílias de baixa renda, descontos na aquisição de traje e outras vantagens.
                             </b>
                         </p>
