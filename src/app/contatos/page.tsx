@@ -1,6 +1,7 @@
 import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
+import { FaWhatsapp } from 'react-icons/fa';
 
 export default function Page(){
     return(
@@ -52,7 +53,9 @@ export default function Page(){
                     <p className={styles.paragraph}>
                         Instagram: @19escoqueiral <br/>
                         E-mail: 19coqueiral@gmail.com <br/>
-                        WhatsApp: 27 99736-4409
+                        <a href="https://wa.me/27997364409?text=Ola%20gostaria%20de%20saber%20mais%20sobre%20o%20grupo%20escoteiro" target='_blank'>
+                            WhatsApp: <FaWhatsapp size={28} color='green' style={{cursor: 'pointer'}}/>
+                        </a>
                     </p>                    
                     <p className={styles.paragraph}>
                         <a href="/seja-escoteiro" className='link'>Veja mais sobre o ESCOTISMO</a>                    
