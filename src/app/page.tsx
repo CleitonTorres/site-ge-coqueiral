@@ -202,6 +202,13 @@ function Home() {
             linkSiteEmpresa={'https://www.paralegalsolucoes.com.br/'}
           />
         </Box>
+        <Box customClass={['margin', 'flexRowWrap']}>
+          <CardEmpresaParceira 
+            nameEmpresa='Vaa Canoeiros' 
+            logoURL='/logo/empresas-parceira/vaaCanoneiros.png'
+            linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros.cpp/#'}
+          />
+        </Box>
       </Section>
 
       <Section customClass={['fullWidth', 'flexCollTop']}>
