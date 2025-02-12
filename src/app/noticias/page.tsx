@@ -33,6 +33,7 @@ export default function Page(){
                                     linkMaps: news.linkMaps || '',
                                     paragraph: news.paragraph || '',
                                     title: news.title || '',
+                                    keywords:[],
                                     evento: news.evento || true,
                                     _id: ''
                                 }

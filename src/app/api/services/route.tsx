@@ -44,11 +44,13 @@ export const config = {
 };
 
 const getInstagramFeed = async (limit?:string) => {
-  const url = limit ? `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
+  const url = limit ? 
+    `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
    `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}`;
   const response = await fetch(url);
   
   if (!response.ok) {
+    console.log("response", response);
     throw new Error('Erro ao buscar o feed do Instagram');
   }
 
@@ -67,14 +69,29 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
     const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey'
     | 'proxyPDF';
+    const newsId = url.searchParams.get('newsId') as string;
 
     if(service === 'news'){
+        if(newsId){
+            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/news"); 
+            const collection = db.collection('news');
+        
+            const data = collection.findOne({_id: new ObjectId(newsId)});
+            const news = await data;
+            
+            //fecha o DB.
+            closeDatabase();
+
+            return NextResponse.json({news}, {status: 200});
+        }
+
         const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/news"); 
         const collection = db.collection('news');
     
         const data = collection.find({});
         const news = await data.toArray()
-    
+        
+
         //fecha o DB.
         closeDatabase();
 
@@ -184,7 +201,6 @@ export async function POST(req: NextRequest) {
             if(!news){
                 return NextResponse.json({error: "Sem dados na requisição"}, {status: 500});
             }
-
             // Conectando ao banco de dados
             const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postUser");
             const collection = db.collection('news');

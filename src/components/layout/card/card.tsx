@@ -52,10 +52,7 @@ const formatText = (text:string) => {
 
 export default function Card({dataNews}:{dataNews:DataNews}){    
     return(
-        <Link href={{
-            pathname: '/news/',
-            query: {idNews: dataNews._id}
-            }} 
+        <Link href={`/aconteceu/${dataNews._id}`} 
             className={styles.conteiner}
         >
             {dataNews.imageID ? 

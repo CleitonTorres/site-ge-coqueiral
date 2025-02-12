@@ -7,10 +7,11 @@ import { useContext, useEffect, useState } from 'react';
 import { Context } from '@/components/context/context';
 import { DataNews } from '@/@types/types';
 import Carrocel from '../carrocel/carrocel';
+import Head from 'next/head';
 
 type Props = {
     origem: 'cadastro' | 'view',
-    idNews: string,
+    idNews?: string,
     dataNews?: DataNews
 }
 
@@ -99,6 +100,18 @@ export const TextFormatter = ({ text }: { text: string }) => {
 export default function NewsPage({idNews, dataNews}:Props) {
     const context = useContext(Context);
     const [news, setNews] = useState(context?.dataNews.find(news=> news._id === idNews));
+    const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": dataNews?.title,
+        "description": dataNews?.paragraph,
+        "image": dataNews?.imageID,
+        "datePublished": dataNews?.date,
+        "author": {
+          "@type": "Person",
+          "name": "19º ES Grupo Escoteiro Coqueiral",
+        },
+    };
 
     useEffect(()=>{
         if(dataNews){
@@ -110,9 +123,24 @@ export default function NewsPage({idNews, dataNews}:Props) {
     useEffect(()=>{
         console.log("componente", news)
     },[news])
+    
     if(!news) return <span>Nada para ler aqui</span>;
 
     return(
+        <>
+        <Head>
+            <title>{dataNews?.title} | Seu Site</title>
+            <meta name="description" content={dataNews?.paragraph} />
+            <meta name="keywords" content={dataNews?.keywords?.join(', ')} />
+            <meta property="og:title" content={dataNews?.title} />
+            <meta property="og:description" content={dataNews?.paragraph} />
+            <meta property="og:image" content={`${dataNews?.imageID}`} />
+            <meta property="og:url" content={`https://seusite.com/noticias/${dataNews?._id}`} />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+            />
+        </Head>
         <Section customClass={['flexCollTop', 'maxWidth']}>
             <h1 className={styles.title}>{news.title}</h1>
             {news.imageID ? 
@@ -137,5 +165,6 @@ export default function NewsPage({idNews, dataNews}:Props) {
             </div>
             <TextFormatter text={news.paragraph}/>
         </Section>
+        </>
     )
 }

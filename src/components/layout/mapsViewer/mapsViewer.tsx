@@ -100,7 +100,9 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
     return(
         <div style={{width: '100vw', marginBottom: '30px'}}>
             <h1>Localização {label === "localInicio" ? 'Início' : 'Fim'}</h1>
-            <h6>{`${data?.logradouro}, ${data?.bairro}, ${data?.municipio}, ${data?.uf}, ${data?.cep}`}</h6>
+            <h6>{
+                data?.address ? data.address : `${data?.logradouro}, ${data?.bairro}, ${data?.municipio}, ${data?.uf}, ${data?.cep}`
+            }</h6>
             <div ref={mapRef} style={{height: '500px', width: "100%"}}></div>
         </div>
     )

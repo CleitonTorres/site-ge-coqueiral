@@ -160,6 +160,7 @@ function Home() {
       {/* notícias */}
       <Section customClass={['fullWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
+        
         <Box customClass={['fullWidth', 'flexRowTopWrap']}>
           {context?.dataNews?.filter(news=> !news.destaque).map((news)=>{            
             return(
@@ -172,6 +173,7 @@ function Home() {
                   imageID: news.imageID,
                   _id: news._id,
                   linkMaps: '',
+                  keywords:[''],
                   evento: false,
                   destaque: news.destaque
                 }}           
@@ -207,6 +209,13 @@ function Home() {
             nameEmpresa='Vaa Canoeiros' 
             logoURL='/logo/empresas-parceira/vaaCanoneiros.png'
             linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros.cpp/#'}
+          />
+        </Box>
+        <Box customClass={['margin', 'flexRowWrap']}>
+          <CardEmpresaParceira 
+            nameEmpresa='Radical Oficial' 
+            logoURL='/logo/empresas-parceira/logoRadical.png'
+            linkSiteEmpresa={'https://radicaloficial.com.br/'}
           />
         </Box>
       </Section>

@@ -460,61 +460,22 @@ export default function DadosGerais({readOnly}:Props){
         //updateContext(newData);        
     };
 
-    const latLongSet = async (lat: number, lng: number, label: 'localInicio' | 'localFim', adress?: string)=>{
+    const latLongSet = async (lat: number, lng: number, label: 'localInicio' | 'localFim', address?: string)=>{
         
         context.setDataSaae((prev)=>{
             let newData = prev.dadosGerais;
 
-            if(adress){
-                const adressSplit = adress.split(',');
-                console.log("split", adressSplit);
+            if(address){
+                console.log("endereço recebido do clique", address);
 
-                if(adressSplit.length === 5){
-                    newData =  {
-                        ...newData,
-                        [label]:{
-                            ...newData[label],
-                            logradouro: adressSplit[0] + ", " + adressSplit[1].split('-')[0],
-                            bairro: adressSplit[1].split('-')[1] || '',
-                            municipio: adressSplit[2].split('-')[0] || '',
-                            uf: adressSplit[2].split('-')[1] || '',
-                            cep:  adressSplit[3] || '',
-                            coordenadas:{
-                                lat: lat,
-                                long: lng
-                            }
-                        }
-                    }
-                }else if(adressSplit.length === 3){
-                    newData = {
-                        ...newData,
-                        [label]:{
-                            ...newData[label],
-                            logradouro: adressSplit[0].split(' ')[0],
-                            bairro: '',
-                            municipio: adressSplit[0].split(' ')[1] || '',
-                            uf: adressSplit[1] || '',
-                            cep:  '',
-                            coordenadas:{
-                                lat: lat,
-                                long: lng
-                            }
-                        }
-                    }
-                }else{
-                    newData = {
-                        ...newData,
-                        [label]:{
-                            ...newData[label],
-                            logradouro: adress,
-                            bairro: '',
-                            municipio: '',
-                            uf: '',
-                            cep:  '',
-                            coordenadas:{
-                                lat: lat,
-                                long: lng
-                            }
+                newData = {
+                    ...newData,
+                    [label]:{
+                        ...newData[label],
+                        address: address,
+                        coordenadas:{
+                            lat: lat,
+                            long: lng
                         }
                     }
                 }
@@ -916,7 +877,20 @@ export default function DadosGerais({readOnly}:Props){
                         />   
                     </div>
                 </div>
+               {context.dataSaae?.dadosGerais?.localInicio?.address ?
+                <div className={styles.line}>
+                    <div className={styles.collum}>
+                        <h1>
+                            Descrição do endereço.
+                        </h1>
+                        <span>{
+                            context.dataSaae?.dadosGerais?.localInicio?.address 
+                        }</span>
+                    </div>
+                </div>
+                :null}
                 {inicioFim || context.dataSaae?.dadosGerais?.localFim ?
+                <>
                     <div className={styles.line}>
                         <div className={styles.collum}>
                             <h1>
@@ -984,7 +958,21 @@ export default function DadosGerais({readOnly}:Props){
                                 readOnly={readOnly}
                             />   
                         </div>
+
                     </div>
+                    {context.dataSaae?.dadosGerais?.localFim?.address ?
+                        <div className={styles.line}>
+                            <div className={styles.collum}>
+                            <h1>
+                                Descrição do endereço.
+                            </h1>
+                                <span>{
+                                    context.dataSaae?.dadosGerais?.localFim?.address 
+                                }</span>
+                            </div>
+                        </div>
+                    :null}
+                </>
                 :null}
 
                 {/* metodologia/objetivo */}

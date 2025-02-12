@@ -31,6 +31,7 @@ export interface DataNews {
     date: Date,
     evento?: boolean, //se não for evento é notícia.
     linkMaps: string,
+    keywords: string[],
     _id: string
 }
 
@@ -54,7 +55,8 @@ export interface Endereco {
     municipio: string,
     uf: string,
     cep: string,
-    coordenadas?: {lat: number, long: number}
+    coordenadas?: {lat: number, long: number},
+    address?: string
 }
 
 export interface DataStorage {
