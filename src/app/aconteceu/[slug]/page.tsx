@@ -75,28 +75,29 @@ export default async function Page({ params }: PageProps) {
 }
 
 async function getNewsData(id: string) {
-    const response = await axios.get(`https://19.escoteiroses.org.br${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
-        params: {
-            service: 'news',
-            newsId: id,
-        },
-        headers: {
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
-        }
-    });
+    try{
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
+            params: {
+                service: 'news',
+                newsId: id,
+            },
+            headers: {
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+            }
+        });
 
-    if (!response) {
+        const data = await response.data as { news: DataNews };
+        return data.news;
+    }catch(error){
+        console.error("Erro ao buscar notícia em aconteceu:", error);
         return null;
     }
-
-    const data = await response.data as { news: DataNews };
-    return data.news;
 }
 
 // Gerar os caminhos estáticos (substitui getStaticPaths)
 export async function generateStaticParams() {
     try {
-        const response = await axios.get(`https://19.escoteiroses.org.br${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
             params: {service: 'news'},
             headers: {
                 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
@@ -108,7 +109,7 @@ export async function generateStaticParams() {
         return noticias.map((noticia) => ({ slug: noticia._id.toString() }));
 
     } catch (error) {
-        console.error("Erro ao buscar notícias:", error);
+        console.error("Erro ao buscar notícias em aconteceu, genarateStaticPparams:", error);
         return [];
     }
 }
