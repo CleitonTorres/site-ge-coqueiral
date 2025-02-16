@@ -14,7 +14,8 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-    const noticia = await getNewsData((await (params)).slug);
+    const slug = (await (params)).slug;
+    const noticia = await getNewsData(slug) as DataNews;
     const schemaData = {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
@@ -74,12 +75,12 @@ export default async function Page({ params }: PageProps) {
     )
 }
 
-async function getNewsData(id: string) {
+async function getNewsData(slug: string) {
     try{
         const response = await axios.get(`${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
             params: {
                 service: 'news',
-                newsId: id,
+                slug: slug,
             },
             headers: {
                 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
@@ -106,7 +107,7 @@ export async function generateStaticParams() {
 
         const noticias = await response.data.news as DataNews[]; 
         
-        return noticias.map((noticia) => ({ slug: noticia._id.toString() }));
+        return noticias.map((noticia) => ({ slug: noticia.slug}));
 
     } catch (error) {
         console.error("Erro ao buscar notícias em aconteceu, genarateStaticPparams:", error);
@@ -116,7 +117,8 @@ export async function generateStaticParams() {
 
 // Configurar SEO dinâmico
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const noticia = await getNewsData((await (params)).slug) as DataNews;
+    const slug = (await (params)).slug;
+    const noticia = await getNewsData(slug) as DataNews;
 
     if (!noticia) {
         return {

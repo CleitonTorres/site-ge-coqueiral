@@ -335,6 +335,22 @@ export function cleamText(value:string){
 }
 
 /**
+ * Função que gera um slug a partir de um título
+ * @param {string} titulo
+ * @returns {string} slug
+*/
+export function gerarSlug(titulo:string) {
+    return titulo
+        .toLowerCase() // Converte para minúsculas
+        .normalize("NFD") // Separa acentos de letras (ex: "ç" -> "c", "á" -> "a")
+        .replace(/[\u0300-\u036f]/g, "") // Remove os acentos
+        .replace(/[^a-z0-9\s-]/g, "") // Remove caracteres especiais (exceto espaços e "-")
+        .replace(/\s+/g, "-") // Substitui espaços por "-"
+        .replace(/-+/g, "-") // Remove múltiplos "-"
+        .trim(); // Remove espaços extras no início e no final
+}
+
+/**
  * Função que verifica se uma string contém apenas números
  * @param {string} str 
  * @returns {boolean}

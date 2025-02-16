@@ -172,6 +172,7 @@ function Home() {
                   paragraph:  news.paragraph || "",
                   imageID: news.imageID,
                   _id: news._id,
+                  slug: news.slug,
                   linkMaps: '',
                   keywords:[''],
                   evento: false,

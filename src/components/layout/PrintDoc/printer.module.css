@@ -1,0 +1,20 @@
+.conteiner{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 20px;
+}
+
+@media print{
+    .conteiner{
+        display: block;
+        width: 100%;
+        padding: 20px;
+    }
+    @page {
+        size: A4;
+        margin: 0;
+        
+    }
+}

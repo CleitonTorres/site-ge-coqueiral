@@ -3,7 +3,7 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import { DataNews, ProfileProps } from '@/@types/types';
-import { calcTotalFilesMB, dateFormat2, encryptPassword } from '@/scripts/globais';
+import { calcTotalFilesMB, dateFormat2, encryptPassword, gerarSlug } from '@/scripts/globais';
 import Modal from '@/components/layout/modal/modal';
 import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 import axios from 'axios';
@@ -17,6 +17,7 @@ export default function Page(){
     const [showModal, setShowModal] = useState(false);
     const [actions, setAction] = useState<number | undefined>();
     const [dataNews, setDataNews] = useState({} as DataNews);
+    const [keyWords, setKeyWords] = useState<string>('');
 
     //arquivos anexados.
     const [file, setFile] = useState<File[]>([]);
@@ -60,6 +61,33 @@ export default function Page(){
             return{
                 ...prev,
                 [name]: value
+            }
+        })
+    }
+    const handleKeysWorld = (e:ChangeEvent<HTMLInputElement>)=>{
+        e.preventDefault();
+        const value = e.target.value;
+        const match = value.includes(',');
+        setKeyWords(value);
+
+        if(match){
+            if(value.length <= 1) return;
+            setDataNews((prev)=>{
+                return{
+                    ...prev,
+                    keywords: [...prev.keywords || [], value.split(',')[0]]
+                }
+            });
+
+            setKeyWords('');
+        }
+    }
+    const removeKeyWords = (index:number)=>{
+        setDataNews((prev)=>{            
+            const newKeys = prev.keywords?.filter((item, i)=> i !== index);
+            return{
+                ...prev,
+                keywords: newKeys
             }
         })
     }
@@ -191,7 +219,12 @@ export default function Page(){
             await axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,
                 {
                     service: 'news',
-                    news: {...dataNews, imageID: idImage, date: new Date(dataNews.date)}
+                    news: {
+                        ...dataNews, 
+                        imageID: idImage, 
+                        slug: gerarSlug(dataNews.title),
+                        date: new Date(dataNews.date)
+                    }
                 },{
                     headers:{
                         'Authorization': `Bearer ${context.dataUser.token}`
@@ -399,9 +432,7 @@ export default function Page(){
                                 value={dataNewUser.password || '' }
                             /> 
                         </div>
-                    </div>                   
-                    
-                      
+                    </div>
                     <button onClick={(e)=>submit(e)}>
                         Ok
                     </button>
@@ -478,6 +509,46 @@ export default function Page(){
                                 datatype={dateFormat2(dataNews.date) || '' }
                                 placeholder='link das coordenadas'
                             />
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Palavras chaves</label>                   
+                            <input 
+                                name='keyWords' 
+                                onChange={(e)=>handleKeysWorld(e)}
+                                onKeyDown={(e)=>{if(e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if(e.currentTarget?.value.length <= 1) return;
+                                    setDataNews((prev)=>{
+                                        return{
+                                            ...prev,
+                                            keywords: [...prev.keywords || [], e.currentTarget?.value.split(',')[0]]
+                                        }
+                                    });
+                                    setKeyWords('');
+                                }}}
+                                value={keyWords || '' }
+                                placeholder='use a vírgula ou enter'
+                            />
+                            <div className={styles.keyWords}>
+                                {dataNews.keywords?.map((item, index)=>(
+                                    <div key={index+"keysworld"} style={{position: 'relative', paddingRight: '16px'}}>
+                                        <span>{item}</span>
+                                        <span 
+                                            key={index+"keysworld"}
+                                            onClick={()=>removeKeyWords(index)}
+                                            style={{
+                                                cursor: 'pointer', 
+                                                color: 'var(--white)',
+                                                position: 'absolute',
+                                                right: '4px',
+                                                top: '-6px',
+                                            }}
+                                        >
+                                            x
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                         <div className={styles.boxTextArea}>
                             <label htmlFor="user">Parágrafo (* para negrito, /p para parágrafo)</label>                   

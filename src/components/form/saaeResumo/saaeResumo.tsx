@@ -11,7 +11,9 @@ import Botton from '../botton/botton';
 import { useContext } from 'react';
 import { Context } from '@/components/context/context';
 import Confirme from '@/components/layout/confirme/confirme';
-import Printer from '@/components/layout/Printer/printer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PdfDocumentInfosPreliminares from '@/components/layout/PrintDoc/printDocInfoPreliminar';
+import PdfDocumentResumoSAAE from '@/components/layout/PrintDoc/printResumoSAAE';
 
 type Props= {
     hiddeButton?: boolean
@@ -25,16 +27,43 @@ export default function SaaeResumo ({hiddeButton}:Props){
     return(
         <div className={styles.conteiner}>
             <h2>8. Resumo da sua SAAE</h2>
-            <span 
-                className='link'
-                onClick={()=>{
-                    context.setShowModal({
-                        //element: <PrintCircular dataSaae={context.dataSaae}/>,
-                        element: <Printer data={context.dataSaae}/>,
-                        styles:['backgroundWhite']
-                }); 
+            <PDFDownloadLink 
+                document={
+                    <PdfDocumentInfosPreliminares dataSaae={context.dataSaae}/>
+                } 
+                fileName="informacoes-preliminares.pdf"
+            >
+                {({ blob, url, loading, error }) =>{
+                    if(loading){
+                        return 'Carregando documento...'
+                    }else{
+                        console.log('blob', blob, 'Url', url, 'error', error)
+                        return <span style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir informações preliminares</span>
+                    }
                 }}
-            > imprimir circular preliminar</span>
+            </PDFDownloadLink> 
+
+            {/* {context.dataSaae? <PDFDownloadLink 
+                document={<PdfDocumentResumoSAAE />} 
+                fileName="resumoSaae.pdf"
+            >
+                {({ blob, url, loading, error }) =>{
+                    if(loading){
+                        return 'Carregando documento...'
+                    }else{
+                        console.log('blob', blob, 'Url', url, 'error', error)
+                        return <span style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir Resumo da SAAE</span>
+                    }
+                }}
+            </PDFDownloadLink> :null} */}
+
+            <span onClick={()=>{
+                context.setShowModal({
+                    element: <PdfDocumentResumoSAAE/>,
+                    styles:['backgroundWhite', 'alingTop']
+                })
+            }} style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir SAAE</span>
+            
             <DadosGerais readOnly/>
             <InfosPreliminares readOnly/>
             <InventarioSaae readOnly/>

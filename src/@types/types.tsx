@@ -32,6 +32,7 @@ export interface DataNews {
     evento?: boolean, //se não for evento é notícia.
     linkMaps: string,
     keywords: string[],
+    slug: string,
     _id: string
 }
 

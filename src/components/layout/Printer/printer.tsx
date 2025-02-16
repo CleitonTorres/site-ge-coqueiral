@@ -1,7 +1,7 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import PdfDocument from '../PrintDoc/printDocInfoPreliminar';
 import { SAAE } from '@/@types/types';
+import PdfDocumentInfosPreliminares from '../PrintDoc/printDocInfoPreliminar';
 
 type Props = {
   data: SAAE
@@ -9,7 +9,12 @@ type Props = {
 
 const Printer = ({data}:Props) => (
   <div>
-    <PDFDownloadLink document={<PdfDocument dataSaae={data}/>} fileName="documento.pdf">
+    <PDFDownloadLink 
+      document={
+        <PdfDocumentInfosPreliminares dataSaae={data}/>
+      } 
+      fileName="informacoes-preliminares.pdf"
+    >
       {({ blob, url, loading, error }) =>{
         if(loading){
             return 'Carregando documento...'

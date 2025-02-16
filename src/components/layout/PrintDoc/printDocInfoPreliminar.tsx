@@ -1,24 +1,35 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { SAAE } from '@/@types/types';
+import { dateFormat3 } from '@/scripts/globais';
 
 // Crie estilos
 const styles = StyleSheet.create({
   page: {
+    display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#E4E4E4'
+    justifyContent: 'flex-start',
+    backgroundColor: '#fff',
+    papdding: 40,
+  },
+  title: {
+    fontSize: 14,
+    textAlign: 'center',
   },
   section: {
-    margin: 10,
     padding: 10,
     flexGrow: 1,
     fontSize: 12,
+    margin: 20,
   },
-  text: {
-    margin: 12,
-    fontSize: 14,
+  paragraph: {
+    fontSize: 12,
     textAlign: 'justify',
   },
+  item: {
+    fontSize: 12,
+    textAlign: 'justify',
+  }
 });
 
 
@@ -27,33 +38,32 @@ type Props = {
 
 }
 // Crie o componente PDF
-const PdfDocument = ({dataSaae}:Props) =>{
-  const date = new Date();
+const PdfDocumentInfosPreliminares = ({dataSaae}:Props) =>{
+  const date = dateFormat3(new Date());
 
   return <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        <Text style={styles.text}>
+        <Text style={styles.title}>
           Informações Preliminares do evento/atividade {dataSaae?.dadosGerais?.nomeAtividade || ''}
         </Text>
-        <Text style={styles.text}>
+        <Text style={styles.paragraph}>
           A coordenação do evento {dataSaae?.dadosGerais?.nomeAtividade || ''} informa a todos os interessados as informações mínimas e preliminares relacionadas ao evento/atividade
         </Text>
         {dataSaae?.infosPreliminares?.map((info, index) => (
             <View key={index}>
-                <Text style={styles.text}>{info.item}.</Text>
-                <Text style={styles.text}>{info.text}</Text>
+                <Text style={styles.item}>{info.item}. {info.text}</Text>
             </View>
         ))}
       </View>
 
       <View style={styles.section}>
-          <Text style={styles.text}>À coordenação,</Text>
-          <Text style={styles.text}>
+          <Text style={styles.paragraph}>À coordenação,</Text>
+          <Text style={styles.paragraph}>
             Local:
             {`${dataSaae?.dadosGerais.localInicio.municipio}/${dataSaae?.dadosGerais.localInicio.uf}`}
           </Text>
-          <Text style={styles.text}>
+          <Text style={styles.paragraph}>
             Data:
             {`${date}`}
           </Text>
@@ -62,4 +72,4 @@ const PdfDocument = ({dataSaae}:Props) =>{
   </Document>
 };
 
-export default PdfDocument;
+export default PdfDocumentInfosPreliminares;

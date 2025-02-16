@@ -107,6 +107,23 @@
 .height400{
     height: 300px;
 }
+.keyWords{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.keyWords div{
+    margin: 5px;
+    padding: 5px;
+    background-color: var(--azul-claro);
+    color: var(--white);
+    border-radius: 5px;
+}
+
 @media (max-width: 991px){
     .title{
         font-size: 24px;

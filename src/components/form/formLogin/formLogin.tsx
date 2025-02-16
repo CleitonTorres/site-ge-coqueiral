@@ -13,7 +13,7 @@ type PropsFormLogin = {
 
 export default function  FormLogin ({handleData, submit, dataForm}:PropsFormLogin){
     return(
-        <Section customClass={['flexCollTop', 'fullWidth', 'minHeight']} title="Sessão Formulário Login">
+        <Section customClass={['flexCollTop', 'minHeight']} title="Sessão Formulário Login">
             <form className={`${styles.subConteiner}`} method='POST' title="formulário de login">
                 <label htmlFor="user">Usuário</label>                   
                 <input 

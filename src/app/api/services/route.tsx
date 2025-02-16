@@ -69,14 +69,14 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
     const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey'
     | 'proxyPDF';
-    const newsId = url.searchParams.get('newsId') as string;
+    const slug = url.searchParams.get('slug') as string;
 
     if(service === 'news'){
-        if(newsId){
+        if(slug){
             const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/news"); 
             const collection = db.collection('news');
         
-            const data = collection.findOne({_id: new ObjectId(newsId)});
+            const data = collection.findOne({slug:slug});
             const news = await data;
             
             //fecha o DB.
