@@ -18,10 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const noticias = response.data.news || [];
 
         // Gera os links dinâmicos das notícias
-        const noticiasUrls = noticias.map((noticia: { _id: string; date: string }) => {
+        const noticiasUrls = noticias.map((noticia: { slug: string; date: string }) => {
             const dataValida = noticia.date ? new Date(noticia.date) : null;
             return {
-                url: `${baseUrl}/aconteceu/${noticia._id}`,
+                url: `${baseUrl}/aconteceu/${noticia.slug}`,
                 lastModified: dataValida instanceof Date && !isNaN(dataValida.getTime()) 
                     ? dataValida.toISOString() 
                     : new Date().toISOString(), // Usa a data atual como fallback
