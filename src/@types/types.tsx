@@ -124,6 +124,7 @@ export interface DadosGeraisSaae {
     regSupervisor?: string,
     nomeSupervisor?: string,
     telSupervisor?: string,
+    emailSupervisor?: string,
     nivelFormacaoSupervisor?: string,
     comoChegar: string,
     linkMapa: string,

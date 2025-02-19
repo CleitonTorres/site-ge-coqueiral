@@ -55,13 +55,34 @@
     max-width: var(--widthLarge);
     min-width: var(--minWidth);
 }
-.sectionsBtn h2{
+.subTitle{
     padding: 3px;
     font-size: 18px;
+}
+.active{
     border: 2px solid var(--cinza);
     border-bottom: 2px solid var(--white);
 }
-
+.conteinerChefia{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+}
+.cardChefia{
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    padding: 6px;
+    margin: 6px;
+    width: 300px;
+    height: 340px;
+    -webkit-box-shadow: 2px 6px 14px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 6px 14px 0px rgba(0,0,0,0.75);
+    box-shadow: 2px 6px 14px 0px rgba(0,0,0,0.75);
+}
 @media (max-width: 991px) {
     .conteiner{
         flex-direction: column;

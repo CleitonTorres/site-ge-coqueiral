@@ -41,6 +41,12 @@ type Props = {
 const PdfDocumentInfosPreliminares = ({dataSaae}:Props) =>{
   const date = dateFormat3(new Date());
 
+  if(!dataSaae) return <Document>
+      <Page size="A4" style={styles.page}>
+        <Text>Dados não carregados</Text>
+      </Page>
+      </Document>
+
   return <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
@@ -61,7 +67,7 @@ const PdfDocumentInfosPreliminares = ({dataSaae}:Props) =>{
           <Text style={styles.paragraph}>À coordenação,</Text>
           <Text style={styles.paragraph}>
             Local:
-            {`${dataSaae?.dadosGerais.localInicio.municipio}/${dataSaae?.dadosGerais.localInicio.uf}`}
+            {`${dataSaae?.dadosGerais?.localInicio.municipio}/${dataSaae?.dadosGerais?.localInicio.uf}`}
           </Text>
           <Text style={styles.paragraph}>
             Data:

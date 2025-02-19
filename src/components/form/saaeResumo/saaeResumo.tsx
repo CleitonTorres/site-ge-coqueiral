@@ -43,8 +43,8 @@ export default function SaaeResumo ({hiddeButton}:Props){
                 }}
             </PDFDownloadLink> 
 
-            {/* {context.dataSaae? <PDFDownloadLink 
-                document={<PdfDocumentResumoSAAE />} 
+            {context.dataSaae._id ? <PDFDownloadLink 
+                document={<PdfDocumentResumoSAAE dataSaae={context.dataSaae}/>} 
                 fileName="resumoSaae.pdf"
             >
                 {({ blob, url, loading, error }) =>{
@@ -55,14 +55,14 @@ export default function SaaeResumo ({hiddeButton}:Props){
                         return <span style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir Resumo da SAAE</span>
                     }
                 }}
-            </PDFDownloadLink> :null} */}
+            </PDFDownloadLink> :null}
 
-            <span onClick={()=>{
+            {/* <span onClick={()=>{
                 context.setShowModal({
-                    element: <PdfDocumentResumoSAAE/>,
+                    element: <PdfDocumentResumoSAAE dataSaae={context.dataSaae}/>,
                     styles:['backgroundWhite', 'alingTop']
                 })
-            }} style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir SAAE</span>
+            }} style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir SAAE</span> */}
             
             <DadosGerais readOnly/>
             <InfosPreliminares readOnly/>
