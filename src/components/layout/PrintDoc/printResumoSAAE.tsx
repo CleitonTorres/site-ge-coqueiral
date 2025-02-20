@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 5,
   },
-  title2:{
-    fontSize: 12,
+  title2: {
+    fontSize: 10,
     textAlign: 'left',
     fontWeight: 'bold',
   },
@@ -35,7 +35,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     width: '100%',
   },
-  line:{
+  line: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+  },
+  line2: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -51,47 +59,102 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     border: '1px solid #000',
     padding: 5,
-    marginBottom: 5
+    marginBottom: 5,
   },
-  bold:{
+  resultado: {
+    display: 'flex',
+    width: 220,
+  },
+  bold: {
     fontWeight: 'bold',
     fontSize: 10,
   },
-  width60:{	
+  width30: {
+    width: 40,
+    fontSize: 10,
+    textAlign: 'justify',
+    border: '1px solid #000',
+    padding: 5,
+    margin: 1,
+  },
+  width60: {
     width: 50,
     fontSize: 10,
     textAlign: 'justify',
     border: '1px solid #000',
     padding: 5,
     margin: 1,
-    height: '100%',
   },
-  width90:{	
+  width90: {
     width: 70,
     fontSize: 10,
     textAlign: 'justify',
     border: '1px solid #000',
     padding: 5,
     margin: 1,
-    height: '100%',
   },
-  width140:{	
+  width140: {
     width: 120,
     fontSize: 10,
     textAlign: 'justify',
     border: '1px solid #000',
     padding: 5,
     margin: 1,
-    height: '100%',
   },
-  width260:{	
+  width260: {
     width: 140,
     fontSize: 10,
     textAlign: 'justify',
     border: '1px solid #000',
     padding: 5,
     margin: 1,
-    height: '100%',
+  },
+  matriz: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 350,
+    padding: 6,
+  },
+  rotuloConsequencia: {
+    width: 50,
+    height: 50,
+    border: '1px solid blue',
+    margin: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    fontSize: 10,
+  },
+  rotuloProbabilidade: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: 50,
+    fontSize: 10,
+    border: '1px solid blue',
+    margin: 1,
+  },
+  valor: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+    fontSize: 10,
+    border: '1px solid blue',
+    margin: 1,
+  },
+  bgGreen: {
+    backgroundColor: 'green',
+    marginTop: 20,
+    paddingLeft: 10,
+  },
+  risco: {
+    fontWeight: 'bold',
+    boxShadow: '0px 0px 33px 0px rgb(5, 1, 42) inset',
   },
 });
 
@@ -154,6 +217,7 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
         <Text style={styles.title2}>
           Resposta da sua SAAE: {data?.status}
         </Text>
+
         <View style={styles.section}>
           <Text style={styles.title}>
             1. Dados gerais da atividade
@@ -167,16 +231,16 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
               <Text style={styles.bold}>Tipo de atividade:</Text> {data?.dadosGerais?.tipoAtividade?.map((item) => item).join(', ')}
             </Text>
             <Text style={styles.item}>
-              <Text style={styles.bold}>Tipo de atividade:</Text> {data?.dadosGerais?.odss?.map((item) => item).join(', ')}
+              <Text style={styles.bold}>ODSs:</Text> {data?.dadosGerais?.odss?.map((item) => item).join(', ')}
             </Text>
             <Text style={styles.item}>
-              <Text style={styles.bold}>Tipo de atividade:</Text> {data?.dadosGerais?.ramo?.map((item) => item).join(', ')}
+              <Text style={styles.bold}>Ramos:</Text> {data?.dadosGerais?.ramo?.map((item) => item).join(', ')}
             </Text>
             <Text style={styles.item}>
               <Text style={styles.bold}>Atividade de Patrulha não supervisionada:</Text> {data?.dadosGerais?.atividadeNaoSupervisionada ? 'Sim' : 'Não'}
             </Text>
             <Text style={styles.item}>
-              <Text style={styles.bold}>Atividade de Patrulha não supervisionada:</Text> {data?.dadosGerais?.usoTransporteInterMunicipal ? 'Sim' : 'Não'}
+              <Text style={styles.bold}>Uso de transporte Intermunicipal?</Text> {data?.dadosGerais?.usoTransporteInterMunicipal ? 'Sim' : 'Não'}
             </Text>
           </View>
 
@@ -335,56 +399,49 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
             </Text>
           </View>
 
-          {/* coordenadas início*/}
-          <View style={styles.line}>
-            <Text style={styles.item}>
-              <Text style={styles.bold}>Coordenadas do local Início:</Text> {`${data?.dadosGerais?.localInicio?.coordenadas?.lat || ''}, ${data?.dadosGerais?.localInicio.coordenadas?.long || ''}`}
-            </Text>
-          </View>
-
-          {/*endereço e mapa início*/}
+          {/*coordenada, endereço e mapa início*/}
           <View style={styles.line}>
             {(data?.dadosGerais?.localInicio?.logradouro && data?.dadosGerais?.localInicio?.bairro) 
             || (data?.dadosGerais?.localInicio?.coordenadas?.lat && data?.dadosGerais?.localInicio?.coordenadas?.long) ?
               <View>
+                  <Text style={styles.item}>
+                    <Text style={styles.bold}>Coordenadas do local Início:</Text> {`${data?.dadosGerais?.localInicio?.coordenadas?.lat || ''}, ${data?.dadosGerais?.localInicio.coordenadas?.long || ''}`}
+                  </Text>
                   <Link style={styles.item} src={gerarLinkMapa(data?.dadosGerais?.localInicio?.coordenadas?.lat, data?.dadosGerais?.localInicio?.coordenadas?.long )}>
                     {gerarLinkMapa(data?.dadosGerais?.localInicio?.coordenadas?.lat, data?.dadosGerais?.localInicio?.coordenadas?.long )}
                   </Link>
                 <Image 
                   id='mapaLocalInicio'
                   src={googleMapImage} 
-                  style={{ width: 600, height: 400 }}
+                  style={{ width: 500, height: 400, objectFit: "contain" }}
                 />
               </View>
             :null}
           </View>
 
-          {/* coordenadas fim*/}
-          <View style={styles.line}>
-            <Text style={styles.item}>
-              <Text style={styles.bold}>Coordenadas do local fim da atividade:</Text> {`${data?.dadosGerais?.localFim?.coordenadas?.lat || ''}, ${data?.dadosGerais?.localInicio.coordenadas?.long || ''}`}
-            </Text>
-          </View>
-
-          {/*endereço e mapa fim*/}
+          {/*coordennadas, endereço e mapa fim*/}
           <View style={styles.line}>
             {(data?.dadosGerais?.localFim?.logradouro && data?.dadosGerais?.localFim?.bairro) 
             || (data?.dadosGerais?.localFim?.coordenadas?.lat && data?.dadosGerais?.localFim?.coordenadas?.long) ?
             <View>
+              <Text style={styles.item}>
+                <Text style={styles.bold}>Coordenadas do local fim da atividade:</Text> {`${data?.dadosGerais?.localFim?.coordenadas?.lat || ''}, ${data?.dadosGerais?.localInicio.coordenadas?.long || ''}`}
+              </Text>
               <Link style={styles.item} src={gerarLinkMapa(data?.dadosGerais?.localFim?.coordenadas?.lat, data?.dadosGerais?.localFim?.coordenadas?.long )}>
                   {gerarLinkMapa(data?.dadosGerais?.localFim?.coordenadas?.lat, data?.dadosGerais?.localFim?.coordenadas?.long )}
               </Link>
               <Image 
                 id='mapaLocalFim'
                 src={googleMapFimImage} 
-                style={{ width: 600, height: 400 }}
+                style={{ width: 500, height: 400, objectFit: "contain" }}
               />
             </View>            
             :null}
           </View>
         </View>
-        <View style={styles.section}>
-          {/*programação da atividade*/}
+
+        {/*programação da atividade*/}
+        <View style={styles.section}>          
           <View style={styles.line}>
             <Text style={styles.title2}>Programação da atividade</Text>
 
@@ -436,6 +493,372 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
 
           </View>
         </View>
+
+        {/* Informações mínimas aos participantes */}
+        <View style={styles.section}>
+          <Text style={styles.title}>
+            2. Informações mínimas aos envolvidos.
+          </Text>
+          <Text style={styles.title2}>
+            Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286
+          </Text>        
+
+          {data?.infosPreliminares?.map((item, idx)=>(
+              <View key={item.item+idx} style={styles.line}>         
+                  <Text style={styles.paragraph}>
+                    {idx+1}: {item.text}
+                  </Text>
+              </View>                
+          ))}
+        </View>
+
+         {/* Inventário de risco */}
+         <View style={styles.section}>
+            <Text style={styles.title}>
+              3. Inventário de Riscos.
+            </Text>
+            <View style={styles.line2}>
+              <Text style={styles.width90}>Atividade</Text>
+              <Text style={styles.width90}>Perigo</Text>
+              <Text style={styles.width90}>Dano</Text>
+              <Text style={styles.width140}>Controle Operacional</Text>
+              <Text style={styles.width140}>Ações Mitigadoras</Text>
+              <Text style={styles.width30}>Prob.</Text>
+              <Text style={styles.width30}>Cons.</Text>
+              <Text style={styles.width30}>N.Risco</Text>
+            </View>
+            {data?.inventarioRiscos?.sort((a,b)=> a.probabilidade - b.probabilidade)
+            ?.map((item, idx)=>(
+              <View key={"inventario"+idx} style={styles.line}>         
+                  <Text style={styles.width90}>
+                    {item.atividade}
+                  </Text>
+                  <Text style={styles.width90}>
+                    {item.perigo}
+                  </Text>
+                  <Text style={styles.width90}>
+                    {item.danos}
+                  </Text>
+                  <Text style={styles.width140}>
+                    {item.controleOperacional}
+                  </Text>
+                  <Text style={styles.width140}>
+                    {item.acoesMitigadoras}
+                  </Text>
+                  <Text style={styles.width30}>
+                    {item.probabilidade}
+                  </Text>
+                  <Text style={styles.width30}>
+                    {item.consequencia}
+                  </Text>
+                  <Text style={styles.width30}>
+                    {item.nivelRisco}
+                  </Text>
+              </View>                
+            ))}
+         </View>
+
+         {/* Matriz de Risco*/}
+         <View style={styles.section}>
+            <Text style={styles.title}>
+              4. Matriz de Risco.
+            </Text>
+            <Text style={styles.title2}>
+              item 9.2 da Política Nacional de Gestão de Risco.
+            </Text>
+            <View style={styles.resultado}>
+                <Text
+                  style={{
+                    display: 'flex',
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginRight: 6
+                  }}
+                >
+                  Maior resultado
+                </Text>
+                <Text 
+                    style={{
+                      display: 'flex',
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: data?.grauRisco?.color, 
+                      fontWeight: 700, 
+                      width: 40, 
+                      height: 40
+                    }}
+                >
+                    {data?.grauRisco?.value || ''}
+                </Text>
+            </View>
+
+            <View style={styles.matriz}>
+                <Text style={styles.rotuloProbabilidade}>
+                    Quase certo
+                </Text>
+                <Text 
+                    style={{...styles.valor, ...{backgroundColor: 'yellow'},  ...data?.grauRisco?.value === 5 ? styles.risco : {}}} 
+                    id='5'
+                > 
+                    5
+                </Text>
+                <Text 
+                  style={{...styles.valor, ...(data?.grauRisco?.value === 10 ? styles.risco : {})}} 
+                  id='10' 
+                > 
+                  10
+                </Text>
+                <Text 
+                  style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 15 ? styles.risco : {})}}
+                  id='15' 
+                > 
+                  15
+                </Text>
+                <Text 
+                  style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 20 ? styles.risco : {})}} 
+                  id='20'
+                > 
+                  20
+                </Text>
+                <Text 
+                  style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 25 ? styles.risco : {})}} 
+                  id='25'
+                > 
+                  25
+                </Text>
+                <Text 
+                  style={styles.rotuloProbabilidade}>
+                  Provável
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+                  backgroundColor: 'yellow'
+                  }} 
+                  id='4'
+                > 
+                  4
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='8'
+                > 
+                  8
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='12'
+                > 
+                  12
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 16 ? styles.risco : {}), 
+                  backgroundColor: 'red'
+                  }} 
+                  id='16'
+                > 
+                  16
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 20 ? styles.risco : {}), 
+                  backgroundColor: 'red'
+                  }} 
+                  id='20'
+                > 
+                  20
+                </Text>
+                <Text style={styles.rotuloProbabilidade}>
+                  Possível
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
+                  backgroundColor: 'green'
+                  }} 
+                  id='3'
+                > 
+                  3
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
+                  backgroundColor: 'yellow'
+                  }} 
+                  id='6'
+                > 
+                  6
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 9 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='9'
+                > 
+                  9
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='12'
+                > 
+                  12
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 15 ? styles.risco : {}), 
+                  backgroundColor: 'red'
+                  }} 
+                  id='15'
+                > 
+                  15
+                </Text>
+                <Text style={styles.rotuloProbabilidade}>
+                  Raro
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
+                  backgroundColor: 'green'
+                  }} 
+                  id='2'
+                > 
+                  2
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+                  backgroundColor: 'yellow'
+                  }} 
+                  id='4'
+                > 
+                  4
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
+                  backgroundColor: 'yellow'
+                  }} 
+                  id='6'
+                > 
+                  6
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='8'
+                > 
+                  8
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 10 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='10'
+                > 
+                  10
+                </Text>
+                <Text style={styles.rotuloProbabilidade}>
+                  Improvável
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 1 ? styles.risco : {}), 
+                  backgroundColor: 'green'
+                  }} 
+                  id='1'
+                > 
+                  1
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
+                  backgroundColor: 'green'
+                  }} 
+                  id='2'
+                > 
+                  2
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
+                  backgroundColor: 'green'
+                  }} 
+                  id='3'
+                > 
+                  3
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+                  backgroundColor: 'yellow'
+                  }} 
+                  id='4'
+                > 
+                  4
+                </Text>
+                <Text 
+                  style={{
+                  ...styles.valor, 
+                  ...(data?.grauRisco?.value === 5 ? styles.risco : {}), 
+                  backgroundColor: 'orange'
+                  }} 
+                  id='5'
+                > 
+                  5
+                </Text>
+
+                <Text style={{...{width: 50}, margin: '1px'}}></Text>
+
+                <Text style={styles.rotuloConsequencia}>
+                  Desprezível
+                </Text>
+                <Text style={styles.rotuloConsequencia}>
+                    Menor
+                </Text>
+                <Text style={styles.rotuloConsequencia}>
+                    Moderada
+                </Text>
+                <Text style={styles.rotuloConsequencia}>
+                    Maior
+                </Text>
+                <Text style={styles.rotuloConsequencia}>
+                    Catastrófica
+                </Text>
+            </View>
+         </View>
       </Page>
     </Document>
 )};

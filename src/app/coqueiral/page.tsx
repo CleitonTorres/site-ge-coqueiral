@@ -35,13 +35,13 @@ export default function Coqueiral (){
             <br />
             <div className={styles.sectionsBtn}> 
                 <h2 
-                    className={`${styles.subTitle} ${showCard === 0 ? styles.active : undefined} cursorPointer`}
+                    className={`${styles.subTitle} ${showCard === 0 ? styles.active : styles.disable} cursorPointer`}
                     onClick={()=>setShowCard(0)}
                 >
                     Na comunidade
                 </h2>
                 <h2 
-                    className={`${styles.subTitle} ${showCard === 1 ? styles.active : undefined} cursorPointer`}
+                    className={`${styles.subTitle} ${showCard === 1 ? styles.active : styles.disable} cursorPointer`}
                     onClick={()=>setShowCard(1)}
                 >
                     Voluntários
@@ -172,7 +172,7 @@ export default function Coqueiral (){
                                     alt=""
                                     width={290}
                                     height={284}
-                                    src={'/images/chefia/chAndreia.png'}
+                                    src={'/images/chefia/chAndreia.jpeg'}
                                     className={styles.image}
                                 />
                                 <span>Assistente de ramo</span>
