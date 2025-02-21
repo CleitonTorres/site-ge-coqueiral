@@ -8,7 +8,7 @@ import PlanoEmergencia from '../planoEmergencia/planoEmergencia';
 import FotosInspecao from '../fotosInspecao/fotosInspecao';
 import SectionDocumentos from '../sectionDocumentos/documentos';
 import Botton from '../botton/botton';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Context } from '@/components/context/context';
 import Confirme from '@/components/layout/confirme/confirme';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -22,8 +22,14 @@ type Props= {
  * Componente que exibe o resumo antes do envio ou os dados preenchidos de uma SAAE já enviada. 
  * @returns 
  */
+
 export default function SaaeResumo ({hiddeButton}:Props){
     const context = useContext(Context);
+
+    useEffect(()=>{
+        return undefined
+    },[]);
+    
     return(
         <div className={styles.conteiner}>
             <h2>8. Resumo da sua SAAE</h2>
@@ -41,11 +47,12 @@ export default function SaaeResumo ({hiddeButton}:Props){
                         return <span style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir informações preliminares</span>
                     }
                 }}
-            </PDFDownloadLink> 
+            </PDFDownloadLink>
 
             {context.dataSaae._id ? <PDFDownloadLink 
                 document={<PdfDocumentResumoSAAE dataSaae={context.dataSaae}/>} 
                 fileName="resumoSaae.pdf"
+                download={true}
             >
                 {({ blob, url, loading, error }) =>{
                     if(loading){

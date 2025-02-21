@@ -7,8 +7,9 @@ import { Context } from '@/components/context/context';
 import Image from 'next/image';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
 import axios from 'axios';
+import { Image as PdfImage, Link, Text, View } from '@react-pdf/renderer';
 
-export const ImagePreview = ({ file, width, height }:{file:File | string, width:number, height:number}) => {
+export const ImagePreview = ({ file, width, height, toPrint }:{file:File | string, width:number, height:number, toPrint?:boolean}) => {
     const context = useContext(Context);
     const [base64, setBase64] = useState('');
     const [isPdf, setIsPdf] = useState(false);
@@ -30,7 +31,10 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
         const data = await signedURL(url);
         if(!data) return;
         
+        //armazena a URL assinada
         setUrlSiged(data);
+
+        //verifica se é um PDF para gerar uma imagem de preview
         const isPDF = data?.includes('.pdf') ? true : false;
 
         if(data && isPDF){
@@ -84,12 +88,25 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
         if (file instanceof Blob) {
           processFile();
         }else if( typeof file === 'string'){
+            console.log("Entrou na url", toPrint);
             getSignedUrl(file);
         }
-      }, [file]); 
+      }, [file]);
 
     if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
 
+    if(toPrint) {
+        return <View>
+            <PdfImage
+                style={{ objectFit: 'contain', height: height, width: width}}
+                src={urlSigned ? urlSigned :undefined}
+                source={base64 ? base64 : undefined} // Usa o Base64 gerado como src
+            />
+            {urlSigned ? <Link href={urlSigned}>
+                <Text>Abrir: {urlSigned}</Text>
+            </Link>:null}
+        </View>
+    }
     return (
         <>            
             <Image

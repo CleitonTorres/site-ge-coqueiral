@@ -1,9 +1,11 @@
 'use client'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Link } from '@react-pdf/renderer';
-import { dateFormat2 } from '@/scripts/globais';
+import { dateFormat2, pdfToImageBase64, signedURL } from '@/scripts/globais';
 import { v4 } from 'uuid';
 import { SAAE } from '@/@types/types';
+import axios from 'axios';
+
 
 // Crie estilos
 const styles = StyleSheet.create({
@@ -57,9 +59,18 @@ const styles = StyleSheet.create({
   item: {
     fontSize: 10,
     textAlign: 'justify',
-    border: '1px solid #000',
+    border: '2px solid #000',
     padding: 5,
-    marginBottom: 5,
+    margin: 2
+  },
+  item2: {
+    display:'flex',
+    flexDirection: 'column',
+    fontSize: 10,
+    textAlign: 'justify',
+    border: '2px solid #000',
+    padding: 5,
+    margin: 2
   },
   resultado: {
     display: 'flex',
@@ -68,12 +79,13 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
     fontSize: 10,
+    marginRight: 2,
   },
   width30: {
-    width: 40,
+    width: 30,
     fontSize: 10,
     textAlign: 'justify',
-    border: '1px solid #000',
+    border: '2px solid #000',
     padding: 5,
     margin: 1,
   },
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
     width: 50,
     fontSize: 10,
     textAlign: 'justify',
-    border: '1px solid #000',
+    border: '2px solid #000',
     padding: 5,
     margin: 1,
   },
@@ -89,7 +101,7 @@ const styles = StyleSheet.create({
     width: 70,
     fontSize: 10,
     textAlign: 'justify',
-    border: '1px solid #000',
+    border: '2px solid #000',
     padding: 5,
     margin: 1,
   },
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
     width: 120,
     fontSize: 10,
     textAlign: 'justify',
-    border: '1px solid #000',
+    border: '2px solid #000',
     padding: 5,
     margin: 1,
   },
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
     width: 140,
     fontSize: 10,
     textAlign: 'justify',
-    border: '1px solid #000',
+    border: '2px solid #000',
     padding: 5,
     margin: 1,
   },
@@ -119,7 +131,7 @@ const styles = StyleSheet.create({
   rotuloConsequencia: {
     width: 50,
     height: 50,
-    border: '1px solid blue',
+    border: '2px solid blue',
     margin: 1,
     display: 'flex',
     justifyContent: 'center',
@@ -134,7 +146,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 50,
     fontSize: 10,
-    border: '1px solid blue',
+    border: '2px solid blue',
     margin: 1,
   },
   valor: {
@@ -144,7 +156,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     fontSize: 10,
-    border: '1px solid blue',
+    border: '2px solid blue',
     margin: 1,
   },
   bgGreen: {
@@ -161,6 +173,105 @@ const styles = StyleSheet.create({
 type Props = {
   dataSaae: SAAE
 }
+
+const ImagePreview = ({file}:{file:File | string}) => {
+  const [base64, setBase64] = useState('');
+  const [urlSigned, setUrlSiged] = useState('');
+
+  // Converte arquivos não PDF para Base64
+  const fileToBase64 = (file: File) => {
+      return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+
+      reader.readAsDataURL(file);
+      });
+  };
+  
+  const getSignedUrl = async(url:string)=>{
+      const data = await signedURL(url);
+      if(!data) return;
+      
+      //armazena a URL assinada
+      setUrlSiged(data);
+
+      //verifica se é um PDF para gerar uma imagem de preview
+      const isPDF = data?.includes('.pdf') ? true : false;
+
+      if(data && isPDF){
+          // Busca o PDF utilizando a URL assinada
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+              params:{
+                  service: 'proxyPDF',
+                  fileUrl: data
+              },
+              headers:{
+                  'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+              },
+              responseType: 'arraybuffer' // Define o tipo de resposta como Blob
+          });
+          
+          //console.log("blob data", response.data)
+          if(!(response.data instanceof ArrayBuffer)) return;
+
+          // Converte o ArrayBuffer para Blob
+          const blob = new Blob([response.data], { type: 'application/pdf' });
+          // Converte o conteúdo do PDF para um objeto File
+          const file = new File([blob], "preview.pdf", { type: "application/pdf" });
+
+          // Gera a visualização da primeira página em Base64
+          const previewBase64 = await pdfToImageBase64(file);
+          setBase64(previewBase64);
+      }else if(data && !isPDF){
+          setBase64(data);
+      }
+  }
+
+  useEffect(() => {
+      const processFile = async () => {
+        try {
+          if(file instanceof Blob){
+              if (file.type === 'application/pdf') {
+                const base64String = await pdfToImageBase64(file);
+                setBase64(base64String);
+              } else {
+                const base64String = await fileToBase64(file);
+                setBase64(base64String);
+              }
+          }
+        } catch (error) {
+          console.error('Erro ao processar arquivo:', error);
+        }
+      };
+  
+      if (file instanceof Blob) {
+        processFile();
+      }else if( typeof file === 'string'){
+          console.log("Entrou na url", file);
+          getSignedUrl(file);
+      }
+  }, [file]);
+
+  useEffect(()=>{
+    console.log("File", file, "base64", base64, "urlSigned", urlSigned);
+  }, [base64, urlSigned]);
+
+  // if (!base64 && !urlSigned) return <Text>Carregando...</Text>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
+
+  return <View>
+          <Image
+              style={{ objectFit: 'contain', height: 200, width: 100}}
+              src={urlSigned ? urlSigned : typeof file == "string" ? file : undefined} // Usa o Base64 gerado como src
+              source={file instanceof File ? file : undefined } // Usa o Base64 gerado como src
+          />
+          {urlSigned ? <Link href={urlSigned}>
+              <Text>Abrir url</Text>
+          </Link>:null}
+      </View>
+};
+
 // Crie o componente PDF
 const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{  
   const [data, setData] = React.useState<SAAE>();
@@ -174,29 +285,6 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
     return `https://www.google.com/maps?q=${lat},${long}`
   };
 
-  // const fetchImageAsBase64 = async (url:string):Promise<string | ArrayBuffer | null> => {
-  //   const response = await fetch(url);
-  //   const blob = await response.blob();
-  //   return new Promise((resolve) => {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => resolve(reader.result);
-  //     reader.readAsDataURL(blob);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   const loadImages = async () => {
-  //     const timestamp = new Date().getTime();
-  //     const googleMapImage = `https://maps.googleapis.com/maps/api/staticmap?center=${dataSaae.dadosGerais?.localInicio?.coordenadas?.lat},${dataSaae.dadosGerais?.localInicio?.coordenadas?.long}&zoom=14&markers=color:blue%7Clabel:P%7C${dataSaae.dadosGerais?.localInicio?.coordenadas?.lat},${dataSaae.dadosGerais?.localInicio?.coordenadas?.long}&size=600x400&key=${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}&t=${timestamp}`;
-  //     const googleMapFimImage = `https://maps.googleapis.com/maps/api/staticmap?center=${dataSaae.dadosGerais?.localFim?.coordenadas?.lat},${dataSaae.dadosGerais?.localFim?.coordenadas?.long}&markers=color:blue%7Clabel:P%7C${dataSaae.dadosGerais?.localFim?.coordenadas?.lat},${dataSaae.dadosGerais?.localFim?.coordenadas?.long}&zoom=14&size=600x400&key=${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}&t=${timestamp}`;
-    
-  //     const img1 = await fetchImageAsBase64(googleMapImage);
-  //     const img2 = await fetchImageAsBase64(googleMapFimImage);
-  //     setMapImages({ inicio: img1 as string, fim: img2 as string});
-  //   };
-  //   loadImages();
-  // }, []);
-
   React.useEffect(()=>{
     if(dataSaae)setData(dataSaae)
   },[dataSaae]);
@@ -209,7 +297,7 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
   
   return(
     <Document pageLayout='singlePage' language='pt-br' pageMode='useThumbs' title='Resumo da SAAE' >
-      <Page size="A4" style={styles.page} orientation='portrait' wrap dpi={300}>
+      <Page size="A4" style={styles.page} orientation='portrait' wrap dpi={200}>
         <Text style={styles.title}>
           8. Resumo da sua SAAE - 
           ID: {data?._id}
@@ -512,353 +600,739 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
           ))}
         </View>
 
-         {/* Inventário de risco */}
-         <View style={styles.section}>
-            <Text style={styles.title}>
-              3. Inventário de Riscos.
-            </Text>
-            <View style={styles.line2}>
-              <Text style={styles.width90}>Atividade</Text>
-              <Text style={styles.width90}>Perigo</Text>
-              <Text style={styles.width90}>Dano</Text>
-              <Text style={styles.width140}>Controle Operacional</Text>
-              <Text style={styles.width140}>Ações Mitigadoras</Text>
-              <Text style={styles.width30}>Prob.</Text>
-              <Text style={styles.width30}>Cons.</Text>
-              <Text style={styles.width30}>N.Risco</Text>
+        {/* Inventário de risco */}
+        <View style={styles.section}>
+          <Text style={styles.title}>
+            3. Inventário de Riscos.
+          </Text>
+          <View style={styles.line2}>
+            <Text style={styles.width90}>Atividade</Text>
+            <Text style={styles.width60}>Perigo</Text>
+            <Text style={styles.width90}>Dano</Text>
+            <Text style={styles.width140}>Controle Operacional</Text>
+            <Text style={styles.width140}>Ações Mitigadoras</Text>
+            <Text style={styles.width30}>Prob.</Text>
+            <Text style={styles.width30}>Cons.</Text>
+            <Text style={styles.width30}>N.Risco</Text>
+          </View>
+          {data?.inventarioRiscos?.sort((a,b)=> a.probabilidade - b.probabilidade)
+          ?.map((item, idx)=>(
+            <View key={"inventario"+idx} style={styles.line}>         
+                <Text style={styles.width90}>
+                  {item.atividade}
+                </Text>
+                <Text style={styles.width60}>
+                  {item.perigo}
+                </Text>
+                <Text style={styles.width90}>
+                  {item.danos}
+                </Text>
+                <Text style={styles.width140}>
+                  {item.controleOperacional}
+                </Text>
+                <Text style={styles.width140}>
+                  {item.acoesMitigadoras}
+                </Text>
+                <Text style={styles.width30}>
+                  {item.probabilidade}
+                </Text>
+                <Text style={styles.width30}>
+                  {item.consequencia}
+                </Text>
+                <Text style={styles.width30}>
+                  {item.nivelRisco}
+                </Text>
+            </View>                
+          ))}
+        </View>
+
+        {/* Matriz de Risco*/}
+        <View style={styles.section}>
+        <Text style={styles.title}>
+          4. Matriz de Risco.
+        </Text>
+        <Text style={styles.title2}>
+          item 9.2 da Política Nacional de Gestão de Risco.
+        </Text>
+        <View style={styles.resultado}>
+          <Text
+            style={{
+            display: 'flex',
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: 6
+            }}
+          >
+          Maior resultado
+          </Text>
+          <Text 
+            style={{
+            display: 'flex',
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: data?.grauRisco?.color, 
+            fontWeight: 700, 
+            width: 40, 
+            height: 40
+            }}
+          >
+          {data?.grauRisco?.value || ''}
+          </Text>
+        </View>
+
+        <View style={styles.matriz}>
+        <Text style={styles.rotuloProbabilidade}>
+        Quase certo
+        </Text>
+        <Text 
+        style={{...styles.valor, ...{backgroundColor: 'yellow'},  ...data?.grauRisco?.value === 5 ? styles.risco : {}}} 
+        id='5'
+        > 
+        5
+        </Text>
+        <Text 
+        style={{...styles.valor, ...(data?.grauRisco?.value === 10 ? styles.risco : {})}} 
+        id='10' 
+        > 
+        10
+        </Text>
+        <Text 
+        style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 15 ? styles.risco : {})}}
+        id='15' 
+        > 
+        15
+        </Text>
+        <Text 
+        style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 20 ? styles.risco : {})}} 
+        id='20'
+        > 
+        20
+        </Text>
+        <Text 
+        style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 25 ? styles.risco : {})}} 
+        id='25'
+        > 
+        25
+        </Text>
+        <Text 
+        style={styles.rotuloProbabilidade}>
+        Provável
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+        backgroundColor: 'yellow'
+        }} 
+        id='4'
+        > 
+        4
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='8'
+        > 
+        8
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='12'
+        > 
+        12
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 16 ? styles.risco : {}), 
+        backgroundColor: 'red'
+        }} 
+        id='16'
+        > 
+        16
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 20 ? styles.risco : {}), 
+        backgroundColor: 'red'
+        }} 
+        id='20'
+        > 
+        20
+        </Text>
+        <Text style={styles.rotuloProbabilidade}>
+        Possível
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
+        backgroundColor: 'green'
+        }} 
+        id='3'
+        > 
+        3
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
+        backgroundColor: 'yellow'
+        }} 
+        id='6'
+        > 
+        6
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 9 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='9'
+        > 
+        9
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='12'
+        > 
+        12
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 15 ? styles.risco : {}), 
+        backgroundColor: 'red'
+        }} 
+        id='15'
+        > 
+        15
+        </Text>
+        <Text style={styles.rotuloProbabilidade}>
+        Raro
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
+        backgroundColor: 'green'
+        }} 
+        id='2'
+        > 
+        2
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+        backgroundColor: 'yellow'
+        }} 
+        id='4'
+        > 
+        4
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
+        backgroundColor: 'yellow'
+        }} 
+        id='6'
+        > 
+        6
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='8'
+        > 
+        8
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 10 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='10'
+        > 
+        10
+        </Text>
+        <Text style={styles.rotuloProbabilidade}>
+        Improvável
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 1 ? styles.risco : {}), 
+        backgroundColor: 'green'
+        }} 
+        id='1'
+        > 
+        1
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
+        backgroundColor: 'green'
+        }} 
+        id='2'
+        > 
+        2
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
+        backgroundColor: 'green'
+        }} 
+        id='3'
+        > 
+        3
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+        backgroundColor: 'yellow'
+        }} 
+        id='4'
+        > 
+        4
+        </Text>
+        <Text 
+        style={{
+        ...styles.valor, 
+        ...(data?.grauRisco?.value === 5 ? styles.risco : {}), 
+        backgroundColor: 'orange'
+        }} 
+        id='5'
+        > 
+        5
+        </Text>
+
+        <Text style={{...{width: 50}, margin: '1px'}}></Text>
+
+        <Text style={styles.rotuloConsequencia}>
+        Desprezível
+        </Text>
+        <Text style={styles.rotuloConsequencia}>
+        Menor
+        </Text>
+        <Text style={styles.rotuloConsequencia}>
+        Moderada
+        </Text>
+        <Text style={styles.rotuloConsequencia}>
+        Maior
+        </Text>
+        <Text style={styles.rotuloConsequencia}>
+        Catastrófica
+        </Text>
+        </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.title}>5. Plano de Ação:</Text>
+          <Text style={styles.title2}>itens 7.5 e 9.1 da Política Nacional de Gestão de Risco</Text>
+        </View>
+        {/* Dados básicos */}
+        <Text style={styles.title2}>Dados básicos</Text>
+        <View style={styles.line}>
+          <View style={styles.line}>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Nome da atividade:</Text>
+              <Text>{data?.dadosGerais?.nomeAtividade}</Text>
             </View>
-            {data?.inventarioRiscos?.sort((a,b)=> a.probabilidade - b.probabilidade)
-            ?.map((item, idx)=>(
-              <View key={"inventario"+idx} style={styles.line}>         
-                  <Text style={styles.width90}>
-                    {item.atividade}
-                  </Text>
-                  <Text style={styles.width90}>
-                    {item.perigo}
-                  </Text>
-                  <Text style={styles.width90}>
-                    {item.danos}
-                  </Text>
-                  <Text style={styles.width140}>
-                    {item.controleOperacional}
-                  </Text>
-                  <Text style={styles.width140}>
-                    {item.acoesMitigadoras}
-                  </Text>
-                  <Text style={styles.width30}>
-                    {item.probabilidade}
-                  </Text>
-                  <Text style={styles.width30}>
-                    {item.consequencia}
-                  </Text>
-                  <Text style={styles.width30}>
-                    {item.nivelRisco}
-                  </Text>
-              </View>                
+            <View style={styles.item}>
+              <Text style={styles.bold}>Local da atividade:</Text>
+              <Text>
+                {data?.dadosGerais?.localInicio ?
+                `${data?.dadosGerais?.localInicio?.logradouro},
+                ${data?.dadosGerais?.localInicio?.bairro},
+                ${data?.dadosGerais?.localInicio?.municipio},
+                ${data?.dadosGerais?.localInicio?.uf},
+                CEP.: ${data?.dadosGerais?.localInicio?.cep}`
+                : null}
+              </Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Fichas médicas revisadas?</Text>
+              <Text>{data?.planoEmergencia?.fichaMedicaRevisada || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Kit primeiros socorros revisado?</Text>
+              <Text>{data?.planoEmergencia?.kitPrimeirosSocorros || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Feito inspeção no local?</Text>
+              <Text>{data?.planoEmergencia?.inspesaoLocal || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Data da inspeção?</Text>
+              <Text>{dateFormat2(data?.planoEmergencia?.dataInspecao) || ''}</Text>
+            </View>
+          </View>
+        </View>
+        
+        {/* Pronto Socorro mais próximo */}
+        <View style={styles.section}>
+          <Text style={styles.title2}>Pronto Socorro mais próximo</Text>
+          <View style={styles.line}>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Nome:</Text>
+              <Text>{data?.planoEmergencia?.prontoSocorro?.nome || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Contatos:</Text>
+              <Text>{data?.planoEmergencia?.prontoSocorro?.contato || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Distância do local da atividade:</Text>
+              <Text>{data?.planoEmergencia?.prontoSocorro?.distancia || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Endereço:</Text>
+              <Text>{data?.planoEmergencia?.prontoSocorro?.local || ''}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hospital mais próximo */}
+        <View style={styles.section}>
+          <Text style={styles.title2}>Hospital mais próximo</Text>
+          <View style={styles.line}>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Nome:</Text>
+              <Text>{data?.planoEmergencia?.hospital?.nome || ""}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Contatos:</Text>
+              <Text>{data?.planoEmergencia?.hospital?.contato || ""}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Distância do local da atividade:</Text>
+              <Text>{data?.planoEmergencia?.hospital?.distancia || ""}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Endereço:</Text>
+              <Text>{data?.planoEmergencia?.hospital?.local || ""}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Contatos de Emergência */}
+        <View style={styles.section}>
+          <Text style={styles.title2}>Contatos de Emergência</Text>
+          {data?.planoEmergencia?.contatosEmergencia?.map((cont, idx) => (
+            <View key={idx + 'contatosEmerg'} style={styles.line2}>
+              <View style={styles.item}>
+                <Text style={styles.bold}>Nome do contato:</Text>
+                <Text>{cont.nome || ''}</Text>
+              </View>
+              <View style={styles.item}>
+                <Text style={styles.bold}>Contato:</Text>
+                <Text>{cont.contato || ''}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        {/* Espaços Seguros */}
+        <View style={styles.section}>
+          <Text style={styles.title2}>Espaços Seguros</Text>
+          <View style={styles.line}>
+            <View style={styles.item}>
+              <Text style={styles.bold}>As informações preliminares foram claramente passadas para os envolvidos?</Text>
+              <Text>{data?.planoEmergencia?.espacosSeguros?.infosPreliminares || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>As informações médicas estão guardadas de forma confidencial e de fácil acesso ao coordenador ou enfermaria da atividade?</Text>
+              <Text>{data?.planoEmergencia?.espacosSeguros?.infosMedicas || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>Os responsáveis pela atividade estão cientes que nenhuma informação pessoal dos participantes deve ser transmitida a terceiros ou utilizada sem a devida autorização expressa de seus responsáveis, exceto em caso de emergência médica, policial ou por força de lei?</Text>
+              <Text>{data?.planoEmergencia?.espacosSeguros?.protecaoDados || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>O coordenador e os escotistas envolvidos possuem o curso de Proteção Infantojuvenil, Bullying e CyberBullying e Política Nacional de Espaço Seguro com validade de 1 ano?</Text>
+              <Text>{data?.planoEmergencia?.espacosSeguros?.cursosEscotistas || ''}</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.bold}>O canal de denúncias foi informado nas Informações Preliminares?</Text>
+              <Text>{data?.planoEmergencia?.espacosSeguros?.canalDenuncias || ''}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Acolhimento/Escuta */}
+        {['orange', 'red'].includes(data?.grauRisco?.color) ?
+          <View style={styles.section}>
+              <Text style={styles.title2}>Pessoa(s) do Acolhimento/Escuta</Text>
+              
+              {data?.planoEmergencia?.espacosSeguros?.acolhimento?.map((acolh, idx) => (
+              <View style={styles.line} key={idx + 'acolhimento'}>
+                <View style={styles.item}>
+                    <Text>Nome</Text>
+                    <Text>{acolh.nome || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text>Contato</Text>
+                    <Text>{acolh.contato || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text>Profissão</Text>
+                    <Text>{acolh.profissao || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text>Registro Escoteiro</Text>
+                    <Text>{acolh.regEscoteiro || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text>CPF</Text>
+                    <Text>{acolh.cpf || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Text>Nº Carteirinha Classe</Text>
+                    <Text>{acolh.numCarteirinhaClass || ''}</Text>
+                </View>
+                <View style={styles.line}>
+                  <View style={styles.item}>
+                    <Text style={styles.title2}>Documentos</Text>
+                    {acolh?.docs?.map((doc, idxDoc) => (
+                    <View key={idxDoc + 'docsAcolhimento'} style={styles.item2}>
+                        <Text>{doc.titulo}</Text>
+                        <ImagePreview 
+                          file={doc.doc}
+                        />
+                    </View>
+                    ))}
+                  </View>=
+                </View>
+            </View>
+          ))}
+          </View>
+        :null}
+
+        {/* Enfermaria */}
+        <View style={styles.section}>
+            <Text style={styles.title2}>Pessoa(s) da Enfermaria</Text>
+            
+            {data?.planoEmergencia?.espacosSeguros?.enfermaria?.map((enf, idx) => (
+            <View style={styles.line} key={idx + 'enfermaria'}>
+              <View style={styles.item}>
+                  <Text style={styles.bold}>Nome</Text>
+                  <Text>{enf.nome || ''}</Text>
+              </View>
+              <View style={styles.item}>
+                  <Text style={styles.bold}>Contato</Text>
+                  <Text>{enf.contato || ''}</Text>
+              </View>
+              <View style={styles.item}>
+                  <Text style={styles.bold}>Profissão</Text>
+                  <Text>{enf.profissao || ''}</Text>
+              </View>
+              <View style={styles.item}>
+                  <Text style={styles.bold}>Registro Escoteiro</Text>
+                  <Text>{enf.regEscoteiro || ''}</Text>
+              </View>
+              <View style={styles.item}>
+                  <Text style={styles.bold}>CPF</Text>
+                  <Text>{enf.cpf || ''}</Text>
+              </View>
+              <View style={styles.item}>
+                  <Text style={styles.bold}>Nº Carteirinha Classe</Text>
+                  <Text>{enf.numCarteirinhaClass || ''}</Text>
+              </View>
+              <View style={styles.line}>
+                  <View style={styles.item}>
+                    <Text style={styles.title2}>Documentos</Text>
+                    {enf?.docs?.map((doc, idxDoc) => (
+                    <View key={idxDoc + 'docsEnfermaria'} style={styles.item2}>
+                        <Text>{doc.titulo}</Text>
+                        <ImagePreview file={doc.doc as string}/>
+                    </View>
+                    ))}
+                  </View>
+              </View>
+            </View>
             ))}
-         </View>
+        </View>
 
-         {/* Matriz de Risco*/}
-         <View style={styles.section}>
-            <Text style={styles.title}>
-              4. Matriz de Risco.
-            </Text>
-            <Text style={styles.title2}>
-              item 9.2 da Política Nacional de Gestão de Risco.
-            </Text>
-            <View style={styles.resultado}>
-                <Text
-                  style={{
-                    display: 'flex',
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginRight: 6
-                  }}
-                >
-                  Maior resultado
-                </Text>
-                <Text 
-                    style={{
-                      display: 'flex',
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: data?.grauRisco?.color, 
-                      fontWeight: 700, 
-                      width: 40, 
-                      height: 40
-                    }}
-                >
-                    {data?.grauRisco?.value || ''}
-                </Text>
+
+        {/* Veículo de Emergência/Apoio */}
+        {['orange', 'red'].includes(data?.grauRisco?.color) ?
+          <>
+          <View style={styles.section}>
+              <Text style={styles.title2}>Veículo de Emergência/Apoio</Text>
+              {data?.planoEmergencia?.veiculos?.map((veic, idx)=>(
+              <View style={styles.line} key={idx+'veiculos'}>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Tipo de veículo</Text>
+                  <Text>{veic.tipoVeiculo || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Nome do condutor</Text>
+                  <Text>{veic.nomeMotorista|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Contato</Text>
+                  <Text>{veic.contato|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Profissão</Text>
+                  <Text>{veic.profissao|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Reg. Escoteiro</Text>
+                  <Text>{veic.regEscoteiro|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Tipo/Nº da Habilitação do condutor</Text>
+                  <Text>{veic.habilitacao|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>CPF do condutor</Text>
+                  <Text>{veic.cpf|| ''}</Text>
+                </View>   
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Manutenção preventiva em dia?</Text>
+                  <Text>{veic.manutencao || ''}</Text>
+                </View>  
+
+                <View style={styles.line}>
+                  <View style={styles.item}>
+                    <Text style={styles.title2}>Documentos do condutor</Text>
+                    {veic?.docs?.map((doc, idxDoc) => (
+                    <View key={idxDoc + 'docsVeiculo'} style={styles.item2}>
+                        <Text>{doc.titulo}</Text>
+                        <ImagePreview file={doc.doc as string}/>
+                    </View>
+                    ))}
+                  </View>
+              </View>
+              </View>
+              ))}
+          </View>
+
+          {/* Atividade conduzida por profissional */}
+          <View style={styles.section}>
+              <Text style={styles.title2}>Profissional</Text>
+              <Text style={styles.title2}>quando a atividade for conduzida por profissionais</Text>
+              {data?.planoEmergencia?.atividadePorProfissional?.map((prof, idx)=>(
+              <View style={styles.line} key={idx+'ativProf'}>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Nome</Text>
+                  <Text>{prof.nomeProf || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Profissão</Text>
+                  <Text>{prof.profissao|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Registro Escoteiro</Text>
+                  <Text>{prof.regEscoteiro|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>CPF</Text>
+                  <Text>{prof.cpf|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Nº da Carteirinha de Classe</Text>
+                  <Text>{prof.numCarteirinha|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Contato</Text>
+                  <Text>{prof.contato|| ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Redes Sociais</Text>
+                  {prof.redesSociais?.map((social, sIdx)=>(
+                      <Link key={sIdx+'linkSocialMidia'} href={social}>
+                        {social || ''}
+                      </Link>                              
+                  ))}
+                </View>
+                <View style={styles.line}>
+                  <View style={styles.item}>
+                    <Text style={styles.title2}>Documentos</Text>
+                    {prof?.docs?.map((doc, idxDoc) => (
+                    <View key={idxDoc + 'docsEnfermaria'} style={styles.item2}>
+                        <Text>{doc.titulo}</Text>
+                        <ImagePreview file={doc.doc as string}/>
+                    </View>
+                    ))}
+                  </View>
+              </View>
+              </View>
+              ))}
+          </View>
+          </>
+        :null}
+
+        {/* Profissional Resgate/Salvamento  */}
+        {['red'].includes(data?.grauRisco?.color) ?
+          <>
+          <View style={styles.section}>
+              <Text style={styles.title2}>Profissional Resgate/Salvamento</Text>
+              {data?.planoEmergencia?.profSalvamento?.map((salv, idx)=>(
+                <View style={styles.line} key={idx+'salvamento'}>
+                  <View style={styles.item}>
+                    <Text style={styles.bold}>Nome</Text>
+                    <Text>{salv.nome || ''}</Text>
+                  </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Profissão</Text>
+                  <Text>{salv.profissao || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>CPF</Text>
+                  <Text>{salv.cpf || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Nº Carteirinha Classe</Text>
+                  <Text>{salv.numCarteirinhaClass || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Registro Escoteiro</Text>
+                  <Text>{salv.regEscoteiro || ''}</Text>
+                </View>
+                <View style={styles.item}>
+                  <Text style={styles.bold}>Contato</Text>
+                  <Text>{salv.contato || ''}</Text>
+                </View>
+                <View style={styles.line}>
+                  <View style={styles.item}>
+                    <Text style={styles.title2}>Documentos</Text>
+                    {salv?.docs?.map((doc, idxDoc) => (
+                    <View key={idxDoc + 'docsEnfermaria'} style={styles.item2}>
+                        <Text>{doc.titulo}</Text>
+                        <ImagePreview file={doc.doc as string}/>
+                    </View>
+                    ))}
+                  </View>
+              </View>
             </View>
-
-            <View style={styles.matriz}>
-                <Text style={styles.rotuloProbabilidade}>
-                    Quase certo
-                </Text>
-                <Text 
-                    style={{...styles.valor, ...{backgroundColor: 'yellow'},  ...data?.grauRisco?.value === 5 ? styles.risco : {}}} 
-                    id='5'
-                > 
-                    5
-                </Text>
-                <Text 
-                  style={{...styles.valor, ...(data?.grauRisco?.value === 10 ? styles.risco : {})}} 
-                  id='10' 
-                > 
-                  10
-                </Text>
-                <Text 
-                  style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 15 ? styles.risco : {})}}
-                  id='15' 
-                > 
-                  15
-                </Text>
-                <Text 
-                  style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 20 ? styles.risco : {})}} 
-                  id='20'
-                > 
-                  20
-                </Text>
-                <Text 
-                  style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 25 ? styles.risco : {})}} 
-                  id='25'
-                > 
-                  25
-                </Text>
-                <Text 
-                  style={styles.rotuloProbabilidade}>
-                  Provável
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
-                  backgroundColor: 'yellow'
-                  }} 
-                  id='4'
-                > 
-                  4
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='8'
-                > 
-                  8
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='12'
-                > 
-                  12
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 16 ? styles.risco : {}), 
-                  backgroundColor: 'red'
-                  }} 
-                  id='16'
-                > 
-                  16
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 20 ? styles.risco : {}), 
-                  backgroundColor: 'red'
-                  }} 
-                  id='20'
-                > 
-                  20
-                </Text>
-                <Text style={styles.rotuloProbabilidade}>
-                  Possível
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
-                  backgroundColor: 'green'
-                  }} 
-                  id='3'
-                > 
-                  3
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
-                  backgroundColor: 'yellow'
-                  }} 
-                  id='6'
-                > 
-                  6
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 9 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='9'
-                > 
-                  9
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='12'
-                > 
-                  12
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 15 ? styles.risco : {}), 
-                  backgroundColor: 'red'
-                  }} 
-                  id='15'
-                > 
-                  15
-                </Text>
-                <Text style={styles.rotuloProbabilidade}>
-                  Raro
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
-                  backgroundColor: 'green'
-                  }} 
-                  id='2'
-                > 
-                  2
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
-                  backgroundColor: 'yellow'
-                  }} 
-                  id='4'
-                > 
-                  4
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
-                  backgroundColor: 'yellow'
-                  }} 
-                  id='6'
-                > 
-                  6
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='8'
-                > 
-                  8
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 10 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='10'
-                > 
-                  10
-                </Text>
-                <Text style={styles.rotuloProbabilidade}>
-                  Improvável
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 1 ? styles.risco : {}), 
-                  backgroundColor: 'green'
-                  }} 
-                  id='1'
-                > 
-                  1
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
-                  backgroundColor: 'green'
-                  }} 
-                  id='2'
-                > 
-                  2
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
-                  backgroundColor: 'green'
-                  }} 
-                  id='3'
-                > 
-                  3
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
-                  backgroundColor: 'yellow'
-                  }} 
-                  id='4'
-                > 
-                  4
-                </Text>
-                <Text 
-                  style={{
-                  ...styles.valor, 
-                  ...(data?.grauRisco?.value === 5 ? styles.risco : {}), 
-                  backgroundColor: 'orange'
-                  }} 
-                  id='5'
-                > 
-                  5
-                </Text>
-
-                <Text style={{...{width: 50}, margin: '1px'}}></Text>
-
-                <Text style={styles.rotuloConsequencia}>
-                  Desprezível
-                </Text>
-                <Text style={styles.rotuloConsequencia}>
-                    Menor
-                </Text>
-                <Text style={styles.rotuloConsequencia}>
-                    Moderada
-                </Text>
-                <Text style={styles.rotuloConsequencia}>
-                    Maior
-                </Text>
-                <Text style={styles.rotuloConsequencia}>
-                    Catastrófica
-                </Text>
-            </View>
-         </View>
+            ))}
+          </View>
+          </>
+        :null}
       </Page>
     </Document>
 )};
