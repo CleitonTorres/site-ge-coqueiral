@@ -1,7 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Link } from '@react-pdf/renderer';
-import { dateFormat2, pdfToImageBase64, signedURL } from '@/scripts/globais';
+import { dateFormat2, fileToBase64, pdfToImageBase64, signedURL, } from '@/scripts/globais';
 import { v4 } from 'uuid';
 import { SAAE } from '@/@types/types';
 import axios from 'axios';
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     border: '2px solid #000',
     padding: 5,
-    margin: 1,
+    margin: 1
   },
   width60: {
     width: 50,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     border: '2px solid #000',
     padding: 5,
-    margin: 1,
+    margin: 1
   },
   width90: {
     width: 70,
@@ -175,100 +175,80 @@ type Props = {
 }
 
 const ImagePreview = ({file}:{file:File | string}) => {
-  const [base64, setBase64] = useState('');
+  // const [base64, setBase64] = useState('');
   const [urlSigned, setUrlSiged] = useState('');
-
-  // Converte arquivos não PDF para Base64
-  const fileToBase64 = (file: File) => {
-      return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-
-      reader.readAsDataURL(file);
-      });
-  };
   
-  const getSignedUrl = async(url:string)=>{
+    const processFile = async () => {
+      try {
+        if(file instanceof Blob){
+            if (file.type === 'application/pdf') {
+              const base64String = await pdfToImageBase64(file);
+              return base64String;
+            } else {
+              const base64String = await fileToBase64(file);
+              return base64String;
+            }
+        }
+      } catch (error) {
+        console.error('Erro ao processar arquivo:', error);
+        return undefined
+      }
+    };
+
+  const getSignedUrl = async(url:string | File)=>{
+    if (url instanceof Blob) {
+      console.log("Entrou no blob", file);
+      return await processFile();
+    }else if( typeof url === 'string'){
+      console.log("Entrou na url", file);
       const data = await signedURL(url);
-      if(!data) return;
       
-      //armazena a URL assinada
+      if(!data) return undefined;
       setUrlSiged(data);
 
       //verifica se é um PDF para gerar uma imagem de preview
       const isPDF = data?.includes('.pdf') ? true : false;
 
-      if(data && isPDF){
-          // Busca o PDF utilizando a URL assinada
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
-              params:{
-                  service: 'proxyPDF',
-                  fileUrl: data
-              },
-              headers:{
-                  'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
-              },
-              responseType: 'arraybuffer' // Define o tipo de resposta como Blob
-          });
-          
-          //console.log("blob data", response.data)
-          if(!(response.data instanceof ArrayBuffer)) return;
+      if(isPDF){
+        // Busca o PDF utilizando a URL assinada
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+            params:{
+                service: 'proxyPDF',
+                fileUrl: data
+            },
+            headers:{
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+            },
+            responseType: 'arraybuffer' // Define o tipo de resposta como Blob
+        });
+        
+        //console.log("blob data", response.data)
+        if(!(response.data instanceof ArrayBuffer)) return;
 
-          // Converte o ArrayBuffer para Blob
-          const blob = new Blob([response.data], { type: 'application/pdf' });
-          // Converte o conteúdo do PDF para um objeto File
-          const file = new File([blob], "preview.pdf", { type: "application/pdf" });
+        // Converte o ArrayBuffer para Blob
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        // Converte o conteúdo do PDF para um objeto File
+        const file = new File([blob], "preview.pdf", { type: "application/pdf" });
 
-          // Gera a visualização da primeira página em Base64
-          const previewBase64 = await pdfToImageBase64(file);
-          setBase64(previewBase64);
-      }else if(data && !isPDF){
-          setBase64(data);
+        // Gera a visualização da primeira página em Base64
+        const previewBase64 = await pdfToImageBase64(file);
+        
+        return previewBase64;
+      }else{
+        return data;
       }
+    }
   }
-
-  useEffect(() => {
-      const processFile = async () => {
-        try {
-          if(file instanceof Blob){
-              if (file.type === 'application/pdf') {
-                const base64String = await pdfToImageBase64(file);
-                setBase64(base64String);
-              } else {
-                const base64String = await fileToBase64(file);
-                setBase64(base64String);
-              }
-          }
-        } catch (error) {
-          console.error('Erro ao processar arquivo:', error);
-        }
-      };
-  
-      if (file instanceof Blob) {
-        processFile();
-      }else if( typeof file === 'string'){
-          console.log("Entrou na url", file);
-          getSignedUrl(file);
-      }
-  }, [file]);
-
-  useEffect(()=>{
-    console.log("File", file, "base64", base64, "urlSigned", urlSigned);
-  }, [base64, urlSigned]);
-
-  // if (!base64 && !urlSigned) return <Text>Carregando...</Text>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
 
   return <View>
           <Image
               style={{ objectFit: 'contain', height: 200, width: 100}}
-              src={urlSigned ? urlSigned : typeof file == "string" ? file : undefined} // Usa o Base64 gerado como src
-              source={file instanceof File ? file : undefined } // Usa o Base64 gerado como src
+              // src={urlSigned ? urlSigned : typeof file == "string" ? file : undefined} // Usa o Base64 gerado como src
+              source={async()=>getSignedUrl(file)} // Usa o Base64 gerado como src
           />
           {urlSigned ? <Link href={urlSigned}>
               <Text>Abrir url</Text>
-          </Link>:null}
+          </Link>: <Text>Erro ao carregar URL</Text>}
       </View>
 };
 
@@ -296,7 +276,7 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
     </Document>
   
   return(
-    <Document pageLayout='singlePage' language='pt-br' pageMode='useThumbs' title='Resumo da SAAE' >
+    <Document language='pt-br' pageMode='useThumbs' title='Resumo da SAAE' >
       <Page size="A4" style={styles.page} orientation='portrait' wrap dpi={200}>
         <Text style={styles.title}>
           8. Resumo da sua SAAE - 
@@ -558,22 +538,22 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
             {/* dados adicionados à programação */}
             {data?.dadosGerais?.programacao?.map((prog)=>(
                 <View key={v4()} style={styles.line}>
-                    <Text style={styles.width90}>
+                    <Text style={{...styles.width90, textAlign: 'left'}}>
                       {dateFormat2(prog?.data)}
                     </Text>
-                    <Text style={styles.width60}>
+                    <Text style={{...styles.width60, textAlign: 'left'}}>
                       {prog?.hora}
                     </Text>
-                    <Text style={styles.width60}>
+                    <Text style={{...styles.width60, textAlign: 'left'}}>
                       {prog?.duracao}
                     </Text>
-                    <Text style={styles.width260}>
+                    <Text style={{...styles.width260, textAlign: 'left'}}>
                       {prog?.descricao}
                     </Text>
-                    <Text style={styles.width140}>
+                    <Text style={{...styles.width140, textAlign: 'left'}}>
                       {prog?.materialNecessario}
                     </Text>
-                    <Text style={styles.width90}>
+                    <Text style={{...styles.width90, textAlign: 'left'}}>
                       {prog?.responsavel}
                     </Text>
                 </View>
@@ -613,7 +593,9 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
             <Text style={styles.width140}>Ações Mitigadoras</Text>
             <Text style={styles.width30}>Prob.</Text>
             <Text style={styles.width30}>Cons.</Text>
-            <Text style={styles.width30}>N.Risco</Text>
+            <Text style={{...styles.width30, flexWrap: 'nowrap', textOverflow:'ellipsis', overflow: 'hidden',}}>
+                N.Risco
+            </Text>
           </View>
           {data?.inventarioRiscos?.sort((a,b)=> a.probabilidade - b.probabilidade)
           ?.map((item, idx)=>(
@@ -648,304 +630,304 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
 
         {/* Matriz de Risco*/}
         <View style={styles.section}>
-        <Text style={styles.title}>
-          4. Matriz de Risco.
-        </Text>
-        <Text style={styles.title2}>
-          item 9.2 da Política Nacional de Gestão de Risco.
-        </Text>
-        <View style={styles.resultado}>
-          <Text
-            style={{
-            display: 'flex',
-            justifyContent: "center",
-            alignItems: "center",
-            marginRight: 6
-            }}
-          >
-          Maior resultado
+          <Text style={styles.title}>
+            4. Matriz de Risco.
           </Text>
-          <Text 
-            style={{
-            display: 'flex',
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: data?.grauRisco?.color, 
-            fontWeight: 700, 
-            width: 40, 
-            height: 40
-            }}
-          >
-          {data?.grauRisco?.value || ''}
+          <Text style={styles.title2}>
+            item 9.2 da Política Nacional de Gestão de Risco.
           </Text>
-        </View>
+          <View style={styles.resultado}>
+            <Text
+              style={{
+              display: 'flex',
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 6
+              }}
+            >
+            Maior resultado
+            </Text>
+            <Text 
+              style={{
+              display: 'flex',
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: data?.grauRisco?.color, 
+              fontWeight: 700, 
+              width: 40, 
+              height: 40
+              }}
+            >
+            {data?.grauRisco?.value || ''}
+            </Text>
+          </View>
 
-        <View style={styles.matriz}>
-        <Text style={styles.rotuloProbabilidade}>
-        Quase certo
-        </Text>
-        <Text 
-        style={{...styles.valor, ...{backgroundColor: 'yellow'},  ...data?.grauRisco?.value === 5 ? styles.risco : {}}} 
-        id='5'
-        > 
-        5
-        </Text>
-        <Text 
-        style={{...styles.valor, ...(data?.grauRisco?.value === 10 ? styles.risco : {})}} 
-        id='10' 
-        > 
-        10
-        </Text>
-        <Text 
-        style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 15 ? styles.risco : {})}}
-        id='15' 
-        > 
-        15
-        </Text>
-        <Text 
-        style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 20 ? styles.risco : {})}} 
-        id='20'
-        > 
-        20
-        </Text>
-        <Text 
-        style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 25 ? styles.risco : {})}} 
-        id='25'
-        > 
-        25
-        </Text>
-        <Text 
-        style={styles.rotuloProbabilidade}>
-        Provável
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
-        backgroundColor: 'yellow'
-        }} 
-        id='4'
-        > 
-        4
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='8'
-        > 
-        8
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='12'
-        > 
-        12
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 16 ? styles.risco : {}), 
-        backgroundColor: 'red'
-        }} 
-        id='16'
-        > 
-        16
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 20 ? styles.risco : {}), 
-        backgroundColor: 'red'
-        }} 
-        id='20'
-        > 
-        20
-        </Text>
-        <Text style={styles.rotuloProbabilidade}>
-        Possível
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
-        backgroundColor: 'green'
-        }} 
-        id='3'
-        > 
-        3
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
-        backgroundColor: 'yellow'
-        }} 
-        id='6'
-        > 
-        6
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 9 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='9'
-        > 
-        9
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='12'
-        > 
-        12
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 15 ? styles.risco : {}), 
-        backgroundColor: 'red'
-        }} 
-        id='15'
-        > 
-        15
-        </Text>
-        <Text style={styles.rotuloProbabilidade}>
-        Raro
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
-        backgroundColor: 'green'
-        }} 
-        id='2'
-        > 
-        2
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
-        backgroundColor: 'yellow'
-        }} 
-        id='4'
-        > 
-        4
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
-        backgroundColor: 'yellow'
-        }} 
-        id='6'
-        > 
-        6
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='8'
-        > 
-        8
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 10 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='10'
-        > 
-        10
-        </Text>
-        <Text style={styles.rotuloProbabilidade}>
-        Improvável
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 1 ? styles.risco : {}), 
-        backgroundColor: 'green'
-        }} 
-        id='1'
-        > 
-        1
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
-        backgroundColor: 'green'
-        }} 
-        id='2'
-        > 
-        2
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
-        backgroundColor: 'green'
-        }} 
-        id='3'
-        > 
-        3
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
-        backgroundColor: 'yellow'
-        }} 
-        id='4'
-        > 
-        4
-        </Text>
-        <Text 
-        style={{
-        ...styles.valor, 
-        ...(data?.grauRisco?.value === 5 ? styles.risco : {}), 
-        backgroundColor: 'orange'
-        }} 
-        id='5'
-        > 
-        5
-        </Text>
+          <View style={styles.matriz}>
+            <Text style={styles.rotuloProbabilidade}>
+            Quase certo
+            </Text>
+            <Text 
+              style={{...styles.valor, ...{backgroundColor: 'yellow'},  ...data?.grauRisco?.value === 5 ? styles.risco : {}}} 
+              id='5'
+            > 
+            5
+            </Text>
+            <Text 
+              style={{...styles.valor, ...(data?.grauRisco?.value === 10 ? styles.risco : {})}} 
+              id='10' 
+            > 
+            10
+            </Text>
+            <Text 
+            style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 15 ? styles.risco : {})}}
+            id='15' 
+            > 
+            15
+            </Text>
+            <Text 
+            style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 20 ? styles.risco : {})}} 
+            id='20'
+            > 
+            20
+            </Text>
+            <Text 
+            style={{...styles.valor, backgroundColor: 'red', ...(data?.grauRisco?.value === 25 ? styles.risco : {})}} 
+            id='25'
+            > 
+            25
+            </Text>
+            <Text 
+            style={styles.rotuloProbabilidade}>
+            Provável
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+            backgroundColor: 'yellow'
+            }} 
+            id='4'
+            > 
+            4
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='8'
+            > 
+            8
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='12'
+            > 
+            12
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 16 ? styles.risco : {}), 
+            backgroundColor: 'red'
+            }} 
+            id='16'
+            > 
+            16
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 20 ? styles.risco : {}), 
+            backgroundColor: 'red'
+            }} 
+            id='20'
+            > 
+            20
+            </Text>
+            <Text style={styles.rotuloProbabilidade}>
+            Possível
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
+            backgroundColor: 'green'
+            }} 
+            id='3'
+            > 
+            3
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
+            backgroundColor: 'yellow'
+            }} 
+            id='6'
+            > 
+            6
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 9 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='9'
+            > 
+            9
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 12 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='12'
+            > 
+            12
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 15 ? styles.risco : {}), 
+            backgroundColor: 'red'
+            }} 
+            id='15'
+            > 
+            15
+            </Text>
+            <Text style={styles.rotuloProbabilidade}>
+            Raro
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
+            backgroundColor: 'green'
+            }} 
+            id='2'
+            > 
+            2
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+            backgroundColor: 'yellow'
+            }} 
+            id='4'
+            > 
+            4
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 6 ? styles.risco : {}), 
+            backgroundColor: 'yellow'
+            }} 
+            id='6'
+            > 
+            6
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 8 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='8'
+            > 
+            8
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 10 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='10'
+            > 
+            10
+            </Text>
+            <Text style={styles.rotuloProbabilidade}>
+            Improvável
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 1 ? styles.risco : {}), 
+            backgroundColor: 'green'
+            }} 
+            id='1'
+            > 
+            1
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 2 ? styles.risco : {}), 
+            backgroundColor: 'green'
+            }} 
+            id='2'
+            > 
+            2
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 3 ? styles.risco : {}), 
+            backgroundColor: 'green'
+            }} 
+            id='3'
+            > 
+            3
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 4 ? styles.risco : {}), 
+            backgroundColor: 'yellow'
+            }} 
+            id='4'
+            > 
+            4
+            </Text>
+            <Text 
+            style={{
+            ...styles.valor, 
+            ...(data?.grauRisco?.value === 5 ? styles.risco : {}), 
+            backgroundColor: 'orange'
+            }} 
+            id='5'
+            > 
+            5
+            </Text>
 
-        <Text style={{...{width: 50}, margin: '1px'}}></Text>
+            <Text style={{...{width: 50}, margin: '1px'}}></Text>
 
-        <Text style={styles.rotuloConsequencia}>
-        Desprezível
-        </Text>
-        <Text style={styles.rotuloConsequencia}>
-        Menor
-        </Text>
-        <Text style={styles.rotuloConsequencia}>
-        Moderada
-        </Text>
-        <Text style={styles.rotuloConsequencia}>
-        Maior
-        </Text>
-        <Text style={styles.rotuloConsequencia}>
-        Catastrófica
-        </Text>
-        </View>
+            <Text style={styles.rotuloConsequencia}>
+              Desprezível
+            </Text>
+            <Text style={styles.rotuloConsequencia}>
+              Menor
+            </Text>
+            <Text style={styles.rotuloConsequencia}>
+              Moderada
+            </Text>
+            <Text style={styles.rotuloConsequencia}>
+              Maior
+            </Text>
+            <Text style={styles.rotuloConsequencia}>
+              Catastrófica
+            </Text>
+          </View>
         </View>
 
         <View style={styles.section}>
@@ -1333,6 +1315,54 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
           </View>
           </>
         :null}
+
+        {/* Fotos da inspeção  */}
+        <View style={styles.section}>
+            <Text style={styles.title2}>6. Fotos do local/inspeção</Text>
+            {data?.fotosInspecao?.map((session)=>(
+              <View key={session?.title+'fotosInspecao'} style={styles.line}>
+                {session?.fotos.map((foto, idx)=>(
+                    <View key={idx+'viewCurrentFoto'} style={styles.item}>
+                      <View style={styles.item}>
+                          <View>
+                              <Text>Rótulo da imagem</Text>
+                              <Text>{foto.title || ''}</Text>
+                          </View>
+                          <View>
+                              <Text>Observações</Text>
+                              <Text>{foto.description || ''}</Text>
+                          </View>
+                      </View>
+                      <ImagePreview file={foto.doc}/>
+                    </View> 
+                ))}
+              </View>
+            ))}
+        </View>
+
+        {/* Documentos adicionais  */}
+        <View style={styles.section}>
+            <Text style={styles.title2}>7. Documentos adicionais</Text>
+            {data?.documentos?.map((session)=>(
+              <View key={session?.title+'Documentos'} style={styles.line}>
+                {session?.docs.map((doc, idx)=>(
+                    <View key={idx+'viewCurrentDoc'} style={styles.item}>
+                      <View style={styles.item}>
+                          <View>
+                              <Text>Rótulo da Documento:</Text>
+                              <Text>{doc.title || ''}</Text>
+                          </View>
+                          <View>
+                              <Text>Observações:</Text>
+                              <Text>{doc.description || ''}</Text>
+                          </View>
+                      </View>
+                      <ImagePreview file={doc.doc}/>
+                    </View> 
+                ))}
+              </View>
+            ))}
+        </View>
       </Page>
     </Document>
 )};

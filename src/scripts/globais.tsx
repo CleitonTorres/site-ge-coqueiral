@@ -497,6 +497,10 @@ export const parseGoogleStorageUrl = (url: string) => {
  * @returns {Promise<string | undefined>} URL assinada
  */
 export const signedURL = async(fileUrl:string)=>{
+    if(isBase64(fileUrl)){
+        return fileUrl;
+    }
+
     try{
         const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
             params: {
@@ -555,6 +559,22 @@ export const pdfToImageBase64 = async (file: File): Promise<string> => {
     }
 
     throw new Error('Erro ao renderizar a página do PDF.');
+};
+
+/**
+ * Converte arquivos não PDF para Base64
+ * @param {File} file - Arquivo a ser convertido
+ * @returns {string} - Arquivo convertido para Base64
+*/
+export const fileToBase64 = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+
+    reader.readAsDataURL(file);
+    });
 };
 
 export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE)=>{
