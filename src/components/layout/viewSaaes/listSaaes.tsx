@@ -127,6 +127,14 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
         }
     }
 
+    const printComponent = (data: SAAE) => {
+        // Salva os dados no localStorage
+        localStorage.setItem("print-data", JSON.stringify(data));
+      
+        // Abre a página de impressão
+        window.open("/administrativo/area-restrita/printer/resumoSaae", "_blank");
+    };
+
     return(
         <>
         {(context.tester || context.dataUser).nivelAcess === 'Regional-admin' && tipo === 'regional'?
@@ -274,8 +282,9 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     {context.listSaaes?.map((saae, idx)=>(
                         <div key={idx+'listaSAAEs'} className={`${styles.boxInput} cursorPointer`} onClick={()=>{
                             if(['aprovada', 'enviada'].includes(saae.status)){
-                                setShowSaae(true);
-                                context.setSaaeEdit(saae._id)
+                                // setShowSaae(true);
+                                // context.setSaaeEdit(saae._id)
+                                printComponent(saae);
                             }else{
                                 context.setSaaeEdit((prev)=> {
                                     if(prev === saae._id) return undefined

@@ -1,18 +1,26 @@
 'use client'
-import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
 import styles from './planoEmergencia.module.css';
-import { AtividadeProfissional, ContatosEmergencia, Docs, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
+import { AtividadeProfissional, ContatosEmergencia, Docs, Endereco, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
 import { calcTotalFilesMB, dateFormat1, masktel, setIconSocialMidia } from '@/scripts/globais';
 import { Context } from '@/components/context/context';
 import { FaPlus } from 'react-icons/fa';
 import { ImagePreview } from '../sectionDocumentos/documentos';
 
 type Props = {
-    readOnly: boolean
+    readOnly: boolean,
+    data?: PlanoEmergenciaSaae,
+    grauRisco: {
+        color: "green" | "yellow" | "orange" | "red" | "";
+        value: number;
+    }
+    nomeAtividade: string,
+    localInicio: Endereco,
 }
 
-export default function PlanoEmergencia ({readOnly}:Props){
+export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio, nomeAtividade}:Props){
     const context = useContext(Context);
+    const [localData, setLocalData] = useState<PlanoEmergenciaSaae>();
     
     const [currentContatoEmerg, setCurrentContatoEmerg] = useState({} as ContatosEmergencia);
     const [currentProfAcolhimento, setCurrentProfAcolhimento] = useState({} as Profissional);
@@ -983,6 +991,12 @@ export default function PlanoEmergencia ({readOnly}:Props){
         })
     }
 
+    useEffect(()=>{
+        if(data || context.dataSaae?.planoEmergencia){
+            setLocalData(data || context.dataSaae.planoEmergencia);
+        }
+    },[data, context.dataSaae]);
+
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}> 
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>
@@ -995,22 +1009,22 @@ export default function PlanoEmergencia ({readOnly}:Props){
                 <h3>Dados básicos</h3>
                 <div className={`${styles.subConteiner} ${styles.header}`} style={{boxShadow: `0px 0px 6px 0px ${context.dataSaae?.grauRisco?.color} inset`}}>
                     <span>Grau de Risco</span>
-                    <h2>{context.dataSaae?.grauRisco?.value || ''}</h2>
+                    <h2>{grauRisco?.value || ''}</h2>
                 </div>
                 <div className={styles.subConteiner}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome da atividade</label>
-                        <span>{context.dataSaae?.dadosGerais?.nomeAtividade}</span>
+                        <span>{nomeAtividade || ''}</span>
                     </div>
                     <div className={styles.boxInput} style={{width: 'auto'}}>
                         <label htmlFor="">Local da atividade</label>
                         <span>
-                            {context.dataSaae?.dadosGerais?.localInicio ?
-                                `${context.dataSaae?.dadosGerais?.localInicio?.logradouro},
-                                ${context.dataSaae?.dadosGerais?.localInicio?.bairro},
-                                ${context.dataSaae?.dadosGerais?.localInicio?.municipio},
-                                ${context.dataSaae?.dadosGerais?.localInicio?.uf},
-                                CEP.: ${context.dataSaae?.dadosGerais?.localInicio?.cep}`
+                            {localInicio ?
+                                `${localInicio?.logradouro},
+                                ${localInicio?.bairro},
+                                ${localInicio?.municipio},
+                                ${localInicio?.uf},
+                                CEP.: ${localInicio?.cep}`
                             :null}
                         </span>
                     </div>
@@ -1021,7 +1035,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="fichaMedicaRevisada" 
-                                value={context.dataSaae?.planoEmergencia?.fichaMedicaRevisada || ''}
+                                value={localData?.fichaMedicaRevisada || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1030,7 +1044,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.fichaMedicaRevisada || ''}
+                                defaultValue={localData?.fichaMedicaRevisada || ''}
                                 readOnly={readOnly}
                             />
                         }
@@ -1040,7 +1054,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="kitPrimeirosSocorros" 
-                                value={context.dataSaae?.planoEmergencia?.kitPrimeirosSocorros || ''}
+                                value={localData?.kitPrimeirosSocorros || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1049,7 +1063,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.kitPrimeirosSocorros || ''}
+                                defaultValue={localData?.kitPrimeirosSocorros || ''}
                                 readOnly={readOnly}
                             />
                         }
@@ -1059,7 +1073,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="inspesaoLocal" 
-                                value={context.dataSaae?.planoEmergencia?.inspesaoLocal || ''}
+                                value={localData?.inspesaoLocal || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1068,7 +1082,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.inspesaoLocal || ''}
+                                defaultValue={localData?.inspesaoLocal || ''}
                                 readOnly={readOnly}
                             />
                         }
@@ -1078,8 +1092,8 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input 
                             type="date"
                             name='dataInspecao'
-                            defaultValue={dateFormat1(context.dataSaae?.planoEmergencia?.dataInspecao) || ''}
-                            datatype={dateFormat1(context.dataSaae?.planoEmergencia?.dataInspecao) || ''} 
+                            defaultValue={dateFormat1(localData?.dataInspecao) || ''}
+                            datatype={dateFormat1(localData?.dataInspecao) || ''} 
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1096,7 +1110,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.nome'
-                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.nome || ''}
+                            value={localData?.prontoSocorro?.nome || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1106,7 +1120,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.contato'
-                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.contato || ''}
+                            value={localData?.prontoSocorro?.contato || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1116,7 +1130,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.distancia'
-                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.distancia || ''}
+                            value={localData?.prontoSocorro?.distancia || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1126,7 +1140,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='prontoSocorro.local'
-                            value={context.dataSaae?.planoEmergencia?.prontoSocorro?.local || ''}
+                            value={localData?.prontoSocorro?.local || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1143,7 +1157,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.nome'
-                            value={context.dataSaae?.planoEmergencia?.hospital?.nome || ""}
+                            value={localData?.hospital?.nome || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1153,7 +1167,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.contato'
-                            value={context.dataSaae?.planoEmergencia?.hospital?.contato || ""}
+                            value={localData?.hospital?.contato || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1163,7 +1177,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.distancia'
-                            value={context.dataSaae?.planoEmergencia?.hospital?.distancia || ""}
+                            value={localData?.hospital?.distancia || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1173,7 +1187,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         <input
                             type='text' 
                             name='hospital.local'
-                            value={context.dataSaae?.planoEmergencia?.hospital?.local || ""}
+                            value={localData?.hospital?.local || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />
@@ -1224,7 +1238,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                     </div>
                     :null}
             </div>
-            {context.dataSaae?.planoEmergencia?.contatosEmergencia?.map((cont, idx)=>(
+            {localData?.contatosEmergencia?.map((cont, idx)=>(
                 <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'contatosEmerg'}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome do contato</label>
@@ -1258,7 +1272,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.infosPreliminares" 
-                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosPreliminares || ''}
+                                value={localData?.espacosSeguros?.infosPreliminares || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1267,7 +1281,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosPreliminares}
+                                defaultValue={localData?.espacosSeguros?.infosPreliminares}
                                 readOnly={readOnly}
                             />
                         }
@@ -1277,7 +1291,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.infosMedicas" 
-                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosMedicas || ''}
+                                value={localData?.espacosSeguros?.infosMedicas || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1286,7 +1300,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.infosMedicas}
+                                defaultValue={localData?.espacosSeguros?.infosMedicas}
                                 readOnly={readOnly}
                             />
                         }
@@ -1296,7 +1310,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ? 
                             <select 
                                 name="espacosSeguros.protecaoDados" 
-                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.protecaoDados || ''}
+                                value={localData?.espacosSeguros?.protecaoDados || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1305,7 +1319,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.protecaoDados}
+                                defaultValue={localData?.espacosSeguros?.protecaoDados}
                                 readOnly={readOnly}
                             />
                         }
@@ -1315,7 +1329,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.cursosEscotistas" 
-                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.cursosEscotistas || ''}
+                                value={localData?.espacosSeguros?.cursosEscotistas || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1324,7 +1338,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.cursosEscotistas}
+                                defaultValue={localData?.espacosSeguros?.cursosEscotistas}
                                 readOnly={readOnly}
                             />
                         }
@@ -1334,7 +1348,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         {!readOnly ? 
                             <select 
                                 name="espacosSeguros.canalDenuncias" 
-                                value={context.dataSaae?.planoEmergencia?.espacosSeguros?.canalDenuncias || ''}
+                                value={localData?.espacosSeguros?.canalDenuncias || ''}
                                 onChange={(e)=>handleChangeData(e)}
                             >
                                 <option value=""></option>
@@ -1343,7 +1357,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.planoEmergencia?.espacosSeguros?.canalDenuncias}
+                                defaultValue={localData?.espacosSeguros?.canalDenuncias}
                                 readOnly={readOnly}
                             />
                         }
@@ -1352,7 +1366,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
             </div>
 
             {/* Acolhimento/Escuta */}
-            {['orange', 'red'].includes(context.dataSaae?.grauRisco?.color) ?
+            {['orange', 'red'].includes(grauRisco?.color) ?
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Pessoa(s) do Acolhimento/Escuta</h3>
@@ -1445,7 +1459,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         </div>
                     :null}
                 </div>
-                {context.dataSaae?.planoEmergencia?.espacosSeguros?.acolhimento?.map((acolh, idx)=>(
+                {localData?.espacosSeguros?.acolhimento?.map((acolh, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'acolhimento'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>
@@ -1624,7 +1638,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         </div>
                     :null}
                 </div>
-                {context.dataSaae?.planoEmergencia?.espacosSeguros?.enfermaria?.map((enf, idx)=>(
+                {localData?.espacosSeguros?.enfermaria?.map((enf, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'enfermaria'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>
@@ -1719,7 +1733,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
             :null}
 
             {/* Veículo de Emergência/Apoio */}
-            {['orange', 'red'].includes(context.dataSaae?.grauRisco?.color) ?
+            {['orange', 'red'].includes(grauRisco?.color) ?
             <>
                 {!readOnly ?
                     <div className={`${styles.section} ${styles.bgGreen}`}>
@@ -1829,7 +1843,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         </h5>      
                     </div>
                 :null}
-                {context.dataSaae?.planoEmergencia?.veiculos?.map((veic, idx)=>(
+                {localData?.veiculos?.map((veic, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'veiculos'}>
                         <div className={`${styles.boxInput} ${styles.minHeight90}`}>
                             <label htmlFor="">Tipo de veículo</label>
@@ -2074,7 +2088,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                     </h5>
                 </div>
-                {context.dataSaae?.planoEmergencia?.atividadePorProfissional?.map((prof, idx)=>(
+                {localData?.atividadePorProfissional?.map((prof, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'ativProf'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>
@@ -2207,7 +2221,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                 </>
             :null}
             {/* Profissional Resgate/Salvamento  */}
-            {['red'].includes(context.dataSaae?.grauRisco?.color) ?
+            {['red'].includes(grauRisco?.color) ?
             <>
                 <div className={`${styles.section} ${styles.bgGreen}`}>
                     <h3>Profissional Resgate/Salvamento</h3>
@@ -2298,7 +2312,7 @@ export default function PlanoEmergencia ({readOnly}:Props){
                         Obs.: Anexar documento de identidade do profissional e documento que comprove a habilitação profissional (certificado de curso, carteirinha de classe ou similar).
                     </h5>
                 </div>
-                {context.dataSaae?.planoEmergencia?.profSalvamento?.map((salv, idx)=>(
+                {localData?.profSalvamento?.map((salv, idx)=>(
                     <div className={`${styles.subConteiner} ${styles.borderGreen}`} key={idx+'salvamento'}>
                         <div className={styles.boxInput}>
                             <label htmlFor="">Nome</label>

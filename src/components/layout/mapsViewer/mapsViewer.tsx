@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from "react";
 import { Endereco } from "@/@types/types";
+import styles from './mapsViewer.module.css';
 
 type Props = {
     data?: Endereco,
@@ -15,7 +16,7 @@ type Props = {
 }
 export default function MapsComponent ({label, data, readonly, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
-
+    
     const loadMapAddress = async()=>{
         if(!mapRef.current)return;
         if(!data) return;
@@ -103,7 +104,10 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
             <h6>{
                 data?.address ? data.address : `${data?.logradouro}, ${data?.bairro}, ${data?.municipio}, ${data?.uf}, ${data?.cep}`
             }</h6>
-            <div ref={mapRef} style={{height: '500px', width: "100%"}}></div>
+            <div 
+                ref={mapRef} 
+                style={{height: '500px', width: "100%"}}
+                className={styles.nobreak}></div>
         </div>
     )
 }

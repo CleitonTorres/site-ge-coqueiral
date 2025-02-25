@@ -7,9 +7,8 @@ import { Context } from '@/components/context/context';
 import Image from 'next/image';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
 import axios from 'axios';
-import { Image as PdfImage, Link, Text, View } from '@react-pdf/renderer';
 
-export const ImagePreview = ({ file, width, height, toPrint }:{file:File | string, width:number, height:number, toPrint?:boolean}) => {
+export const ImagePreview = ({ file, width, height }:{file:File | string, width:number, height:number}) => {
     const context = useContext(Context);
     const [base64, setBase64] = useState('');
     const [isPdf, setIsPdf] = useState(false);
@@ -88,25 +87,12 @@ export const ImagePreview = ({ file, width, height, toPrint }:{file:File | strin
         if (file instanceof Blob) {
           processFile();
         }else if( typeof file === 'string'){
-            console.log("Entrou na url", toPrint);
             getSignedUrl(file);
         }
       }, [file]);
 
     if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
 
-    if(toPrint) {
-        return <View>
-            <PdfImage
-                style={{ objectFit: 'contain', height: height, width: width}}
-                src={urlSigned ? urlSigned :undefined}
-                source={base64 ? base64 : undefined} // Usa o Base64 gerado como src
-            />
-            {urlSigned ? <Link href={urlSigned}>
-                <Text>Abrir: {urlSigned}</Text>
-            </Link>:null}
-        </View>
-    }
     return (
         <>            
             <Image
@@ -139,11 +125,13 @@ export const ImagePreview = ({ file, width, height, toPrint }:{file:File | strin
 };
 
 type Props = {
-    readOnly: boolean
+    readOnly: boolean,
+    data?: FormDocs[]
 }
 
-export default function SectionDocumentos({readOnly}:Props){
+export default function SectionDocumentos({readOnly, data}:Props){
     const context = useContext(Context);
+    const localData = data || context.dataSaae?.documentos || [];
 
     const [currentForm, setCurrentForm] = useState({} as FormDocs);
     
@@ -334,7 +322,7 @@ export default function SectionDocumentos({readOnly}:Props){
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h1 className={styles.bgGreen}>7. Documentos adicionais:</h1>
+            <h2 className={styles.bgGreen}>7. Documentos adicionais:</h2>
 
             {!readOnly ?
             <>
@@ -399,7 +387,7 @@ export default function SectionDocumentos({readOnly}:Props){
             :null}
 
             <div className={styles.subConteiner}>
-                {context.dataSaae?.documentos?.map((section, idx)=>(
+                {localData?.map((section, idx)=>(
                     <div 
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}

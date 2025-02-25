@@ -13,11 +13,17 @@ import RouteMapComponent from '@/components/layout/mapsRotas/mapsRotas';
 import { FaTrash } from 'react-icons/fa6';
 
 type Props = {
-    readOnly: boolean
+    readOnly: boolean,
+    data?: DadosGeraisSaae,
+    obsSaae?: string,
+    statusSaae?: string,
+    idSaae?: string,
+    print?: boolean
 }
 
-export default function DadosGerais({readOnly}:Props){
+export default function DadosGerais({readOnly, data, obsSaae, idSaae, statusSaae, print}:Props){
     const context = useContext(Context);
+    const localData = data || context.dataSaae?.dadosGerais || {} as DadosGeraisSaae;
 
     const [currentProgramacao, setCurrentProgramacao] = useState({} as ProgramacaoAtividade);
     const [atividade, setAtividade] = useState('');
@@ -126,7 +132,7 @@ export default function DadosGerais({readOnly}:Props){
                 }
             }else if(name === 'coordenador'){
                 const responsavel = context.tester || context.dataUser;
-                const verify = value === responsavel.name;
+                const verify = value === responsavel?.name;
                 if(verify){
                     newData = {
                         ...newData,
@@ -539,11 +545,11 @@ export default function DadosGerais({readOnly}:Props){
             style={{marginTop: readOnly ? '30px' : '0px'}}
         >
             <h1 className={styles.bgGreen}>1. Dados gerais da atividade</h1>
-
+            {idSaae ? <h6 className={styles.bgGreen}>ID: {idSaae}</h6> :null}    
             <div className={styles.table}>
-                {context.dataSaae?.obs ?
+                {obsSaae ?
                     <div className={styles.line}>
-                        <p>Resposta da sua SAAE: {context.dataSaae?.status?.toUpperCase()} -  {context.dataSaae?.obs || ''}</p>
+                        <p>Resposta da sua SAAE: {statusSaae?.toUpperCase()} -  {obsSaae || ''}</p>
                     </div>
                 :null}
                 {/* nome/tipo/ods */}
@@ -556,7 +562,7 @@ export default function DadosGerais({readOnly}:Props){
                             type='text'
                             name='nomeAtividade'
                             list='listAtividades'
-                            value={context.dataSaae?.dadosGerais?.nomeAtividade || ''}
+                            value={localData?.nomeAtividade || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={(e)=>getAtividade(e)}
                             placeholder="nome da atividade"
@@ -598,7 +604,7 @@ export default function DadosGerais({readOnly}:Props){
                             flexDirection: 'row',
                             flexWrap: 'wrap',
                         }}>
-                            {context.dataSaae?.dadosGerais?.tipoAtividade?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                            {localData?.tipoAtividade?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
@@ -655,7 +661,7 @@ export default function DadosGerais({readOnly}:Props){
                             flexDirection: 'row',
                             flexWrap: 'wrap',
                         }}>
-                            {context.dataSaae?.dadosGerais?.odss?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                            {localData?.odss?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
@@ -708,7 +714,7 @@ export default function DadosGerais({readOnly}:Props){
                             flexDirection: 'row',
                             flexWrap: 'wrap',
                         }}>
-                            {context.dataSaae?.dadosGerais?.ramo?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
+                            {localData?.ramo?.sort((a,b)=> a.localeCompare(b))?.map((tag, index) => (
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
@@ -735,7 +741,7 @@ export default function DadosGerais({readOnly}:Props){
                         {!readOnly ?
                             <select
                                 name='atividadeNaoSupervisionada'
-                                value={context.dataSaae?.dadosGerais?.atividadeNaoSupervisionada || ''}
+                                value={localData?.atividadeNaoSupervisionada || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                             >
@@ -745,7 +751,7 @@ export default function DadosGerais({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.dadosGerais?.atividadeNaoSupervisionada || ''}
+                                defaultValue={localData?.atividadeNaoSupervisionada || ''}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
@@ -758,7 +764,7 @@ export default function DadosGerais({readOnly}:Props){
                         {!readOnly ?
                             <select
                                 name='usoTransporteInterMunicipal'
-                                value={context.dataSaae?.dadosGerais?.usoTransporteInterMunicipal || ''}
+                                value={localData?.usoTransporteInterMunicipal || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                             >
@@ -768,7 +774,7 @@ export default function DadosGerais({readOnly}:Props){
                             </select>
                             :
                             <input 
-                                defaultValue={context.dataSaae?.dadosGerais?.usoTransporteInterMunicipal || ''}
+                                defaultValue={localData?.usoTransporteInterMunicipal || ''}
                                 readOnly={readOnly}
                                 className={`${styles.collum}`}
                             />
@@ -817,7 +823,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='localInicio.cep'
-                            value={context.dataSaae?.dadosGerais?.localInicio?.cep || ''}
+                            value={localData?.localInicio?.cep || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={(e)=>getCep(e)}
                             placeholder="CEP do local da atividade"
@@ -831,7 +837,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localInicio.logradouro'
-                            value={context.dataSaae?.dadosGerais?.localInicio?.logradouro || ''}
+                            value={localData?.localInicio?.logradouro || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="logradouro"
                             className={`${styles.collum}`}
@@ -845,7 +851,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='localInicio.bairro'
-                            value={context.dataSaae?.dadosGerais?.localInicio?.bairro || ''}
+                            value={localData?.localInicio?.bairro || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -858,7 +864,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='localInicio.municipio'
-                            value={context.dataSaae?.dadosGerais?.localInicio?.municipio || ''}
+                            value={localData?.localInicio?.municipio || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -870,26 +876,26 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localInicio.uf'
-                            value={context.dataSaae?.dadosGerais?.localInicio?.uf || ''}
+                            value={localData?.localInicio?.uf || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />   
                     </div>
                 </div>
-               {context.dataSaae?.dadosGerais?.localInicio?.address ?
+               {localData?.localInicio?.address ?
                 <div className={styles.line}>
                     <div className={styles.collum}>
                         <h1>
                             Descrição do endereço.
                         </h1>
                         <span>{
-                            context.dataSaae?.dadosGerais?.localInicio?.address 
+                            localData?.localInicio?.address 
                         }</span>
                     </div>
                 </div>
                 :null}
-                {inicioFim || context.dataSaae?.dadosGerais?.localFim ?
+                {inicioFim || localData?.localFim ?
                 <>
                     <div className={styles.line}>
                         <div className={styles.collum}>
@@ -899,7 +905,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='localFim.cep'
-                                value={context.dataSaae?.dadosGerais?.localFim?.cep || ''}
+                                value={localData?.localFim?.cep || ''}
                                 onChange={(e) => handleForm(e)}
                                 onBlur={(e)=>getCep(e)}
                                 placeholder="CEP do local da atividade"
@@ -913,7 +919,7 @@ export default function DadosGerais({readOnly}:Props){
                             </h1>
                             <textarea
                                 name='localFim.logradouro'
-                                value={context.dataSaae?.dadosGerais?.localFim?.logradouro || ''}
+                                value={localData?.localFim?.logradouro || ''}
                                 onChange={(e) => handleForm(e)}
                                 placeholder="logradouro"
                                 className={`${styles.collum}`}
@@ -927,7 +933,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='localFim.bairro'
-                                value={context.dataSaae?.dadosGerais?.localFim?.bairro || ''}
+                                value={localData?.localFim?.bairro || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -940,7 +946,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='localFim.municipio'
-                                value={context.dataSaae?.dadosGerais?.localFim?.municipio || ''}
+                                value={localData?.localFim?.municipio || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -952,7 +958,7 @@ export default function DadosGerais({readOnly}:Props){
                             </h1>
                             <textarea
                                 name='localFim.uf'
-                                value={context.dataSaae?.dadosGerais?.localFim?.uf || ''}
+                                value={localData?.localFim?.uf || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -960,14 +966,14 @@ export default function DadosGerais({readOnly}:Props){
                         </div>
 
                     </div>
-                    {context.dataSaae?.dadosGerais?.localFim?.address ?
+                    {localData?.localFim?.address ?
                         <div className={styles.line}>
                             <div className={styles.collum}>
                             <h1>
                                 Descrição do endereço.
                             </h1>
                                 <span>{
-                                    context.dataSaae?.dadosGerais?.localFim?.address 
+                                    localData?.localFim?.address 
                                 }</span>
                             </div>
                         </div>
@@ -983,7 +989,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='metodologia'
-                            value={context.dataSaae?.dadosGerais?.metodologia || ''}
+                            value={localData?.metodologia || ''}
                             onChange={(e) => handleForm(e)}
                             readOnly={readOnly}
                         />
@@ -994,7 +1000,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='objetivo'
-                            value={context.dataSaae?.dadosGerais?.objetivo || ''}
+                            value={localData?.objetivo || ''}
                             onChange={(e) => handleForm(e)}
                             readOnly={readOnly}
                         />
@@ -1010,8 +1016,8 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='date'
                             name='dataInicio'
-                            defaultValue={dateFormat1(context.dataSaae?.dadosGerais?.dataInicio) || ''}
-                            datatype={dateFormat1(context.dataSaae?.dadosGerais?.dataInicio) || ''}
+                            defaultValue={dateFormat1(localData?.dataInicio) || ''}
+                            datatype={dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1024,7 +1030,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='horaInicio'
-                            value={context.dataSaae?.dadosGerais?.horaInicio || ''}
+                            value={localData?.horaInicio || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1036,7 +1042,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localSaida'
-                            value={context.dataSaae?.dadosGerais?.localSaida || ''}
+                            value={localData?.localSaida || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1048,7 +1054,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='localChegada'
-                            value={context.dataSaae?.dadosGerais?.localChegada || ''}
+                            value={localData?.localChegada || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1061,8 +1067,8 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='date'
                             name='dataFim'
-                            defaultValue={dateFormat1(context.dataSaae?.dadosGerais?.dataFim) || ''}
-                            datatype={dateFormat1(context.dataSaae?.dadosGerais?.dataFim) || ''}
+                            defaultValue={dateFormat1(localData?.dataFim) || ''}
+                            datatype={dateFormat1(localData?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1075,7 +1081,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='horaFim'
-                            value={context.dataSaae?.dadosGerais?.horaFim || ''}
+                            value={localData?.horaFim || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1092,7 +1098,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='meioTransporte'
-                            value={context.dataSaae?.dadosGerais?.meioTransporte || ''}
+                            value={localData?.meioTransporte || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1105,7 +1111,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='custoIndividual'
-                            value={context.dataSaae?.dadosGerais?.custoIndividual || ''}
+                            value={localData?.custoIndividual || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1123,14 +1129,14 @@ export default function DadosGerais({readOnly}:Props){
                             type='text'
                             name='coordenador'
                             list='listResponsaveis'
-                            value={context.dataSaae?.dadosGerais?.coordenador || ''}
+                            value={localData?.coordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                         <datalist id='listResponsaveis'>
-                            <option value={context.dataUser.name || context.tester?.name}>
-                                {context.dataUser.name || context.tester?.name}
+                            <option value={context.dataUser?.name || context.tester?.name}>
+                                {context.dataUser?.name || context.tester?.name}
                             </option>
                         </datalist>
                     </div>
@@ -1141,7 +1147,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='regCoordenador'
-                            value={context.dataSaae?.dadosGerais?.regCoordenador || ''}
+                            value={localData?.regCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1154,7 +1160,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='telCoordenador'
-                            value={context.dataSaae?.dadosGerais?.telCoordenador || ''}
+                            value={localData?.telCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1167,7 +1173,7 @@ export default function DadosGerais({readOnly}:Props){
                         <input
                             type='text'
                             name='emailCoordenador'
-                            value={context.dataSaae?.dadosGerais?.emailCoordenador || ''}
+                            value={localData?.emailCoordenador || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1180,7 +1186,7 @@ export default function DadosGerais({readOnly}:Props){
                         {!readOnly ?
                             <select
                                 name='nivelFormacaoCoordenador'
-                                value={context.dataSaae?.dadosGerais?.nivelFormacaoCoordenador || ''}
+                                value={localData?.nivelFormacaoCoordenador || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                             >
@@ -1190,7 +1196,7 @@ export default function DadosGerais({readOnly}:Props){
                             </select>
                         :
                                 <input 
-                                    defaultValue={context.dataSaae?.dadosGerais?.nivelFormacaoCoordenador || ''}
+                                    defaultValue={localData?.nivelFormacaoCoordenador || ''}
                                     readOnly={readOnly}
                                     className={`${styles.collum}`}
                                 />
@@ -1199,7 +1205,7 @@ export default function DadosGerais({readOnly}:Props){
                 </div>
 
                 {/* supervisão */}
-                {context.dataSaae?.dadosGerais?.nivelFormacaoCoordenador === "Preliminar" ? 
+                {localData?.nivelFormacaoCoordenador === "Preliminar" ? 
                 <>
                     <div className={styles.line}>
                         <div className={styles.collum}>
@@ -1209,7 +1215,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='nomeSupervisor'
-                                value={context.dataSaae?.dadosGerais?.nomeSupervisor || ''}
+                                value={localData?.nomeSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1222,7 +1228,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='regSupervisor'
-                                value={context.dataSaae?.dadosGerais?.regSupervisor || ''}
+                                value={localData?.regSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1235,7 +1241,7 @@ export default function DadosGerais({readOnly}:Props){
                             <input
                                 type='text'
                                 name='telSupervisor'
-                                value={context.dataSaae?.dadosGerais?.telSupervisor || ''}
+                                value={localData?.telSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1248,7 +1254,7 @@ export default function DadosGerais({readOnly}:Props){
                             {!readOnly ?
                                 <select
                                     name='nivelFormacaoSupervisor'
-                                    value={context.dataSaae?.dadosGerais?.nivelFormacaoSupervisor || ''}
+                                    value={localData?.nivelFormacaoSupervisor || ''}
                                     onChange={(e) => handleForm(e)}
                                     className={`${styles.collum}`}
                                 >
@@ -1258,7 +1264,7 @@ export default function DadosGerais({readOnly}:Props){
                                 </select>
                                 :
                                 <input 
-                                    defaultValue={context.dataSaae?.dadosGerais?.nivelFormacaoSupervisor || ''}
+                                    defaultValue={localData?.nivelFormacaoSupervisor || ''}
                                     readOnly={readOnly}
                                     className={`${styles.collum}`}
                                 />
@@ -1275,7 +1281,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='comoChegar'
-                            value={context.dataSaae?.dadosGerais?.comoChegar || ''}
+                            value={localData?.comoChegar || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="como chegar"
                             readOnly={readOnly}
@@ -1287,7 +1293,7 @@ export default function DadosGerais({readOnly}:Props){
                         </h1>
                         <textarea
                             name='linkMapa'
-                            value={context.dataSaae?.dadosGerais?.linkMapa || ''}
+                            value={localData?.linkMapa || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="sugestão: procure por google Earth Web e crie uma pasta com todas as rotas"
                             readOnly={readOnly}
@@ -1320,8 +1326,8 @@ export default function DadosGerais({readOnly}:Props){
                             }}/>
                         </div>
                     :null}
-                    {context.dataSaae?.dadosGerais?.rotas && <div className={styles.boxRotas} style={{padding: '6px'}}>
-                        {context.dataSaae?.dadosGerais?.rotas?.map((rota, index)=>(
+                    {localData?.rotas && <div className={styles.boxRotas} style={{padding: '6px'}}>
+                        {localData?.rotas?.map((rota, index)=>(
                             <div key={v4()}>
                                 <span style={{width: 80}}>
                                     <b>Título:</b> 
@@ -1383,13 +1389,13 @@ export default function DadosGerais({readOnly}:Props){
                         Coordenadas do local Início (opcional)
                     </h2>
                     <label htmlFor="">
-                       {`${context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat || ''},  
-                       ${context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long || ''}`}
+                       {`${localData?.localInicio?.coordenadas?.lat || ''},  
+                       ${localData?.localInicio?.coordenadas?.long || ''}`}
                     </label>
                     {/* <input
                         type='text'
                         name='localInicio.coordenadas.lat'
-                        value={context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat || ''}
+                        value={localData?.localInicio?.coordenadas?.lat || ''}
                         onChange={(e) => {
                             handleForm(e)
                         }}
@@ -1400,7 +1406,7 @@ export default function DadosGerais({readOnly}:Props){
                     <input
                         type='text'
                         name='localInicio.coordenadas.long'
-                        value={context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long || ''}
+                        value={localData?.localInicio?.coordenadas?.long || ''}
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
@@ -1408,29 +1414,29 @@ export default function DadosGerais({readOnly}:Props){
                     /> */}
                 </div>
                 <div className={styles.line}>
-                    {(context.dataSaae?.dadosGerais?.localInicio?.logradouro && context.dataSaae?.dadosGerais?.localInicio?.bairro) || (context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.lat && context.dataSaae?.dadosGerais?.localInicio?.coordenadas?.long) ?
+                    {(localData?.localInicio?.logradouro && localData?.localInicio?.bairro) || (localData?.localInicio?.coordenadas?.lat && localData?.localInicio?.coordenadas?.long) ?
                         <MapsComponent 
                             label='localInicio'
                             setLatLong={latLongSet}
-                            data={context.dataSaae?.dadosGerais?.localInicio}
+                            data={localData?.localInicio}
                             readonly={readOnly}
                         />
                     :null}                    
                 </div>
-                {(context.dataSaae?.dadosGerais?.localFim?.logradouro && context.dataSaae?.dadosGerais?.localFim?.bairro) || context.dataSaae?.dadosGerais?.localFim?.coordenadas ?
+                {(localData?.localFim?.logradouro && localData?.localFim?.bairro) || localData?.localFim?.coordenadas ?
                 <>
                 <div>
                     <h2>
                         Coordenadas do local Fim (opcional)
                     </h2>
                     <label htmlFor="">
-                       {`${context.dataSaae?.dadosGerais?.localFim?.coordenadas?.lat || ''},  
-                       ${context.dataSaae?.dadosGerais?.localFim?.coordenadas?.long || ''}`}
+                       {`${localData?.localFim?.coordenadas?.lat || ''},  
+                       ${localData?.localFim?.coordenadas?.long || ''}`}
                     </label>
                     {/* <input
                         type='number'
                         name='localFim.coordenadas.lat'
-                        value={context.dataSaae?.dadosGerais?.localFim?.coordenadas?.lat || ''}
+                        value={localData?.localFim?.coordenadas?.lat || ''}
                         onChange={(e) => {
                             handleForm(e)
                         }}
@@ -1441,7 +1447,7 @@ export default function DadosGerais({readOnly}:Props){
                     {/* <input
                         type='number'
                         name='localFim.coordenadas.long'
-                        value={context.dataSaae?.dadosGerais?.localFim?.coordenadas?.long || ''}
+                        value={localData?.localFim?.coordenadas?.long || ''}
                         onChange={(e) => handleForm(e)}
                         placeholder="longitude"
                         style={{width: 200}}
@@ -1453,7 +1459,7 @@ export default function DadosGerais({readOnly}:Props){
                     <MapsComponent 
                         label='localFim'
                         setLatLong={latLongSet}
-                        data={context.dataSaae?.dadosGerais?.localFim}
+                        data={localData?.localFim}
                         readonly={readOnly}
                     />                   
                 </div>
@@ -1466,7 +1472,7 @@ export default function DadosGerais({readOnly}:Props){
                 </div>
 
                 {/* cabeçalho da programação */}
-                <div className={styles.line}>
+                <div className={`${styles.line} ${print ? styles.print : ''}`}>
                     <div className={`${styles.collum} ${styles.width120}`}>
                         <h1 >
                             Data
@@ -1497,16 +1503,16 @@ export default function DadosGerais({readOnly}:Props){
                             Responsável
                         </h1>
                     </div> 
-                        <div className={`${styles.collum} ${styles.width100}`}>
-                            <h1>
-                                Add/Rem
-                            </h1>
-                        </div>
+                    {!readOnly ? <div className={`${styles.collum} ${styles.width100}`}>
+                        <h1>
+                            Add/Rem
+                        </h1>
+                    </div>:null}
                 </div>
 
                 {/* dados adicionados à programação */}
-                {context.dataSaae?.dadosGerais?.programacao?.map((prog, idx)=>(
-                    <div key={v4()} className={styles.line}>
+                {localData?.programacao?.map((prog, idx)=>(
+                    <div key={v4()} className={`${styles.line} ${print ? styles.print : ''}`}>
                         <div className={`${styles.collum} ${styles.width120}`}>
                             <span>{dateFormat2(prog?.data)}</span>
                         </div>
@@ -1538,7 +1544,7 @@ export default function DadosGerais({readOnly}:Props){
                 ))}
 
                 {!readOnly ? 
-                    <div className={styles.line}>
+                    <div className={`${styles.line} ${print ? styles.print : ''}`}>
                         <div className={`${styles.collum} ${styles.width120}`}>
                             <input
                                 type='date'

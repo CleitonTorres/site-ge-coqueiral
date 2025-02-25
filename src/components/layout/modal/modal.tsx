@@ -18,6 +18,10 @@ export default function Modal ({children, customClass, actionClose}:Props){
     const [customStyles, setCustomStyles] = useState(''); 
 
     useEffect(()=>{
+        return undefined;
+    },[]);
+
+    useEffect(()=>{
         if(Array.isArray(customClass)){
             let newString = '';
             for (const item of customClass) {

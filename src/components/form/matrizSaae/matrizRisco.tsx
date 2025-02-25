@@ -4,11 +4,16 @@ import styles from './matrizRisco.module.css';
 import { Context } from '@/components/context/context';
 
 type Props = {
-    readOnly: boolean
+    readOnly: boolean,
+    data?: {
+        color: "green" | "yellow" | "orange" | "red" | "";
+        value: number;
+    }    
 }
-export default function MatrizRisco ({readOnly}:Props){
+export default function MatrizRisco ({readOnly, data}:Props){
     const context = useContext(Context);
-    
+    const localData = data || context.dataSaae?.grauRisco || [];
+
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>
@@ -20,9 +25,9 @@ export default function MatrizRisco ({readOnly}:Props){
             <div className={`${styles.resultado}`}>
                 <span>Maior resultado</span>
                 <span 
-                    style={{backgroundColor: context.dataSaae?.grauRisco?.color, fontWeight: '700'}}
+                    style={{backgroundColor: localData?.color, fontWeight: '700'}}
                 >
-                    {context.dataSaae?.grauRisco?.value || ''}
+                    {localData?.value || ''}
                 </span>
             </div>
             
@@ -31,7 +36,7 @@ export default function MatrizRisco ({readOnly}:Props){
                     Quase certo
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 5 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 5 ? styles.risco : ''}`} 
                     id='5' 
                     style={{
                         backgroundColor: 'yellow'
@@ -40,21 +45,21 @@ export default function MatrizRisco ({readOnly}:Props){
                     5
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 10 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 10 ? styles.risco : ''}`} 
                     id='10' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     10
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 15 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 15 ? styles.risco : ''}`} 
                     id='15' 
                     style={{backgroundColor: 'red'}}
                 > 
                     15
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 20 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 20 ? styles.risco : ''}`} 
                     id='20' 
                     style={{
                         backgroundColor: 'red'
@@ -63,7 +68,7 @@ export default function MatrizRisco ({readOnly}:Props){
                     20
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 25 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 25 ? styles.risco : ''}`} 
                     id='25' 
                     style={{backgroundColor: 'red'}}
                 > 
@@ -74,35 +79,35 @@ export default function MatrizRisco ({readOnly}:Props){
                     Provável
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 4 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 4 ? styles.risco : ''}`} 
                     id='4' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     4
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 8 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 8 ? styles.risco : ''}`} 
                     id='8' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     8
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 12 ? styles.risco : ''}`}
+                    className={`${styles.valor} ${localData?.value === 12 ? styles.risco : ''}`}
                     id='12' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     12
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 16 ? styles.risco : ''}`}
+                    className={`${styles.valor} ${localData?.value === 16 ? styles.risco : ''}`}
                     id='16'
                     style={{backgroundColor: 'red'}}
                 > 
                     16
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 20 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 20 ? styles.risco : ''}`} 
                     id='20' 
                     style={{backgroundColor: 'red'}}
                 > 
@@ -112,34 +117,34 @@ export default function MatrizRisco ({readOnly}:Props){
                     Possível
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 3 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 3 ? styles.risco : ''}`} 
                     id='3' 
                     style={{backgroundColor: 'green'}}
                 > 
                     3
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 6 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 6 ? styles.risco : ''}`} 
                     id='6' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     6
                 </span>
                 <span  
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 9 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${localData?.value === 9 ? styles.risco : ''}`}  
                     id='9' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     9
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 12 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 12 ? styles.risco : ''}`} 
                     id='12' 
                     style={{backgroundColor: 'orange'}}> 
                     12
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 15 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 15 ? styles.risco : ''}`} 
                     id='15' 
                     style={{backgroundColor: 'red'}}> 
                     15
@@ -148,35 +153,35 @@ export default function MatrizRisco ({readOnly}:Props){
                     Raro
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 2 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${localData?.value === 2 ? styles.risco : ''}`}  
                     id='2' 
                     style={{backgroundColor: 'green'}}
                 > 
                     2
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 4 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 4 ? styles.risco : ''}`} 
                     id='4' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     4
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 6 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 6 ? styles.risco : ''}`} 
                     id='6' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     6
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 8 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 8 ? styles.risco : ''}`} 
                     id='8' 
                     style={{backgroundColor: 'orange'}}
                 > 
                     8
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 10 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 10 ? styles.risco : ''}`} 
                     id='10' 
                     style={{backgroundColor: 'orange'}}
                 > 
@@ -186,35 +191,35 @@ export default function MatrizRisco ({readOnly}:Props){
                     Improvável
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 1 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 1 ? styles.risco : ''}`} 
                     id='1' 
                     style={{backgroundColor: 'green'}}
                 > 
                     1
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 2 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 2 ? styles.risco : ''}`} 
                     id='2'
                     style={{backgroundColor: 'green'}}
                 > 
                     2
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 3 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${localData?.value === 3 ? styles.risco : ''}`}  
                     id='3' 
                     style={{backgroundColor: 'green'}}
                 > 
                     3
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 4 ? styles.risco : ''}`}  
+                    className={`${styles.valor} ${localData?.value === 4 ? styles.risco : ''}`}  
                     id='4' 
                     style={{backgroundColor: 'yellow'}}
                 > 
                     4
                 </span>
                 <span 
-                    className={`${styles.valor} ${context.dataSaae?.grauRisco?.value === 5 ? styles.risco : ''}`} 
+                    className={`${styles.valor} ${localData?.value === 5 ? styles.risco : ''}`} 
                     id='5' 
                     style={{backgroundColor: 'orange'}}
                 > 

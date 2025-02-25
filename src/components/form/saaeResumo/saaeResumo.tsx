@@ -13,7 +13,7 @@ import { Context } from '@/components/context/context';
 import Confirme from '@/components/layout/confirme/confirme';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PdfDocumentInfosPreliminares from '@/components/layout/PrintDoc/printDocInfoPreliminar';
-import PdfDocumentResumoSAAE from '@/components/layout/PrintDoc/printResumoSAAE';
+import { SAAE } from '@/@types/types';
 
 type Props= {
     hiddeButton?: boolean
@@ -26,6 +26,15 @@ type Props= {
 export default function SaaeResumo ({hiddeButton}:Props){
     const context = useContext(Context);
 
+    const printComponent = (data: SAAE) => {
+        // Salva os dados no localStorage
+        localStorage.setItem("print-data", JSON.stringify(data));
+      
+        // Abre a página de impressão
+        window.open("/administrativo/area-restrita/printer/resumoSaae", "_blank");
+    };
+
+      
     useEffect(()=>{
         return undefined
     },[]);
@@ -48,34 +57,31 @@ export default function SaaeResumo ({hiddeButton}:Props){
                     }
                 }}
             </PDFDownloadLink>
-
-            {context.dataSaae._id ? <PDFDownloadLink 
-                document={<PdfDocumentResumoSAAE dataSaae={context.dataSaae}/>} 
-                fileName="resumoSaae.pdf"
-                download={true}
-            >
-                {({ blob, url, loading, error }) =>{
-                    if(loading){
-                        return 'Carregando documento...'
-                    }else{
-                        console.log('blob', blob, 'Url', url, 'error', error)
-                        return <span style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir Resumo da SAAE</span>
-                    }
-                }}
-            </PDFDownloadLink> :null}
-
-            {/* <span onClick={()=>{
-                context.setShowModal({
-                    element: <PdfDocumentResumoSAAE dataSaae={context.dataSaae}/>,
-                    styles:['backgroundWhite', 'alingTop']
-                })
-            }} style={{cursor:'pointer', textDecoration: 'underline'}}>imprimir SAAE</span> */}
             
-            <DadosGerais readOnly/>
+            <span 
+                style={{cursor:'pointer', textDecoration: 'underline'}}
+                onClick={()=>{
+                    printComponent(context.dataSaae);
+                }}
+            >
+                Imprimir SAAE
+            </span>
+
+            <DadosGerais 
+                readOnly 
+                idSaae={context.dataSaae._id} 
+                obsSaae={context.dataSaae.obs} 
+                statusSaae={context.dataSaae.status}
+            />
             <InfosPreliminares readOnly/>
             <InventarioSaae readOnly/>
             <MatrizRisco readOnly/>
-            <PlanoEmergencia readOnly/>
+            <PlanoEmergencia 
+                readOnly
+                grauRisco={context.dataSaae.grauRisco}
+                nomeAtividade={context.dataSaae.dadosGerais.nomeAtividade}
+                localInicio={context.dataSaae.dadosGerais.localInicio}
+            />
             <FotosInspecao readOnly/>
             <SectionDocumentos readOnly/>
             {!hiddeButton ? 

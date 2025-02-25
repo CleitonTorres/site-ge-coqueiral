@@ -525,15 +525,15 @@ export const signedURL = async(fileUrl:string)=>{
             
             // Capturando os detalhes da resposta
             if (error.response) {
-            console.error("Status:", error.response.status);
-            console.error("Dados:", error.response.data);
+                console.error("Status:", error.response.status);
+                console.error("Dados:", error.response.data);
             }
         } else {
             // Se for outro tipo de erro
             console.error("Erro inesperado:", error);
         }
 
-        alert("Ocorreu um erro ao tentar recuperar a lista de SAAEs")
+        console.log("Ocorreu um erro ao tentar assinar URLs", fileUrl)
     }
 }
 

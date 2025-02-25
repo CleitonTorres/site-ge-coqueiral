@@ -89,10 +89,12 @@ import { ImagePreview } from '../sectionDocumentos/documentos';
 // };
 
 type Props = {
-    readOnly: boolean
+    readOnly: boolean,
+    data?: FormFotosInspecao[]
 }
-export default function FotosInspecao({readOnly}:Props){
+export default function FotosInspecao({readOnly, data}:Props){
     const context = useContext(Context);
+    const localData = data || context.dataSaae?.fotosInspecao || [];
 
     const [currentForm, setCurrentForm] = useState({} as FormFotosInspecao);
     
@@ -283,7 +285,7 @@ export default function FotosInspecao({readOnly}:Props){
 
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <h1 className={styles.bgGreen}>6. Fotos do local/inspeção:</h1>
+            <h2 className={styles.bgGreen}>6. Fotos do local/inspeção:</h2>
             {!readOnly ?
                 <>
                 <div className={styles.section}>
@@ -347,7 +349,7 @@ export default function FotosInspecao({readOnly}:Props){
             :null}
 
             <div className={styles.subConteiner}>
-                {context.dataSaae?.fotosInspecao?.map((section, idx)=>(
+                {localData?.map((section, idx)=>(
                     <div 
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}

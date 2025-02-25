@@ -5,14 +5,17 @@ import { FaPlus, FaMinus, FaInfo } from "react-icons/fa";
 import { BsBagPlus } from "react-icons/bs";
 import { Context } from '@/components/context/context';
 import { dateFormat2 } from '@/scripts/globais';
+import { InfosPreliminaresSaae } from '@/@types/types';
 
 type Props = {
-    readOnly: boolean
+    readOnly: boolean,
+    data?: InfosPreliminaresSaae[]
 }
 
-export default function InfosPreliminares ({readOnly}:Props){
+export default function InfosPreliminares ({readOnly, data}:Props){
     const context = useContext(Context);
-    //const [data, setData] = useState<InfosPreliminaresSaae[]>([]);
+    const localData = data || context.dataSaae?.infosPreliminares || [];
+
     const [showDicas, setShowDicas] = useState(false);
 
     const handleChange = async (e: ChangeEvent<HTMLTextAreaElement>)=>{
@@ -125,7 +128,7 @@ export default function InfosPreliminares ({readOnly}:Props){
                     <FaPlus title='dicas de preenchimento'  onClick={addItem}/>
                 </div>
             :null}
-            {context.dataSaae?.infosPreliminares?.map((item, idx)=>(
+            {localData?.map((item, idx)=>(
                 <div key={item.item} className={styles.boxTextarea}>
                     <h4>Item {item.item} 
                         {!readOnly ? 

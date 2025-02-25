@@ -3,6 +3,7 @@
     flex-direction: column;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
+    width: 100%;
 }
 .boxHead{
     position: relative;
@@ -10,6 +11,7 @@
     flex-direction: column;
     align-items: left;
     min-height: 50px;
+    width: 100%;
 }
 .boxHead svg{
     position: absolute;
@@ -114,6 +116,7 @@
     background-color: var(--verde);
     margin-top: 20px;
     padding-left: 10px;
+    width: 100%;
 }
 .closeBtn{
     position: absolute;

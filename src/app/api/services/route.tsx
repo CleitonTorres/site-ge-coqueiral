@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
     
     // Parseando os parâmetros da URL (query params)
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
-    const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey'
+    const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey' | 'printPDF'
     | 'proxyPDF';
     const slug = url.searchParams.get('slug') as string;
 
@@ -350,7 +350,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json(resp, {status: 200});
             
-        }else{
+        }{
             return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
         }
     }catch(e){

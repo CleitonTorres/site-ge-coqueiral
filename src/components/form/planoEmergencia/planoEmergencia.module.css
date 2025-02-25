@@ -2,9 +2,10 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    max-width: 1232px;
+    /* max-width: 1232px; */
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
+    width: 100%;
 }
 .boxHead{
     position: relative;

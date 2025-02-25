@@ -1,0 +1,9 @@
+[
+    {
+        "origin": ["http://localhost:3001", "https://19.escoteiroses.org.br/"],
+        "method": ["GET"],
+        "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"],
+        "maxAgeSeconds": 3600
+    }
+]
+  

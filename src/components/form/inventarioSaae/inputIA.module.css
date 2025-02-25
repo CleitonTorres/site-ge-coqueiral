@@ -4,6 +4,7 @@
     flex-direction: column;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
+    width: 100%;
 }
 .boxHead{
     position: relative;
@@ -32,12 +33,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 170px;
     font-size: 12px;
     text-align: justify;
     border: 1px solid;
 }
-.collum{
+.collum, .collum2{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,11 +48,9 @@
     border: 1px solid;
     resize: none;
     min-height: 90px;
-    height: fit-content;
     padding: 6px;
     background-color: var(--white);
 }
-
 .boxInput{
     position: relative;
     width: 170px;
@@ -140,6 +140,31 @@
     background-color: var(--verde);
     margin-top: 20px;
     padding-left: 10px;
+}
+.line{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-width: 380px;
+    flex-wrap: wrap;
+}
+.line h1{
+    font-size: 14px;
+    padding: 6px;
+    text-align: center;
+}
+.print .line h1, .print .line .collum
+{
+    font-size: 10px;
+    width: 100px;
+    height: auto!important;
+}
+.print .collum2{
+    width: 50px !important;
+}
+.print .line h1{
+    height: 40px;
+    text-align: center;
 }
 
 @keyframes loadingDots {

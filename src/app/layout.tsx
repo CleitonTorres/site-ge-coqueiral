@@ -9,6 +9,7 @@ import './layout.css'
 import Script from 'next/script';
 import Provider from '@/components/context/context';
 import Breadcrumb from '@/components/layout/breadcrumb/breadCrumb';
+import { usePathname } from "next/navigation";
 
 import { GlobalWorkerOptions } from 'pdfjs-dist';
 
@@ -17,6 +18,10 @@ GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 export default function RootLayout({children}: {children: React.ReactNode}) {
     const [activeMenu, setActiveMenu] = useState('none');
     const [animation, setAnimation] = useState('');
+    const pathname = usePathname();
+
+    // Verifica se a URL contém "/printer"
+    const isPrinterRoute = pathname.includes("/printer");
 
     const togleMenu = (id:string)=>{
         if(id === activeMenu) {
@@ -67,6 +72,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             style={{ position: 'relative', minHeight: '100vh' }}
         >
             <Provider>
+                {!isPrinterRoute ? 
                 <div className='navBox porcent100 flexCollTop'>
                     <div className='conteinerAreaAssociado porcent100 flexRowCenter'>
                         <nav id="area-do-associado">
@@ -425,10 +431,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         <a href="/doe">DOE AGORA</a>
                     </div> 
                 </div>
+                :null}
 
                 {/* Layout UI */}
                 <main className='flexCollTop'>{children}</main>
                 
+                {!isPrinterRoute ?
                 <div className='footer'>
                     <nav>
                         <ul className='menuFooter'>
@@ -501,6 +509,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         © 2024 Escoteiros do Brasil - Todos os direitos reservados
                     </span>
                 </div>
+                :null}
             </Provider>
         </body>
       </html>

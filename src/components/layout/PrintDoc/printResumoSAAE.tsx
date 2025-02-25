@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Link } from '@react-pdf/renderer';
-import { dateFormat2, fileToBase64, pdfToImageBase64, signedURL, } from '@/scripts/globais';
+import { dateFormat2, fileToBase64, pdfToImageBase64, signedURL } from '@/scripts/globais';
 import { v4 } from 'uuid';
 import { SAAE } from '@/@types/types';
 import axios from 'axios';
@@ -177,7 +177,8 @@ type Props = {
 const ImagePreview = ({file}:{file:File | string}) => {
   // const [base64, setBase64] = useState('');
   const [urlSigned, setUrlSiged] = useState('');
-  
+
+    //**Retorna uma string Base64*/
     const processFile = async () => {
       try {
         if(file instanceof Blob){
@@ -196,47 +197,54 @@ const ImagePreview = ({file}:{file:File | string}) => {
     };
 
   const getSignedUrl = async(url:string | File)=>{
-    if (url instanceof Blob) {
-      console.log("Entrou no blob", file);
-      return await processFile();
-    }else if( typeof url === 'string'){
-      console.log("Entrou na url", file);
-      const data = await signedURL(url);
-      
-      if(!data) return undefined;
-      setUrlSiged(data);
+    try{
+      if (url instanceof Blob) {
+        console.log("Entrou no blob", file);
+        return await processFile();
+      }else if( typeof url === 'string'){
+        console.log("Entrou na url", url);
+        const data = await signedURL(url);
 
-      //verifica se é um PDF para gerar uma imagem de preview
-      const isPDF = data?.includes('.pdf') ? true : false;
+        if(!data) return undefined;
 
-      if(isPDF){
+        setUrlSiged(data);
+        //verifica se é um PDF para gerar uma imagem de preview
+        const isPDF = data?.toLowerCase().includes('.pdf');
+        const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(data);
+
         // Busca o PDF utilizando a URL assinada
         const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
-            params:{
-                service: 'proxyPDF',
-                fileUrl: data
-            },
-            headers:{
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
-            },
-            responseType: 'arraybuffer' // Define o tipo de resposta como Blob
+          params:{
+              service: 'proxyPDF',
+              fileUrl: data
+          },
+          headers:{
+              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+          },
+          responseType: 'arraybuffer' // Define o tipo de resposta como Blob
         });
-        
+      
         //console.log("blob data", response.data)
-        if(!(response.data instanceof ArrayBuffer)) return;
+        if(!(response.data instanceof ArrayBuffer)) return undefined;
 
-        // Converte o ArrayBuffer para Blob
-        const blob = new Blob([response.data], { type: 'application/pdf' });
-        // Converte o conteúdo do PDF para um objeto File
-        const file = new File([blob], "preview.pdf", { type: "application/pdf" });
-
-        // Gera a visualização da primeira página em Base64
-        const previewBase64 = await pdfToImageBase64(file);
-        
-        return previewBase64;
-      }else{
-        return data;
+        if (isPDF) {
+          const blob = new Blob([response.data], { type: 'application/pdf' });
+          const file = new File([blob], "preview.pdf", { type: "application/pdf" });
+      
+          const previewBase64 = await pdfToImageBase64(file);
+          return previewBase64;
+        } else if (isImage) {
+          const blob = new Blob([response.data], { type: 'image/png' }); // Ajuste o MIME type conforme necessário
+          const file = new File([blob], "preview.png", { type: "image/png" });
+          const previewBase64 = await fileToBase64(file);
+          return previewBase64;
+        } else {
+          return data;
+        }
       }
+    }catch(error){
+      console.error('Erro ao buscar URL assinada:', "URL", url, error);
+      return undefined;
     }
   }
 

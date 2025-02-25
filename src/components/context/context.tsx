@@ -26,6 +26,8 @@ type PropsContext ={
   setTester: Dispatch<SetStateAction<ProfileProps | undefined>>,
   tester: ProfileProps | undefined,
   setShowModal: Dispatch<SetStateAction<{element: JSX.Element, styles?: string[]} | null>>,
+  elementoToPrint: JSX.Element | null, 
+  setElementoToPrint: Dispatch<SetStateAction<JSX.Element | null>>
 }
 
 
@@ -46,6 +48,8 @@ type PropsContext ={
  * @param {SAAE[]} listSaaes - lista de SAAEs enviadas para a Região.
  * @param {Dispatch<SetStateAction<SAAE[]>>} setListSaaes - acessa o estado da lista de SAAEs enviadas para a Região.
  * @param {Dispatch<SetStateAction<{element: JSX.Element, styles?: string[]} | null>>} setShowModal - acessa o estado do modal de carregamento.
+ * @param {JSX.Element | null} elementoToPrint - elemento a ser impresso.
+ * @param {Dispatch<SetStateAction<JSX.Element | null>>} - setElementoToPrint - acessa o estado do elemento a ser impresso.
  * @returns
 */
 export const Context = createContext( {} as PropsContext );
@@ -54,6 +58,7 @@ export default function Provider({children}:{children:ReactNode}){
     const [dataNews, setDataNewsHome] = useState<DataNews[]>([]);
     const [dataUser, setDataUser] = useState({} as ProfileProps);
     const [tester, setTester] = useState<ProfileProps>();
+    const [elementoToPrint, setElementoToPrint] = useState<JSX.Element | null>(null);
 
     //SAAEs em edição
     const [dataSaae, setDataSaae] = useState({} as SAAE);
@@ -406,6 +411,7 @@ export default function Provider({children}:{children:ReactNode}){
         <Context.Provider value={{
             dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, handleSendSaae, setTester, tester,
             recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes, setShowModal,
+            elementoToPrint, setElementoToPrint
         }}>
           {children}
           {showModal ?
