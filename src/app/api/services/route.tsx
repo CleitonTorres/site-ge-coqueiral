@@ -218,86 +218,11 @@ export async function POST(req: NextRequest) {
             }
         }else if(service === 'iaSaae'){
             // Consultando a API do ChatGPT
-            console.log("key", process.env.NEXT_PUBLIC_GPT_API_KEY);
             const openai = new OpenAI({
                 apiKey: `${process.env.NEXT_PUBLIC_GPT_API_KEY}`
             });
 
-            // const assistant = await openai.beta.assistants.create({
-            //     name: "Mathias",
-            //     instructions: `Você é um assistente que vai auxiliar no preenchimento de uma tabela de controle operacional de riscos. O usuário vai te passar um tipo de atividade ao ar livre e você vai sugerir prováveis riscos, quais danos esses riscos pode causar, prováveis medidas de controle operacional (que evita que o risco aconteça) e sugerir ações mitigadoras (caso algum dos danos ocorra). Você deve formatar a resposta com as seguintes chaves:
-
-            //     {
-            //         atividade: "nome da atividade",
-            //         dados: [
-            //             {
-            //                 perigo: "nome do risco identificado",
-            //                 dano: "descrições dos riscos identificados",
-            //                 controleOperacional: "medidas para evitar o risco",
-            //                 acoesMitigadoras: "ações caso o risco aconteça"
-            //             }
-            //         ]
-            //     }`,
-            //     model: "gpt-4o-mini-2024-07-18",
-            //     response_format: {
-            //         type: "json_schema",
-            //         json_schema:{
-            //             "name": "risco_operacional",
-            //             "schema": {
-            //               "type": "object",
-            //               "properties": {
-            //                 "atividade": {
-            //                   "type": "string",
-            //                   "description": "Nome da atividade ao ar livre."
-            //                 },
-            //                 "dados": {
-            //                   "type": "array",
-            //                   "description": "Lista de riscos identificados associados à atividade.",
-            //                   "items": {
-            //                     "type": "object",
-            //                     "properties": {
-            //                       "perigo": {
-            //                         "type": "string",
-            //                         "description": "Nome do risco identificado."
-            //                       },
-            //                       "dano": {
-            //                         "type": "string",
-            //                         "description": "Descrição dos danos que podem ser causados pelo risco."
-            //                       },
-            //                       "controleOperacional": {
-            //                         "type": "string",
-            //                         "description": "Medidas específicas para evitar que o risco aconteça."
-            //                       },
-            //                       "acoesMitigadoras": {
-            //                         "type": "string",
-            //                         "description": "Ações a serem tomadas caso o risco venha a acontecer."
-            //                       }
-            //                     },
-            //                     "required": [
-            //                       "perigo",
-            //                       "dano",
-            //                       "controleOperacional",
-            //                       "acoesMitigadoras"
-            //                     ],
-            //                     "additionalProperties": false
-            //                   }
-            //                 }
-            //               },
-            //               "required": [
-            //                 "atividade",
-            //                 "dados"
-            //               ],
-            //               "additionalProperties": false
-            //             },
-            //             "strict": true
-            //           }
-            //     },
-            // });
-            
             const assistantSenior = await openai.beta.assistants.retrieve('asst_tvaWDeASyjtUX2uEsIXaZPVL');
-
-            //const project = openai.apiKey;
-            //console.log('Acessando o projeto:', project);
 
             // Criação de thread
             const thread = await openai.beta.threads.create();
@@ -307,7 +232,7 @@ export async function POST(req: NextRequest) {
                 content: `Me dê os dados de controle de risco para a seguinte atividade: "${input}". A resposta deve ser formatada como JSON.`,
             });
             
-            console.log("Mensagem enviada:", message.id);
+            console.log("Mensagem enviada:", message.id, 'aguardando resposta...');
             
             // Executa e aguarda a resposta
             const run = await openai.beta.threads.runs.createAndPoll(thread.id, {
