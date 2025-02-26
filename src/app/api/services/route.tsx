@@ -3,8 +3,8 @@ import { closeDatabase, connectToDatabase } from "@/scripts/connectDB";
 import axios from "axios";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
-import { MessageContent } from "openai/resources/beta/threads/messages.mjs";
+// import OpenAI from "openai";
+// import { MessageContent } from "openai/resources/beta/threads/messages.mjs";
 
 import { Storage } from "@google-cloud/storage";
 import { parseGoogleStorageUrl } from "@/scripts/globais";
@@ -182,7 +182,7 @@ export async function POST(req: NextRequest) {
         const news = body.news as DataNews;
         const token = body.token as string;
         const limit = body.limit as string;
-        const input = body.input as string;
+        // const input = body.input as string;
         const status = body.status as string;
         const idSaae = body.idSaae as string;
         const obs = body.obs as string;
@@ -216,48 +216,50 @@ export async function POST(req: NextRequest) {
                 console.log(error);
                 return NextResponse.json({error: "Não foi possivel receber o feed"}, {status: 500});
             }
-        }else if(service === 'iaSaae'){
-            // Consultando a API do ChatGPT
-            const openai = new OpenAI({
-                apiKey: `${process.env.NEXT_PUBLIC_GPT_API_KEY}`
-            });
+        }
+        // else if(service === 'iaSaae'){
+        //     // Consultando a API do ChatGPT
+        //     const openai = new OpenAI({
+        //         apiKey: `${process.env.NEXT_PUBLIC_GPT_API_KEY}`
+        //     });
 
-            const assistantSenior = await openai.beta.assistants.retrieve('asst_tvaWDeASyjtUX2uEsIXaZPVL');
+        //     const assistantSenior = await openai.beta.assistants.retrieve('asst_tvaWDeASyjtUX2uEsIXaZPVL');
 
-            // Criação de thread
-            const thread = await openai.beta.threads.create();
+        //     // Criação de thread
+        //     const thread = await openai.beta.threads.create();
             
-            const message = await openai.beta.threads.messages.create(thread.id, {
-                role: "user",
-                content: `Me dê os dados de controle de risco para a seguinte atividade: "${input}". A resposta deve ser formatada como JSON.`,
-            });
+        //     const message = await openai.beta.threads.messages.create(thread.id, {
+        //         role: "user",
+        //         content: `Me dê os dados de controle de risco para a seguinte atividade: "${input}". A resposta deve ser formatada como JSON.`,
+        //     });
             
-            console.log("Mensagem enviada:", message.id, 'aguardando resposta...');
+        //     console.log("Mensagem enviada:", message.id, 'aguardando resposta...');
             
-            // Executa e aguarda a resposta
-            const run = await openai.beta.threads.runs.createAndPoll(thread.id, {
-                assistant_id: assistantSenior.id,
-                instructions: "Me forneça uma atividade para que eu possa gerar a resposta em formato JSON.",
-            });
+        //     // Executa e aguarda a resposta
+        //     const run = await openai.beta.threads.runs.createAndPoll(thread.id, {
+        //         assistant_id: assistantSenior.id,
+        //         instructions: "Me forneça uma atividade para que eu possa gerar a resposta em formato JSON.",
+        //     });
             
-            if (run.status === "completed") {
-                const messages = await openai.beta.threads.messages.list(run.thread_id);
-                let data:MessageContent[] = []
-                for (const mes of messages.data.reverse()) {
-                    if(mes.role === "assistant"){
-                        //console.log(`${mes.role}:`, JSON.stringify(mes.content));
-                        const resp  = mes.content[0] as unknown as {type: string, text:{value: string}};
-                        data = JSON.parse(resp.text.value)               
-                    }
-                }
+        //     if (run.status === "completed") {
+        //         const messages = await openai.beta.threads.messages.list(run.thread_id);
+        //         let data:MessageContent[] = []
+        //         for (const mes of messages.data.reverse()) {
+        //             if(mes.role === "assistant"){
+        //                 //console.log(`${mes.role}:`, JSON.stringify(mes.content));
+        //                 const resp  = mes.content[0] as unknown as {type: string, text:{value: string}};
+        //                 data = JSON.parse(resp.text.value)               
+        //             }
+        //         }
 
-                return NextResponse.json(data, {status: 200});
-            } else {
-                console.log("Status:", run.status);
-                console.log("Run Details:", run.last_error);
-                return NextResponse.json({error: "Ocorreu uma falha no processamento"}, {status: 500});
-            }
-        }else if(service === 'saaeResposta'){
+        //         return NextResponse.json(data, {status: 200});
+        //     } else {
+        //         console.log("Status:", run.status);
+        //         console.log("Run Details:", run.last_error);
+        //         return NextResponse.json({error: "Ocorreu uma falha no processamento"}, {status: 500});
+        //     }
+        // }
+        else if(service === 'saaeResposta'){
             if(!status || !idSaae)  return NextResponse.json({error: "Falta dados para a atualização"}, {status: 500});
 
             // Conectando ao banco de dados
@@ -275,7 +277,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json(resp, {status: 200});
             
-        }{
+        }else{
             return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
         }
     }catch(e){

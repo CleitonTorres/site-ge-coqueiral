@@ -128,17 +128,16 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
         if(verify) return;
 
         setLoading(true);
-        try {
-            const result = await axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`, { 
-                    input: value,
-                    service: 'iaSaae'
-                },{
+        try { 
+            const formData = new FormData();
+            formData.append('input', value);
+            formData.append('service', 'iaSaae');
+
+            const result = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/mathias`, formData,{
                 headers:{
                     'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
                 }
             });
-
-            console.log(result.data);
         
             const Response = result.data as {
                 atividade: string, 
@@ -331,6 +330,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                                     border: 'none', 
                                     width: '96%',
                                     height: '100%',
+                                    fontSize: '11px',
                                 }}
                             />                       
                         </div>
