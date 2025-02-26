@@ -14,7 +14,7 @@
 .resultado{
     display: inline-block;
     width: 220px;
-    display: flex;
+    display: flex; 
 }
 .conteiner h2, .conteiner h3, .resultado{
     padding-left: 6px;
@@ -23,7 +23,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #343a40; 
+    border: 1px solid var(--dark); 
     width: 100px;
     height: 50px;
     padding: 6px;
@@ -39,13 +39,13 @@
 .rotuloConsequencia, .valor{
     width: 70px;
     height: 70px;
-    border: 1px solid #007bff;
+    border: 1px solid var(--blue);
     margin: 1px;
 }
 
 .rotuloProbabilidade{
     font-size: 14px;
-    border: 1px solid #007bff;
+    border: 1px solid var(--blue);
     margin: 1px;
 }
 
@@ -77,7 +77,7 @@
     text-align: justify;
 }
 .bgGreen{
-    background-color: #9eb83b;
+    background-color: var(--verde);
     margin-top: 20px;
     padding-left: 10px;
 }

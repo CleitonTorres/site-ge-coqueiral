@@ -1276,7 +1276,7 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                 <h3>Espaços Seguros</h3>
                 <div className={`${styles.subConteiner}`}>
                     <div className={`${styles.boxInput} ${styles.minHeight}`}>
-                        <label htmlFor="">As informações preliminares foram claramente passadas para os envolvios?</label>
+                        <label htmlFor="">Tenho ciência de que as informações preliminares devem ser claramente repassadas aos envolvidos.</label>
                         {!readOnly ?
                             <select 
                                 name="espacosSeguros.infosPreliminares" 

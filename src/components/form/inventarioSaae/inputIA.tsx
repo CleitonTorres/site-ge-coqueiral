@@ -360,7 +360,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             name='acoesMitigadoras'
                             value={atividadeCorrente?.acoesMitigadoras || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
-                            placeholder="Exemplo: por o participante em repouso em local sombrado, oferecer hidratação lenta, umidecer nuca e o rosto."
+                            placeholder="Exemplo: Colocar o participante em repouso em um local sombreado, oferecer hidratação lenta, umedecer a nuca e o rosto."
                             className={`${styles.collum} `}
                         />
                         <select

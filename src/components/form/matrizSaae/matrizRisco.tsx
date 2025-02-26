@@ -254,7 +254,7 @@ export default function MatrizRisco ({readOnly, localData}:Props){
             </p>
             <br />
             <p className={styles.paragraph}>
-                Nível <b style={{ backgroundColor: 'yellow', padding: '0 3px'}}>Amarelo</b> são atividades de grupo como acampamentos, caminhadas eventos anuais como MUTECO, MUTCON, Educação Escoteira etc. Que não envolvam grupos convidados ou atividade de alto risco como rapel, escalada, atividades aquáticas. São aceitáveis desde que as colunas Controle Operacional e Ações Mitigadoras estejam preenchida de forma coerente. Dependem de autorização da Região Escoteira.
+                Nível <b style={{ backgroundColor: 'yellow', padding: '0 3px'}}>Amarelo</b> são atividades de grupo como acampamentos, caminhadas eventos anuais como MutEco, MutCom, Educação Escoteira etc. Que não envolvam grupos convidados ou atividade de alto risco como rapel, escalada, atividades aquáticas. São aceitáveis desde que as colunas Controle Operacional e Ações Mitigadoras estejam preenchida de forma coerente. Dependem de autorização da Região Escoteira.
             </p>
             <br />
             <p className={styles.paragraph}>

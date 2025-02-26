@@ -638,7 +638,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             list="optionsODS" 
                             name='odss'
                             value={odss}
-                            placeholder='precione Enter ou vírgula para inserir'
+                            placeholder='pressione Enter ou vírgula para inserir'
                             onChange={(e) => {
                                 setOdss(e.target.value);
                                 handleKeyChange(e);
