@@ -140,10 +140,19 @@
     border: 2px solid var(--verde) !important;
 }
 .bgGreen{
-    background-color: var(--verde);
+    background-color: #9eb83b;
     margin-top: 20px;
     padding-left: 10px;
 }
+.nobreak {
+    page-break-before: always;
+}
+@media print{
+    .nobreak {
+        page-break-before: always; /* Sempre quebrar antes */
+    }
+}
+
 @keyframes fadeIn {
     from{
         opacity: 0;

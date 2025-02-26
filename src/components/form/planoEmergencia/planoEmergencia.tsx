@@ -1,5 +1,5 @@
 'use client'
-import { ChangeEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import styles from './planoEmergencia.module.css';
 import { AtividadeProfissional, ContatosEmergencia, Docs, Endereco, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
 import { calcTotalFilesMB, dateFormat1, masktel, setIconSocialMidia } from '@/scripts/globais';
@@ -9,18 +9,27 @@ import { ImagePreview } from '../sectionDocumentos/documentos';
 
 type Props = {
     readOnly: boolean,
-    data?: PlanoEmergenciaSaae,
+    localData: PlanoEmergenciaSaae,
     grauRisco: {
         color: "green" | "yellow" | "orange" | "red" | "";
         value: number;
     }
     nomeAtividade: string,
     localInicio: Endereco,
+    print?: boolean
 }
 
-export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio, nomeAtividade}:Props){
+/**
+ * Componente que gerencia o formulário de Plano de Emergência.
+ * @param {boolean} readOnly - Define se o formulário é somente leitura.
+ * @param {PlanoEmergenciaSaae} localData - Dados do Plano de Emergência.
+ * @param {Endereco} localInicio - Endereço de início da atividade.
+ * @param {string} nomeAtividade - Nome da atividade.
+ * @param {{color:string, value: number}} grauRisco - Grau de risco da atividade.
+ * @returns {JSX.Element} - Formulário de Plano de Emergência. 
+ */
+export default function PlanoEmergencia ({readOnly, localData, grauRisco, localInicio, nomeAtividade, print}:Props){
     const context = useContext(Context);
-    const [localData, setLocalData] = useState<PlanoEmergenciaSaae>();
     
     const [currentContatoEmerg, setCurrentContatoEmerg] = useState({} as ContatosEmergencia);
     const [currentProfAcolhimento, setCurrentProfAcolhimento] = useState({} as Profissional);
@@ -32,6 +41,11 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
     const [currentRedesSociaisProf, setcurrentRedesSociaisProf]= useState('');
     const [currentRedesSociaisProfArray, setcurrentRedesSociaisProfArray]= useState<string[]>([]);
     
+    //constantes de configuraçõeos  para versões de impressão ou de edição
+    const width = print ? 400 : 100;
+    const height = print ? 600 : 200;
+    const maxWidth = print ? 'none' : 150;
+
     const handleChangeData = (
         e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>, 
         idx?: number,
@@ -991,12 +1005,6 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
         })
     }
 
-    useEffect(()=>{
-        if(data || context.dataSaae?.planoEmergencia){
-            setLocalData(data || context.dataSaae.planoEmergencia);
-        }
-    },[data, context.dataSaae]);
-
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}> 
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>
@@ -1452,7 +1460,11 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                             {currentProfAcolhimento?.docs?.map((doc, idx)=>(
                                 <span key={idx+'docsAcolhimento'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={200} 
+                                        width={100}
+                                    /> 
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimento')}>X</b>
                                 </span>
                             ))}
@@ -1540,9 +1552,14 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                                 <div 
                                     key={idxDoc+'docsAcolhimento'} 
                                     className={styles.removeDoc}
+                                    style={{maxWidth: maxWidth}}
                                 >
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/> 
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={height} 
+                                        width={width}
+                                    /> 
                                     {!readOnly ? 
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'acolhimentoRemove', idx)}>X</b>
                                     :null}
@@ -1631,7 +1648,11 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                             {currentProfEnfermaria?.docs?.map((doc, idx)=>(
                                 <div key={idx+'docsEnfermaria'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={200} 
+                                        width={100}
+                                    /> 
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermaria')}>X</b>
                                 </div>
                             ))}
@@ -1718,9 +1739,15 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                             {enf?.docs?.map((doc, idxDoc)=>(
                                 <div 
                                     key={idxDoc+'docsEnfermaria'} 
-                                    className={styles.removeDoc}>
+                                    className={styles.removeDoc}
+                                    style={{maxWidth: maxWidth}}
+                                >
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={height} 
+                                        width={width}
+                                    /> 
                                     {!readOnly ?
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'enfermariaRemove', idx)}>X</b>
                                     :null}
@@ -1833,7 +1860,11 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                             {currentVeiculo?.docs?.map((doc, idx)=>(
                                 <div key={idx+'docsAcolhimento'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={200} 
+                                        width={100}
+                                    /> 
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculos')}>X</b>
                                 </div>
                             ))}
@@ -1950,9 +1981,17 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                                 </div>
                             :null}
                             {veic?.docs?.map((doc, idxV)=>(
-                                <div key={idx+idxV+'docsVeiculos'} className={styles.removeDoc}>
+                                <div 
+                                    key={idx+idxV+'docsVeiculos'} 
+                                    className={styles.removeDoc}
+                                    style={{maxWidth: maxWidth}}
+                                >
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={height} 
+                                        width={width}
+                                    /> 
                                     {!readOnly? 
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'veiculosRemove', idx)}>X</b>
                                     :null}
@@ -2078,7 +2117,11 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                             {currentProfissional?.docs?.map((doc, idx)=>(
                                 <div key={idx+'docsProfissional'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={200} 
+                                        width={100}
+                                    /> 
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissional')}>X</b>
                                 </div>
                             ))}
@@ -2207,9 +2250,17 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                                 </div>
                             :null}
                             {prof?.docs?.map((doc, idxDoc)=>(
-                                <div key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
+                                <div 
+                                    key={idx+idxDoc+'docsProfissional'} 
+                                    className={styles.removeDoc}
+                                    style={{maxWidth: maxWidth}}
+                                >
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={height} 
+                                        width={width}
+                                    /> 
                                     {!readOnly ?
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'profissionalRemove', idx)}>X</b>
                                     :null}
@@ -2302,7 +2353,11 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                             {currentProfSalvamento?.docs?.map((doc, idx)=>(
                                 <div key={idx+'docsProfsalvamento'} className={styles.removeDoc}>
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={200} 
+                                        width={100}
+                                    /> 
                                     <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamento')}>X</b>
                                 </div>
                             ))}
@@ -2377,7 +2432,9 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
 
                         {/* docs viewer */}                
                         <div className={styles.subConteiner}>
-                            <div className={styles.boxInput}>
+                            <div 
+                                className={styles.boxInput}
+                            >
                                 <label htmlFor="">Documentos</label>
                                {!readOnly ? 
                                 <input
@@ -2391,9 +2448,17 @@ export default function PlanoEmergencia ({readOnly, data, grauRisco, localInicio
                                 :null}
                             </div>
                             {salv?.docs?.map((doc, idxDoc)=>(
-                                <div key={idx+idxDoc+'docsProfissional'} className={styles.removeDoc}>
+                                <div 
+                                    key={idx+idxDoc+'docsProfissional'} 
+                                    className={styles.removeDoc}
+                                    style={{maxWidth: maxWidth}}
+                                >
                                     {doc.titulo}
-                                    <ImagePreview file={doc.doc as File} height={200} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={height} 
+                                        width={width}
+                                    /> 
                                     {!readOnly ? 
                                         <b onClick={()=>handleRemoveUpload(doc.titulo, 'salvamentoRemove', idx)}>X</b>
                                     :null}

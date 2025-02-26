@@ -14,16 +14,22 @@ import { FaTrash } from 'react-icons/fa6';
 
 type Props = {
     readOnly: boolean,
-    data?: DadosGeraisSaae,
+    localData: DadosGeraisSaae,
     obsSaae?: string,
     statusSaae?: string,
     idSaae?: string,
     print?: boolean
 }
-
-export default function DadosGerais({readOnly, data, obsSaae, idSaae, statusSaae, print}:Props){
+/**
+ * Componente que exibe a o formulário de Dados Gerais da SAAE.
+ * @param {DadosGeraisSaae} localData - dados básicos usado pelo componente "Grau de Risco".
+ * @param {boolean} readOnly - booleano que define se o usuário pode ou não editar os dados.
+ * @param {string} obsSaae - observação da SAAE.
+ * @param {string} idSaae - id da SAAE.
+ * @param {string} statusSaae - status da SAAE.
+ */
+export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statusSaae, print}:Props){
     const context = useContext(Context);
-    const localData = data || context.dataSaae?.dadosGerais || {} as DadosGeraisSaae;
 
     const [currentProgramacao, setCurrentProgramacao] = useState({} as ProgramacaoAtividade);
     const [atividade, setAtividade] = useState('');

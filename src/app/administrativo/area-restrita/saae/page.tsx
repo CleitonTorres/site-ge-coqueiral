@@ -112,13 +112,40 @@ export default function Page(){
                 <div className={styles.conteiner}>
                     <NavButoomsSaae currenteSession={currenteSession} setCurrentSession={setCurrentSession}/>                
                     
-                    {currenteSession === 0 ? <DadosGerais readOnly={false}/> : null}
-                    {currenteSession === 1 ? <InfosPreliminares readOnly={false}/> : null}
-                    {currenteSession === 2 ? <InventarioSaae readOnly={false}/> : null}
-                    {currenteSession === 3 ? <MatrizRisco readOnly={false}/> : null}
-                    {currenteSession === 4 ? <PlanoEmergencia readOnly={false}/> : null}
-                    {currenteSession === 5 ? <FotosInspecao readOnly={false}/> : null}
-                    {currenteSession === 6 ? <SectionDocumentos readOnly={false}/> : null}
+                    {currenteSession === 0 ? <DadosGerais 
+                        readOnly={false}
+                        localData={context.dataSaae.dadosGerais}
+                        idSaae={context.dataSaae._id}
+                        obsSaae={context.dataSaae.obs}
+                        statusSaae={context.dataSaae.status}
+                    /> : null}
+                    {currenteSession === 1 ? <InfosPreliminares 
+                        readOnly={false}
+                        localData={context.dataSaae.infosPreliminares}
+                    /> : null}
+                    {currenteSession === 2 ? <InventarioSaae 
+                        readOnly={false}
+                        localData={context.dataSaae.inventarioRiscos}
+                    /> : null}
+                    {currenteSession === 3 ? <MatrizRisco 
+                        readOnly={false}
+                        localData={context.dataSaae.grauRisco}
+                    /> : null}
+                    {currenteSession === 4 ? <PlanoEmergencia 
+                        readOnly={false}
+                        grauRisco={context.dataSaae.grauRisco}
+                        localInicio={context.dataSaae.dadosGerais.localInicio}
+                        nomeAtividade={context.dataSaae.dadosGerais.nomeAtividade}
+                        localData={context.dataSaae.planoEmergencia}
+                    /> : null}
+                    {currenteSession === 5 ? <FotosInspecao 
+                        readOnly={false}
+                        localData={context.dataSaae.fotosInspecao}
+                    /> : null}
+                    {currenteSession === 6 ? <SectionDocumentos 
+                        readOnly={false}
+                        localData={context.dataSaae.documentos}
+                    /> : null}
                     {currenteSession === 7 ? <SaaeResumo /> : null}
                     
                     <NavButoomsSaae currenteSession={currenteSession} setCurrentSession={setCurrentSession}/>                

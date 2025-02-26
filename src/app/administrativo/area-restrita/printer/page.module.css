@@ -9,6 +9,11 @@
     margin: 20px;
 }
 
+@page {
+    margin: 2cm;
+    size: portrait;
+}
+
 @media print {
     @page {
         size: A4;

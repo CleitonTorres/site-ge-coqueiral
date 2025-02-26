@@ -94,44 +94,48 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
     if (!base64) return <p>Carregando...</p>; // Mostra um indicador de carregamento enquanto o Base64 não é gerado
 
     return (
-        <>            
-            <Image
-                alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
-                width={width}
-                height={height}
-                className='cursorPointers'
-                style={{ objectFit: 'contain', height: 'auto', cursor: 'pointer'}}
-                src={base64} // Usa o Base64 gerado como src
-                onClick={()=>{
-                    if(file instanceof Blob){
-                        context.setShowModal({
-                            element: <Image
-                                alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
-                                width={600}
-                                height={600}
-                                className='cursorPointers'
-                                style={{ objectFit: 'contain', height: 'auto'}}
-                                src={base64} // Usa o Base64 gerado como src
-                            />,
-                            styles:['backgroundWhite']
-                        })
-                    }else{
-                        window?.open(urlSigned, '_blank')
-                    }
-                }}
-            />
-        </>
+        <Image
+            alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
+            width={width}
+            height={height}
+            className={`${styles.nobreak} cursorPointers`}
+            style={{ objectFit: 'contain', height: 'auto', cursor: 'pointer'}}
+            src={base64} // Usa o Base64 gerado como src
+            onClick={()=>{
+                if(file instanceof Blob){
+                    context.setShowModal({
+                        element: <Image
+                            alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
+                            width={600}
+                            height={600}
+                            className='cursorPointers'
+                            style={{ objectFit: 'contain', height: 'auto'}}
+                            src={base64} // Usa o Base64 gerado como src
+                        />,
+                        styles:['backgroundWhite']
+                    })
+                }else{
+                    window?.open(urlSigned, '_blank')
+                }
+            }}
+        />
     );
 };
 
 type Props = {
     readOnly: boolean,
-    data?: FormDocs[]
+    localData: FormDocs[],
+    print?: boolean
 }
-
-export default function SectionDocumentos({readOnly, data}:Props){
+/**
+ * Formulário de documentos
+ * @param {boolean} readOnly - define se o formulário é somente leitura
+ * @param {FormDocs[]} localData - dados locais do formulário
+ * @param {boolean} print - define se o formulário é para impressão
+ * @returns 
+ */
+export default function SectionDocumentos({readOnly, localData, print}:Props){
     const context = useContext(Context);
-    const localData = data || context.dataSaae?.documentos || [];
 
     const [currentForm, setCurrentForm] = useState({} as FormDocs);
     
@@ -438,7 +442,11 @@ export default function SectionDocumentos({readOnly, data}:Props){
                                             readOnly={readOnly}
                                         />
                                     </div>
-                                    <ImagePreview file={doc.doc as File} height={100} width={100}/>
+                                    <ImagePreview 
+                                        file={doc.doc as File} 
+                                        height={print ? 400 : 200} 
+                                        width={print ? 300 : 100}
+                                    /> 
                                 </div>
                             ))}
                         </div>

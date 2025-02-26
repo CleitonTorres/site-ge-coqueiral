@@ -73,6 +73,9 @@ export default function Provider({children}:{children:ReactNode}){
 
     const [showModal, setShowModal] = useState<{element: JSX.Element, styles?: string[]} | null>(null);
 
+    /**
+     * Recupera as notícias do DB para o site.
+    */
     const getNews = async()=>{
       if(dataNews.length > 0) return;
 
@@ -93,6 +96,9 @@ export default function Provider({children}:{children:ReactNode}){
       .catch(err=> console.log(err))
     }    
 
+    /**
+     * Recupera e valida os dados do token do usuario.
+    */
     const recoverProfile = async()=>{
       //caso esteja vindo da página de login.
       const token = getCookie();
@@ -116,6 +122,10 @@ export default function Provider({children}:{children:ReactNode}){
       }
     } 
 
+    /**
+     * Verifica se o token do usuário é válido.
+     * @returns {boolean} - true se o token é válido, false se não for.
+    */
     const verifySession = ()=>{
       //caso esteja vindo da página de login.
       const token = getCookie();
@@ -134,6 +144,9 @@ export default function Provider({children}:{children:ReactNode}){
       return true;
     }
 
+    /**
+     * Atualiza o armazenamento local com a SAAE em edição.
+    */
     const updateStorage = async () => {
       //entra nesse if quando a é uma nova SAAE ou uma SAAE salva em rascunho.
       //SAAEs que não tem um _id do mongo.
@@ -166,6 +179,10 @@ export default function Provider({children}:{children:ReactNode}){
       }
     }
 
+    /**
+     * Lida com as opções de cadastar nova SAAE ou editar uma SAAE já enviada.
+     * @param {SAAE} data - SAAE a ser enviada.
+    */
     const handleSendSaae = async (data:SAAE)=>{
       try{
         if(data._id && typeof data._id === 'string'){
@@ -193,6 +210,11 @@ export default function Provider({children}:{children:ReactNode}){
         }
       }
     }
+
+    /**
+     * Envia a SAAE para a Avaliação e o DB.
+     * @param {SAAE} data - SAAE a ser enviada.
+    */
     const sendSaae= async(data:SAAE)=>{
       if(!data.dadosGerais || !data.planoEmergencia){ 
         return{
@@ -291,6 +313,10 @@ export default function Provider({children}:{children:ReactNode}){
       }
     }
 
+    /**
+     * Envia a SAAE editada para a Avaliação e o DB.
+     * @param {SAAE} data - SAAE editada.
+    */
     const sendEditSaae= async(data:SAAE)=>{
       try{
         if(!data.dadosGerais || !data.planoEmergencia){ 
@@ -307,12 +333,11 @@ export default function Provider({children}:{children:ReactNode}){
           text: 'Desculpe, mas não consegui encontrar a SAAE Original.'
         }
 
-        console.log('encontro original', locationOriginalSAAE);
+        console.log('encontrou a original', locationOriginalSAAE);
         console.log("SAAE editada", data)
 
         const verify = verifyObjSAAE(locationOriginalSAAE, data);
 
-        console.log(verify);
         if(verify.length === 0){
           return{
             bool: false,
@@ -320,9 +345,10 @@ export default function Provider({children}:{children:ReactNode}){
           }
         }
 
-        const objUpdate = verify.map(v=> {
-          return {[v]: data[v]}
-        });
+        const objUpdate = verify.reduce((acc, v) => {
+          acc[v] = data[v];
+          return acc;
+        }, {});
 
         console.log('objetoUpdate', objUpdate);
 
@@ -404,9 +430,6 @@ export default function Provider({children}:{children:ReactNode}){
       }
     },[dataSaae]);   
 
-    useEffect(()=>{
-      console.log('lista  de SAAEs', listSaaes)
-    },[listSaaes])
     return(
         <Context.Provider value={{
             dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, handleSendSaae, setTester, tester,

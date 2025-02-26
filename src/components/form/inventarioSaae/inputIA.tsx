@@ -10,13 +10,18 @@ import Mathias from '@/components/layout/mathias/mathias';
 
 type Props = {
     readOnly: boolean,
-    data?: InventarioSaaeType[],
+    localData: InventarioSaaeType[],
     print?: boolean
 }
 
-const InventarioSaae = ({readOnly, data, print}:Props) => {
+/**
+ * Componente que gerencia o inventário de riscos de uma SAAE.
+ * @param {boolean} readOnly - Define se o componente é somente leitura.
+ * @param {InventarioSaaeType[]} localData - Dados locais do componente.
+ * @param {boolean} print - Define se o componente será impresso.
+ */
+const InventarioSaae = ({readOnly, localData, print}:Props) => {
     const context = useContext(Context);
-    const localData = data || context.dataSaae?.inventarioRiscos || [];
 
     const [atividadeCorrente, setAtividadeCorrente] = useState({} as InventarioSaaeType);
 
@@ -213,7 +218,7 @@ const InventarioSaae = ({readOnly, data, print}:Props) => {
         })
     }
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         const value = e.currentTarget.value;
         
         if (e.key === 'Enter') {
@@ -315,14 +320,18 @@ const InventarioSaae = ({readOnly, data, print}:Props) => {
                     <div className={styles.line}>
                         <div className={styles.collum}>
                             {loading ? <span>gerando dados</span> : null}
-                            <input
+                            <textarea
                                 name='atividade'
                                 value={atividadeCorrente?.atividade || ''}
                                 onChange={(e) => handleCurrentAtivity(e)}
                                 onBlur={(e)=>handleSubmit(e)}
                                 onKeyDown={handleKeyDown}
                                 placeholder="Exemplo: remada em caiaque"
-                                style={{border: 'none', height: 40}}
+                                style={{
+                                    border: 'none', 
+                                    width: '96%',
+                                    height: '100%',
+                                }}
                             />                       
                         </div>
                         <textarea

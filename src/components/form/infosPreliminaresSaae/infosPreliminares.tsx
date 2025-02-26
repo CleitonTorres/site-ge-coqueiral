@@ -9,12 +9,19 @@ import { InfosPreliminaresSaae } from '@/@types/types';
 
 type Props = {
     readOnly: boolean,
-    data?: InfosPreliminaresSaae[]
+    localData: InfosPreliminaresSaae[],
+    print?: boolean
 }
 
-export default function InfosPreliminares ({readOnly, data}:Props){
+/**
+  * Componente que gerencia as informações preliminares de uma SAAE.
+  * @param {boolean} readOnly - Define se o componente é somente leitura.
+  * @param {InfosPreliminaresSaae[]} localData - Define se o componente é somente leitura.
+  * @param {boolean} print - Define se o componente é para visualização de impressão.
+  * @returns {JSX.Element} Retorna o JSX com as informações preliminares.
+ */
+export default function InfosPreliminares ({readOnly, localData, print}:Props){
     const context = useContext(Context);
-    const localData = data || context.dataSaae?.infosPreliminares || [];
 
     const [showDicas, setShowDicas] = useState(false);
 
@@ -109,11 +116,16 @@ export default function InfosPreliminares ({readOnly, data}:Props){
     }
 
     return(
-        <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
+        <div 
+            className={`${styles.conteiner} ${print ? styles.print : undefined}`} 
+            style={{marginTop: readOnly ? '30px' : '0px'}}
+        >
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>
                 <h5>Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286</h5>
                 <h1>2. Informações mínimas aos participantes do evento/atividade </h1> 
-                <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
+                {!print ? 
+                    <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
+                :null}
             </div>
             
             {!readOnly ? 
@@ -130,7 +142,8 @@ export default function InfosPreliminares ({readOnly, data}:Props){
             :null}
             {localData?.map((item, idx)=>(
                 <div key={item.item} className={styles.boxTextarea}>
-                    <h4>Item {item.item} 
+                    <h4>
+                        {!print ? 'Item' : <b>-</b>} {item.item} 
                         {!readOnly ? 
                         <FaMinus 
                             onClick={()=>removeItem((idx+1).toString())} 

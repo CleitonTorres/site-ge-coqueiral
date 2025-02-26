@@ -4,10 +4,10 @@
 }
 
 @media print {
-    /* Evita que elementos sejam cortados entre páginas */
-    .nobreak {
-      break-inside: avoid; /* Impede a quebra dentro do elemento */
-      page-break-inside: avoid; /* Alternativa para navegadores mais antigos */
-    }
+  /* Evita que elementos sejam cortados entre páginas */
+  .nobreak {
+    break-inside: avoid; /* Impede a quebra dentro do elemento */
+    page-break-inside: avoid; /* Alternativa para navegadores mais antigos */
   }
+}
   

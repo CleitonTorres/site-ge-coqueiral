@@ -90,11 +90,18 @@ import { ImagePreview } from '../sectionDocumentos/documentos';
 
 type Props = {
     readOnly: boolean,
-    data?: FormFotosInspecao[]
+    localData: FormFotosInspecao[],
+    print?: boolean
 }
-export default function FotosInspecao({readOnly, data}:Props){
+/**
+ * Componente de fotos da inspeção
+ * @param {boolean} readOnly - define se o componente é somente leitura
+ * @param {FormFotosInspecao[]} localData - dados locais
+ * @param {boolean} print - define se o componente é para impressão
+ * @returns {JSX.Element} - Formulário de Fotos da Inspeção.
+ */
+export default function FotosInspecao({readOnly, localData, print}:Props){
     const context = useContext(Context);
-    const localData = data || context.dataSaae?.fotosInspecao || [];
 
     const [currentForm, setCurrentForm] = useState({} as FormFotosInspecao);
     
@@ -398,7 +405,11 @@ export default function FotosInspecao({readOnly, data}:Props){
                                             readOnly={readOnly}
                                         />
                                     </div>
-                                    <ImagePreview file={foto.doc as File} height={100} width={100}/>
+                                    <ImagePreview 
+                                        file={foto.doc as File} 
+                                        height={print ? 400 : 200} 
+                                        width={print ? 300 : 100}
+                                    /> 
                                 </div>
                             ))}
                         </div>

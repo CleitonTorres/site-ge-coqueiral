@@ -277,7 +277,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 />
             </div>
             <p>Distância total: {formRota.distance?.toFixed(2)} km</p>
-            <div ref={mapRef} style={{ height: "500px", width: "100%" }}></div>
+            <div ref={mapRef} style={{ height: "500px", width: "100%" }} className={styles.nobreak}></div>
         </div>
     );
 }

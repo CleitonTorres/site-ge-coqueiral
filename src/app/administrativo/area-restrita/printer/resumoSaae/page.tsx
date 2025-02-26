@@ -9,9 +9,8 @@ import PlanoEmergencia from "@/components/form/planoEmergencia/planoEmergencia";
 import SectionDocumentos from "@/components/form/sectionDocumentos/documentos";
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import styles from './page.module.css';
+import styles from '../page.module.css';
 import { FaPrint } from "react-icons/fa";
-//import RootLayout from "./layout";
 
 export default function PrinterPage() {
   const [data, setData] = useState<SAAE | null>(null);
@@ -51,23 +50,43 @@ export default function PrinterPage() {
 
           <DadosGerais 
             readOnly 
-            data={data.dadosGerais} 
+            localData={data.dadosGerais} 
             obsSaae={data.obs} 
             statusSaae={data.status} 
             idSaae={data._id}
-            print/>
-          <InfosPreliminares readOnly data={data.infosPreliminares} />
-          <InventarioSaae readOnly data={data.inventarioRiscos} print/>
-          <MatrizRisco readOnly data={data.grauRisco} />
+            print
+          />
+          <InfosPreliminares 
+            readOnly 
+            localData={data.infosPreliminares}
+          />
+          <InventarioSaae 
+            readOnly 
+            localData={data.inventarioRiscos} 
+            print
+          />
+          <MatrizRisco 
+            readOnly 
+            localData={data.grauRisco}
+          />
           <PlanoEmergencia 
             readOnly 
-            data={data.planoEmergencia} 
+            localData={data.planoEmergencia} 
             grauRisco={data.grauRisco}
             nomeAtividade={data.dadosGerais.nomeAtividade}
             localInicio={data.dadosGerais.localInicio}
+            print
           />
-          <FotosInspecao readOnly data={data.fotosInspecao} />
-          <SectionDocumentos readOnly data={data.documentos} />
+          <FotosInspecao 
+            readOnly 
+            localData={data.fotosInspecao} 
+            print
+          />
+          <SectionDocumentos 
+            readOnly 
+            localData={data.documentos} 
+            print
+          />
         </div>
         : <p>Carregando...</p>
       }

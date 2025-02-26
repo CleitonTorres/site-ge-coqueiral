@@ -34,42 +34,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 170px;
-    font-size: 12px;
+    width: 120px;
     text-align: justify;
     border: 1px solid;
+}
+.header span{
+    font-size: 11px;
 }
 .collum, .collum2{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 170px;
     font-size: 12px;
     border: 1px solid;
     resize: none;
     min-height: 90px;
     padding: 6px;
     background-color: var(--white);
-}
-.boxInput{
-    position: relative;
-    width: 170px;
-    height: 100%;
-}
-.boxInput textarea{
-    width: 100%;
-    min-height: 90px;
-    resize: none;
-    text-wrap: wrap;
-    line-break: auto;
-    padding: 6px;
-    background-color: var(--white);
-}
-.boxInput span{
-    position: absolute;
-    top: -15px;
-    font-size: 10px;
-    font-weight: 700;
+    width: 120px;
 }
 .collum span::after{
     content: '';
@@ -137,7 +119,7 @@
     width: 100px;
 }
 .bgGreen{
-    background-color: var(--verde);
+    background-color: #9eb83b;
     margin-top: 20px;
     padding-left: 10px;
 }

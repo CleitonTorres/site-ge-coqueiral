@@ -23,3 +23,7 @@
 .conteiner svg:active path{
     fill: var(--blue);
 }
+.nobreak {
+    break-inside: avoid; /* Impede a quebra dentro do elemento */
+    page-break-inside: avoid; /* Alternativa para navegadores mais antigos */
+}

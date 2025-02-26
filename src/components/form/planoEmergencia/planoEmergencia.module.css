@@ -39,6 +39,7 @@
     border: 1px solid;
     margin: 2px;
     padding: 6px;
+
 }
 .boxInput input, .boxInput select{
     border: none;
@@ -72,7 +73,7 @@
 }
 
 .borderGreen{
-    border: 4px solid var(--verde);
+    border: 4px solid #9eb83b;
 }
 .minHeight{
     min-height: 210px;
@@ -82,7 +83,7 @@
     justify-content: space-between;
 }
 .bgGreen{
-    background-color: var(--verde);
+    background-color: #9eb83b; 
     margin-top: 20px;
 }
 
@@ -167,5 +168,11 @@
     }
     to{
         opacity: 1;
+    }
+}
+
+@media print{
+    .boxInput{
+        page-break-before: always;
     }
 }

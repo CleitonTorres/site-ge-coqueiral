@@ -1,19 +1,19 @@
 'use client'
-import { useContext } from 'react';
 import styles from './matrizRisco.module.css';
-import { Context } from '@/components/context/context';
 
 type Props = {
     readOnly: boolean,
-    data?: {
+    localData: {
         color: "green" | "yellow" | "orange" | "red" | "";
         value: number;
     }    
 }
-export default function MatrizRisco ({readOnly, data}:Props){
-    const context = useContext(Context);
-    const localData = data || context.dataSaae?.grauRisco || [];
-
+/**
+ * Componente que exibe a matriz de risco.
+ * @param {object} localData - dados básicos usado pelo componente "Grau de Risco".
+ * @param {boolean} readOnly - booleano que define se o usuário pode ou não editar os dados.
+ */
+export default function MatrizRisco ({readOnly, localData}:Props){    
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>
