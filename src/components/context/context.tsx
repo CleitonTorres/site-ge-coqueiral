@@ -338,18 +338,19 @@ export default function Provider({children}:{children:ReactNode}){
 
         const verify = verifyObjSAAE(locationOriginalSAAE, data);
 
-        if(verify.length === 0){
+        if(verify.fieldObjetos.length === 0 && verify.fieldsArray.length === 0){
           return{
             bool: false,
             text: 'Não encontrei atualização de dados para enviar, por favor revise os dados.'
           }
         }
 
-        const objUpdate = verify.reduce((acc, v) => {
+        const objUpdate = verify.fieldObjetos.reduce((acc, v) => {
           acc[v] = data[v];
           return acc;
         }, {});
 
+        console.log('resultado da verificação do update', verify)
         console.log('objetoUpdate', objUpdate);
 
         return{

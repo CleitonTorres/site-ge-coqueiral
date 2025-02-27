@@ -1,4 +1,4 @@
-import { CEP, DataNews, ProfileProps, SAAE } from "@/@types/types";
+import { CEP, DataNews, FormDocs, FormFotosInspecao, InfosPreliminaresSaae, InventarioSaaeType, ProfileProps, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -577,32 +577,79 @@ export const fileToBase64 = (file: File) => {
     });
 };
 
+/**
+ * Verifica se um objeto SAAE foi alterado
+ * @param {SAAE} objetoOriginal - Objeto original
+ * @param {SAAE} objetoEditado - Objeto editado
+ * @returns {string[]} - Campos que foram alterados
+*/
 export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE)=>{
-    const keysOriginal = Object.keys(objetoOriginal);
-    const keysEditado = Object.keys(objetoEditado);
+    const keysOriginal = Object.keys(objetoOriginal) as (keyof SAAE)[];
+    const keysEditado = Object.keys(objetoEditado) as (keyof SAAE)[];
 
-    const result:string[] = [];
+    const fieldObjetos:(keyof SAAE)[] = [];
 
-    //verifica fields primarias;
     //verifica se existe fields no objeto editado que não existe no original.
     if(keysEditado.length > keysOriginal.length){
         keysEditado.forEach(k=>{
             const verify = JSON.stringify(objetoEditado[k]) !== JSON.stringify(objetoOriginal[k]);
-            if(verify) result.push(k);
+            if(verify) fieldObjetos.push(k);
         })
-
-    }else if(keysEditado.length < keysOriginal.length){ //verifica se existe fields no objeto original que não existe no editado.
+    //verifica se existe fields no objeto original que não existe no editado.
+    //ou se ambos os objetos são do mesmo tamanho.
+    }else {
         keysOriginal.forEach(k=>{
             const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
-            if(verify) result.push(k);
-        })
-    }else{ //se o número de fields dos objetos é igual.
-        keysOriginal.forEach(k=>{
-            const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
-            if(verify) result.push(k)
+            if(verify) fieldObjetos.push(k);
         })
     }
 
-    return result
+    const fieldsArray:{
+        field:keyof SAAE, 
+        value:InfosPreliminaresSaae | InventarioSaaeType | FormFotosInspecao | FormDocs,
+        idx:number}[] = [];
+    if(fieldObjetos.length > 0){
+        for (const key of fieldObjetos) {  
+            //verifica se o field é um array 
+            //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
+            if(Array.isArray(objetoEditado[key]) && Array.isArray(objetoOriginal[key])){        
+                //se o field editado for maior que o original
+                if(objetoEditado[key].length > objetoOriginal[key].length){
+                    //verifica se o field é um array 
+                    //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
+                    objetoEditado[key]?.forEach((item, idx)=>{
+                        //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
+                        if(Array.isArray(objetoOriginal[key])){
+                            const verify = JSON.stringify(objetoOriginal[key][idx]) === JSON.stringify(item) ? true : false ;
+                            
+                            // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+                            if(!verify){ 
+                                fieldsArray.push({field: key, value: item, idx})
+                            }
+                        }
+                    });
+                }
+                //se o field original for maior que o editado      
+                //ou se ambos são do mesmo tamanho
+                else{
+                    //verifica se o field é um array 
+                    //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
+                    keysOriginal[key]?.forEach((item, idx)=>{
+                        //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
+                        if(Array.isArray(objetoEditado[key])){
+                            const verify = JSON.stringify(objetoEditado[key][idx]) === JSON.stringify(item) ? true : false ;
+                            
+                            // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+                            if(!verify){ 
+                                fieldsArray.push({field: key, value: item, idx})
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    return {fieldObjetos: fieldObjetos.filter(i=> !Array.isArray(objetoEditado[i]) ), fieldsArray}
 }
 

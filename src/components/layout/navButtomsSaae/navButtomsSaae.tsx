@@ -13,7 +13,7 @@ type Props = {
  */
 export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Props){
     return(
-        <div className={styles.boxButtom}>
+        <div className={styles.boxButtom} id="scrollSaae">
             <IoIosArrowBack 
                 size={40}
                 onClick={()=>{
@@ -24,14 +24,14 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                         return prev-1
                     }
                     });
-                    window.scrollTo(0, 0);
+                    window.scrollTo(0, 500);
                 }}
             />
             <div className={styles.boxBtnNav}>
                 <div 
                     onClick={()=>{
                         setCurrentSession(0);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }} 
                     style={{
                         border: currenteSession === 0 ? '2px solid var(--dark)' : '',
@@ -41,7 +41,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(1);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 1 ? '2px solid var(--dark)' : '',
@@ -51,7 +51,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(2);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 2 ? '2px solid var(--dark)' : '',
@@ -62,7 +62,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(3);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 3 ? '2px solid var(--dark)' : '',
@@ -73,7 +73,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(4);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 4 ? '2px solid var(--dark)' : '',
@@ -84,7 +84,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(5);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 5 ? '2px solid var(--dark)' : '',
@@ -95,7 +95,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(6);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 6 ? '2px solid var(--dark)' : '',
@@ -106,7 +106,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                 <div 
                     onClick={()=>{
                         setCurrentSession(7);
-                        window.scrollTo(0, 0);
+                        window.scrollTo(0, 500);
                     }}
                     style={{
                         border: currenteSession === 7 ? '2px solid var(--dark)' : '',
@@ -124,7 +124,7 @@ export default function NavButoomsSaae ({setCurrentSession, currenteSession}:Pro
                         return prev+1
                     }
                     });
-                    window.scrollTo(0, 0);
+                    window.scrollTo(0, 500);
                 }}
             />                    
         </div>
