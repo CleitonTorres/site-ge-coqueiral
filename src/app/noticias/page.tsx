@@ -29,7 +29,7 @@ export default function Page(){
                                 {
                                     date:news.date || new Date(),
                                     destaque: news.destaque || false,
-                                    imageID: news.imageID || '/images/grupo00.jpg',
+                                    imageID: news.imageID || ['/images/grupo00.jpg'],
                                     linkMaps: news.linkMaps || '',
                                     paragraph: news.paragraph || '',
                                     title: news.title || '',

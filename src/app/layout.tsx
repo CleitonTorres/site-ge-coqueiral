@@ -289,6 +289,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                             <li>
                                                 <a href="/espacos-seguros">Espaços Seguros</a>
                                             </li>
+                                            <li>
+                                                <a href="/projetos">Nossos Projetos</a>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li className='subItensContents'>

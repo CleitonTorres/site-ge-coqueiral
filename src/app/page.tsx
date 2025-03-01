@@ -167,7 +167,7 @@ function Home() {
               <Card
                 key={v4()}
                 dataNews={{
-                  date: news.date || "",
+                  date: news.date,
                   title:  news.title || "",
                   paragraph:  news.paragraph || "",
                   imageID: news.imageID,

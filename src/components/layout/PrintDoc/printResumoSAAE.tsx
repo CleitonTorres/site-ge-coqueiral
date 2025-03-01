@@ -323,7 +323,7 @@ const PdfDocumentResumoSAAE = ({dataSaae}:Props) =>{
           {/* hora e data da saída e chegada */}
           <View style={styles.line}>
             <Text style={styles.item}>
-              <Text style={styles.bold}>Data início:</Text> {dateFormat2(data?.dadosGerais?.dataInicio || '')}
+              <Text style={styles.bold}>Data início:</Text> {dateFormat2(data?.dadosGerais?.dataInicio)}
             </Text>
             <Text style={styles.item}>
               <Text style={styles.bold}>Hora início:</Text> {data?.dadosGerais?.horaInicio || ''}

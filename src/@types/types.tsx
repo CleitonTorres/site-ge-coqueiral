@@ -67,10 +67,7 @@ export interface DataStorage {
 }
 export interface SAAE {
     solicitante: ProfileProps,
-    grauRisco: {
-        color: 'green' | 'yellow' | 'orange' | 'red' | '',
-        value: number
-    }
+    grauRisco: GrauRisco,
     infosPreliminares: InfosPreliminaresSaae[],
     dadosGerais: DadosGeraisSaae,
     inventarioRiscos: InventarioSaaeType[],
@@ -82,6 +79,10 @@ export interface SAAE {
     _id: string
 }
 
+export interface GrauRisco {
+    color: 'green' | 'yellow' | 'orange' | 'red' | '',
+    value: number
+}
 export interface InventarioSaaeType{
     atividade: string;
     perigo: string,

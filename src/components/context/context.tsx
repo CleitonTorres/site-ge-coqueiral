@@ -336,27 +336,15 @@ export default function Provider({children}:{children:ReactNode}){
         console.log('encontrou a original', locationOriginalSAAE);
         console.log("SAAE editada", data)
 
-        const verify = verifyObjSAAE(locationOriginalSAAE, data);
+        const update = verifyObjSAAE(locationOriginalSAAE, data);
 
-        if(verify.fieldObjetos.length === 0 && verify.fieldsArray.length === 0){
-          return{
-            bool: false,
-            text: 'Não encontrei atualização de dados para enviar, por favor revise os dados.'
-          }
-        }
-
-        const objUpdate = verify.fieldObjetos.reduce((acc, v) => {
-          acc[v] = data[v];
-          return acc;
-        }, {});
-
-        console.log('resultado da verificação do update', verify)
-        console.log('objetoUpdate', objUpdate);
+        console.log('resultado da verificação do update', update)
 
         return{
           bool: true,
           text: 'Teste de edição de SAAE feito com sucesso!'
         }
+        
       }catch(e){
         if (axios.isAxiosError(e)) {
           // Se o erro for gerado pelo Axios

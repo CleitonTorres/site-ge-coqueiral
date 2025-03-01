@@ -1,4 +1,4 @@
-import { CEP, DataNews, FormDocs, FormFotosInspecao, InfosPreliminaresSaae, InventarioSaaeType, ProfileProps, SAAE } from "@/@types/types";
+import { CEP, DataNews, ProfileProps, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -577,79 +577,216 @@ export const fileToBase64 = (file: File) => {
     });
 };
 
+
+// export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE)=>{
+//     const keysOriginal = Object.keys(objetoOriginal) as (keyof SAAE)[];
+//     const keysEditado = Object.keys(objetoEditado) as (keyof SAAE)[];
+
+//     const fieldObjetos:(keyof SAAE)[] = [];
+
+//     //verifica se existe fields no objeto editado que não existe no original.
+//     if(keysEditado.length > keysOriginal.length){
+//         keysEditado.forEach(k=>{
+//             const verify = JSON.stringify(objetoEditado[k]) !== JSON.stringify(objetoOriginal[k]);
+//             if(verify) fieldObjetos.push(k);
+//         })
+//     //verifica se existe fields no objeto original que não existe no editado.
+//     //ou se ambos os objetos são do mesmo tamanho.
+//     }else {
+//         keysOriginal.forEach(k=>{
+//             const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
+//             if(verify) fieldObjetos.push(k);
+//         })
+//     }
+
+//     const fieldsArray:{
+//         field: keyof SAAE, 
+//         value: InfosPreliminaresSaae | InventarioSaaeType | FormFotosInspecao | FormDocs,
+//         idx: number
+//     }[] = [];
+//     const fieldsObject:{
+//         field: keyof SAAE,
+//         rotulo?: keyof ProfileProps | keyof GrauRisco | keyof DadosGeraisSaae | keyof PlanoEmergenciaSaae,
+//         value?: unknown
+//     }[] = [];
+//     const fieldsStrings: {
+//         field: string,
+//         value: string
+//     }[]= [];
+
+//     if(fieldObjetos.length > 0){
+//         for (const key of fieldObjetos) {  
+//             //se o objeto editado não for válido, a gente remove todo o 
+//             //conteudo do objeto original.
+//             if(!objetoEditado[key]){
+//                 fieldsObject.push({
+//                     field: key,
+//                     rotulo: undefined,
+//                     value: undefined
+//                 })
+//             }
+//             //verifica se o field é um array 
+//             //como por exemplo InfosPreliminaresSaae[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
+//             else if(Array.isArray(objetoEditado[key])){ 
+//                 if(Array.isArray(objetoOriginal[key])){       
+//                     //se o field editado for maior que o original
+//                     if(objetoEditado[key].length > objetoOriginal[key].length){
+//                         //verifica se o field é um array 
+//                         //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
+//                         objetoEditado[key]?.forEach((item, idx)=>{
+//                             //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
+//                             if(Array.isArray(objetoOriginal[key])){
+//                                 const verify = JSON.stringify(objetoOriginal[key][idx]) === JSON.stringify(item) ? true : false ;
+                                
+//                                 // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+//                                 if(!verify){ 
+//                                     fieldsArray.push({field: key, value: item, idx})
+//                                 }
+//                             }
+//                         });
+//                     }
+//                     //se o field original for maior que o editado      
+//                     //ou se ambos são do mesmo tamanho
+//                     else{
+//                         //verifica se o field é um array 
+//                         //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
+//                         objetoOriginal[key]?.forEach((item, idx)=>{
+//                             //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
+//                             if(Array.isArray(objetoEditado[key])){
+//                                 const verify = JSON.stringify(objetoEditado[key][idx]) === JSON.stringify(item) ? true : false ;
+                                
+//                                 // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+//                                 if(!verify){ 
+//                                     fieldsArray.push({field: key, value: item, idx})
+//                                 }
+//                             }
+//                         });
+//                     }
+//                 }else{
+//                     //se o objeto original não for um array, logo ele não é válido
+//                     //então deve ser populado com todas as alterações do objeto editado.
+//                     objetoEditado[key]?.forEach((item, idx)=>{
+//                         fieldsArray.push({field: key, value: item, idx})
+//                     });
+//                 }
+//             }
+//             //lida com os casos que o objeto editado é uma instancia dos tipos 
+//             // ProfileProps | GrauRisco | DadosGeraisSaae | PlanoEmergenciaSaae
+//             else if(typeof objetoEditado[key] === 'object'){
+//                 const countFieldsEditado = objetoEditado[key] ? Object.keys(objetoEditado[key]) as (keyof ProfileProps | keyof GrauRisco | keyof DadosGeraisSaae | keyof PlanoEmergenciaSaae)[] : [];
+//                 const countFieldsOriginal = objetoEditado[key] ? Object.keys(objetoEditado[key]) as (keyof ProfileProps | keyof GrauRisco | keyof DadosGeraisSaae | keyof PlanoEmergenciaSaae)[] : [];
+
+//                 if(countFieldsEditado.length > countFieldsOriginal.length){
+//                     console.log("entrou no editado > original")
+//                     countFieldsEditado?.forEach((field)=> {
+//                         if(objetoOriginal[key]){
+//                             const verify = JSON.stringify(objetoOriginal[key][field]) === JSON.stringify(objetoEditado[key]?.[field]) ? true : false ;
+                                        
+//                             // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+//                             if(!verify){ 
+//                                 fieldsObject.push({
+//                                     field: key,
+//                                     rotulo: field,
+//                                     value: objetoEditado[key]?.[field], 
+//                                 })
+//                             }
+//                         }
+//                         //se o objeto original não for válido, a gente adiciona todo o 
+//                         //conteudo do objeto editado nele.
+//                         else{
+//                             fieldsObject.push({
+//                                 field: key,
+//                                 rotulo: field,
+//                                 value: objetoEditado[key]?.[field]
+//                             })
+//                         }
+//                     })
+//                 }else{
+//                     console.log("entrou no original >= editado");
+//                     countFieldsOriginal?.forEach((field)=> {
+//                         if(objetoOriginal[key]){
+//                             const verify = JSON.stringify(objetoOriginal[key][field]) === JSON.stringify(objetoEditado[key]?.[field]) ? true : false ;
+                                    
+//                             // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+//                             if(!verify){ 
+//                                 fieldsObject.push({
+//                                     field: key,
+//                                     rotulo: field,
+//                                     value: objetoEditado[key]?.[field]
+//                                 })
+//                             }
+//                         }
+//                     })
+//                 }
+//             }
+//             else if(typeof objetoEditado[key] === 'string'){
+//                 const verify = objetoOriginal[key] === objetoEditado[key] ? true : false ;
+                                    
+//                 // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
+//                 if(!verify){ 
+//                     fieldsStrings.push({
+//                         field: key,
+//                         value: objetoEditado[key] 
+//                     })
+//                 }
+//             }
+//         }
+//     }
+
+//     return {fieldsArray, fieldsObject, fieldsStrings}
+// }
+
 /**
- * Verifica se um objeto SAAE foi alterado
- * @param {SAAE} objetoOriginal - Objeto original
+ * Verifica as alterações entre dois objetos SAAE e retorna um update formatado
+ * @param {SAAE} objetoOriginal - Objeto original antes da edição
  * @param {SAAE} objetoEditado - Objeto editado
- * @returns {string[]} - Campos que foram alterados
-*/
-export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE)=>{
-    const keysOriginal = Object.keys(objetoOriginal) as (keyof SAAE)[];
-    const keysEditado = Object.keys(objetoEditado) as (keyof SAAE)[];
-
-    const fieldObjetos:(keyof SAAE)[] = [];
-
-    //verifica se existe fields no objeto editado que não existe no original.
-    if(keysEditado.length > keysOriginal.length){
-        keysEditado.forEach(k=>{
-            const verify = JSON.stringify(objetoEditado[k]) !== JSON.stringify(objetoOriginal[k]);
-            if(verify) fieldObjetos.push(k);
-        })
-    //verifica se existe fields no objeto original que não existe no editado.
-    //ou se ambos os objetos são do mesmo tamanho.
-    }else {
-        keysOriginal.forEach(k=>{
-            const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
-            if(verify) fieldObjetos.push(k);
-        })
-    }
-
-    const fieldsArray:{
-        field:keyof SAAE, 
-        value:InfosPreliminaresSaae | InventarioSaaeType | FormFotosInspecao | FormDocs,
-        idx:number}[] = [];
-    if(fieldObjetos.length > 0){
-        for (const key of fieldObjetos) {  
-            //verifica se o field é um array 
-            //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
-            if(Array.isArray(objetoEditado[key]) && Array.isArray(objetoOriginal[key])){        
-                //se o field editado for maior que o original
-                if(objetoEditado[key].length > objetoOriginal[key].length){
-                    //verifica se o field é um array 
-                    //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
-                    objetoEditado[key]?.forEach((item, idx)=>{
-                        //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
-                        if(Array.isArray(objetoOriginal[key])){
-                            const verify = JSON.stringify(objetoOriginal[key][idx]) === JSON.stringify(item) ? true : false ;
-                            
-                            // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-                            if(!verify){ 
-                                fieldsArray.push({field: key, value: item, idx})
-                            }
-                        }
-                    });
-                }
-                //se o field original for maior que o editado      
-                //ou se ambos são do mesmo tamanho
-                else{
-                    //verifica se o field é um array 
-                    //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
-                    keysOriginal[key]?.forEach((item, idx)=>{
-                        //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
-                        if(Array.isArray(objetoEditado[key])){
-                            const verify = JSON.stringify(objetoEditado[key][idx]) === JSON.stringify(item) ? true : false ;
-                            
-                            // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-                            if(!verify){ 
-                                fieldsArray.push({field: key, value: item, idx})
-                            }
-                        }
-                    });
+ * @returns {Record<string, any>} - Objeto de update formatado para o MongoDB
+ */
+export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record<string, unknown> => {
+    const update: Record<string, unknown> = {};
+    
+    for (const key of Object.keys(objetoEditado) as (keyof SAAE)[]) {
+        const originalValue = objetoOriginal[key];
+        const editedValue = objetoEditado[key];
+        
+        if (JSON.stringify(originalValue) === JSON.stringify(editedValue)) {
+            continue; // Se os valores são iguais, não precisa atualizar
+        }
+        
+        if (editedValue === undefined) {
+            update.$unset = update.$unset || {};
+            update.$unset[key] = "";
+        } else if (Array.isArray(editedValue)) {
+            // Verificar adições, remoções e edições no array
+            const originalArray = Array.isArray(originalValue) ? originalValue : [];
+            const addedItems = editedValue.filter(item => !originalArray.some(orig => JSON.stringify(orig) === JSON.stringify(item)));
+            const removedItems = originalArray.filter(item => !editedValue.some(edit => JSON.stringify(edit) === JSON.stringify(item)));
+            
+            if (addedItems.length > 0) {
+                update.$push = update.$push || {};
+                update.$push[key] = { $each: addedItems };
+            }
+            if (removedItems.length > 0) {
+                update.$pull = update.$pull || {};
+                update.$pull[key] = { $in: removedItems };
+            }
+        } else if (typeof editedValue === 'object' && editedValue !== null) {
+            // Verificar alterações dentro de objetos aninhados
+            for (const subKey of Object.keys(editedValue) as string[]) {
+                if (JSON.stringify(originalValue?.[subKey]) !== JSON.stringify(editedValue[subKey])) {
+                    update.$set = update.$set || {};
+                    update.$set[`${key}.${subKey}`] = editedValue[subKey];
                 }
             }
+        } else {
+            // Para valores primitivos (string, number, boolean)
+            update.$set = update.$set || {};
+            update.$set[key] = editedValue;
         }
     }
+    
+    return update;
+};
 
-    return {fieldObjetos: fieldObjetos.filter(i=> !Array.isArray(objetoEditado[i]) ), fieldsArray}
-}
+
 
