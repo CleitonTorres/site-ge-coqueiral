@@ -1,6 +1,6 @@
 'use client'
 import { Context } from "@/components/context/context";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import styles from './listSaaes.module.css';
 import { FaMinus } from "react-icons/fa6";
 import Modal from "../modal/modal";
@@ -18,6 +18,7 @@ type ListSaaeProps = {
 export default function ViewSaaes({tipo}: ListSaaeProps) {
     const context = useContext(Context);
     const [showSaae, setShowSaae]= useState(false);
+    const [showObs, setShowObs]= useState(false);
     const [currentSAAEResponse, setCurrentSAAEResponse] = useState<SAAE>();
 
     const handleSaaeResponse = (e:ChangeEvent<HTMLSelectElement>, saae:SAAE)=>{
@@ -88,14 +89,14 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     });
 
                     return newData
-                })
+                });
 
                 return {
                     bool: true,
                     text: 'Resposta enviada com sucesso!'
                 }
             }else{
-                 //retorna ao valor original, sem alterações.
+                //retorna ao valor original, sem alterações.
                 setCurrentSAAEResponse(undefined)
                 return {
                     bool: false,
@@ -135,6 +136,17 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
         window.open("/administrativo/area-restrita/printer/resumoSaae", "_blank");
     };
 
+    useEffect(()=>{
+        setShowObs(()=>{
+            if(currentSAAEResponse?.status && 
+                currentSAAEResponse.status !== context.listSaaes.find(s=> s._id === currentSAAEResponse._id)?.status){
+                return true
+            }else{
+                return false
+            }
+        })
+    },[currentSAAEResponse?.status]);
+
     return(
         <>
         {(context.tester || context.dataUser).nivelAcess === 'Regional-admin' && tipo === 'regional'?
@@ -155,11 +167,12 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                 htmlFor={`saae-${idx}`} 
                                 className={`${styles.collum01} ${styles.cursorPointer}`}
                                 onClick={()=>{
-                                    setShowSaae(true);
-                                    context.setSaaeEdit((prev)=> {
-                                        if(prev === saae._id) return undefined
-                                        return saae._id
-                                    });
+                                    // setShowSaae(true);
+                                    // context.setSaaeEdit((prev)=> {
+                                    //     if(prev === saae._id) return undefined
+                                    //     return saae._id
+                                    // });
+                                    printComponent(saae);
                                 }}
                             >
                                 {saae?.dadosGerais?.nomeAtividade || 'Sem nome atividade'}
@@ -181,7 +194,6 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                 style={{background: 'none', border: 'none', fontSize: 16}}
                                 value={saae._id === currentSAAEResponse?._id ? currentSAAEResponse.status : saae.status || ''}
                                 onChange={(e)=>{
-                                    if(e.target.value === 'enviada') return;
                                     handleSaaeResponse(e, saae);
                                 }}
                             >
@@ -193,7 +205,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     ))}
                 </div>
             </div>
-            {currentSAAEResponse?.status && currentSAAEResponse.status !== context.listSaaes.find(s=> s._id === currentSAAEResponse._id)?.status ?
+            {showObs ?
                 <div className={`${styles.conteiner} flexRowButton`}>
                     <div className={`${styles.subConteinerRegional}`}>
                         <b>Enviar resposta:</b>

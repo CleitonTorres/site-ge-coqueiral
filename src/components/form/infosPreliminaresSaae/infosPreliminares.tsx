@@ -4,8 +4,9 @@ import styles from './infosPreliminares.module.css';
 import { FaPlus, FaMinus, FaInfo } from "react-icons/fa";
 import { BsBagPlus } from "react-icons/bs";
 import { Context } from '@/components/context/context';
-import { dateFormat2 } from '@/scripts/globais';
+import { dateFormat2, printComponent } from '@/scripts/globais';
 import { InfosPreliminaresSaae } from '@/@types/types';
+import { usePathname } from "next/navigation";
 
 type Props = {
     readOnly: boolean,
@@ -22,6 +23,10 @@ type Props = {
  */
 export default function InfosPreliminares ({readOnly, localData, print}:Props){
     const context = useContext(Context);
+    const pathname = usePathname();
+
+    // Verifica se a URL contém "/printer"
+    const isPrinterRoute = pathname.includes("/printer");
 
     const [showDicas, setShowDicas] = useState(false);
 
@@ -48,7 +53,6 @@ export default function InfosPreliminares ({readOnly, localData, print}:Props){
             }
         });
     }
-
     const addItem = ()=>{
         context.setDataSaae((prev)=>{
             return{ 
@@ -127,7 +131,16 @@ export default function InfosPreliminares ({readOnly, localData, print}:Props){
                     <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
                 :null}
             </div>
-            
+
+            {!isPrinterRoute ? <span 
+                style={{cursor:'pointer', textDecoration: 'underline'}}
+                onClick={()=>{
+                    printComponent(localData, 'print-data-infosPreliminares');
+                }}
+            >
+                Imprimir Infos. Preliminares
+            </span> : null}
+
             {!readOnly ? 
                 <div className={styles.addItem}>
                     <span>Adicionar informações básicas: </span>

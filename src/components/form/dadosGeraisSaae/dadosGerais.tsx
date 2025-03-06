@@ -1518,7 +1518,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
 
                 {/* dados adicionados à programação */}
                 {localData?.programacao?.map((prog, idx)=>(
-                    <div key={v4()} className={`${styles.line} ${print ? styles.print : ''}`}>
+                    <div key={idx+"progragamacao"} className={`${styles.line} ${print ? styles.print : ''}`}>
                         <div className={`${styles.collum} ${styles.width120}`}>
                             <span>{dateFormat2(prog?.data)}</span>
                         </div>

@@ -11,7 +11,8 @@ import Botton from '../botton/botton';
 import { useContext, useEffect } from 'react';
 import { Context } from '@/components/context/context';
 import Confirme from '@/components/layout/confirme/confirme';
-import { InfosPreliminaresSaae, SAAE } from '@/@types/types';
+import { printComponent } from '@/scripts/globais';
+// import { InfosPreliminaresSaae, SAAE } from '@/@types/types';
 
 type Props= {
     hiddeButton?: boolean
@@ -25,21 +26,6 @@ type Props= {
 export default function SaaeResumo ({hiddeButton}:Props){
     const context = useContext(Context);
 
-    const printComponent = (data: SAAE | InfosPreliminaresSaae[], field: 'print-data-infosPreliminares' | "print-data") => {
-        
-        // Salva os dados no localStorage
-        localStorage.setItem(field, JSON.stringify(data));
-      
-        // Abre a página de impressão
-        const url = ()=>{
-            if(field === 'print-data-infosPreliminares')
-                return "/administrativo/area-restrita/printer/infosPreliminares";
-            else return "/administrativo/area-restrita/printer/resumoSaae";
-        }
-        window.open(url(), "_blank");
-    };
-
-      
     useEffect(()=>{
         return undefined
     },[]);
@@ -87,8 +73,8 @@ export default function SaaeResumo ({hiddeButton}:Props){
             <PlanoEmergencia 
                 readOnly
                 grauRisco={context.dataSaae.grauRisco}
-                nomeAtividade={context.dataSaae.dadosGerais.nomeAtividade}
-                localInicio={context.dataSaae.dadosGerais.localInicio}
+                nomeAtividade={context.dataSaae.dadosGerais?.nomeAtividade}
+                localInicio={context.dataSaae.dadosGerais?.localInicio}
                 localData={context.dataSaae.planoEmergencia}
             />
             <FotosInspecao 

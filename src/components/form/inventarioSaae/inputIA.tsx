@@ -72,7 +72,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
         const value = e.target.value;
 
         context.setDataSaae((prev)=>{
-            const newData = prev.inventarioRiscos.map((ativ, index)=>{
+            const newData = prev.inventarioRiscos?.map((ativ, index)=>{
                 if(index === idx){
                     if(['probabilidade', 'consequencia', 'nivelRisco'].includes(name)){
                         if(name === 'probabilidade'){
@@ -165,7 +165,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
             
             context.setDataSaae((prev)=>{
                 const data = [
-                    ...prev.inventarioRiscos,
+                    ...prev.inventarioRiscos || [],
                     ...newData
                 ];
                 const nivelRisco = calcNivelRisco(data);
@@ -209,7 +209,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
 
     const removeItem = (idx:number)=>{
         context.setDataSaae((prev)=>{
-            const newData = prev.inventarioRiscos.filter((ativ, i)=> i !== idx);
+            const newData = prev.inventarioRiscos?.filter((ativ, i)=> i !== idx);
             return{
                 ...prev,
                 inventarioRiscos: newData

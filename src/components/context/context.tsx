@@ -63,7 +63,7 @@ export default function Provider({children}:{children:ReactNode}){
     //SAAEs em edição
     const [dataSaae, setDataSaae] = useState({} as SAAE);
 
-    // SAAEs enviadas para a região.
+    //SAAEs enviadas para a região.
     const [listSaaes, setListSaaes] = useState<SAAE[]>([]);
 
     //lista de SAAEs salvas em rascunhos no armazenamento local.
@@ -227,54 +227,271 @@ export default function Provider({children}:{children:ReactNode}){
       formData.append('bucketName', 'site-coqueiral-saae');
       formData.append('destinationFolder', 'saaes');
 
+      //verifica se existem novos arquivos para serem anexos à SAAE e salvos no Buncket.
+      const verificar:{
+        field:string
+      }[] = [];
+
       // Adicionar arquivos
       data.fotosInspecao?.forEach((item, index) => {
           item.fotos.forEach((foto, fotoIndex) => {
-              formData.append(`fotosInspecao-${index}-${fotoIndex}`, foto.doc);
+            verificar.push({field: `fotosInspecao-${index}-${fotoIndex}`});
+            formData.append(`fotosInspecao-${index}-${fotoIndex}`, foto.doc);
           });
       });
   
       data.documentos?.forEach((item, index) => {
           item.docs.forEach((doc, docIndex) => {
-              formData.append(`documentos-${index}-${docIndex}`, doc.doc);
+            verificar.push({field: `documentos-${index}-${docIndex}`});
+            formData.append(`documentos-${index}-${docIndex}`, doc.doc);
           });
       });
   
       data.planoEmergencia?.espacosSeguros?.acolhimento?.forEach((item, index) => {
         item.docs.forEach((doc, docIndex) => {
-            formData.append(`acolhimento-${index}-${docIndex}`, doc.doc);
+          verificar.push({field: `acolhimento-${index}-${docIndex}`});
+          formData.append(`acolhimento-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.espacosSeguros?.enfermaria?.forEach((item, index) => {
         item.docs.forEach((doc, docIndex) => {
-            formData.append(`enfermaria-${index}-${docIndex}`, doc.doc);
+          verificar.push({field: `enfermaria-${index}-${docIndex}`});
+          formData.append(`enfermaria-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.veiculos?.forEach((item, index) => {
         item.docs.forEach((doc, docIndex) => {
-            formData.append(`veiculos-${index}-${docIndex}`, doc.doc);
+          verificar.push({field: `veiculos-${index}-${docIndex}`});
+          formData.append(`veiculos-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.atividadePorProfissional?.forEach((item, index) => {
         item.docs.forEach((doc, docIndex) => {
-            formData.append(`atividadePorProfissional-${index}-${docIndex}`, doc.doc);
+          verificar.push({field: `atividadePorProfissional-${index}-${docIndex}`});
+          formData.append(`atividadePorProfissional-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.profSalvamento?.forEach((item, index) => {
         item.docs.forEach((doc, docIndex) => {
-            formData.append(`profSalvamento-${index}-${docIndex}`, doc.doc);
+          verificar.push({field: `profSalvamento-${index}-${docIndex}`});
+          formData.append(`profSalvamento-${index}-${docIndex}`, doc.doc);
         });
       });
 
-      // Adicionar os dados do SAAE como JSON
-      formData.append('saaeData', JSON.stringify({...data, status: 'enviada'}));
+      //se existir algum file significa que foi incluído arquivos.
+      //então faz-se o upload deles
+      if(verificar.length > 0){
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/uploadFilesSAAE/`, formData, {
+          headers:{
+              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+          }
+        });
+
+        //após o upload dos arquivos anexas na etapa de edição, fazemos a alteração do aquivo file 
+        // pelo URL de onde o arquivo foi salvo no Buncket.
+        if(response && response.data.filesUpdated){            
+          const dataResp = response.data as {
+            message: string, 
+            filesUpdated:{
+              sectionName: string,
+              sectionIdx: number,
+              docIdx: number,
+              docUrl: string
+          }[]}
+          dataResp.filesUpdated?.forEach((item)=>{
+            if(item.sectionName === 'fotosInspecao'){
+              const newData = data.fotosInspecao?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.fotos.map((f, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...f,
+                          doc: item.docUrl
+                        }
+                      }else return f
+                    });
+                    return {
+                      ...s,
+                      fotos: newData
+                    }
+                }else return s;
+              })
+              data = {
+                ...data,
+                fotosInspecao: newData
+              }
+            }else if(item.sectionName === 'documentos'){
+              const newData = data.documentos?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.docs.map((d, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...d,
+                          doc: item.docUrl
+                        }
+                      }else return d
+                    });
+                    return {
+                      ...s,
+                      docs: newData
+                    }
+                }else return s;
+              });
+
+              data = {
+                ...data,
+                documentos: newData
+              }
+            }else if(item.sectionName === 'acolhimento'){
+              const newData = data.planoEmergencia.espacosSeguros.acolhimento?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.docs.map((d, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...d,
+                          doc: item.docUrl
+                        }
+                      }else return d
+                    });
+                    return {
+                      ...s,
+                      docs: newData
+                    }
+                }else return s;
+              });
+              
+              data = {
+                ...data,
+                planoEmergencia: {
+                  ...data.planoEmergencia,
+                  espacosSeguros:{
+                    ...data.planoEmergencia.espacosSeguros,
+                    acolhimento: newData
+                  }
+                }
+              }
+            }else if(item.sectionName === 'enfermaria'){
+              const newData = data.planoEmergencia.espacosSeguros.enfermaria?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.docs.map((d, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...d,
+                          doc: item.docUrl
+                        }
+                      }else return d
+                    });
+                    return {
+                      ...s,
+                      docs: newData
+                    }
+                }else return s;
+              });
+              
+              data = {
+                ...data,
+                planoEmergencia: {
+                  ...data.planoEmergencia,
+                  espacosSeguros:{
+                    ...data.planoEmergencia.espacosSeguros,
+                    enfermaria: newData
+                  }
+                }
+              }
+            }else if(item.sectionName === 'veiculos'){
+              const newData = data.planoEmergencia.veiculos?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.docs.map((d, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...d,
+                          doc: item.docUrl
+                        }
+                      }else return d
+                    });
+                    return {
+                      ...s,
+                      docs: newData
+                    }
+                }else return s;
+              });
+              
+              data = {
+                ...data,
+                planoEmergencia: {
+                  ...data.planoEmergencia,
+                  veiculos: newData
+                }
+              }
+            }else if(item.sectionName === 'atividadePorProfissional'){
+              const newData = data.planoEmergencia.atividadePorProfissional?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.docs.map((d, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...d,
+                          doc: item.docUrl
+                        }
+                      }else return d
+                    });
+                    return {
+                      ...s,
+                      docs: newData
+                    }
+                }else return s;
+              });
+              
+              data = {
+                ...data,
+                planoEmergencia: {
+                  ...data.planoEmergencia,
+                  atividadePorProfissional: newData
+                }
+              }
+            }else if(item.sectionName === 'profSalvamento'){
+              const newData = data.planoEmergencia.profSalvamento?.map((s, idx)=> {
+                if(item.sectionIdx === idx){
+                    const newData= s.docs.map((d, fIdx)=>{
+                      if(item.docIdx === fIdx){
+                        return {
+                          ...d,
+                          doc: item.docUrl
+                        }
+                      }else return d
+                    });
+                    return {
+                      ...s,
+                      docs: newData
+                    }
+                }else return s;
+              });
+              
+              data = {
+                ...data,
+                planoEmergencia: {
+                  ...data.planoEmergencia,
+                  profSalvamento: newData
+                }
+              }
+            }
+          })
+        }
+        //---------------------------------
+        console.log("entrou em enviar arquivos", verificar.length, response.data.filesUpdated);
+      }else{
+        console.log("sem novos arquivos para enviar");
+      }
+
+      // Adicionar os dados do SAAE como JSON para serem salvos no DB.
+      const formDataPost = new FormData();
+      formDataPost.append('saaeData', JSON.stringify({...data, status: 'enviada'}));
   
       try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/uploadSaae/`, formData, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/uploadSaae/`, formDataPost, {
           headers:{
               'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
           }
@@ -333,17 +550,329 @@ export default function Provider({children}:{children:ReactNode}){
           text: 'Desculpe, mas não consegui encontrar a SAAE Original.'
         }
 
-        console.log('encontrou a original', locationOriginalSAAE);
-        console.log("SAAE editada", data)
+        // console.log('encontrou a original', locationOriginalSAAE);
+        // console.log("SAAE editada", data)
 
+        //antes de verificar as edições dos dados da SAAE, verifico se existe algum arquivo carregado do 
+        // dispositivo do usupario "File", se existe é porque houve um carregamento de novo arquivo.
+        //então deve ser enviado para o buncket
+        const formData = new FormData();
+        formData.append('bucketName', 'site-coqueiral-saae');
+        formData.append('destinationFolder', 'saaes');
+        
+        //verifica se existem novos arquivos para serem anexos à SAAE e salvos no Buncket.
+        const verificar:{
+          field:string
+        }[] = [];
+
+        // Adicionar arquivos
+        data.fotosInspecao?.forEach((item, index) => {
+            item.fotos.forEach((foto, fotoIndex) => {
+              if (foto.doc instanceof File)
+                verificar.push({field: `fotosInspecao-${index}-${fotoIndex}`});
+                formData.append(`fotosInspecao-${index}-${fotoIndex}`, foto.doc);
+            });
+        });
+    
+        data.documentos?.forEach((item, index) => {
+            item.docs.forEach((doc, docIndex) => {
+              if (doc.doc instanceof File)
+                verificar.push({field: `documentos-${index}-${docIndex}`});
+                formData.append(`documentos-${index}-${docIndex}`, doc.doc);
+            });
+        });
+    
+        data.planoEmergencia?.espacosSeguros?.acolhimento?.forEach((item, index) => {
+          item.docs.forEach((doc, docIndex) => {
+            if (doc.doc instanceof File)
+              verificar.push({field: `acolhimento-${index}-${docIndex}`});
+              formData.append(`acolhimento-${index}-${docIndex}`, doc.doc);
+          });
+        });
+
+        data.planoEmergencia?.espacosSeguros?.enfermaria?.forEach((item, index) => {
+          item.docs.forEach((doc, docIndex) => {
+            if (doc.doc instanceof File)
+            verificar.push({field: `enfermaria-${index}-${docIndex}`});
+            formData.append(`enfermaria-${index}-${docIndex}`, doc.doc);
+          });
+        });
+
+        data.planoEmergencia?.veiculos?.forEach((item, index) => {
+          item.docs.forEach((doc, docIndex) => {
+            if (doc.doc instanceof File)
+            verificar.push({field: `veiculos-${index}-${docIndex}`});
+            formData.append(`veiculos-${index}-${docIndex}`, doc.doc);
+          });
+        });
+
+        data.planoEmergencia?.atividadePorProfissional?.forEach((item, index) => {
+          item.docs.forEach((doc, docIndex) => {
+            if (doc.doc instanceof File)
+            verificar.push({field: `atividadePorProfissional-${index}-${docIndex}`});            
+            formData.append(`atividadePorProfissional-${index}-${docIndex}`, doc.doc);
+          });
+        });
+
+        data.planoEmergencia?.profSalvamento?.forEach((item, index) => {
+          item.docs.forEach((doc, docIndex) => {
+            if (doc.doc instanceof File)
+            verificar.push({field: `profSalvamento-${index}-${docIndex}`});
+            formData.append(`profSalvamento-${index}-${docIndex}`, doc.doc);
+          });
+        });
+
+        //se existir algum file significa que foi incluído novos arquivos.
+        //então faz-se o upload dos novos arquivos
+        if(verificar.length > 0){
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/uploadFilesSAAE/`, formData, {
+            headers:{
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+            }
+          });
+
+          //após o upload dos arquivos anexas na etapa de edição, fazemos a alteração do aquivo file 
+          // pelo URL de onde o arquivo foi salvo no Buncket.
+          if(response && response.data.filesUpdated){            
+            const dataResp = response.data as {
+              message: string, 
+              filesUpdated:{
+                sectionName: string,
+                sectionIdx: number,
+                docIdx: number,
+                docUrl: string
+            }[]}
+            dataResp.filesUpdated?.forEach((item)=>{
+              if(item.sectionName === 'fotosInspecao'){
+                const newData = data.fotosInspecao?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.fotos.map((f, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...f,
+                            doc: item.docUrl
+                          }
+                        }else return f
+                      });
+                      return {
+                        ...s,
+                        fotos: newData
+                      }
+                  }else return s;
+                })
+                data = {
+                  ...data,
+                  fotosInspecao: newData
+                }
+              }else if(item.sectionName === 'documentos'){
+                const newData = data.documentos?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.docs.map((d, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...d,
+                            doc: item.docUrl
+                          }
+                        }else return d
+                      });
+                      return {
+                        ...s,
+                        docs: newData
+                      }
+                  }else return s;
+                });
+
+                data = {
+                  ...data,
+                  documentos: newData
+                }
+              }else if(item.sectionName === 'acolhimento'){
+                const newData = data.planoEmergencia.espacosSeguros.acolhimento?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.docs.map((d, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...d,
+                            doc: item.docUrl
+                          }
+                        }else return d
+                      });
+                      return {
+                        ...s,
+                        docs: newData
+                      }
+                  }else return s;
+                });
+                
+                data = {
+                  ...data,
+                  planoEmergencia: {
+                    ...data.planoEmergencia,
+                    espacosSeguros:{
+                      ...data.planoEmergencia.espacosSeguros,
+                      acolhimento: newData
+                    }
+                  }
+                }
+              }else if(item.sectionName === 'enfermaria'){
+                const newData = data.planoEmergencia.espacosSeguros.enfermaria?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.docs.map((d, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...d,
+                            doc: item.docUrl
+                          }
+                        }else return d
+                      });
+                      return {
+                        ...s,
+                        docs: newData
+                      }
+                  }else return s;
+                });
+                
+                data = {
+                  ...data,
+                  planoEmergencia: {
+                    ...data.planoEmergencia,
+                    espacosSeguros:{
+                      ...data.planoEmergencia.espacosSeguros,
+                      enfermaria: newData
+                    }
+                  }
+                }
+              }else if(item.sectionName === 'veiculos'){
+                const newData = data.planoEmergencia.veiculos?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.docs.map((d, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...d,
+                            doc: item.docUrl
+                          }
+                        }else return d
+                      });
+                      return {
+                        ...s,
+                        docs: newData
+                      }
+                  }else return s;
+                });
+                
+                data = {
+                  ...data,
+                  planoEmergencia: {
+                    ...data.planoEmergencia,
+                    veiculos: newData
+                  }
+                }
+              }else if(item.sectionName === 'atividadePorProfissional'){
+                const newData = data.planoEmergencia.atividadePorProfissional?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.docs.map((d, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...d,
+                            doc: item.docUrl
+                          }
+                        }else return d
+                      });
+                      return {
+                        ...s,
+                        docs: newData
+                      }
+                  }else return s;
+                });
+                
+                data = {
+                  ...data,
+                  planoEmergencia: {
+                    ...data.planoEmergencia,
+                    atividadePorProfissional: newData
+                  }
+                }
+              }else if(item.sectionName === 'profSalvamento'){
+                const newData = data.planoEmergencia.profSalvamento?.map((s, idx)=> {
+                  if(item.sectionIdx === idx){
+                      const newData= s.docs.map((d, fIdx)=>{
+                        if(item.docIdx === fIdx){
+                          return {
+                            ...d,
+                            doc: item.docUrl
+                          }
+                        }else return d
+                      });
+                      return {
+                        ...s,
+                        docs: newData
+                      }
+                  }else return s;
+                });
+                
+                data = {
+                  ...data,
+                  planoEmergencia: {
+                    ...data.planoEmergencia,
+                    profSalvamento: newData
+                  }
+                }
+              }
+            })
+          }
+
+        }else{
+          console.log("sem novos arquivos para enviar");
+        }
+        //---------------------------------
+        
         const update = verifyObjSAAE(locationOriginalSAAE, data);
 
         console.log('resultado da verificação do update', update)
 
-        return{
-          bool: true,
-          text: 'Teste de edição de SAAE feito com sucesso!'
+        const formDataUpdate = new FormData();
+        formDataUpdate.append('idSaae', data._id);
+        formDataUpdate.append('saaeData', JSON.stringify(update));
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/updateSaae/`, formDataUpdate, {
+          headers:{
+              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+          }
+        });
+
+        if(response.status === 200){
+          setListSaaes((prev)=> {
+            const newData = prev.map(saae=> {
+              if(saae._id === data._id){
+                return {...data, status: 'enviada'}
+              }else return saae
+            });
+
+            return newData
+            
+          });
+
+          setDataSaae({} as SAAE);
+          setSaaeEdit(undefined);
+          
+          //não precisa deletar porque a SAAE editada não fica armazenado nele        
+          // deleteDataStorage('saae', saaeEdit! as number) 
+          return{
+            bool: true,
+            text: 'SAAE enviada com sucesso!'
+          }
+        }else{
+          return{
+            bool: true,
+            text: 'Ocorreu um errro ao tentar atualizar a SAAE'
+          }
         }
+        
+
+        // return{
+        //   bool: true,
+        //   text: 'Teste de edição de SAAE feito com sucesso!'
+        // }
         
       }catch(e){
         if (axios.isAxiosError(e)) {

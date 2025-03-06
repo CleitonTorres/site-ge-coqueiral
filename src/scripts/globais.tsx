@@ -1,4 +1,4 @@
-import { CEP, DataNews, ProfileProps, SAAE } from "@/@types/types";
+import { CEP, DataNews, InfosPreliminaresSaae, ProfileProps, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -784,8 +784,27 @@ export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record
             update.$set[key] = editedValue;
         }
     }
-    
+    update.$set['status'] = 'enviada';
+
     return update;
+};
+
+/**
+ * Preprara e envia um componente parar impressão.
+ * @param {SAAE | InfosPreliminaresSaae[]} data - Componente a ser enviado para impressão.
+ * @param {'print-data-infosPreliminares' | 'print-dat'} field - rótulo que identifica qual componente está sendo impresso.
+ */
+export const printComponent = (data: SAAE | InfosPreliminaresSaae[], field: 'print-data-infosPreliminares' | "print-data") => {
+    // Salva os dados no localStorage
+    localStorage.setItem(field, JSON.stringify(data));
+    
+    // Abre a página de impressão
+    const url = ()=>{
+        if(field === 'print-data-infosPreliminares')
+            return "/administrativo/area-restrita/printer/infosPreliminares";
+        else return "/administrativo/area-restrita/printer/resumoSaae";
+    }
+    window.open(url(), "_blank");
 };
 
 
