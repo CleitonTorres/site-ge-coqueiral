@@ -26,7 +26,7 @@ function Home() {
 
       {/* estatisticas */}
       <Section customClass={['fullWidth', 'flexRowCenter', 'minWidth']}> 
-        <Box customClass={['flexCollCenter']}>
+        <Box customClass={['flexColl', 'width300']}> 
           <Image 
             alt='imagem seja escoteiro'
             width={181}
@@ -34,9 +34,9 @@ function Home() {
             src={'/icons/40.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>66.787</span>
-          <span style={{fontWeight: 300, width: 200, textAlign: 'center', marginLeft: '20px',  marginRight: '20px'}}>jovens atendidos no Brasil</span>
+          <span style={{fontWeight: 300, textAlign: 'center'}}>jovens atendidos no Brasil</span>
         </Box>
-        <Box customClass={['flexCollCenter']}>
+        <Box customClass={['flexColl', 'width300']}>
           <Image 
             alt='imagem seja escoteiro'
             width={181}
@@ -44,9 +44,9 @@ function Home() {
             src={'/icons/41.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>25.408</span>
-          <span style={{fontWeight: 300, width: 200, textAlign: 'center', marginLeft: '20px',  marginRight: '20px'}}>voluntários no Brasil</span>
+          <span style={{fontWeight: 300, textAlign: 'center'}}>voluntários no Brasil</span>
         </Box>
-        <Box customClass={['flexCollCenter']}>
+        <Box customClass={['flexColl', 'width300']}>
           <Image 
             alt='imagem seja escoteiro'
             width={181}
@@ -54,9 +54,9 @@ function Home() {
             src={'/icons/42.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>1.416</span>
-          <span style={{fontWeight: 300, width: 200, textAlign: 'center', marginLeft: '20px',  marginRight: '20px'}}>unidades escoteiras no Brasil</span>
+          <span style={{fontWeight: 300, textAlign: 'center'}}>unidades escoteiras no Brasil</span>
         </Box>
-        <Box customClass={['flexCollCenter']}>
+        <Box customClass={['flexColl', 'width300']}>
           <Image 
             alt='imagem seja escoteiro'
             width={181}
@@ -64,7 +64,7 @@ function Home() {
             src={'/icons/43.png'}
           />
           <span style={{fontSize: 32, fontWeight: 600}}>7.536.668</span>
-          <span style={{fontWeight: 300, width: 200, textAlign: 'center', marginLeft: '20px',  marginRight: '20px'}}>horas de voluntariado em 2024 no Brasil</span>
+          <span style={{fontWeight: 300, textAlign: 'center'}}>horas de voluntariado em 2024 no Brasil</span>
         </Box>
       </Section>
 
@@ -102,7 +102,7 @@ function Home() {
             />
             <span style={{
               position: 'absolute', 
-              left: '50%', 
+              left: '53%', 
               top: '40%',
               transform: 'translate(-50%, -50%)',
               fontSize: 24,
@@ -115,7 +115,7 @@ function Home() {
               left: '50%', 
               top: '60%',
               transform: 'translate(-50%, -50%)',
-              fontSize: 12,
+              fontSize: 10,
               color: 'var(--white)',
               fontWeight: 600
             }}>saiba como</span>
@@ -198,27 +198,29 @@ function Home() {
         >
           Empresas que apoiam o escotismo em Coqueiral
         </h1>
-        <Box customClass={['margin', 'flexRowWrap']}>
-          <CardEmpresaParceira 
-            nameEmpresa='Paralegal Soluções' 
-            logoURL='/logo/empresas-parceira/paraLegal.png'
-            linkSiteEmpresa={'https://www.paralegalsolucoes.com.br/'}
-          />
-        </Box>
-        <Box customClass={['margin', 'flexRowWrap']}>
-          <CardEmpresaParceira 
-            nameEmpresa='Vaa Canoeiros' 
-            logoURL='/logo/empresas-parceira/vaaCanoneiros.png'
-            linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros.cpp/#'}
-          />
-        </Box>
-        <Box customClass={['margin', 'flexRowWrap']}>
-          <CardEmpresaParceira 
-            nameEmpresa='Radical Oficial' 
-            logoURL='/logo/empresas-parceira/logoRadical.png'
-            linkSiteEmpresa={'https://radicaloficial.com.br/'}
-          />
-        </Box>
+        <Section customClass={['fullWidth',  'flexRowCenter', 'minWidth']}>
+          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
+            <CardEmpresaParceira 
+              nameEmpresa='Paralegal Soluções' 
+              logoURL='/logo/empresas-parceira/paraLegal.png'
+              linkSiteEmpresa={'https://www.paralegalsolucoes.com.br/'}
+            />
+          </Box>
+          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
+            <CardEmpresaParceira 
+              nameEmpresa='Vaa Canoeiros' 
+              logoURL='/logo/empresas-parceira/vaaCanoneiros.png'
+              linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros.cpp/#'}
+            />
+          </Box>
+          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
+            <CardEmpresaParceira 
+              nameEmpresa='Radical Oficial' 
+              logoURL='/logo/empresas-parceira/logoRadical.png'
+              linkSiteEmpresa={'https://radicaloficial.com.br/'}
+            />
+          </Box>
+        </Section>
       </Section>
 
       <Section customClass={['fullWidth', 'flexCollTop']}>

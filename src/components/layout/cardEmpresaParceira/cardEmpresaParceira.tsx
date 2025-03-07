@@ -11,7 +11,7 @@ export default function CardEmpresaParceira ({nameEmpresa, logoURL, linkSiteEmpr
         <a href={linkSiteEmpresa} target='_blank' className={styles.conteiner}>
             <Image 
               alt='imagem seja escoteiro'
-              width={408}
+              width={200}
               height={135}
               src={logoURL}
               className={styles.logo}

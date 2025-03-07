@@ -448,16 +448,16 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     <b>Jovem</b>
                                 </span>
                                 <ul className='footerMenu' >
-                                    <li className='link textColorWhite'>
+                                    <li className='textColorWhite'>
                                         <a href='https://www.escoteiros.org.br/especialidades/' target='_blank'>Especialidades</a>
                                     </li>
                                     <li 
-                                        className='link textColorWhite'
+                                        className='textColorWhite'
                                     >
                                         <a href='/progressao' target='_self'>Progressão</a>
                                     </li>
                                     
-                                    <li className='link textColorWhite'>                                    
+                                    <li className='textColorWhite'>                                    
                                         <a href='/tribo-da-terra' target='_self'>Tribo da Terra</a>
                                     </li>                                
                                 </ul>
@@ -482,19 +482,19 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 </ul>
                             </li>
                             <li 
-                                className='dropItemMenuBoxFooter link cursorPointer' 
+                                className='dropItemMenuBoxFooter cursorPointer' 
                                 onClick={()=>navigate('http://escoteiroses.org.br/', '_blanck')}>
                                 <span><b>Área da Região</b></span>
                             </li>
                             <li 
-                                className='dropItemMenuBoxFooter link cursorPointer' 
+                                className='dropItemMenuBoxFooter cursorPointer' 
                                 onClick={()=>navigate('https://loja.escoteiros.org.br/', '_blanck')}>
                                 <span>
                                 <b>Loja Nacional</b>
                                 </span>
                             </li>
                             <li 
-                                className='dropItemMenuBoxFooter link cursorPointer' 
+                                className='dropItemMenuBoxFooter cursorPointer' 
                                 onClick={()=>navigate('https://paxtu.escoteiros.org.br/', '_blanck')}>
                                 <span>
                                     <b>Paxtu</b>

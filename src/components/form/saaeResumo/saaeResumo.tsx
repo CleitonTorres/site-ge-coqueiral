@@ -22,7 +22,6 @@ type Props= {
  * @param {boolean} hiddeButton - Se verdadeiro, não exibe o botão de envio.
  * @returns {JSX.Element} retorna o JSX com o resumo da SAAE.
  */
-
 export default function SaaeResumo ({hiddeButton}:Props){
     const context = useContext(Context);
 
