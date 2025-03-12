@@ -59,49 +59,45 @@
 }
 
 .addItem {
-    position: absolute;
-    right: 10px;
-    top: 45px;
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
-.addItem path{
+.addItem svg path{
     color: var(--blue);
 }
 .addItem  svg{
-    font-size: 24px;
+    font-size: 18px;
 }
-.addItem:hover{
+.addItem:hover svg{
     background-color: var(--verde);
     border-radius: 10px;
     padding: 3px;
     cursor: pointer;
 }
-.addItem:active{
+.addItem:active svg{
     padding: 4px;
 }
 .removeItem{
-    position: absolute;
-    right: 10px;
-    top: 10px;
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
-.removeItem path{
+.removeItem svg path{
     color: red;
 }
 .removeItem  svg{
-    font-size: 24px;
+    font-size: 18px;
 }
-.removeItem:hover{
+.removeItem:hover svg{
     background-color: var(--verde);
     border-radius: 10px;
     padding: 3px;
     cursor: pointer;
 }
-.removeItem:active{
+.removeItem:active svg{
     padding: 4px;
 }
 .boxCheckIA{

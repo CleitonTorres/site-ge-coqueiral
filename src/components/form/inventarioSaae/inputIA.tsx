@@ -397,11 +397,13 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                         >
                             <option value={atividadeCorrente.nivelRisco || ''}>{(atividadeCorrente?.probabilidade * atividadeCorrente?.consequencia) || ''}</option>
                         </select>
-                        <FaPlus 
-                            className={styles.addItem} 
-                            onClick={addItem} 
-                            aria-label='adicionar este item'
-                            title='adicionar este item'/>
+                        <div className={styles.addItem}>
+                            <FaPlus 
+                                onClick={addItem} 
+                                aria-label='adicionar este item'
+                                title='adicionar este item'
+                            />
+                        </div>
                     </div>
                 :null}
 
@@ -549,11 +551,12 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             />
                         }
                         {!readOnly ? 
-                            <FaMinus 
-                                className={styles.removeItem} 
-                                onClick={()=>removeItem(idx)} 
-                                aria-label='remover este item'
-                                title='remover este item'/>
+                            <div className={styles.removeItem}>
+                                <FaMinus 
+                                    onClick={()=>removeItem(idx)} 
+                                    aria-label='remover este item'
+                                    title='remover este item'/>
+                            </div>
                         :null}
                     </div>
                 ))}
