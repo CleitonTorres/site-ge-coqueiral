@@ -4,7 +4,7 @@ import styles from './infosPreliminares.module.css';
 import { FaPlus, FaMinus, FaInfo } from "react-icons/fa";
 import { BsBagPlus } from "react-icons/bs";
 import { Context } from '@/components/context/context';
-import { dateFormat2, printComponent } from '@/scripts/globais';
+import { adressToString, dateFormat2, printComponent } from '@/scripts/globais';
 import { InfosPreliminaresSaae } from '@/@types/types';
 import { usePathname } from "next/navigation";
 
@@ -78,7 +78,7 @@ export default function InfosPreliminares ({readOnly, localData, print}:Props){
                 {
                     item: `${newData.length+1}`,
                     text: `A coordenação do evento/atividade ${dadosGerais?.nomeAtividade || '...'} torna público as informações preliminares e de segurança adotadas pela coordenação ou que devem ser adotadas pelos participantes.
-    O evento/atividade vai acontecer das ${dadosGerais.horaInicio || ''} do dia ${dateFormat2(dadosGerais?.dataInicio) || ''}, ${dadosGerais?.dataFim ? `às ${dadosGerais.horaFim || ''} do dia ${dateFormat2(dadosGerais.dataFim)}` : ''} no local ${dadosGerais?.localInicio?.logradouro || ''}, ${dadosGerais?.localInicio?.bairro || ''}, ${dadosGerais?.localInicio?.municipio || ''}, ${dadosGerais?.localInicio?.municipio || ''}, ${dadosGerais?.localInicio?.cep || ''}, coordenadas ${dadosGerais?.localInicio?.coordenadas?.lat || ''}, ${dadosGerais?.localInicio.coordenadas?.long || ''}.`
+    O evento/atividade vai acontecer das ${dadosGerais.horaInicio || ''} do dia ${dateFormat2(dadosGerais?.dataInicio) || ''}, ${dadosGerais?.dataFim ? `às ${dadosGerais.horaFim || ''} do dia ${dateFormat2(dadosGerais.dataFim)}` : ''} no local ${adressToString(dadosGerais.localInicio)}, coordenadas ${dadosGerais?.localInicio?.coordenadas?.lat || ''}, ${dadosGerais?.localInicio.coordenadas?.long || ''}.`
                 },
                 {
                     item: `${newData.length+2}`,
@@ -128,7 +128,10 @@ export default function InfosPreliminares ({readOnly, localData, print}:Props){
                 <h5>Refências: PNES item 8.1.1, 8.3.6, 8.4.1  ABNT NBR 15286</h5>
                 <h1>2. Informações mínimas aos participantes do evento/atividade </h1> 
                 {!print ? 
-                    <FaInfo onClick={()=> { setShowDicas(prev=> !prev)}} title='mostrar dicas de preenchimento'/>
+                    <FaInfo 
+                        onClick={()=> { setShowDicas(prev=> !prev)}} 
+                        title='mostrar dicas de preenchimento'
+                        className={styles.noPrint}/>
                 :null}
             </div>
 

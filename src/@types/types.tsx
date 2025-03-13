@@ -12,17 +12,25 @@ export interface ProfileProps {
     ramo: string,
     nivelFormacao: string,
     registro: string,
-    numUel: number,
-    nameUel: string,
     tel: string,
     email: string, 
     nivelAcess: "Escotista" | "Dirigente" | "Admin" | 'Tester' | 'Regional-admin',
-    token: string,    
+    token?: string,    
     user: string,
     password: string,
     expires?: number,
+    dadosUel: DadosUEL
 }
 
+export interface DadosUEL {
+    presidenteUel: string,
+    regEscoteiroPresidente: string,
+    telPresidente: string,
+    numUel: number,
+    nameUel: string,
+    cidadeUels: string,
+    ufUel: string,
+}
 export interface DataNews {
     title: string,
     paragraph: string,
@@ -130,7 +138,8 @@ export interface DadosGeraisSaae {
     comoChegar: string,
     linkMapa: string,
     rotas?:Rota[],
-    programacao: ProgramacaoAtividade[]
+    programacao: ProgramacaoAtividade[],
+    dadosUel: DadosUEL
 }
 export interface Rota {
     title: string,

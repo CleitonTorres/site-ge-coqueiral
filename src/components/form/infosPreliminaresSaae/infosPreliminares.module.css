@@ -3,7 +3,6 @@
     flex-direction: column;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
-    width: 100vw;
 }
 .boxHead{
     position: relative;
@@ -165,5 +164,11 @@
     }
     .conteiner h5{
         font-size: 10px;
+    }
+}
+
+@media print{
+    .noPrint{
+        display: none;
     }
 }

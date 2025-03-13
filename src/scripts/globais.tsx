@@ -1,4 +1,4 @@
-import { CEP, DataNews, InfosPreliminaresSaae, ProfileProps, SAAE } from "@/@types/types";
+import { CEP, DataNews, Endereco, InfosPreliminaresSaae, ProfileProps, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -159,8 +159,9 @@ export function dateFormat1(date:Date | undefined){
         const mes = date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
 
-        console.log("data format1", `${ano}-${mes}-${dia}`)
-        return `${ano}-${mes}-${dia}`;
+        const ajusteMes = mes < 10 ? `0${mes}` : mes
+        console.log("data format1", `${ano}-${ajusteMes}-${dia}`)
+        return `${ano}-${ajusteMes}-${dia}`;
     }
 }
 
@@ -182,7 +183,9 @@ export function dateFormat2(date:Date | undefined){
         const mes = date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
 
-        return `${dia}/${mes}/${ano}`;
+        const ajusteMes = mes < 10 ? `0${mes}` : mes
+
+        return `${dia}/${ajusteMes}/${ano}`;
     }
 }
 
@@ -795,10 +798,12 @@ export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record
  * @param {SAAE | InfosPreliminaresSaae[]} data - Componente a ser enviado para impressão.
  * @param {'print-data-infosPreliminares' | 'print-dat'} field - rótulo que identifica qual componente está sendo impresso.
  */
-export const printComponent = (data: SAAE | InfosPreliminaresSaae[], field: 'print-data-infosPreliminares' | "print-data") => {
+export const printComponent = (
+    data: SAAE | InfosPreliminaresSaae[], 
+    field: 'print-data-infosPreliminares' | "print-data") => {
     // Salva os dados no localStorage
     localStorage.setItem(field, JSON.stringify(data));
-    
+
     // Abre a página de impressão
     const url = ()=>{
         if(field === 'print-data-infosPreliminares')
@@ -808,5 +813,11 @@ export const printComponent = (data: SAAE | InfosPreliminaresSaae[], field: 'pri
     window.open(url(), "_blank");
 };
 
+
+export const adressToString = (adress?:Endereco)=>{
+    if(!adress) return '';
+
+    return `${adress.logradouro || ''}, ${adress.bairro || ''}, ${adress.municipio || ''}, ${adress.municipio || ''}, ${adress.cep || ''}`
+}
 
 

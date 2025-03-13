@@ -12,7 +12,16 @@ export const userTest = [
         ramo: 'Sênior',
         registro: '0019',
         tel: '27 6563-2522',
-        user: 'tester'
+        user: 'tester',
+        dadosUel: {
+            nameUel: 'Grupo Escoteiro Coqueiral',
+            numUel: 19,
+            cidadeUels: 'Aracruz',
+            ufUel: 'ES',
+            presidenteUel: 'Rubia Veiga Ribeiro Machado',
+            regEscoteiroPresidente: '1322446-8',
+            telPresidente: '27 99736-4409'
+        }
     } as ProfileProps,
     {
         _id: '002',
@@ -25,7 +34,16 @@ export const userTest = [
         ramo: 'Diretoria',
         registro: '0019',
         tel: '27 6563-2522',
-        user: 'tester-admin'
+        user: 'tester-admin',
+        dadosUel: {
+            nameUel: 'Grupo Escoteiro Coqueiral',
+            numUel: 19,
+            cidadeUels: 'Aracruz',
+            ufUel: 'ES',
+            presidenteUel: 'Rubia Veiga Ribeiro Machado',
+            regEscoteiroPresidente: '1322446-8',
+            telPresidente: '27 99736-4409'
+        }
     } as ProfileProps
 ];
 

@@ -155,6 +155,15 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     }
                 }
 
+            }else if(name.includes('dadosUel')){
+                const nameSplit = name.split('.')[1];
+                newData = {
+                    ...newData,
+                    dadosUel: {
+                        ...newData.dadosUel,
+                        [nameSplit]: value
+                    }
+                }
             }else{
                 newData = {
                     ...newData,
@@ -543,6 +552,17 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             const newData = dataBaseSaae?.map(ativ=> `${ativ.produto}`)
             return newData
         });
+
+        //seta os dados gerais da UEL na SAAE.
+        // context.setDataSaae((prev)=>{
+        //     return{
+        //         ...prev,
+        //         dadosGerais:{
+        //             ...prev.dadosGerais,
+        //             dadosUel: context.dataUser.dadosUel
+        //         }
+        //     }
+        // })
     },[])
 
     return(
@@ -785,10 +805,105 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 className={`${styles.collum}`}
                             />
                         }
-                    </div>  
-                             
+                    </div>    
                 </div>
                 
+                {/* dados da UEL */}
+                <h5>Dados da UEL</h5>
+                <div className={styles.line}>
+                    <div className={styles.collum}>
+                        <h1>
+                            Numeral da UEL
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.numUel'
+                            value={localData?.dadosUel?.numUel || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.numUel || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Nome da UEL
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.nameUel'
+                            value={localData?.dadosUel?.nameUel || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.nameUel || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Cidade da UEL
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.cidadeUels'
+                            value={localData?.dadosUel?.cidadeUels || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.cidadeUels || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            UF da UEL
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.ufUel'
+                            value={localData?.dadosUel?.ufUel || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.ufUel || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Presidente da UEL
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.presidenteUel'
+                            value={localData?.dadosUel?.presidenteUel || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.presidenteUel || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Registro Escoteiros do(a) Presidente
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.regEscoteiroPresidente'
+                            value={localData?.dadosUel?.regEscoteiroPresidente || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.regEscoteiroPresidente || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Contato do(a) Presidente
+                        </h1>
+                        {!print ? <input
+                            type='text'
+                            name='dadosUel.telPresidente'
+                            value={localData?.dadosUel?.telPresidente || ''}
+                            onChange={(e) => handleForm(e)}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        /> : <p>{localData?.dadosUel?.telPresidente || ''}</p>}
+                    </div>
+                </div>
+
                 {/* local/endereço */}
                 <div className={`${styles.line} ${styles.margin0}`}>                    
                     {!readOnly ? 
@@ -1029,8 +1144,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input
                             type='date'
                             name='dataInicio'
-                            defaultValue={dateFormat1(localData?.dataInicio) || ''}
-                            datatype={dateFormat1(localData?.dataInicio) || ''}
+                            //defaultValue={dateFormat1(localData?.dataInicio) || ''}
+                            value={dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}

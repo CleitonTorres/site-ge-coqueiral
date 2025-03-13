@@ -11,6 +11,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import styles from '../page.module.css';
 import { FaPrint } from "react-icons/fa";
+import Requerimento from "@/components/form/requerimento/requerimento";
 
 export default function PrinterPage() {
   const [data, setData] = useState<SAAE | null>(null);
@@ -21,11 +22,8 @@ export default function PrinterPage() {
     const storedData = localStorage.getItem("print-data");
     if (storedData) {
       setData(JSON.parse(storedData));
-      console.log('storedData', JSON.parse(storedData))
-      // setTimeout(() => {
-      //   window.print();
-      // }, 500);
     }
+
   }, []);
 
   if (!data) return <p>Carregando...</p>;
@@ -47,6 +45,8 @@ export default function PrinterPage() {
             <h3 style={{marginLeft: 10, marginRight: 10}}>Impressão</h3>
             <FaPrint size={34} onClick={()=>window.print()} style={{cursor:'pointer'}}/>
           </div>
+
+          <Requerimento localData={data.dadosGerais}/>
 
           <DadosGerais 
             readOnly 

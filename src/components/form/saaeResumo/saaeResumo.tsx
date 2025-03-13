@@ -12,7 +12,7 @@ import { useContext, useEffect } from 'react';
 import { Context } from '@/components/context/context';
 import Confirme from '@/components/layout/confirme/confirme';
 import { printComponent } from '@/scripts/globais';
-// import { InfosPreliminaresSaae, SAAE } from '@/@types/types';
+import Requerimento from '../requerimento/requerimento';
 
 type Props= {
     hiddeButton?: boolean
@@ -49,6 +49,8 @@ export default function SaaeResumo ({hiddeButton}:Props){
             >
                 Imprimir SAAE
             </span>
+
+            <Requerimento localData={context.dataSaae.dadosGerais}/>
 
             <DadosGerais 
                 readOnly 

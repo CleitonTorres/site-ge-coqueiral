@@ -10,6 +10,7 @@ import { SAAE } from "@/@types/types";
 import Confirme from "../confirme/confirme";
 import axios from "axios";
 import Botton from "@/components/form/botton/botton";
+import { printComponent } from "@/scripts/globais";
 
 type ListSaaeProps = {
     tipo: 'user' | 'regional'
@@ -91,6 +92,8 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     return newData
                 });
 
+                setShowObs(false);
+                
                 return {
                     bool: true,
                     text: 'Resposta enviada com sucesso!'
@@ -128,14 +131,6 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
         }
     }
 
-    const printComponent = (data: SAAE) => {
-        // Salva os dados no localStorage
-        localStorage.setItem("print-data", JSON.stringify(data));
-      
-        // Abre a página de impressão
-        window.open("/administrativo/area-restrita/printer/resumoSaae", "_blank");
-    };
-
     useEffect(()=>{
         setShowObs(()=>{
             if(currentSAAEResponse?.status && 
@@ -167,12 +162,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                 htmlFor={`saae-${idx}`} 
                                 className={`${styles.collum01} ${styles.cursorPointer}`}
                                 onClick={()=>{
-                                    // setShowSaae(true);
-                                    // context.setSaaeEdit((prev)=> {
-                                    //     if(prev === saae._id) return undefined
-                                    //     return saae._id
-                                    // });
-                                    printComponent(saae);
+                                    printComponent(saae, 'print-data');
                                 }}
                             >
                                 {saae?.dadosGerais?.nomeAtividade || 'Sem nome atividade'}
@@ -185,7 +175,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                             <label 
                                 htmlFor="" 
                                 className={`${styles.collum02}`}>
-                                    {`${saae.solicitante?.numUel || '00'} - ${saae.solicitante?.nameUel || 'UEL Teste'}`  || 'Usuário Teste'}
+                                    {`${saae.solicitante?.dadosUel?.numUel || '00'} - ${saae.solicitante?.dadosUel?.nameUel || 'UEL Teste'}`  || 'Usuário Teste'}
                                 </label>
                             <select 
                                 name="status" 
@@ -294,9 +284,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     {context.listSaaes?.map((saae, idx)=>(
                         <div key={idx+'listaSAAEs'} className={`${styles.boxInput} cursorPointer`} onClick={()=>{
                             if(['aprovada', 'enviada'].includes(saae.status)){
-                                // setShowSaae(true);
-                                // context.setSaaeEdit(saae._id)
-                                printComponent(saae);
+                                printComponent(saae, 'print-data');
                             }else{
                                 context.setSaaeEdit((prev)=> {
                                     if(prev === saae._id) return undefined

@@ -305,7 +305,7 @@ export default function Page(){
                                 type="number" 
                                 name='numUel' 
                                 onChange={(e)=>handleData(e)}
-                                value={dataNewUser.numUel || '' }
+                                value={dataNewUser.dadosUel?.numUel || '' }
                                 placeholder='numeral da UEL'
                             />
                         </div>
@@ -315,7 +315,7 @@ export default function Page(){
                                 type="text" 
                                 name='nameUel' 
                                 onChange={(e)=>handleData(e)}
-                                value={dataNewUser.nameUel || '' }
+                                value={dataNewUser.dadosUel?.nameUel || '' }
                                 placeholder='nome da UEL'
                             />
                         </div>
