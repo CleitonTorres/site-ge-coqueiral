@@ -23,6 +23,7 @@
     padding: 4px;
 }
 .subConteiner{
+    position: relative;
     display: flex;
     width: 100%;
     flex-wrap: wrap;
@@ -145,7 +146,19 @@
 .removeDoc b:active{
     padding: 4px;
 }
-
+.btnRemSection{
+    position: absolute;
+    right: 10px;
+}
+.btnRemSection path{
+    color: red;
+}
+.btnRemSection:hover{
+    cursor: pointer;
+}
+.btnRemSection:active{
+    padding: 4px;
+}
 .header{
     display: flex;
     justify-content: flex-start;

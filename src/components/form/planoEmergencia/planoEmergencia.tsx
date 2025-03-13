@@ -4,7 +4,7 @@ import styles from './planoEmergencia.module.css';
 import { AtividadeProfissional, ContatosEmergencia, Docs, Endereco, PlanoEmergenciaSaae, Profissional, Veiculos } from '@/@types/types';
 import { calcTotalFilesMB, dateFormat1, masktel, setIconSocialMidia } from '@/scripts/globais';
 import { Context } from '@/components/context/context';
-import { FaPlus } from 'react-icons/fa';
+import { FaMinus, FaPlus } from 'react-icons/fa';
 import { ImagePreview } from '../sectionDocumentos/documentos';
 
 type Props = {
@@ -983,6 +983,41 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
         setCurrentVeiculo({} as Veiculos);
     }
 
+    const removePessoa = (section: (keyof PlanoEmergenciaSaae), sectionIdx:number, subField?: 'acolhimento' | 'enfermaria')=>{
+        context.setDataSaae((prev)=>{
+            if(Array.isArray(prev.planoEmergencia[section])){
+                const newData = prev.planoEmergencia[section].filter((s, idx)=> idx !== sectionIdx);
+            
+                return{
+                    ...prev,
+                    planoEmergencia: {
+                        ...prev.planoEmergencia,
+                        [section]: newData
+                    }
+                }
+            }
+            //se for um objeto do tipo espacosSeguros
+            else{
+                if(section === 'espacosSeguros' && Array.isArray(prev.planoEmergencia[section][subField])){
+                    const newData = prev.planoEmergencia.espacosSeguros[subField].filter((s, idx)=> idx !== sectionIdx);
+            
+                    return{
+                        ...prev,
+                        planoEmergencia: {
+                            ...prev.planoEmergencia,
+                            espacosSeguros: {
+                                ...prev.planoEmergencia.espacosSeguros,
+                                [subField]: newData
+                            }
+                        }
+                    }
+                }else{
+                    return prev
+                }
+            }
+        })
+    }
+
     const handleAddTag = (e: KeyboardEvent<HTMLInputElement>)=>{
         if(e.key === "Enter"){
             const trimmedValue = currentRedesSociaisProf.trim();
@@ -1268,6 +1303,11 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                             readOnly={readOnly}
                         />
                     </div>
+                    <FaMinus  
+                        size={18} 
+                        className={`${styles.btnRemSection}`}
+                        onClick={()=>removePessoa('contatosEmergencia', idx)} 
+                    />
                 </div>
             ))}
 
@@ -1566,6 +1606,11 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                                 </div>
                             ))}
                         </div>
+                        <FaMinus  
+                            size={18} 
+                            className={`${styles.btnRemSection}`}
+                            onClick={()=>removePessoa('espacosSeguros', idx, 'acolhimento')} 
+                        />
                     </div>
                 ))}
                 
@@ -1754,6 +1799,11 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                                 </div>
                             ))}
                         </div>
+                        <FaMinus  
+                            size={18} 
+                            className={`${styles.btnRemSection}`}
+                            onClick={()=>removePessoa('espacosSeguros', idx, 'enfermaria')} 
+                        />  
                     </div>
                 ))}
             </>
@@ -1871,7 +1921,7 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                         </div>
                         <h5>
                             Obs.: Anexar documento de identidade do habilitação do condutor.
-                        </h5>      
+                        </h5>    
                     </div>
                 :null}
                 {localData?.veiculos?.map((veic, idx)=>(
@@ -1997,7 +2047,12 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                                     :null}
                                 </div>
                             ))}
-                        </div>      
+                        </div>
+                        <FaMinus  
+                            size={18} 
+                            className={`${styles.btnRemSection}`}
+                            onClick={()=>removePessoa('veiculos', idx)} 
+                        />       
                     </div>
                 ))}
 
@@ -2267,6 +2322,11 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                                 </div>
                             ))}
                         </div>
+                        <FaMinus  
+                            size={18} 
+                            className={`${styles.btnRemSection}`}
+                            onClick={()=>removePessoa('atividadePorProfissional', idx)} 
+                        />
                     </div>
                 ))}
                 </>
@@ -2465,6 +2525,12 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                                 </div>
                             ))}
                         </div>
+
+                        <FaMinus  
+                            size={18} 
+                            className={`${styles.btnRemSection}`}
+                            onClick={()=>removePessoa('profSalvamento', idx)} 
+                        />
                     </div>
                 ))}
             </>

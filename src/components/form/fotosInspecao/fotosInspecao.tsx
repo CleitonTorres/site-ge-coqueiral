@@ -362,48 +362,48 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                         style={{marginLeft: '2px'}}
                         key={idx+'dataFotos'}>
                         <div className={styles.boxInput}>
-                            <p>Título do conjunto de fotos:</p>
+                            <p style={{fontWeight: 600}}>Título do conjunto de fotos:</p>
                             {!readOnly ?
                                 <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
                             :null}
-                            <input 
+                            {!print ? <input 
                                 name='title'
                                 value={section.title || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderBlue}
                                 readOnly={readOnly}
-                            />
-                            <p>Observações do conjunto de fotos:</p>
-                            <input 
+                            /> : <p>{section.title || ''}</p>}
+                            <p style={{fontWeight: 600}}>Observações do conjunto de fotos:</p>
+                            {!print ? <input 
                                 name='description'
                                 value={section.description || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderBlue}
                                 readOnly={readOnly}
-                            />
+                            /> : <p>{section.description || ''}</p>}
                             {section.fotos?.map((foto, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
                                     <div>
                                         <b>Título da imagem:</b> 
-                                        <input 
+                                        {!print ? <input 
                                             name='fotos.title'
                                             value={foto.title || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
                                             readOnly={readOnly}
-                                        />
+                                        /> : <p>{foto.title || ''}</p>}
                                     </div>
                                     <div>
                                         <b>Descrição:</b> 
-                                        <input 
+                                        {!print ? <input 
                                             name='fotos.description'
                                             value={foto.description || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
                                             readOnly={readOnly}
-                                        />
+                                        /> : <p>{foto.description}</p>}
                                     </div>
                                     <ImagePreview 
                                         file={foto.doc as File} 

@@ -564,7 +564,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <h1>
                             Nome da atividade
                         </h1>
-                        <input
+                        {!print ? <input
                             type='text'
                             name='nomeAtividade'
                             list='listAtividades'
@@ -574,7 +574,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             placeholder="nome da atividade"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.nomeAtividade || ''}</p>}
                         <datalist id='listAtividades'>
                             {atividadesList.map(ativ=> (
                                 <option value={ativ} key={ativ}>{ativ}</option>
@@ -841,14 +841,14 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <h1>
                             Logradouro
                         </h1>
-                        <textarea
+                        {!print ? <textarea
                             name='localInicio.logradouro'
                             value={localData?.localInicio?.logradouro || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="logradouro"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.localInicio?.logradouro || ''}</p>}
                     </div>
                     <div className={styles.collum}>
                         <h1>
@@ -993,23 +993,30 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <h1>
                             Métodologia usada na atividade
                         </h1>
-                        <textarea
+                        {!print ? 
+                            <textarea
                             name='metodologia'
                             value={localData?.metodologia || ''}
                             onChange={(e) => handleForm(e)}
                             readOnly={readOnly}
-                        />
+                            />
+                        : <p>
+                            {localData?.metodologia || ''}
+                        </p>}
                     </div>
                     <div className={styles.collum2}>
                         <h1>
                             Objetivo da atividade
                         </h1>
-                        <textarea
+                        {!print ? <textarea
                             name='objetivo'
                             value={localData?.objetivo || ''}
                             onChange={(e) => handleForm(e)}
                             readOnly={readOnly}
-                        />
+                        /> 
+                        : <p>
+                            {localData?.objetivo || ''}
+                        </p>}
                     </div>
                 </div>
                 
@@ -1332,22 +1339,25 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             }}/>
                         </div>
                     :null}
-                    {localData?.rotas && <div className={styles.boxRotas} style={{padding: '6px'}}>
+                    {localData?.rotas && 
+                    <div className={styles.boxRotas} style={{padding: '6px'}}>
+                        <h4>Demais rotas e locais</h4>
                         {localData?.rotas?.map((rota, index)=>(
                             <div key={v4()}>
                                 <span style={{width: 80}}>
-                                    <b>Título:</b> 
+                                    <b style={{fontWeight: 600}}>Título:</b> 
                                     {rota.title}
                                 </span>
                                 <span style={{width: 120}}>
-                                    <b>Descrição:</b> 
+                                    <b style={{fontWeight: 600}}>Descrição:</b> 
                                     {rota.description}
                                 </span>
-                                <span><b>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
+                                <span><b style={{fontWeight: 600}}>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
                                 <span 
                                     className='cursorPointer' 
                                     style={{textDecoration: 'underline', color: 'blue'}}
                                     onClick={()=>{
+                                        if(!readOnly)
                                         context.setShowModal({
                                             element:
                                                 <RouteMapComponent 
@@ -1362,10 +1372,15 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                                     }
                                                 />,
                                             styles:['backgroundWhite']
-                                        })
+                                        });
                                     }}
                                 >
-                                    <b>Visualizar</b>
+                                    {!readOnly ? 
+                                        <b>Visualizar</b> :
+                                        <a href={`https://www.google.com/maps/search/?api=1&query=${rota.points[0].lat},${rota.points[0].lng}`} target='_blank'>
+                                            Visualizar
+                                        </a>
+                                    }
                                 </span>
                                 <FaTrash 
                                     className={styles.btnRemAtividade}
@@ -1556,7 +1571,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 type='date'
                                 name='data'
                                 defaultValue={dateFormat1(currentProgramacao?.data) || ''}
-                                datatype={dateFormat1(currentProgramacao?.data) || ''}
+                                value={dateFormat1(currentProgramacao?.data) || ''}
                                 onChange={(e) => handleFormProgramacao(e)}
                                 className={`${styles.collum} ${styles.width120}`}
                                 readOnly={readOnly}

@@ -397,50 +397,50 @@ export default function SectionDocumentos({readOnly, localData, print}:Props){
                         style={{marginLeft: '2px'}}
                         key={idx+'dataDocumentos'}>
                         <div className={styles.boxInput}>
-                            <p>Título do conjunto de documentos:</p>
+                            <p style={{fontWeight: 600}}>Título do conjunto de documentos:</p>
                             {!readOnly ?
                                 <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
                             :null}
-                            <input 
+                            {!print ? <input 
                                 name='title'
                                 value={section.title || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderGreen}
                                 readOnly={readOnly}
-                            />
-                            <p>Observações do conjunto de documentos:</p>
-                            <input 
+                            /> : <p>{section.title || ''}</p>}
+                            <p style={{fontWeight: 600}}>Observações do conjunto de documentos:</p>
+                            {!print ? <input 
                                 name='description'
                                 value={section.description || ''}
                                 placeholder='digite aqui...'
                                 onChange={(e)=>handleChange(e, idx)}
                                 className={styles.borderGreen}
                                 readOnly={readOnly}
-                            />
+                            /> : <p>{section.description || ''}</p>}
                             {section.docs?.map((doc, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
                                     <div>
-                                        <b>Título da documento:</b> 
-                                        <input 
+                                        <b style={{fontWeight: 600}}>Título da documento:</b> 
+                                        {!print ? <input 
                                             name='docs.title'
                                             value={doc.title || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
                                             className={styles.borderGreen}
                                             readOnly={readOnly}
-                                        />
+                                        /> : <p>{doc.title || ''}</p>}
                                     </div>
                                     <div>
-                                        <b>Descrição:</b> 
-                                        <input 
+                                        <b style={{fontWeight: 600}}>Descrição:</b> 
+                                        {!print ? <input 
                                             name='docs.description'
                                             value={doc.description || ''}
                                             placeholder='digite aqui...'
                                             onChange={(e)=>handleChange(e, idx, fIdx)}
                                             className={styles.borderGreen}
                                             readOnly={readOnly}
-                                        />
+                                        /> : <p>{doc.description || ''}</p>}
                                     </div>
                                     <ImagePreview 
                                         file={doc.doc as File} 
