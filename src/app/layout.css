@@ -319,15 +319,16 @@
   cursor: pointer;
 }
 
-@page {
-  margin: 2cm;
-  size: portrait;
-  size: A4;
-  margin: 20px;
-  padding: 20px;
-}
+
 
 @media print{
+  @page {
+    margin: 2cm;
+    size: portrait;
+    size: A4;
+    margin: 20px;
+    padding: 20px;
+  }
   body{
     margin: 0 !important;
     padding: 0 !important;

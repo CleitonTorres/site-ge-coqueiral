@@ -801,6 +801,9 @@ export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record
 export const printComponent = (
     data: SAAE | InfosPreliminaresSaae[], 
     field: 'print-data-infosPreliminares' | "print-data") => {
+    //limpa antes de armazenar outros dados.
+    localStorage.clear()
+
     // Salva os dados no localStorage
     localStorage.setItem(field, JSON.stringify(data));
 

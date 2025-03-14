@@ -33,9 +33,9 @@
     padding: 6px;
     text-align: center;
 }
-.collum,.collum2, .collum3{
+/* .collum,.collum2, .collum3{
     page-break-before: always;
-}
+} */
 .collum{
     display: flex;
     flex-direction: column;
@@ -251,8 +251,8 @@
     }
 }
 
-@media print{
+/* @media print{
     .collum, .collum2, .collum3{
         page-break-before: always;
     }
-}
+} */
