@@ -552,17 +552,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             const newData = dataBaseSaae?.map(ativ=> `${ativ.produto}`)
             return newData
         });
-
-        //seta os dados gerais da UEL na SAAE.
-        // context.setDataSaae((prev)=>{
-        //     return{
-        //         ...prev,
-        //         dadosGerais:{
-        //             ...prev.dadosGerais,
-        //             dadosUel: context.dataUser.dadosUel
-        //         }
-        //     }
-        // })
     },[])
 
     return(
@@ -1006,9 +995,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 </div>
                {localData?.localInicio?.address ?
                 <div className={styles.line}>
-                    <div className={styles.collum}>
+                    <div className={styles.collum3}>
                         <h1>
-                            Descrição do endereço.
+                            Endereço coletado do mapa (local início).
                         </h1>
                         <span>{
                             localData?.localInicio?.address 

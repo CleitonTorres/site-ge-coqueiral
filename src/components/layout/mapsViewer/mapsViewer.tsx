@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { Endereco } from "@/@types/types";
 import styles from './mapsViewer.module.css';
+import { adressToString } from "@/scripts/globais";
 
 type Props = {
     data?: Endereco,
@@ -40,7 +41,7 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
             map: map,
         });
         
-        const address = `${data.logradouro}, ${data.bairro}, ${data.municipio}, ${data.uf}, ${data.cep}`
+        const address = adressToString(data);
         
         if(!data.coordenadas?.lat ||  !data.coordenadas?.long){
             console.log("entrou no marcador pelo endereço")
@@ -102,7 +103,7 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
         <div style={{width: '100vw', marginBottom: '30px'}}>
             <h1>Localização {label === "localInicio" ? 'Início' : 'Fim'}</h1>
             <h6>{
-                data?.address ? data.address : `${data?.logradouro}, ${data?.bairro}, ${data?.municipio}, ${data?.uf}, ${data?.cep}`
+                data?.address ? data.address : adressToString(data)
             }</h6>
             <div 
                 ref={mapRef} 
