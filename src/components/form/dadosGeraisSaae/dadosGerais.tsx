@@ -1145,7 +1145,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             type='date'
                             name='dataInicio'
                             //defaultValue={dateFormat1(localData?.dataInicio) || ''}
-                            value={dateFormat1(localData?.dataInicio) || ''}
+                            //value={dateFormat1(localData?.dataInicio) || ''}
+                            defaultValue={dateFormat1(localData?.dataInicio) || ''}
+                            datatype={dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
