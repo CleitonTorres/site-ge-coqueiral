@@ -1135,8 +1135,7 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                         <input 
                             type="date"
                             name='dataInspecao'
-                            defaultValue={dateFormat1(localData?.dataInspecao) || ''}
-                            datatype={dateFormat1(localData?.dataInspecao) || ''} 
+                            value={dateFormat1(localData?.dataInspecao) || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
                         />

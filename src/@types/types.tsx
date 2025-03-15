@@ -145,7 +145,8 @@ export interface Rota {
     title: string,
     description: string,
     distance: number,
-    points: { lat: number, lng: number }[]
+    points: { lat: number, lng: number }[],
+    id: string
 }
 export interface ProgramacaoAtividade {
     data: Date,

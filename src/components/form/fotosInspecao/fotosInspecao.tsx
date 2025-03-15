@@ -361,7 +361,7 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}
                         key={idx+'dataFotos'}>
-                        <div className={styles.boxInput}>
+                        <div style={{border: 'solid 1px #000'}}>
                             <p style={{fontWeight: 600}}>Título do conjunto de fotos:</p>
                             {!readOnly ?
                                 <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
@@ -409,7 +409,7 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                                         file={foto.doc as File} 
                                         height={print ? 400 : 200} 
                                         width={print ? 300 : 100}
-                                    /> 
+                                    />  
                                 </div>
                             ))}
                         </div>

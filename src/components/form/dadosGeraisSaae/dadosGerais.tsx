@@ -1,7 +1,7 @@
 'use client'
 import { ChangeEvent, FocusEvent, Fragment, KeyboardEvent, useContext, useEffect, useState } from 'react';
 import styles from './dadosGerais.module.css';
-import { DadosGeraisSaae, Endereco, ProgramacaoAtividade, Rota } from '@/@types/types';
+import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types';
 import { v4 } from 'uuid';
 import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
 import { FaMinus, FaPlus } from "react-icons/fa";
@@ -203,6 +203,49 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 [name]: value
             }
         })
+    }
+
+    const handleEditProgramacao = (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>, itemId: number)=>{
+        e.preventDefault();
+        const name = e.target.name;
+        const value= e.target.value;
+        try{
+            context.setDataSaae((prev)=>{
+                const newProgragacao = (prev.dadosGerais.programacao || []).map((p)=>{
+                    if(p.id === itemId){
+                        if(name === "data"){
+                            const date = new Date(value + `T00:00`);
+                            return{
+                                ...p,
+                                data: date
+                            }
+                        }
+                        else if(['hora', 'duracao'].includes(name)){
+                            return{
+                                ...p,
+                                [name]: formatToHourMin(value)
+                            }
+                        }
+                        return{
+                            ...p,
+                            [name]: value
+                        }
+                    }else{
+                        return p
+                    }
+                });
+
+                return {
+                    ...prev,
+                    dadosGerais:{
+                        ...prev.dadosGerais,
+                        programacao: newProgragacao
+                    }
+                };
+            });
+        }catch(e){
+            console.log(e);
+        }
     }
 
     const addAtividade = async()=>{
@@ -527,23 +570,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             }
         })
         //updateContext(newData);
-    }
-
-    const handleRotas = (rotas:Rota)=>{
-        context.setDataSaae((prev)=>{
-            if(rotas){
-                const newData = prev.dadosGerais.rotas ? [...prev.dadosGerais.rotas, rotas] : [rotas];
-                return{
-                    ...prev,
-                    dadosGerais:{
-                        ...prev.dadosGerais,
-                        rotas: newData
-                    }
-                }
-            }else{
-                return prev;
-            }
-        })
     }
 
     useEffect(()=>{
@@ -1133,10 +1159,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input
                             type='date'
                             name='dataInicio'
-                            //defaultValue={dateFormat1(localData?.dataInicio) || ''}
-                            //value={dateFormat1(localData?.dataInicio) || ''}
-                            defaultValue={dateFormat1(localData?.dataInicio) || ''}
-                            datatype={dateFormat1(localData?.dataInicio) || ''}
+                            value={dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1186,8 +1209,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input
                             type='date'
                             name='dataFim'
-                            defaultValue={dateFormat1(localData?.dataFim) || ''}
-                            datatype={dateFormat1(localData?.dataFim) || ''}
+                            // defaultValue={dateFormat1(localData?.dataFim) || ''}
+                            // datatype={dateFormat1(localData?.dataFim) || ''}
+                            value={dateFormat1(localData?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1438,7 +1462,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                                         lng: context.dataSaae.dadosGerais.localInicio.coordenadas?.long
                                                     } : undefined
                                                 }
-                                                handleRotas={handleRotas}
                                             />,
                                         styles:['backgroundWhite']
                                     })
@@ -1449,62 +1472,70 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     <div className={styles.boxRotas} style={{padding: '6px'}}>
                         <h4>Demais rotas e locais</h4>
                         {localData?.rotas?.map((rota, index)=>(
-                            <div key={v4()}>
-                                <span style={{width: 80}}>
-                                    <b style={{fontWeight: 600}}>Título:</b> 
-                                    {rota.title}
-                                </span>
-                                <span style={{width: 120}}>
-                                    <b style={{fontWeight: 600}}>Descrição:</b> 
-                                    {rota.description}
-                                </span>
-                                <span><b style={{fontWeight: 600}}>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
-                                <span 
-                                    className='cursorPointer' 
-                                    style={{textDecoration: 'underline', color: 'blue'}}
-                                    onClick={()=>{
-                                        if(!readOnly)
-                                        context.setShowModal({
-                                            element:
-                                                <RouteMapComponent 
-                                                    readonly={true}
-                                                    initialRota={rota}
-                                                    initialPosition={
-                                                        rota ?
-                                                        {
-                                                            lat: rota.points[0].lat,
-                                                            lng: rota.points[0].lng
-                                                        } : undefined
+                            <div key={v4()} className={styles.subBoxRotas}>
+                                {!readOnly ? 
+                                    <>
+                                        <span style={{width: 80}}>
+                                            <b style={{fontWeight: 600}}>Título:</b> 
+                                            {rota.title}
+                                        </span>
+                                        <span style={{width: 120}}>
+                                            <b style={{fontWeight: 600}}>Descrição:</b> 
+                                            {rota.description}
+                                        </span>
+                                        <span><b style={{fontWeight: 600}}>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
+                                        <span 
+                                            className='cursorPointer' 
+                                            style={{textDecoration: 'underline', color: 'blue'}}
+                                            onClick={()=>{
+                                                if(!readOnly)
+                                                context.setShowModal({
+                                                    element:
+                                                        <RouteMapComponent 
+                                                            initialRota={rota}
+                                                            initialPosition={
+                                                                rota ?
+                                                                {
+                                                                    lat: rota.points[0].lat,
+                                                                    lng: rota.points[0].lng
+                                                                } : undefined
+                                                            }
+                                                        />,
+                                                    styles:['backgroundWhite']
+                                                });
+                                            }}
+                                        >
+                                            <b>Visualizar</b>
+                                        </span>                                
+                                        <FaTrash 
+                                            className={styles.btnRemAtividade}
+                                            onClick={()=>{
+                                                context.setDataSaae((prev)=>{
+                                                    const newArray = prev.dadosGerais.rotas?.filter((_, i) => i !== index)
+                                                    
+                                                    const newData= {
+                                                        ...prev.dadosGerais,
+                                                        rotas: newArray
                                                     }
-                                                />,
-                                            styles:['backgroundWhite']
-                                        });
-                                    }}
-                                >
-                                    {!readOnly ? 
-                                        <b>Visualizar</b> :
-                                        <a href={`https://www.google.com/maps/search/?api=1&query=${rota.points[0].lat},${rota.points[0].lng}`} target='_blank'>
-                                            Visualizar
-                                        </a>
+                                                    return{
+                                                        ...prev,
+                                                        dadosGerais: newData
+                                                    }
+                                                })
+                                            }}
+                                        />
+                                    </>
+                                : <RouteMapComponent 
+                                    readonly={true}
+                                    initialRota={rota}
+                                    initialPosition={
+                                        rota ?
+                                        {
+                                            lat: rota.points[0].lat,
+                                            lng: rota.points[0].lng
+                                        } : undefined
                                     }
-                                </span>
-                                <FaTrash 
-                                    className={styles.btnRemAtividade}
-                                    onClick={()=>{
-                                        context.setDataSaae((prev)=>{
-                                            const newArray = prev.dadosGerais.rotas?.filter((_, i) => i !== index)
-                                            
-                                            const newData= {
-                                                ...prev.dadosGerais,
-                                                rotas: newArray
-                                            }
-                                            return{
-                                                ...prev,
-                                                dadosGerais: newData
-                                            }
-                                        })
-                                    }}
-                                />
+                                />}
                             </div>
                         ))}
                     </div>}
@@ -1641,22 +1672,48 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 {localData?.programacao?.map((prog, idx)=>(
                     <div key={idx+"progragamacao"} className={`${styles.line} ${print ? styles.print : ''}`}>
                         <div className={`${styles.collum} ${styles.width120}`}>
-                            <span>{dateFormat2(prog?.data)}</span>
+                            {!readOnly ? <input
+                                name='data'
+                                value={dateFormat2(prog?.data) || ''}
+                                onChange={(e)=>handleEditProgramacao(e, prog.id)}
+                            /> : <p>{dateFormat2(prog?.data) || ''}</p>}
                         </div>
                         <div  className={`${styles.collum} ${styles.width100}`}>
-                            <span>{prog?.hora}</span>
+                            {!readOnly ? <input
+                                name='hora'
+                                value={prog?.hora  || ''}
+                                onChange={(e)=>handleEditProgramacao(e, prog.id)}
+                            /> : <p>{prog?.hora  || ''}</p>}
                         </div>
                         <div className={styles.collum}>
-                            <span>{prog?.duracao}</span>
+                            {!readOnly ? <input
+                                name='duracao' 
+                                value={prog?.duracao || ''}
+                                onChange={(e)=>handleEditProgramacao(e, prog.id)}
+                            />: <p>{prog?.duracao || ''}</p>}
                         </div>
                         <div className={`${styles.collum} ${styles.width260}`}>
-                            <p>{prog?.descricao}</p>
+                            {!readOnly ? <textarea 
+                                name='descricao'
+                                value={prog?.descricao || ''}
+                                readOnly={readOnly}
+                                onChange={(e)=>handleEditProgramacao(e, prog.id)}
+                            />: <p>{prog?.descricao || ''}</p>}
                         </div>
                         <div className={styles.collum}>
-                            <p>{prog?.materialNecessario}</p>
+                            {!readOnly ? <input
+                                name='materialNecessario' 
+                                value={prog?.materialNecessario || ''}
+                                onChange={(e)=>handleEditProgramacao(e, prog.id)}
+                            /> : <p>{prog?.materialNecessario || ''}</p>}
                         </div>
                         <div className={`${styles.collum} ${styles.width100}`}>
-                            <p>{prog?.responsavel}</p>
+                            {!readOnly ? <input
+                                name='responsavel' 
+                                value={prog?.responsavel || ''}
+                                onChange={(e)=>handleEditProgramacao(e, prog.id)}
+                                className={styles.inputProgramacao}
+                            /> : <p>{prog?.responsavel || ''}</p>}
                         </div>
                         {!readOnly ?
                             <div className={`${styles.collum} ${styles.width100}`}>

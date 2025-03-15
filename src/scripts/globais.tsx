@@ -155,13 +155,12 @@ export function dateFormat1(date:Date | undefined){
         date = typeof date === 'string' ? new Date(date) : date;
 
         // Extrair dia, mês e ano
-        const dia = date.getUTCDate();
-        const mes = date.getMonth()+1; // Meses começam em 0
+        const dia = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate();
+        const mes = date.getMonth()+1 < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
 
-        const ajusteMes = mes < 10 ? `0${mes}` : mes
-        console.log("data format1", `${ano}-${ajusteMes}-${dia}`)
-        return `${ano}-${ajusteMes}-${dia}`;
+        console.log("data format1", `${ano}-${mes}-${dia}`)
+        return `${ano}-${mes}-${dia}`;
     }
 }
 
@@ -179,13 +178,11 @@ export function dateFormat2(date:Date | undefined){
         date = typeof date === 'string' ? new Date(date) : date;
 
         // Extrair dia, mês e ano
-        const dia = date.getDate();
-        const mes = date.getMonth()+1; // Meses começam em 0
+        const dia = date.getDate() > 10 ? `0${date.getDate()}` : date.getDate();
+        const mes = date.getMonth()+1 < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
-
-        const ajusteMes = mes < 10 ? `0${mes}` : mes
-
-        return `${dia}/${ajusteMes}/${ano}`;
+        
+        return `${dia}/${mes}/${ano}`;
     }
 }
 

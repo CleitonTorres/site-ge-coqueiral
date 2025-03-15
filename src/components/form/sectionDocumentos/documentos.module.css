@@ -57,7 +57,6 @@
     border: 1px var(--blue) dotted;
     padding: 3px;
     margin-bottom: 40px;
-    word-break: break-all;
 }
 .viewerFotos b{
     display: inline-block;
@@ -146,11 +145,6 @@
 }
 .nobreak {
     page-break-before: always;
-}
-@media print{
-    .nobreak {
-        page-break-before: always; /* Sempre quebrar antes */
-    }
 }
 
 @keyframes fadeIn {

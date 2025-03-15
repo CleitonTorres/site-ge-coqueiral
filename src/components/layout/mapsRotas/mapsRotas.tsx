@@ -1,17 +1,17 @@
 'use client'
 import { Rota } from "@/@types/types";
-import { Context } from "@/components/context/context";
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./mapsRotas.module.css";
 import { FaSave } from "react-icons/fa";
+import { Context } from "@/components/context/context";
+import { v4 } from "uuid";
 
 type RouteMapComponentProps = {
     readonly?: boolean;
     initialRota?: Rota | undefined;
     initialPosition: {lat: number, lng: number} | undefined;
-    handleRotas?: (rota: Rota) => void;
 }
-export default function RouteMapComponent({ readonly, initialRota, initialPosition, handleRotas }: RouteMapComponentProps) {
+export default function RouteMapComponent({ readonly, initialRota, initialPosition }: RouteMapComponentProps) {
     const context = useContext(Context);
     const mapRef = useRef<HTMLDivElement | null>(null);
     const [formRota, setFormRota] = useState({} as Rota);
@@ -202,6 +202,28 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 });
 
                 markers.push(marke);
+
+                // Adiciona evento nos marcadores iniciais para remover o marcador ao clicar nele
+                marke.addListener("click", () => {
+                    const index = markers.indexOf(marke);
+                    if (index > -1) {
+                        markers.splice(index, 1); // Remove o marcador da lista
+                        marke.map = null; // Remove o marcador do mapa
+
+                        // Remove o ponto correspondente e atualiza a rota
+                        const updatedPoints = [...markers.map((m) => {
+                            const pos = m.position as google.maps.LatLngLiteral;
+                            console.log(pos);
+                            return { 
+                                lat: pos?.lat, 
+                                lng: pos?.lng 
+                            }
+                        })]
+                        .filter((point) => point.lat !== undefined && point.lng !== undefined);
+                        updateRoute(updatedPoints);
+                    }
+                });
+
             });
     
             // cria as Polylines iniciais
@@ -217,6 +239,45 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
         if(initialRota){
             startInitialRota();
         }
+    }
+
+    const handleRotas = (rotas:Rota)=>{
+        console.log("rotas add ou edit", rotas);
+
+        context.setDataSaae((prev)=>{
+            if(rotas){
+                if(rotas.id){
+                    const newData = (prev.dadosGerais.rotas || []).map(r=>{
+                        if(r.id === rotas.id){
+                            return rotas
+                            
+                        }else{
+                            return r
+                        }
+                    });
+                    return {
+                        ...prev,
+                        dadosGerais:{
+                            ...prev.dadosGerais,
+                            rotas: newData
+                        }
+                    }
+                }else{
+                    const newRota = {...rotas, id: v4()}
+                    const newData = prev.dadosGerais.rotas ? [...prev.dadosGerais.rotas, newRota] : [newRota];
+                    return{
+                        ...prev,
+                        dadosGerais:{
+                            ...prev.dadosGerais,
+                            rotas: newData
+                        }
+                    }
+                }
+            }else{
+                return prev;
+            }
+        });
+        // context.setShowModal(null);
     }
 
     useEffect(() => {
@@ -242,7 +303,6 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                         onClick={()=>{
                             if(handleRotas)
                                 handleRotas(formRota);
-                                context.setShowModal(null);
                             } 
                         }
                         size={20}
@@ -251,12 +311,8 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                     />
                 }
             </div>
-            <div style={{ 
-                display: "flex", 
-                flexDirection: 'column', 
-                justifyContent: "space-between",
-            }}>
-                <label htmlFor="title">Nome da rota</label>
+            <div className={styles.subConteiner}>
+                <span>Nome da rota:</span>
                 <input 
                     type="text" 
                     name="title"
@@ -264,12 +320,8 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                     onChange={(e) => setFormRota((prev) => ({ ...prev, title: e.target.value }))}
                 />
             </div>
-            <div style={{ 
-                display: "flex", 
-                flexDirection: 'column', 
-                justifyContent: "space-between",
-            }}>
-                <label htmlFor="description">Descrição</label>
+            <div className ={styles.subConteiner}>
+                <span>Descrição:</span>
                 <textarea 
                     name="description" 
                     value={formRota.description || ''}
@@ -277,7 +329,8 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 />
             </div>
             <p>Distância total: {formRota.distance?.toFixed(2)} km</p>
-            <div ref={mapRef} style={{ height: "500px", width: "100%" }} className={styles.nobreak}></div>
+
+            <div ref={mapRef} className={styles.map}></div>
         </div>
     );
 }

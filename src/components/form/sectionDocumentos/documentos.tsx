@@ -98,7 +98,7 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
             alt={isPdf ? 'Prévia do PDF' : 'Imagem'}
             width={width}
             height={height}
-            className={`${styles.nobreak} cursorPointers`}
+            className={`cursorPointers`}
             style={{ objectFit: 'contain', height: 'auto', cursor: 'pointer'}}
             src={base64} // Usa o Base64 gerado como src
             onClick={()=>{

@@ -33,9 +33,6 @@
     padding: 6px;
     text-align: center;
 }
-/* .collum,.collum2, .collum3{
-    page-break-before: always;
-} */
 .collum{
     display: flex;
     flex-direction: column;
@@ -73,13 +70,13 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    width: 380px;
+    width: 100%;
     font-size: 12px;
     text-align: justify;
     border: 1px solid;
     margin: 3px;
 }
-.boxRotas div{
+.subBoxRotas{
     width: 100%;
     min-height: 30px;
     display: flex;
@@ -88,7 +85,7 @@
     justify-content: flex-start;
     margin-bottom: 4px;
 }
-.boxRotas span {
+.subBoxRotas span {
     display: flex;
     flex-direction: column;
     font-size: 12px;

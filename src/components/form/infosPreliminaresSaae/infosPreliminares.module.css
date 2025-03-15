@@ -3,6 +3,7 @@
     flex-direction: column;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
+    width: 100%;
 }
 .boxHead{
     position: relative;
