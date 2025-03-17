@@ -1209,8 +1209,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input
                             type='date'
                             name='dataFim'
-                            // defaultValue={dateFormat1(localData?.dataFim) || ''}
-                            // datatype={dateFormat1(localData?.dataFim) || ''}
                             value={dateFormat1(localData?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
@@ -1733,7 +1731,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             <input
                                 type='date'
                                 name='data'
-                                defaultValue={dateFormat1(currentProgramacao?.data) || ''}
                                 value={dateFormat1(currentProgramacao?.data) || ''}
                                 onChange={(e) => handleFormProgramacao(e)}
                                 className={`${styles.collum} ${styles.width120}`}

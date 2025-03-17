@@ -103,6 +103,11 @@
     color: blue;
     font-size: 20px;
 }
+.boxFotos{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 .boxDados{
     position: relative;
     display: flex;
@@ -111,7 +116,6 @@
     border-bottom: 2px solid var(--blue);
     margin-bottom: 20px;
     overflow-x: hidden;
-    width: 100%;
     text-align: left;
 }
 .boxDados span:nth-child(2){

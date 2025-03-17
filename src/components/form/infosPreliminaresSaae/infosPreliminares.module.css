@@ -67,6 +67,8 @@
 .boxTextarea{
     width: 100%;
     margin-top: 10px;
+    break-before: auto;
+    break-inside: avoid;
 }
 .boxTextarea textarea{
     width: 100%;

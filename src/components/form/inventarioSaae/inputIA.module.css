@@ -125,6 +125,8 @@
     width: 100%;
     min-width: 380px;
     flex-wrap: wrap;
+    break-before: auto;
+    break-inside: avoid;
 }
 .line h1{
     font-size: 14px;

@@ -2,7 +2,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    /* max-width: 1232px; */
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
     width: 100%;
@@ -40,7 +39,8 @@
     border: 1px solid;
     margin: 2px;
     padding: 6px;
-
+    break-before: auto;
+    break-inside: avoid;
 }
 .boxInput input, .boxInput select{
     border: none;
@@ -183,9 +183,3 @@
         opacity: 1;
     }
 }
-
-/* @media print{
-    .boxInput{
-        page-break-before: always;
-    }
-} */

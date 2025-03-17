@@ -1,7 +1,7 @@
 'use client'
-import { DataNews, DataStorage, ProfileProps, SAAE } from "@/@types/types";
+import { DataNews, ProfileProps, SAAE } from "@/@types/types";
 import { createCookie, destroyCookie, getCookie, verifyObjSAAE } from "@/scripts/globais";
-import { createDb, deleteDataStorage, getAllDataStorage, putNewData } from "@/scripts/indexedDB";
+import { createDb, deleteDataStorage, getAllDataStorage, getDataStorage, putNewData } from "@/scripts/indexedDB";
 import axios from "axios";
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 import Modal from "../layout/modal/modal";
@@ -13,8 +13,6 @@ type PropsContext ={
   verifySession: ()=>boolean,
   setDataSaae: Dispatch<SetStateAction<SAAE>>,
   dataSaae: SAAE,
-  setDataStorage: Dispatch<SetStateAction<DataStorage[]>>,
-  dataStorage: DataStorage[],
   setSaaeEdit: Dispatch<SetStateAction<number | string | undefined>>,
   saaeEdit: number | string | undefined,
   handleSendSaae: (saae:SAAE)=>Promise<{
@@ -66,9 +64,7 @@ export default function Provider({children}:{children:ReactNode}){
     //SAAEs enviadas para a região.
     const [listSaaes, setListSaaes] = useState<SAAE[]>([]);
 
-    //lista de SAAEs salvas em rascunhos no armazenamento local.
-    const [dataStorage, setDataStorage] = useState<DataStorage[]>([]);
-    //identificação da SAAE salva em rascunhos no armazenamento local.
+    //identificação da SAAE para edição.
     const [saaeEdit, setSaaeEdit] = useState<number | string | undefined>();
 
     const [showModal, setShowModal] = useState<{element: JSX.Element, styles?: string[]} | null>(null);
@@ -148,34 +144,23 @@ export default function Provider({children}:{children:ReactNode}){
      * Atualiza o armazenamento local com a SAAE em edição.
     */
     const updateStorage = async () => {
-      //entra nesse if quando a é uma nova SAAE ou uma SAAE salva em rascunho.
-      //SAAEs que não tem um _id do mongo.
-      if(typeof saaeEdit === 'number' && saaeEdit || saaeEdit !== 0){
+      //SAAEs que não tem um _id do mongo (foram salvas no storage, mas ainda não enviadas para análise).
+      if(typeof saaeEdit === 'number' && saaeEdit !== 0){
         putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit as number});
-        setDataStorage((prev)=>{
-          const newData = prev.map(item=>{
-            if(item.id === saaeEdit){
-              return{
-                ...item,
-                dataSaae,
-                user: dataUser
-              }
-            }else{
-              return item;
-            }
-          });
-          return newData;
-        });
-      }else if(typeof saaeEdit === 'number' && saaeEdit === 0){//cria uma nova SAAE
+      }
+      //cria uma nova SAAE
+      else if(typeof saaeEdit === 'number' && saaeEdit === 0){
         const key = await putNewData('saae',{dataSaae: {} as SAAE, user: dataUser});
         console.log("criado nova saae", key);
         setSaaeEdit(key as number);
-        setDataStorage((prev)=>{
-          return [
-            ...prev,
-            {dataSaae: {} as SAAE, user: dataUser, id: key as number}
-          ]
-        });
+      }
+      //salva no storage SAAE em correção.
+      else if(typeof saaeEdit === 'string'){
+        console.log("corrigindo SAAE");
+        
+        //armazena a SAAE no storage.
+        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit});
+        
       }
     }
 
@@ -502,7 +487,7 @@ export default function Provider({children}:{children:ReactNode}){
 
         setListSaaes((prev)=> [...prev, {...data, _id: result.insertId, status: 'enviada'}]);
         setDataSaae({} as SAAE);
-        deleteDataStorage('saae', saaeEdit! as number)
+        await deleteDataStorage('saae', saaeEdit);
         setSaaeEdit(undefined);
 
         return{
@@ -895,63 +880,88 @@ export default function Provider({children}:{children:ReactNode}){
       }
     }
 
-    useEffect(()=>{
-        if(dataNews.length === 0) getNews();
-
-        async function getData() {
-          await createDb('saae')
-          .then(async()=>{
-              const data = await getAllDataStorage('saae')
-              setDataStorage(data);
-          })
-          
-      }
-      
-      getData();
-    },[]);
-
-    useEffect(()=>{
-      console.log("contexto dataStorage: ", dataStorage);
-    },[dataStorage]);
-
-    useEffect(()=>{
-      console.log("contexto saaeEdit: ", saaeEdit);
-      if(saaeEdit === undefined) return;
-      
-      if(typeof saaeEdit === 'number'&& saaeEdit !== 0){
-        setDataSaae((prev)=>{
-          const newData = dataStorage.find(data=> data.id === saaeEdit);
+    /**
+     * lida com a inclusão e remoção da SAAE para edição
+     */
+    const handleStorage = async()=>{
+      //busca SAAEs salvas no storage, mas que ainda não foram enviadas para análise.
+      //e carrega os dados em dataSaae para ser exibino nos formulários.
+      if(typeof saaeEdit === 'number' && saaeEdit !== 0){
+        console.log("editando SAAE do rascunho");
+        const newData = (await getAllDataStorage('saae')).find(data=> data.id === saaeEdit);
+        setDataSaae((prev)=>{          
           if(newData){
             return newData.dataSaae
           }else{
             return prev
           }
         });
-      }else if(typeof saaeEdit === 'number' && saaeEdit === 0){
-        updateStorage();
-      }else if(typeof saaeEdit === 'string'){
-        setDataSaae(()=>{
-          const newData = listSaaes.find(data=> data._id === saaeEdit);
-          console.log("encontrou", newData);
-          
-          return newData ? newData : {} as SAAE;
-        });
       }
+      //cria uma nova SAAE.
+      else if(typeof saaeEdit === 'number' && saaeEdit === 0){
+        console.log("criando uma nova SAAE no rascunho");
+        updateStorage();
+      }
+      //pega dados da SAAE em correção para armazenar no storage.
+      else if(typeof saaeEdit === 'string'){
+        console.log("entrou na correção de SAAE", saaeEdit)
+
+        //verifica primeiro se já tem um rascunho salvo.
+        //se não tiver, pega os dados salvos na nuvem.
+        const verifyStorage = await getDataStorage('saae', saaeEdit);
+        setDataSaae((prev)=>{          
+          const saae = verifyStorage?.dataSaae || listSaaes.find(s=> s._id === saaeEdit);      
+          if(saae){
+            return saae
+          }else{
+            return prev
+          }
+        });
+        await updateStorage();
+      }
+    }
+
+    const debugStorage = async()=>{
+      console.log("contexto dataStorage: ", await getDataStorage('saae', `${saaeEdit}`));
+    }
+
+    useEffect(()=>{
+        if(dataNews.length === 0) getNews();
+
+        async function getData() {
+          await createDb('saae')
+          // .then(async()=>{
+          //     const data = await getAllDataStorage('saae')
+          //     setDataStorage(data);
+          // })
+          
+      }
+      
+      getData();
+    },[]);
+
+    //acontece apenas uma vez, quando o valor de saaeEdit muda.
+    useEffect(()=>{
+      console.log("contexto saaeEdit: ", saaeEdit);
+      if(saaeEdit === undefined) return;
+      handleStorage();      
     },[saaeEdit]);
 
-    //atualiza o storage.
+    //atualiza o storage quando a SAAE em dataSAAE sofre algum alteração.
     useEffect(()=>{
       console.log("contexto dataSaae: ", dataSaae);
 
-      if(Object.keys(dataSaae).length > 0 && typeof saaeEdit === 'number'){
+      if(Object.keys(dataSaae).length > 0 && (typeof saaeEdit === 'number' || typeof saaeEdit === 'string')){
         updateStorage()
       }
+
+      debugStorage();
     },[dataSaae]);   
 
     return(
         <Context.Provider value={{
-            dataNews, dataUser, dataSaae, dataStorage, saaeEdit, listSaaes, handleSendSaae, setTester, tester,
-            recoverProfile, verifySession, setDataSaae, setDataStorage, setSaaeEdit, setListSaaes, setShowModal,
+            dataNews, dataUser, dataSaae, saaeEdit, listSaaes, handleSendSaae, setTester, tester,
+            recoverProfile, verifySession, setDataSaae, setSaaeEdit, setListSaaes, setShowModal,
             elementoToPrint, setElementoToPrint
         }}>
           {children}

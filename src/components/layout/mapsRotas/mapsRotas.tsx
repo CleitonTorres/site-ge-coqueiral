@@ -81,7 +81,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 points,
             }));
 
-            console.log('markers', markers)
+            // console.log('markers', markers)
         };
 
         // Adiciona um clique no mapa para criar marcadores e calcular rota
@@ -111,7 +111,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                     })(),
                 });
 
-                 // Atualiza a rota ao soltar o marcador
+                // Atualiza a rota ao soltar o marcador
                 marker.addListener("dragend", () => {
                     const updatedPoints = markers.map((m) => {
                         const pos = m.position as google.maps.LatLngLiteral;
@@ -130,7 +130,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                         // Remove o ponto correspondente e atualiza a rota
                         const updatedPoints = [...markers.map((m) => {
                             const pos = m.position as google.maps.LatLngLiteral;
-                            console.log(pos);
+                            // console.log(pos);
                             return { 
                                 lat: pos?.lat, 
                                 lng: pos?.lng 
@@ -147,7 +147,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 // Atualiza os pontos e a Polyline
                 const updatedPoints = [...markers.map((m) =>{
                     const pos = m.position as google.maps.LatLngLiteral ;
-                    console.log("coord", pos);
+                    // console.log("coord", pos);
                     return{ 
                         lat: pos?.lat, 
                         lng: pos?.lng 
@@ -201,8 +201,6 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                     gmpDraggable: false
                 });
 
-                markers.push(marke);
-
                 // Adiciona evento nos marcadores iniciais para remover o marcador ao clicar nele
                 marke.addListener("click", () => {
                     const index = markers.indexOf(marke);
@@ -213,7 +211,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                         // Remove o ponto correspondente e atualiza a rota
                         const updatedPoints = [...markers.map((m) => {
                             const pos = m.position as google.maps.LatLngLiteral;
-                            console.log(pos);
+                            // console.log(pos);
                             return { 
                                 lat: pos?.lat, 
                                 lng: pos?.lng 
@@ -223,6 +221,17 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                         updateRoute(updatedPoints);
                     }
                 });
+
+                // Atualiza a rota ao soltar o marcador
+                marke.addListener("dragend", () => {
+                    const updatedPoints = markers.map((m) => {
+                        const pos = m.position as google.maps.LatLngLiteral;
+                        return { lat: pos.lat, lng: pos.lng };
+                    });
+                    updateRoute(updatedPoints);
+                });
+
+                markers.push(marke);
 
             });
     
@@ -242,8 +251,6 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
     }
 
     const handleRotas = (rotas:Rota)=>{
-        console.log("rotas add ou edit", rotas);
-
         context.setDataSaae((prev)=>{
             if(rotas){
                 if(rotas.id){
@@ -277,7 +284,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 return prev;
             }
         });
-        // context.setShowModal(null);
+        alert("Salvo com sucesso!")
     }
 
     useEffect(() => {
@@ -288,7 +295,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
 
     useEffect(() => {
         if(initialRota && mapRef.current){
-            console.log(initialRota)
+            // console.log(initialRota)
             setFormRota(initialRota);
 
             loadMap();

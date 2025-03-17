@@ -18,6 +18,10 @@
     width: 100%;
     flex-wrap: wrap;
 }
+.noBreak{
+    break-before: auto;
+    break-inside: avoid;
+}
 .boxInput{
     position: relative;
     display: flex;
@@ -142,9 +146,6 @@
     background-color: #9eb83b;
     margin-top: 20px;
     padding-left: 10px;
-}
-.nobreak {
-    page-break-before: always;
 }
 
 @keyframes fadeIn {

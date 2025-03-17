@@ -71,10 +71,9 @@ export interface Endereco {
 export interface DataStorage {
     dataSaae: SAAE,
     user: ProfileProps,
-    id?: number
+    id?: number | string
 }
 export interface SAAE {
-    solicitante: ProfileProps,
     grauRisco: GrauRisco,
     infosPreliminares: InfosPreliminaresSaae[],
     dadosGerais: DadosGeraisSaae,

@@ -38,7 +38,7 @@ export const putNewData = async(nameStorage: string, data: DataStorage)=>{
 }
 
 // Obter dados
-export const getDataStorage = async (nameStorage: string, id: number)=>{
+export const getDataStorage = async (nameStorage: string, id: number | string)=>{
   const database = await createDb(nameStorage);
   const data = await database.get(nameStorage, id);
   
@@ -64,7 +64,7 @@ export const getAllDataStorage = async (nameStorage: string) => {
 };
 
 // Deletar dados
-export const deleteDataStorage = async(nameStorage: string, id: number)=>{
+export const deleteDataStorage = async(nameStorage: string, id: number | string)=>{
   const database = await createDb(nameStorage);
 
   await database.delete(nameStorage, id);

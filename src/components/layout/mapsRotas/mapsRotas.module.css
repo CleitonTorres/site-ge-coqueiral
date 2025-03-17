@@ -60,6 +60,8 @@
 .map{
     height: 500px;
     width: 100%;
+    break-before: auto;
+    break-inside: avoid;
 }
 
 @media print{

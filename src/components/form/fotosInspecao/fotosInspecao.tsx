@@ -360,8 +360,11 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                     <div 
                         className={`${styles.subConteiner} ${styles.widthAuto}`}
                         style={{marginLeft: '2px'}}
-                        key={idx+'dataFotos'}>
-                        <div style={{border: 'solid 1px #000'}}>
+                        key={idx+'dataFotos'}
+                    >
+                        <div 
+                            style={{border: 'solid 1px #000'}}
+                        >
                             <p style={{fontWeight: 600}}>Título do conjunto de fotos:</p>
                             {!readOnly ?
                                 <FaMinus className={styles.removeBtn} size={20} onClick={()=>removeSectionFotos(idx)}/>
@@ -383,35 +386,37 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                                 className={styles.borderBlue}
                                 readOnly={readOnly}
                             /> : <p>{section.description || ''}</p>}
-                            {section.fotos?.map((foto, fIdx)=>(
-                                <div key={fIdx+'fotosData'} className={styles.boxDados}>
-                                    <div>
-                                        <b>Título da imagem:</b> 
-                                        {!print ? <input 
-                                            name='fotos.title'
-                                            value={foto.title || ''}
-                                            placeholder='digite aqui...'
-                                            onChange={(e)=>handleChange(e, idx, fIdx)}
-                                            readOnly={readOnly}
-                                        /> : <p>{foto.title || ''}</p>}
+                            <div  className={styles.boxFotos}>                            
+                                {section.fotos?.map((foto, fIdx)=>(
+                                    <div key={fIdx+'fotosData'} className={styles.boxDados}>
+                                        <div>
+                                            <b>Título da imagem:</b> 
+                                            {!print ? <input 
+                                                name='fotos.title'
+                                                value={foto.title || ''}
+                                                placeholder='digite aqui...'
+                                                onChange={(e)=>handleChange(e, idx, fIdx)}
+                                                readOnly={readOnly}
+                                            /> : <p>{foto.title || ''}</p>}
+                                        </div>
+                                        <div>
+                                            <b>Descrição:</b> 
+                                            {!print ? <input 
+                                                name='fotos.description'
+                                                value={foto.description || ''}
+                                                placeholder='digite aqui...'
+                                                onChange={(e)=>handleChange(e, idx, fIdx)}
+                                                readOnly={readOnly}
+                                            /> : <p>{foto.description}</p>}
+                                        </div>
+                                        <ImagePreview 
+                                            file={foto.doc as File} 
+                                            height={print ? 400 : 200} 
+                                            width={print ? 300 : 100}
+                                        />  
                                     </div>
-                                    <div>
-                                        <b>Descrição:</b> 
-                                        {!print ? <input 
-                                            name='fotos.description'
-                                            value={foto.description || ''}
-                                            placeholder='digite aqui...'
-                                            onChange={(e)=>handleChange(e, idx, fIdx)}
-                                            readOnly={readOnly}
-                                        /> : <p>{foto.description}</p>}
-                                    </div>
-                                    <ImagePreview 
-                                        file={foto.doc as File} 
-                                        height={print ? 400 : 200} 
-                                        width={print ? 300 : 100}
-                                    />  
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 ))}

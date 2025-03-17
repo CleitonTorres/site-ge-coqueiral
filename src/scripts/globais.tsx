@@ -159,7 +159,6 @@ export function dateFormat1(date:Date | undefined){
         const mes = date.getMonth()+1 < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
 
-        console.log("data format1", `${ano}-${mes}-${dia}`)
         return `${ano}-${mes}-${dia}`;
     }
 }

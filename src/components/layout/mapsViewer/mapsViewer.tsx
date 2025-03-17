@@ -100,7 +100,7 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
     },[data]);
 
     return(
-        <div style={{width: '100vw', marginBottom: '30px'}}>
+        <div style={{width: '100vw', marginBottom: '30px'}} className={styles.conteiner}>
             <h1>Localização {label === "localInicio" ? 'Início' : 'Fim'}</h1>
             <h6>{
                 data?.address ? data.address : adressToString(data)

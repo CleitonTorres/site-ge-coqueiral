@@ -5,8 +5,8 @@ import styles from './listSaaes.module.css';
 import { FaMinus } from "react-icons/fa6";
 import Modal from "../modal/modal";
 import SaaeResumo from "@/components/form/saaeResumo/saaeResumo";
-import { deleteDataStorage } from "@/scripts/indexedDB";
-import { SAAE } from "@/@types/types";
+import { deleteDataStorage, getAllDataStorage } from "@/scripts/indexedDB";
+import { DataStorage, SAAE } from "@/@types/types";
 import Confirme from "../confirme/confirme";
 import axios from "axios";
 import Botton from "@/components/form/botton/botton";
@@ -21,6 +21,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
     const [showSaae, setShowSaae]= useState(false);
     const [showObs, setShowObs]= useState(false);
     const [currentSAAEResponse, setCurrentSAAEResponse] = useState<SAAE>();
+    const [dataStorage, setDataStorage] = useState<DataStorage[]>([]);
 
     const handleSaaeResponse = (e:ChangeEvent<HTMLSelectElement>, saae:SAAE)=>{
         //valor do select.
@@ -131,6 +132,11 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
         }
     }
 
+    const handleGetStorage = async ()=>{
+        const saaes = await getAllDataStorage('saae');
+
+        setDataStorage(saaes);
+    }
     useEffect(()=>{
         setShowObs(()=>{
             if(currentSAAEResponse?.status && 
@@ -141,6 +147,10 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
             }
         })
     },[currentSAAEResponse?.status]);
+
+    useEffect(()=>{
+        handleGetStorage()
+    },[]);
 
     return(
         <>
@@ -170,12 +180,12 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                             <label 
                                 htmlFor="" 
                                 className={`${styles.collum02}`}>
-                                    {saae.solicitante?.name || 'Usuário Teste'}
+                                    {saae.dadosGerais?.coordenador || 'Usuário Teste'}
                                 </label>
                             <label 
                                 htmlFor="" 
                                 className={`${styles.collum02}`}>
-                                    {`${saae.solicitante?.dadosUel?.numUel || '00'} - ${saae.solicitante?.dadosUel?.nameUel || 'UEL Teste'}`  || 'Usuário Teste'}
+                                    {`${saae.dadosGerais?.dadosUel?.numUel || '00'} - ${saae.dadosGerais?.dadosUel?.nameUel || 'UEL Teste'}`  || 'Usuário Teste'}
                                 </label>
                             <select 
                                 name="status" 
@@ -240,7 +250,8 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                         />
                     </div>  
                             
-                    {context.dataStorage?.map((storage, idx)=>(
+                    {dataStorage.filter(item=> !item.dataSaae.status)
+                    ?.map((storage, idx)=>(
                         <div key={idx+'listaSAAEs'} className={styles.boxInput}>
                             <label htmlFor={`saae-${storage.id}`}>{storage.dataSaae?.dadosGerais?.nomeAtividade || 'Sem nome atividade'}</label>
                             <div className={styles.btns}>
@@ -263,11 +274,13 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                     onClick={()=>{
                                         const result = confirm("Você tem certeza que deseja excluir essa SAAE?")
                                         if(result){ 
-                                            deleteDataStorage('saae', storage.id!)
-                                            context.setDataStorage((prev)=>{
-                                                const newData= prev.filter(data=> data.id !== storage.id);
+                                            deleteDataStorage('saae', storage.id!);
+                                            setDataStorage((prev)=>{
+                                                const newData = prev.filter(s=> s.id !== storage.id);
                                                 return newData;
-                                            });
+                                            })
+                                            context.setDataSaae({} as SAAE);
+                                            context.setSaaeEdit(undefined);
                                         }
                                     }}
                                 />
@@ -289,7 +302,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                 context.setSaaeEdit((prev)=> {
                                     if(prev === saae._id) return undefined
                                     return saae._id
-                                })//corrigir isso depois.
+                                });
                             }
                         }}>
                             <label htmlFor={`saae-${idx}`} className="cursorPointer">
