@@ -186,3 +186,12 @@
         padding-left: 6px;
     }
 }
+
+@media print {
+    .conteiner{
+        break-before: always;
+        page-break-before: always;
+        display: block;
+        width: 100%;
+    }
+}

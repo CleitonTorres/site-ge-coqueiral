@@ -56,7 +56,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 if(name.includes('coordenadas')){
                     const nameSplit = name.split('.')[2] as 'lat' | 'long';
                     const coordenadas = newData?.localInicio?.coordenadas ? {
-                        ...newData?.localInicio.coordenadas,
+                        ...newData?.localInicio?.coordenadas,
                         [nameSplit]: value ? parseFloat(value) : ''
                     } : {
                         [nameSplit]: value ? parseFloat(value) : ''
@@ -76,7 +76,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     const local:Endereco = newData.localInicio ? {
                         ...newData.localInicio,
                         [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
-                    } as Endereco: {
+                    } as Endereco
+                    : {
                         [nameSplit]: nameSplit === "cep" ? maskcep(value) : value
                     } as unknown as  Endereco;
     
@@ -176,8 +177,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 dadosGerais: newData
             };
         })        
-
-        //updateContext(newData);     
     }
 
     const handleFormProgramacao= (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
@@ -358,9 +357,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 ...prev,
                 dadosGerais: newData
             }
-        })        
-
-        //updateContext(newData);
+        })
     }
 
     //busca o endereço da empresa.
@@ -389,7 +386,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         const newData = {
                             ...prev.dadosGerais,  
                             [initialName]: {
-                                ...prev.dadosGerais[initialName],
+                                ...prev.dadosGerais[initialName] || {},
                                 logradouro: logra,
                                 bairro: resp.bairro,
                                 municipio: resp.localidade,
@@ -401,8 +398,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             dadosGerais: newData
                         }
                     })
-                    
-                    //updateContext(newData);
                 }
             })
             .catch(err=> console.log(err))
@@ -580,6 +575,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         });
     },[])
 
+    useEffect(()=>{
+        console.log("dados gerais", localData);
+    })
     return(
         <div 
             className={`${styles.conteiner}`} 
@@ -1026,11 +1024,12 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             Endereço coletado do mapa (local início).
                         </h1>
                         <span>{
-                            localData?.localInicio?.address 
+                            localData?.localInicio?.address || ''
                         }</span>
                     </div>
                 </div>
                 :null}
+
                 {inicioFim || localData?.localFim ?
                 <>
                     <div className={styles.line}>
@@ -1053,14 +1052,14 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             <h1>
                                 Logradouro
                             </h1>
-                            <textarea
+                            {!readOnly ? <textarea
                                 name='localFim.logradouro'
                                 value={localData?.localFim?.logradouro || ''}
                                 onChange={(e) => handleForm(e)}
                                 placeholder="logradouro"
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
-                            />
+                            /> : <p>{localData?.localFim?.logradouro || ''}</p>}
                         </div>
                         <div className={styles.collum}>
                             <h1>
@@ -1182,25 +1181,25 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <h1>
                             Local da saída
                         </h1>
-                        <textarea
+                        {!readOnly ? <textarea
                             name='localSaida'
                             value={localData?.localSaida || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.localSaida || ''}</p>}
                     </div>
                     <div className={styles.collum}>
                         <h1>
                             Local da chegada
                         </h1>
-                        <textarea
+                        {!readOnly ? <textarea
                             name='localChegada'
                             value={localData?.localChegada || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.localChegada || ''}</p>}
                     </div>
                     <div className={`${styles.collum} ${styles.width120}`}>
                         <h1>
@@ -1420,25 +1419,31 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <h1>
                             Como chegar no local da atividade?
                         </h1>
-                        <textarea
+                        {!readOnly ? <textarea
                             name='comoChegar'
                             value={localData?.comoChegar || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="como chegar"
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.comoChegar || ''}</p>}
                     </div>
                     <div className={styles.collum2}>
                         <h1>
                             Link do mapa(s)
                         </h1>
-                        <textarea
+                        {!readOnly ? <textarea
                             name='linkMapa'
                             value={localData?.linkMapa || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="sugestão: procure por google Earth Web e crie uma pasta com todas as rotas"
                             readOnly={readOnly}
-                        />
+                        /> : <a 
+                            href={localData?.linkMapa || ''} 
+                            className='link'
+                            style={{overflow: 'hidden', textOverflow: 'clip'}}
+                        >
+                            {localData?.linkMapa || ''}
+                        </a>}
                     </div>                    
                 </div>
 
@@ -1454,10 +1459,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                         element:
                                             <RouteMapComponent 
                                                 initialPosition={
-                                                    context.dataSaae.dadosGerais.localInicio.coordenadas ?
+                                                    context.dataSaae.dadosGerais?.localInicio?.coordenadas ?
                                                     {
-                                                        lat: context.dataSaae.dadosGerais.localInicio.coordenadas?.lat,
-                                                        lng: context.dataSaae.dadosGerais.localInicio.coordenadas?.long
+                                                        lat: context.dataSaae.dadosGerais.localInicio?.coordenadas?.lat,
+                                                        lng: context.dataSaae.dadosGerais.localInicio?.coordenadas?.long
                                                     } : undefined
                                                 }
                                             />,
@@ -1470,7 +1475,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     <div className={styles.boxRotas} style={{padding: '6px'}}>
                         <h4>Demais rotas e locais</h4>
                         {localData?.rotas?.map((rota, index)=>(
-                            <div key={v4()} className={styles.subBoxRotas}>
+                            <div key={v4()} className={styles.subBoxRotas}> 
                                 {!readOnly ? 
                                     <>
                                         <span style={{width: 80}}>
@@ -1542,35 +1547,16 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 {/* coordenadas do local */}
                 <div>
                     <h2>
-                        Coordenadas do local Início (opcional)
+                        Coordenadas do local Início
                     </h2>
                     <label htmlFor="">
                        {`${localData?.localInicio?.coordenadas?.lat || ''},  
                        ${localData?.localInicio?.coordenadas?.long || ''}`}
                     </label>
-                    {/* <input
-                        type='text'
-                        name='localInicio.coordenadas.lat'
-                        value={localData?.localInicio?.coordenadas?.lat || ''}
-                        onChange={(e) => {
-                            handleForm(e)
-                        }}
-                        placeholder="latitude"
-                        style={{width: 200}}
-                        readOnly={readOnly}
-                    />
-                    <input
-                        type='text'
-                        name='localInicio.coordenadas.long'
-                        value={localData?.localInicio?.coordenadas?.long || ''}
-                        onChange={(e) => handleForm(e)}
-                        placeholder="longitude"
-                        style={{width: 200}}
-                        readOnly={readOnly}
-                    /> */}
                 </div>
                 <div className={styles.line}>
-                    {(localData?.localInicio?.logradouro && localData?.localInicio?.bairro) || (localData?.localInicio?.coordenadas?.lat && localData?.localInicio?.coordenadas?.long) ?
+                    {(localData?.localInicio?.logradouro && localData?.localInicio?.bairro) || 
+                        (localData?.localInicio?.coordenadas?.lat && localData?.localInicio?.coordenadas?.long) ?
                         <MapsComponent 
                             label='localInicio'
                             setLatLong={latLongSet}
@@ -1583,32 +1569,12 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 <>
                 <div>
                     <h2>
-                        Coordenadas do local Fim (opcional)
+                        Coordenadas do local Fim
                     </h2>
                     <label htmlFor="">
                        {`${localData?.localFim?.coordenadas?.lat || ''},  
                        ${localData?.localFim?.coordenadas?.long || ''}`}
                     </label>
-                    {/* <input
-                        type='number'
-                        name='localFim.coordenadas.lat'
-                        value={localData?.localFim?.coordenadas?.lat || ''}
-                        onChange={(e) => {
-                            handleForm(e)
-                        }}
-                        placeholder="latitude"
-                        style={{width: 200}}
-                        readOnly={readOnly}
-                    /> */}
-                    {/* <input
-                        type='number'
-                        name='localFim.coordenadas.long'
-                        value={localData?.localFim?.coordenadas?.long || ''}
-                        onChange={(e) => handleForm(e)}
-                        placeholder="longitude"
-                        style={{width: 200}}
-                        readOnly={readOnly}
-                    /> */}
                 </div>
 
                 <div className={styles.line}>

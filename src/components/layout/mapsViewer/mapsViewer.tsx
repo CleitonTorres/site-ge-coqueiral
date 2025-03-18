@@ -2,7 +2,8 @@
 import { useEffect, useRef } from "react";
 import { Endereco } from "@/@types/types";
 import styles from './mapsViewer.module.css';
-import { adressToString } from "@/scripts/globais";
+import { adressToString, getStaticMapUrl } from "@/scripts/globais";
+import Image from "next/image";
 
 type Props = {
     data?: Endereco,
@@ -17,7 +18,7 @@ type Props = {
 }
 export default function MapsComponent ({label, data, readonly, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
-    
+    const zoom = 14;
     const loadMapAddress = async()=>{
         if(!mapRef.current)return;
         if(!data) return;
@@ -26,7 +27,7 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
 
         const mapOptions: google.maps.MapOptions= {
             center: data.coordenadas?.lat && data.coordenadas.long ? {lat: data.coordenadas?.lat, lng: data.coordenadas.long} : { lat: -23.55052, lng: -46.633308 }, // Localização padrão inicial (São Paulo),
-            zoom: 19,
+            zoom,
             mapId: `MY_NEXTJS_MAPID_${label}`,
             clickableIcons: true
         };
@@ -89,7 +90,7 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
             });
         }
     }
-
+    
     useEffect(()=>{
         if(!data){
             return;
@@ -100,15 +101,23 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
     },[data]);
 
     return(
-        <div style={{width: '100vw', marginBottom: '30px'}} className={styles.conteiner}>
+        <div style={{width: '100vw', marginBottom: '30px'}}>
             <h1>Localização {label === "localInicio" ? 'Início' : 'Fim'}</h1>
             <h6>{
                 data?.address ? data.address : adressToString(data)
             }</h6>
-            <div 
+            {!readonly ? <div 
                 ref={mapRef} 
-                style={{height: '500px', width: "100%"}}
-                className={styles.nobreak}></div>
+                style={{width: '100%', height: 'auto' }}
+                className={styles.nobreak}>
+            </div> 
+            : <Image 
+                alt="mapa"
+                width={600}
+                height={400}
+                style={{objectFit: 'contain'}}
+                src={getStaticMapUrl(data.coordenadas?.lat, data.coordenadas?.long, label === "localInicio" ? 'Início' : 'Fim')}
+            />}
         </div>
     )
 }

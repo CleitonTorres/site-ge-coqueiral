@@ -3,8 +3,6 @@
     flex-direction: column;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
-    break-before: auto;
-    break-inside: avoid;
 }
 .boxHead{
     position: relative;
@@ -96,5 +94,13 @@
     }
     to{
         opacity: 1;
+    }
+}
+
+@media print {
+    .conteiner{
+        break-before: always;
+        break-inside: avoid;
+        page-break-before: always;
     }
 }

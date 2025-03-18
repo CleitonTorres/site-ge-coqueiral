@@ -216,7 +216,14 @@ body {
   }
 }
 @media print{
+  * {
+    overflow: visible !important; /* Garante que nenhum conteúdo fique escondido */
+  }
+  main{
+    height: 100%;
+  }
   .grecaptcha-badge{
     display: none !important;
   }
+  
 }

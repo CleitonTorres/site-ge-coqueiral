@@ -12,7 +12,7 @@ type PropsContext ={
   recoverProfile: ()=>Promise<void>,
   verifySession: ()=>boolean,
   setDataSaae: Dispatch<SetStateAction<SAAE>>,
-  dataSaae: SAAE,
+  dataSaae: SAAE | undefined,
   setSaaeEdit: Dispatch<SetStateAction<number | string | undefined>>,
   saaeEdit: number | string | undefined,
   handleSendSaae: (saae:SAAE)=>Promise<{
@@ -37,7 +37,7 @@ type PropsContext ={
  * @param {()=>Promise<void>} recoverProfile - recupera e valida os dados do token do usuario.
  * @param {()=>boolean} verifySession - valida o token do usuário.
  * @param {Dispatch<SetStateAction<SAAE>>} setDataSaae - acessa e altera o estado da SAAE em preenchimento.
- * @param {SAAE} dataSaae - dados da SAAE em preenchimento.
+ * @param {SAAE | null} dataSaae - dados da SAAE em preenchimento.
  * @param {Dispatch<SetStateAction<DataStorage[]>>} setDataStorage - acessa o estado da lista de SAAEs salvas em rascunho no storage local do navegador.
  * @param {DataStorage[]} dataStorage - lista de SAAEs salvas em rascunhos no armazenamento local do navegador.
  * @param {Dispatch<SetStateAction<number | string | undefined>>} setSaaeEdit - acessa o estado do id da SAAE em edição.
@@ -59,7 +59,7 @@ export default function Provider({children}:{children:ReactNode}){
     const [elementoToPrint, setElementoToPrint] = useState<JSX.Element | null>(null);
 
     //SAAEs em edição
-    const [dataSaae, setDataSaae] = useState({} as SAAE);
+    const [dataSaae, setDataSaae] = useState<SAAE | null>(null);
 
     //SAAEs enviadas para a região.
     const [listSaaes, setListSaaes] = useState<SAAE[]>([]);
@@ -150,9 +150,14 @@ export default function Provider({children}:{children:ReactNode}){
       }
       //cria uma nova SAAE
       else if(typeof saaeEdit === 'number' && saaeEdit === 0){
-        const key = await putNewData('saae',{dataSaae: {} as SAAE, user: dataUser});
+        const key = await putNewData('saae',{dataSaae: {
+          status: 'rascunho'
+        } as SAAE, user: dataUser});
+
+        //ao alterar o estado de saaeEdit com um ID diferente de 0, chama o trigger
+        //para gerar uma nova SAAE em handleStorage.
         console.log("criado nova saae", key);
-        setSaaeEdit(key as number);
+        setSaaeEdit(key as number);   
       }
       //salva no storage SAAE em correção.
       else if(typeof saaeEdit === 'string'){
@@ -811,7 +816,7 @@ export default function Provider({children}:{children:ReactNode}){
         }
         //---------------------------------
         
-        const update = verifyObjSAAE(locationOriginalSAAE, data);
+        const update = verifyObjSAAE(locationOriginalSAAE, {...data, status: 'enviada'});
 
         console.log('resultado da verificação do update', update)
 
@@ -825,7 +830,8 @@ export default function Provider({children}:{children:ReactNode}){
           }
         });
 
-        if(response.status === 200){
+        console.log("respose edit saee", response)
+        if(response?.status === 200){
           setListSaaes((prev)=> {
             const newData = prev.map(saae=> {
               if(saae._id === data._id){
@@ -851,28 +857,9 @@ export default function Provider({children}:{children:ReactNode}){
             bool: true,
             text: 'Ocorreu um errro ao tentar atualizar a SAAE'
           }
-        }
-        
-
-        // return{
-        //   bool: true,
-        //   text: 'Teste de edição de SAAE feito com sucesso!'
-        // }
-        
+        }        
       }catch(e){
-        if (axios.isAxiosError(e)) {
-          // Se o erro for gerado pelo Axios
-          console.error("Erro Axios:", e.response?.data || e.message);
-          
-          // Capturando os detalhes da resposta
-          if (e.response) {
-            console.error("Status:", e.response.status);
-            console.error("Dados:", e.response.data);
-          }
-        } else {
-          // Se for outro tipo de erro
-          console.error("Erro inesperado:", e);
-        }
+        console.log("erro no envio da correção da SAAE", e)
         return{
           bool: true,
           text: 'Ocorreu um erro ao tentar enviar a correção da sua SAAE!'
@@ -887,8 +874,9 @@ export default function Provider({children}:{children:ReactNode}){
       //busca SAAEs salvas no storage, mas que ainda não foram enviadas para análise.
       //e carrega os dados em dataSaae para ser exibino nos formulários.
       if(typeof saaeEdit === 'number' && saaeEdit !== 0){
-        console.log("editando SAAE do rascunho");
+        
         const newData = (await getAllDataStorage('saae')).find(data=> data.id === saaeEdit);
+        console.log("editando SAAE do rascunho", newData);
         setDataSaae((prev)=>{          
           if(newData){
             return newData.dataSaae
@@ -922,7 +910,8 @@ export default function Provider({children}:{children:ReactNode}){
     }
 
     const debugStorage = async()=>{
-      console.log("contexto dataStorage: ", await getDataStorage('saae', `${saaeEdit}`));
+      console.log("contexto dataStorage: ", await getDataStorage('saae', saaeEdit));
+      console.log("contexto allDataStorage: ", await getAllDataStorage('saae'));
     }
 
     useEffect(()=>{
@@ -949,13 +938,13 @@ export default function Provider({children}:{children:ReactNode}){
 
     //atualiza o storage quando a SAAE em dataSAAE sofre algum alteração.
     useEffect(()=>{
+      if(!dataSaae) return;
+
       console.log("contexto dataSaae: ", dataSaae);
-
       if(Object.keys(dataSaae).length > 0 && (typeof saaeEdit === 'number' || typeof saaeEdit === 'string')){
-        updateStorage()
-      }
-
-      debugStorage();
+        updateStorage();
+        debugStorage();
+      };      
     },[dataSaae]);   
 
     return(

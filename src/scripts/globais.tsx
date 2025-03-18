@@ -577,165 +577,6 @@ export const fileToBase64 = (file: File) => {
     });
 };
 
-
-// export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE)=>{
-//     const keysOriginal = Object.keys(objetoOriginal) as (keyof SAAE)[];
-//     const keysEditado = Object.keys(objetoEditado) as (keyof SAAE)[];
-
-//     const fieldObjetos:(keyof SAAE)[] = [];
-
-//     //verifica se existe fields no objeto editado que não existe no original.
-//     if(keysEditado.length > keysOriginal.length){
-//         keysEditado.forEach(k=>{
-//             const verify = JSON.stringify(objetoEditado[k]) !== JSON.stringify(objetoOriginal[k]);
-//             if(verify) fieldObjetos.push(k);
-//         })
-//     //verifica se existe fields no objeto original que não existe no editado.
-//     //ou se ambos os objetos são do mesmo tamanho.
-//     }else {
-//         keysOriginal.forEach(k=>{
-//             const verify = JSON.stringify(objetoOriginal[k]) !== JSON.stringify(objetoEditado[k]);
-//             if(verify) fieldObjetos.push(k);
-//         })
-//     }
-
-//     const fieldsArray:{
-//         field: keyof SAAE, 
-//         value: InfosPreliminaresSaae | InventarioSaaeType | FormFotosInspecao | FormDocs,
-//         idx: number
-//     }[] = [];
-//     const fieldsObject:{
-//         field: keyof SAAE,
-//         rotulo?: keyof ProfileProps | keyof GrauRisco | keyof DadosGeraisSaae | keyof PlanoEmergenciaSaae,
-//         value?: unknown
-//     }[] = [];
-//     const fieldsStrings: {
-//         field: string,
-//         value: string
-//     }[]= [];
-
-//     if(fieldObjetos.length > 0){
-//         for (const key of fieldObjetos) {  
-//             //se o objeto editado não for válido, a gente remove todo o 
-//             //conteudo do objeto original.
-//             if(!objetoEditado[key]){
-//                 fieldsObject.push({
-//                     field: key,
-//                     rotulo: undefined,
-//                     value: undefined
-//                 })
-//             }
-//             //verifica se o field é um array 
-//             //como por exemplo InfosPreliminaresSaae[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
-//             else if(Array.isArray(objetoEditado[key])){ 
-//                 if(Array.isArray(objetoOriginal[key])){       
-//                     //se o field editado for maior que o original
-//                     if(objetoEditado[key].length > objetoOriginal[key].length){
-//                         //verifica se o field é um array 
-//                         //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
-//                         objetoEditado[key]?.forEach((item, idx)=>{
-//                             //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
-//                             if(Array.isArray(objetoOriginal[key])){
-//                                 const verify = JSON.stringify(objetoOriginal[key][idx]) === JSON.stringify(item) ? true : false ;
-                                
-//                                 // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-//                                 if(!verify){ 
-//                                     fieldsArray.push({field: key, value: item, idx})
-//                                 }
-//                             }
-//                         });
-//                     }
-//                     //se o field original for maior que o editado      
-//                     //ou se ambos são do mesmo tamanho
-//                     else{
-//                         //verifica se o field é um array 
-//                         //como por exemplo InfosPreliminares[], InventarioSaaeType[], FormFotosInspecao[] e FormDocs[]);
-//                         objetoOriginal[key]?.forEach((item, idx)=>{
-//                             //verificação para garantir que o objeto original é um objeto válido para o tipo que estamos verificando.
-//                             if(Array.isArray(objetoEditado[key])){
-//                                 const verify = JSON.stringify(objetoEditado[key][idx]) === JSON.stringify(item) ? true : false ;
-                                
-//                                 // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-//                                 if(!verify){ 
-//                                     fieldsArray.push({field: key, value: item, idx})
-//                                 }
-//                             }
-//                         });
-//                     }
-//                 }else{
-//                     //se o objeto original não for um array, logo ele não é válido
-//                     //então deve ser populado com todas as alterações do objeto editado.
-//                     objetoEditado[key]?.forEach((item, idx)=>{
-//                         fieldsArray.push({field: key, value: item, idx})
-//                     });
-//                 }
-//             }
-//             //lida com os casos que o objeto editado é uma instancia dos tipos 
-//             // ProfileProps | GrauRisco | DadosGeraisSaae | PlanoEmergenciaSaae
-//             else if(typeof objetoEditado[key] === 'object'){
-//                 const countFieldsEditado = objetoEditado[key] ? Object.keys(objetoEditado[key]) as (keyof ProfileProps | keyof GrauRisco | keyof DadosGeraisSaae | keyof PlanoEmergenciaSaae)[] : [];
-//                 const countFieldsOriginal = objetoEditado[key] ? Object.keys(objetoEditado[key]) as (keyof ProfileProps | keyof GrauRisco | keyof DadosGeraisSaae | keyof PlanoEmergenciaSaae)[] : [];
-
-//                 if(countFieldsEditado.length > countFieldsOriginal.length){
-//                     console.log("entrou no editado > original")
-//                     countFieldsEditado?.forEach((field)=> {
-//                         if(objetoOriginal[key]){
-//                             const verify = JSON.stringify(objetoOriginal[key][field]) === JSON.stringify(objetoEditado[key]?.[field]) ? true : false ;
-                                        
-//                             // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-//                             if(!verify){ 
-//                                 fieldsObject.push({
-//                                     field: key,
-//                                     rotulo: field,
-//                                     value: objetoEditado[key]?.[field], 
-//                                 })
-//                             }
-//                         }
-//                         //se o objeto original não for válido, a gente adiciona todo o 
-//                         //conteudo do objeto editado nele.
-//                         else{
-//                             fieldsObject.push({
-//                                 field: key,
-//                                 rotulo: field,
-//                                 value: objetoEditado[key]?.[field]
-//                             })
-//                         }
-//                     })
-//                 }else{
-//                     console.log("entrou no original >= editado");
-//                     countFieldsOriginal?.forEach((field)=> {
-//                         if(objetoOriginal[key]){
-//                             const verify = JSON.stringify(objetoOriginal[key][field]) === JSON.stringify(objetoEditado[key]?.[field]) ? true : false ;
-                                    
-//                             // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-//                             if(!verify){ 
-//                                 fieldsObject.push({
-//                                     field: key,
-//                                     rotulo: field,
-//                                     value: objetoEditado[key]?.[field]
-//                                 })
-//                             }
-//                         }
-//                     })
-//                 }
-//             }
-//             else if(typeof objetoEditado[key] === 'string'){
-//                 const verify = objetoOriginal[key] === objetoEditado[key] ? true : false ;
-                                    
-//                 // se existe algum valor diferente entre o objeto editado e o original, ele é incluído no array.
-//                 if(!verify){ 
-//                     fieldsStrings.push({
-//                         field: key,
-//                         value: objetoEditado[key] 
-//                     })
-//                 }
-//             }
-//         }
-//     }
-
-//     return {fieldsArray, fieldsObject, fieldsStrings}
-// }
-
 /**
  * Verifica as alterações entre dois objetos SAAE e retorna um update formatado
  * @param {SAAE} objetoOriginal - Objeto original antes da edição
@@ -784,8 +625,6 @@ export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record
             update.$set[key] = editedValue;
         }
     }
-    update.$set['status'] = 'enviada';
-
     return update;
 };
 
@@ -812,11 +651,61 @@ export const printComponent = (
     window.open(url(), "_blank");
 };
 
-
+/**
+ * Gerar uma string com o endereço completo.
+ * @param {Endereco} adress - objeto contendo os fields para montar o endereço 
+ * @returns {string} - endereço montado.
+ */
 export const adressToString = (adress?:Endereco)=>{
     if(!adress) return '';
 
     return `${adress.logradouro || ''}, ${adress.bairro || ''}, ${adress.municipio || ''}, ${adress.municipio || ''}, ${adress.cep || ''}`
 }
+
+/**
+ * Cria um URL de imagem estática do google maps de uma coordenada.
+ * @param {number} lat - latitude da coordenada. 
+ * @param {number} lng - longitude da coordenada.
+ * @param {string} label - rótulo da coordenada. 
+ * @returns 
+ */
+export const getStaticMapUrl = (lat: number, lng: number, label: string) => {
+    const API_KEY = `${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`; // Substitua pela sua chave
+    return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=19&size=600x300&maptype=roadmap
+    &markers=color:red%7Clabel:${label}%7C${lat},${lng}
+    &key=${API_KEY}`;
+};
+
+
+/**
+ * Cria um URL de imagem estática do google maps para rotas.
+ * @param {number} points - latitude da coordenada. 
+ * @param {string} label - rótulo da coordenada. 
+ * @returns 
+ */
+export const generateStaticMapURL = (points: { lat: number; lng: number }[]) => {
+    if (!points || points.length === 0) return "";
+
+    const API_KEY = `${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`; // Substitua pela sua chave
+    const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
+    const size = "600x400"; // Defina o tamanho da imagem
+    const path = points.map(p => `${p.lat},${p.lng}`).join("|");
+    
+    // Adiciona marcadores para o primeiro e último ponto
+    const markers = [];
+    
+    if (points.length > 0) {
+        markers.push(`color:green|label:A|${points[0].lat},${points[0].lng}`); // Primeiro ponto (verde, "A")
+    }
+    
+    if (points.length > 1) {
+        markers.push(`color:red|label:B|${points[points.length - 1].lat},${points[points.length - 1].lng}`); // Último ponto (vermelho, "B")
+    }
+
+    
+    const markersParam = markers.length ? `&markers=${markers.join("&markers=")}` : "";
+
+    return `${baseUrl}?size=${size}&path=color:red|weight:3|${path}${markersParam}&key=${API_KEY}`;
+};
 
 

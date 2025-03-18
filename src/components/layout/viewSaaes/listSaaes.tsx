@@ -1,6 +1,6 @@
 'use client'
 import { Context } from "@/components/context/context";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useContext, useEffect, useState } from "react";
 import styles from './listSaaes.module.css';
 import { FaMinus } from "react-icons/fa6";
 import Modal from "../modal/modal";
@@ -137,6 +137,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
 
         setDataStorage(saaes);
     }
+
     useEffect(()=>{
         setShowObs(()=>{
             if(currentSAAEResponse?.status && 
@@ -149,8 +150,16 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
     },[currentSAAEResponse?.status]);
 
     useEffect(()=>{
-        handleGetStorage()
-    },[]);
+        handleGetStorage();
+    },[context.saaeEdit]);
+
+    const setNameAtividade = useCallback((idSaae:number | string, storageNameAtividade: string)=>{
+        if(idSaae === context.saaeEdit){
+            return context.dataSaae?.dadosGerais?.nomeAtividade || storageNameAtividade
+        }else{
+            return storageNameAtividade
+        }
+    },[context.dataSaae]);
 
     return(
         <>
@@ -250,10 +259,12 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                         />
                     </div>  
                             
-                    {dataStorage.filter(item=> !item.dataSaae.status)
+                    {dataStorage.filter(item=> item.dataSaae?.status === 'rascunho')
                     ?.map((storage, idx)=>(
                         <div key={idx+'listaSAAEs'} className={styles.boxInput}>
-                            <label htmlFor={`saae-${storage.id}`}>{storage.dataSaae?.dadosGerais?.nomeAtividade || 'Sem nome atividade'}</label>
+                            <label htmlFor={`saae-${storage.id}`}>
+                                {setNameAtividade(storage.id, storage.dataSaae?.dadosGerais?.nomeAtividade || 'Nova Atividade')}
+                            </label>
                             <div className={styles.btns}>
                                 <input 
                                     type="radio"

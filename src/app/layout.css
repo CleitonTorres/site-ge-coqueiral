@@ -329,17 +329,6 @@
     margin: 20px;
     padding: 20px;
   }
-  body{
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 10px;
-  }
-  .conteinerAreaAssociado, .menu, .boxIconMenu, .boxSubItens, .dropItemMenuBoxFooter, .footer,
-  .subItemList, .titleItem, .iconClose, #bottons, .linhaDoeAgora, .footerMenu, .menuFooter{
-    display: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
 }
 
 @keyframes show {

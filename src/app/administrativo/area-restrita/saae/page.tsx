@@ -108,44 +108,44 @@ export default function Page(){
            <ViewSaaes tipo="user"/>
             
             {/* não permite edição de SAAE se tiver com status de enviada ou aprovada*/}
-            {context.saaeEdit && !['enviada', 'aprovada'].includes(context.dataSaae.status) && 
+            {context.saaeEdit && !['enviada', 'aprovada'].includes(context.dataSaae?.status) && 
                 (context.tester || Object.keys(context.dataUser).length > 0) ?
                 <div className={styles.conteiner}>
                     <NavButoomsSaae currenteSession={currenteSession} setCurrentSession={setCurrentSession}/>                
                     
                     {currenteSession === 0 ? <DadosGerais 
                         readOnly={false}
-                        localData={context.dataSaae.dadosGerais}
-                        idSaae={context.dataSaae._id}
-                        obsSaae={context.dataSaae.obs}
-                        statusSaae={context.dataSaae.status}
+                        localData={context.dataSaae?.dadosGerais}
+                        idSaae={context.dataSaae?._id}
+                        obsSaae={context.dataSaae?.obs}
+                        statusSaae={context.dataSaae?.status}
                     /> : null}
                     {currenteSession === 1 ? <InfosPreliminares 
                         readOnly={false}
-                        localData={context.dataSaae.infosPreliminares}
+                        localData={context.dataSaae?.infosPreliminares}
                     /> : null}
                     {currenteSession === 2 ? <InventarioSaae 
                         readOnly={false}
-                        localData={context.dataSaae.inventarioRiscos}
+                        localData={context.dataSaae?.inventarioRiscos}
                     /> : null}
                     {currenteSession === 3 ? <MatrizRisco 
                         readOnly={false}
-                        localData={context.dataSaae.grauRisco}
+                        localData={context.dataSaae?.grauRisco}
                     /> : null}
                     {currenteSession === 4 ? <PlanoEmergencia 
                         readOnly={false}
-                        grauRisco={context.dataSaae.grauRisco}
-                        localInicio={context.dataSaae.dadosGerais.localInicio}
-                        nomeAtividade={context.dataSaae.dadosGerais.nomeAtividade}
-                        localData={context.dataSaae.planoEmergencia}
+                        grauRisco={context.dataSaae?.grauRisco}
+                        localInicio={context.dataSaae?.dadosGerais.localInicio}
+                        nomeAtividade={context.dataSaae?.dadosGerais.nomeAtividade}
+                        localData={context.dataSaae?.planoEmergencia}
                     /> : null}
                     {currenteSession === 5 ? <FotosInspecao 
                         readOnly={false}
-                        localData={context.dataSaae.fotosInspecao}
+                        localData={context.dataSaae?.fotosInspecao}
                     /> : null}
                     {currenteSession === 6 ? <SectionDocumentos 
                         readOnly={false}
-                        localData={context.dataSaae.documentos}
+                        localData={context.dataSaae?.documentos}
                     /> : null}
                     {currenteSession === 7 ? <SaaeResumo /> : null}
                     

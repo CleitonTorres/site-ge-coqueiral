@@ -16,6 +16,8 @@ import Requerimento from "@/components/form/requerimento/requerimento";
 export default function PrinterPage() {
   const [data, setData] = useState<SAAE | null>(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
+  // Recupera os dados do localStorage
+  // const storedData = localStorage.getItem("print-data");
 
   useEffect(() => {
     // Recupera os dados do localStorage
@@ -23,7 +25,6 @@ export default function PrinterPage() {
     if (storedData) {
       setData(JSON.parse(storedData));
     }
-
   }, []);
 
   if (!data) return <p>Carregando...</p>;

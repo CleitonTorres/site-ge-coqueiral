@@ -1,9 +1,11 @@
 .conteiner{
+    position: relative;
     display: flex;
     flex-direction: column;
     transition: 0.4s;
     animation: fadeIn 0.8s linear forwards;
     width: 100%;
+    flex: 1;
 }
 .boxHead{
     position: relative;
@@ -65,12 +67,11 @@
     color: red;
 }
 .boxTextarea{
+    position: relative;
     width: 100%;
     margin-top: 10px;
-    break-before: auto;
-    break-inside: avoid;
 }
-.boxTextarea textarea{
+.boxTextarea textarea, .boxTextarea p{
     width: 100%;
     resize: vertical;
     padding: 5px;
@@ -148,6 +149,7 @@
     justify-content: center;
     align-items: flex-start;
 }
+
 @keyframes fadeIn {
     from{
         opacity: 0;
@@ -173,5 +175,15 @@
 @media print{
     .noPrint{
         display: none;
+    }
+    .conteiner, .print{
+        break-before: always;
+        page-break-before: always;
+        display: block;
+        width: 100%;
+    }
+    .boxTextarea{
+        break-before: auto;
+        break-inside: avoid;
     }
 }

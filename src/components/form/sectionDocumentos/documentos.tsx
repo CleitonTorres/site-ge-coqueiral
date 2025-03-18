@@ -118,6 +118,7 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
                     window?.open(urlSigned, '_blank')
                 }
             }}
+            loading='lazy'
         />
     );
 };
@@ -444,8 +445,8 @@ export default function SectionDocumentos({readOnly, localData, print}:Props){
                                     </div>
                                     <ImagePreview 
                                         file={doc.doc as File} 
-                                        height={print ? 400 : 200} 
-                                        width={print ? 300 : 100}
+                                        height={print ? 600 : 200} 
+                                        width={print ? 400 : 100}
                                     /> 
                                 </div>
                             ))}

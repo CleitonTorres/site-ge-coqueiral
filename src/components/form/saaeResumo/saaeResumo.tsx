@@ -54,37 +54,37 @@ export default function SaaeResumo ({hiddeButton}:Props){
 
             <DadosGerais 
                 readOnly 
-                idSaae={context.dataSaae._id} 
-                obsSaae={context.dataSaae.obs} 
-                statusSaae={context.dataSaae.status}
-                localData={context.dataSaae.dadosGerais}
+                idSaae={context.dataSaae?._id} 
+                obsSaae={context.dataSaae?.obs} 
+                statusSaae={context.dataSaae?.status}
+                localData={context.dataSaae?.dadosGerais}
             />
             <InfosPreliminares 
                 readOnly
-                localData={context.dataSaae.infosPreliminares}
+                localData={context.dataSaae?.infosPreliminares}
             />
             <InventarioSaae 
                 readOnly
-                localData={context.dataSaae.inventarioRiscos}
+                localData={context.dataSaae?.inventarioRiscos}
             />
             <MatrizRisco 
                 readOnly
-                localData={context.dataSaae.grauRisco}
+                localData={context.dataSaae?.grauRisco}
             />
             <PlanoEmergencia 
                 readOnly
-                grauRisco={context.dataSaae.grauRisco}
-                nomeAtividade={context.dataSaae.dadosGerais?.nomeAtividade}
-                localInicio={context.dataSaae.dadosGerais?.localInicio}
-                localData={context.dataSaae.planoEmergencia}
+                grauRisco={context.dataSaae?.grauRisco}
+                nomeAtividade={context.dataSaae?.dadosGerais?.nomeAtividade}
+                localInicio={context.dataSaae?.dadosGerais?.localInicio}
+                localData={context.dataSaae?.planoEmergencia}
             />
             <FotosInspecao 
                 readOnly
-                localData={context.dataSaae.fotosInspecao}
+                localData={context.dataSaae?.fotosInspecao}
             />
             <SectionDocumentos 
                 readOnly
-                localData={context.dataSaae.documentos}
+                localData={context.dataSaae?.documentos}
             />
             {!hiddeButton ? 
             <div className={styles.subConteiner}>

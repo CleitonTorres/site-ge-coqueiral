@@ -1,4 +1,5 @@
 .conteiner{ 
+    position: relative;
     display: flex; 
     flex-direction: column; 
     justify-content: space-between;
@@ -6,6 +7,7 @@
     margin-top: 30px;
     z-index: 10;
     padding: 20px;
+    overflow: hidden;
 }
 .conteiner svg{
     position: absolute;
@@ -58,15 +60,6 @@
 }
 
 .map{
+    position: relative;
     height: 500px;
-    width: 100%;
-    break-before: auto;
-    break-inside: avoid;
-}
-
-@media print{
-    .map{
-        break-inside: avoid; 
-        page-break-inside: avoid;
-    }
 }

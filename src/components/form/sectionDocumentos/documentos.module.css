@@ -29,7 +29,7 @@
     align-items: center;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 300px;
+    min-width: 300px;
     font-size: 12px;
     text-align: justify;
     border: 1px solid;
@@ -116,7 +116,7 @@
     border-bottom: 2px solid var(--blue);
     margin-bottom: 20px;
     overflow-x: hidden;
-    width: 100%;
+    min-width: 100%;
     text-align: left;
 }
 .boxDados span:nth-child(2){
@@ -154,5 +154,20 @@
     }
     to{
         opacity: 1;
+    }
+}
+
+@media print {
+    .conteiner{
+        break-before: always;
+        page-break-before: always;
+        display: block;
+        width: 100%;
+    }
+    .boxDados{
+        break-before: auto;
+        break-inside: avoid;
+        display: block;
+        width: 100%;
     }
 }

@@ -5,16 +5,19 @@ import styles from "./mapsRotas.module.css";
 import { FaSave } from "react-icons/fa";
 import { Context } from "@/components/context/context";
 import { v4 } from "uuid";
+import Image from "next/image";
+import { generateStaticMapURL } from "@/scripts/globais";
 
 type RouteMapComponentProps = {
-    readonly?: boolean;
-    initialRota?: Rota | undefined;
-    initialPosition: {lat: number, lng: number} | undefined;
+    readonly?: boolean,
+    initialRota?: Rota | undefined,
+    initialPosition: {lat: number, lng: number} | undefined,
 }
 export default function RouteMapComponent({ readonly, initialRota, initialPosition }: RouteMapComponentProps) {
     const context = useContext(Context);
     const mapRef = useRef<HTMLDivElement | null>(null);
     const [formRota, setFormRota] = useState({} as Rota);
+    const zoom = 14;
 
     //const [points, setPoints] = useState<google.maps.LatLng[]>([]);
     // const [distance, setDistance] = useState<number>(0);    
@@ -26,7 +29,7 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
 
         const mapOptions: google.maps.MapOptions = {
             center: initialPosition || {lat: -20.319467, lng: -40.331466}, //{ lat: -23.55052, lng: -46.633308 }, // Localização inicial (São Paulo)
-            zoom: 14,
+            zoom,
             mapId: "MY_NEXTJS_MAPID_ROUTE",
         };
         const map = new google.maps.Map(mapRef.current, mapOptions);    
@@ -288,18 +291,12 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
     }
 
     useEffect(() => {
-        if (!mapRef.current) return;
-
-        loadMap();
-    },[]);
-
-    useEffect(() => {
         if(initialRota && mapRef.current){
             // console.log(initialRota)
             setFormRota(initialRota);
-
-            loadMap();
-        }        
+        }
+        loadMap();
+        console.log(initialRota)
     },[initialRota, mapRef?.current]);
 
     return (
@@ -323,21 +320,34 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 <input 
                     type="text" 
                     name="title"
-                    value={formRota.title || ''}
+                    value={formRota.title || initialRota.title || ''}
                     onChange={(e) => setFormRota((prev) => ({ ...prev, title: e.target.value }))}
+                    readOnly={readonly}
                 />
             </div>
             <div className ={styles.subConteiner}>
                 <span>Descrição:</span>
                 <textarea 
                     name="description" 
-                    value={formRota.description || ''}
+                    value={formRota.description || initialRota.description || ''}
                     onChange={(e) => setFormRota((prev) => ({ ...prev, description: e.target.value }))}
+                    readOnly={readonly}
                 />
             </div>
             <p>Distância total: {formRota.distance?.toFixed(2)} km</p>
 
-            <div ref={mapRef} className={styles.map}></div>
+            {!readonly ? <div 
+                ref={mapRef} 
+                className={styles.map}
+                style={{width: '100%', height: 'auto' }}
+            ></div> :
+            <Image 
+                alt="mapa"
+                width={600}
+                height={400}
+                style={{objectFit: 'contain'}}
+                src={generateStaticMapURL(initialRota.points)}
+            />}
         </div>
     );
 }

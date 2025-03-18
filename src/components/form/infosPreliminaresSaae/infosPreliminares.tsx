@@ -168,12 +168,12 @@ export default function InfosPreliminares ({readOnly, localData, print}:Props){
                         />
                         :null} 
                     </h4>         
-                    <textarea                     
+                    {!readOnly ? <textarea                     
                         name={item.item} 
                         value={item.text}
                         onChange={(e)=>handleChange(e)}
                         readOnly={readOnly}
-                    />
+                    /> : <p>{item.text}</p>}
                 </div>                
             ))}
 

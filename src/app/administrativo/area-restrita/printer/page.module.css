@@ -1,6 +1,5 @@
 .page{
     position: relative;
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -10,16 +9,15 @@
     padding: 10px;
     padding-left: 40px;
 }
-@page {
-    margin: 2cm;
-    size: portrait;
-}
 
 @media print {
+    .page{
+        margin: 0;
+    }
     @page {
         size: A4;
-        margin: 20px;
-        padding: 20px;
+        margin: 1.3cm;
+        size: portrait;
     }
     .noPrint {
         display: none !important;
