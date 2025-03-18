@@ -73,16 +73,16 @@ export default function Page(){
                     </ul>
                     <br />
                     <h1 className={styles.subTitle}>
-                        Transparência 2023
+                        Transparência 2024
                     </h1>
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://drive.google.com/file/d/1lQxWNaJAWJsEeja5TaF6h1HyLmT_m17A/view?usp=sharing" target='_blank'>Balanço Consolidado 2023</a>
+                            <a href="https://drive.google.com/file/d/1lQxWNaJAWJsEeja5TaF6h1HyLmT_m17A/view?usp=sharing" target='_blank'>Balanço Consolidado 2024</a>
                         </li>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="">Parecer Comissão Fiscal</a>
+                            <a href="https://drive.google.com/file/d/1aiIe26AHB76TTpt2nzEoWsnu0lqXRZzh/view?usp=sharing">Parecer Comissão Fiscal AGO 2025</a>
                         </li>
                     </ul>
                 </div>

@@ -1,4 +1,4 @@
-import { DataBaseSaae, ProfileProps } from "@/@types/types"
+import { DadosBasicosUEL, DataBaseSaae, ProfileProps } from "@/@types/types"
 
 export const userTest = [
     {
@@ -97,7 +97,44 @@ export const Odss = [
     '16. Paz, Justiça e Instituições Eficazes',
     '17. Parcerias e Meios de Implementação'
 ]
-
+export const uels:DadosBasicosUEL[] = [
+    {
+        numUel: 6,
+        nameUel: 'Grupo Escoteiro Baden-Powell',
+        cidadeUel: 'Cachoeiro de Itapemirim',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 11,
+        nameUel: 'Grupo Escoteiro do Mar Ilha de Vitória',
+        cidadeUel: 'Vitória',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 19,
+        nameUel: 'Grupo Escoteiro Coqueiral',
+        cidadeUel: 'Aracruz',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 25,
+        nameUel: 'Grupo Escoteiro Jequitibá',
+        cidadeUel: 'Aracruz',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 35,
+        nameUel: 'Grupo Escoteiro Linhares',
+        cidadeUel: 'Linhares',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 48,
+        nameUel: 'Grupo Escoteiro Itabira',
+        cidadeUel: 'Itabira',
+        ufUel: 'ES'
+    },
+]
 export const dataBaseSaae:DataBaseSaae[] = [
     {
         produto: 'Trilha dos Camarás',

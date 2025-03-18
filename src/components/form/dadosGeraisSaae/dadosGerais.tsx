@@ -5,7 +5,7 @@ import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types'
 import { v4 } from 'uuid';
 import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
 import { FaMinus, FaPlus } from "react-icons/fa";
-import { dataBaseSaae, Odss, tiposAtividade } from '@/components/data-training/data-training';
+import { dataBaseSaae, Odss, tiposAtividade, uels } from '@/components/data-training/data-training';
 import { Context } from '@/components/context/context';
 
 import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
@@ -35,7 +35,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
     const [atividade, setAtividade] = useState('');
     const [odss, setOdss] = useState('');
     const [inputRamo, setInputRamo] = useState('');
-
+    const [inputGruposConvidados, setInputGruposConvidados] = useState('');
     const [atividadesList, setAtividadesList] = useState<string[]>([]);
     const [inicioFim, setInicioFim] = useState(false);
     
@@ -407,12 +407,29 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
     const handleKeyBlur = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const value = e.target.value;
-        const name = e.target.name as 'tipoAtividade' | 'odss';
+        const name = e.target.name as 'tipoAtividade' | 'odss' | 'gruposConvidados';
 
         // Adicionar o valor ao array se não for vazio e não for duplicado
         const trimmedValue = value.trim();
+
+        if(!trimmedValue) return;
+
         context.setDataSaae((prev)=>{
-            if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+            if(name === 'gruposConvidados'){
+                const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
+                const existe = prev.dadosGerais.gruposConvidados.find(i=> i.nameUel.includes(trimmedValue));
+                if(existe) return prev;
+
+                const newData = [...(prev.dadosGerais.gruposConvidados || []), findUel];
+                return{
+                    ...prev,
+                    dadosGerais: {
+                        ...prev.dadosGerais,
+                        gruposConvidados: newData
+                    }
+                }
+            }
+            else if (!prev.dadosGerais[name]?.includes(trimmedValue)) {
                 const newArray = prev.dadosGerais[name] ? [
                     ...prev.dadosGerais[name],
                     trimmedValue
@@ -426,7 +443,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     ...prev,
                     dadosGerais: newData
                 }
-                //updateContext(newData);
             }else{
                 return prev
             }
@@ -434,19 +450,31 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
 
         setAtividade(''); // Limpa o input
         setOdss(''); // Limpa o input
-        setInputRamo('');
+        setInputRamo(''); // Limpa o input
+        setInputGruposConvidados(''); // Limpa o input
     };
 
     const handleKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const value = e.target.value;
-        const name = e.target.name as 'tipoAtividade' | 'odss';
+        const name = e.target.name as 'tipoAtividade' | 'odss' | 'gruposConvidados';
 
         if (value.includes(',')) {
             // Adicionar o valor ao array se não for vazio e não for duplicado
             const trimmedValue = value.trim();
             context.setDataSaae((prev)=>{
-                if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+                if(name === 'gruposConvidados'){
+                    const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
+                    const newData = [...(prev.dadosGerais.gruposConvidados || []), findUel];
+                    return{
+                        ...prev,
+                        dadosGerais: {
+                            ...prev.dadosGerais,
+                            gruposConvidados: newData
+                        }
+                    }
+                }
+                else if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
                     const newArray = prev.dadosGerais[name] ? [
                         ...prev.dadosGerais[name],
                         trimmedValue
@@ -457,7 +485,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         [name]: newArray
                     }
     
-                    //updateContext(newData);
                     return{
                         ...prev,
                         dadosGerais: newData
@@ -468,17 +495,29 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             })
             setAtividade(''); // Limpa o input
             setOdss(''); // Limpa o input
-            setInputRamo('');
+            setInputRamo(''); // Limpa o input
+            setInputGruposConvidados(''); // Limpa o input
         }
     };
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        const name = e.currentTarget.name as 'tipoAtividade' | 'odss';
+        const name = e.currentTarget.name as 'tipoAtividade' | 'odss' | 'gruposConvidados';
         if (e.key === 'Enter') {
             // Adicionar o valor ao array se não for vazio e não for duplicado
             const trimmedValue = value.trim();
             context.setDataSaae((prev)=>{
-                if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+                if(name === 'gruposConvidados'){
+                    const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
+                    const newData = [...(prev.dadosGerais.gruposConvidados || []), findUel];
+                    return{
+                        ...prev,
+                        dadosGerais: {
+                            ...prev.dadosGerais,
+                            gruposConvidados: newData
+                        }
+                    }
+                }
+                else if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
                     const newArray = prev.dadosGerais[name] ? [
                         ...prev.dadosGerais[name],
                         trimmedValue
@@ -499,11 +538,12 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             })
             setAtividade(''); // Limpa o input
             setOdss(''); // Limpa o input
-            setInputRamo('');
+            setInputRamo(''); // Limpa o input
+            setInputGruposConvidados(''); // Limpa o input
         }
     };
 
-    const handleRemoveTag = (index: number, name:'tipoAtividade' | 'odss' | 'ramo') => {
+    const handleRemoveTag = (index: number, name:'tipoAtividade' | 'odss' | 'ramo' | 'gruposConvidados') => {
         context.setDataSaae((prev)=>{
             const newArray = prev.dadosGerais[name].filter((_, i) => i !== index)
             
@@ -516,7 +556,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 dadosGerais: newData
             }
         })
-        //updateContext(newData);        
     };
 
     const latLongSet = async (lat: number, lng: number, label: 'localInicio' | 'localFim', address?: string)=>{
@@ -575,9 +614,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         });
     },[])
 
-    useEffect(()=>{
-        console.log("dados gerais", localData);
-    })
+    // useEffect(()=>{
+    //     console.log("dados gerais", localData);
+    // });
+
     return(
         <div 
             className={`${styles.conteiner}`} 
@@ -917,6 +957,66 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     </div>
                 </div>
 
+                {/* grupos convidados */}
+                <div className={styles.line}>
+                    <div className={styles.collum3}>
+                        <h1>
+                            Grupos convidados
+                        </h1>
+                        <input 
+                            name='gruposConvidados'
+                            value={inputGruposConvidados}
+                            placeholder='pressione Enter ou vírgula para inserir'
+                            list='optionsUels'
+                            onChange={(e) => {
+                                setInputGruposConvidados(e.target.value);
+                                handleKeyChange(e);
+                            }}
+                            onKeyDown={handleKeyDown}
+                            onBlur={handleKeyBlur}
+                            className={`${styles.collum}`}
+                            readOnly={readOnly}
+                        />
+                        <datalist id="optionsUels">
+                            {uels.sort((a,b)=>{
+                                const item1 = a.numUel;
+                                const item2 = b.numUel;
+                                if(item1 > item2){
+                                    return 1
+                                }else if(item1 < item2){
+                                    return -1
+                                }else return 0;
+                            }).map(uel=> (
+                                <option value={uel.nameUel} key={uel.nameUel}>{`${uel.numUel || ''} ${uel.ufUel || ''} - ${uel.nameUel || ''}`}</option>
+                            ))}
+                        </datalist>
+                        
+                        <div style={{
+                            display: 'flex', 
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                        }}>
+                            {localData?.gruposConvidados?.sort((a,b)=> a.numUel - b.numUel)?.map((tag, index) => (
+                                <div
+                                    key={index+'tags'}
+                                    className={styles.boxTags}
+                                >
+                                {`${tag.numUel} ${tag.ufUel} - ${tag.nameUel}`}
+                                {!readOnly ? 
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault(); 
+                                            handleRemoveTag(index, 'gruposConvidados')
+                                        }}
+                                    >
+                                        x
+                                    </button>
+                                :null}
+                                </div>                                
+                            ))}
+                        </div>
+                    </div>
+                </div>
                 {/* local/endereço */}
                 <div className={`${styles.line} ${styles.margin0}`}>                    
                     {!readOnly ? 

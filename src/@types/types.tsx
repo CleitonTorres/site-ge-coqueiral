@@ -31,6 +31,12 @@ export interface DadosUEL {
     cidadeUels: string,
     ufUel: string,
 }
+export interface DadosBasicosUEL{
+    numUel: number,
+    nameUel: string,
+    cidadeUel: string,
+    ufUel: string,
+}
 export interface DataNews {
     title: string,
     paragraph: string,
@@ -109,6 +115,7 @@ export interface DadosGeraisSaae {
     atividadeNaoSupervisionada: 'Sim' | 'Não',
     usoTransporteInterMunicipal: 'Sim' | 'Não',
     ramo: string[],
+    gruposConvidados?: DadosBasicosUEL[],
     tipoAtividade: string[],
     odss: string[],
     metodologia: string,
