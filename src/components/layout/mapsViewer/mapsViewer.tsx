@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useRef } from "react";
 import { Endereco } from "@/@types/types";
-import styles from './mapsViewer.module.css';
 import { adressToString, getStaticMapUrl } from "@/scripts/globais";
 import Image from "next/image";
 
@@ -106,11 +105,12 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
             <h6>{
                 data?.address ? data.address : adressToString(data)
             }</h6>
-            {!readonly ? <div 
-                ref={mapRef} 
-                style={{width: '100%', height: 'auto' }}
-                className={styles.nobreak}>
-            </div> 
+            {!readonly ? 
+                <div 
+                    ref={mapRef} 
+                    style={{width: '100%', height: 'auto' }}
+                >
+                </div> 
             : <Image 
                 alt="mapa"
                 width={600}

@@ -1,31 +1,22 @@
 "use client";
 import { SAAE } from "@/@types/types";
-import DadosGerais from "@/components/form/dadosGeraisSaae/dadosGerais";
-import FotosInspecao from "@/components/form/fotosInspecao/fotosInspecao";
-import InfosPreliminares from "@/components/form/infosPreliminaresSaae/infosPreliminares";
-import InventarioSaae from "@/components/form/inventarioSaae/inputIA";
-import MatrizRisco from "@/components/form/matrizSaae/matrizRisco";
-import PlanoEmergencia from "@/components/form/planoEmergencia/planoEmergencia";
-import SectionDocumentos from "@/components/form/sectionDocumentos/documentos";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import styles from '../page.module.css';
 import { FaPrint } from "react-icons/fa";
-import Requerimento from "@/components/form/requerimento/requerimento";
+import SaaeResumo from "@/components/form/saaeResumo/saaeResumo";
 
 export default function PrinterPage() {
   const [data, setData] = useState<SAAE | null>(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
-  // Recupera os dados do localStorage
-  // const storedData = localStorage.getItem("print-data");
 
   useEffect(() => {
     // Recupera os dados do localStorage
     const storedData = localStorage.getItem("print-data");
-    if (storedData) {
+    if (storedData && !data) {
       setData(JSON.parse(storedData));
     }
-  }, []);
+  }, [data]);
 
   if (!data) return <p>Carregando...</p>;
 
@@ -47,47 +38,8 @@ export default function PrinterPage() {
             <FaPrint size={34} onClick={()=>window.print()} style={{cursor:'pointer'}}/>
           </div>
 
-          <Requerimento localData={data.dadosGerais}/>
+          <SaaeResumo localData={data} print hiddeButton/>
 
-          <DadosGerais 
-            readOnly 
-            localData={data.dadosGerais} 
-            obsSaae={data.obs} 
-            statusSaae={data.status} 
-            idSaae={data._id}
-            print
-          />
-          <InfosPreliminares 
-            readOnly 
-            localData={data.infosPreliminares}
-          />
-          <InventarioSaae 
-            readOnly 
-            localData={data.inventarioRiscos} 
-            print
-          />
-          <MatrizRisco 
-            readOnly 
-            localData={data.grauRisco}
-          />
-          <PlanoEmergencia 
-            readOnly 
-            localData={data.planoEmergencia} 
-            grauRisco={data.grauRisco}
-            nomeAtividade={data.dadosGerais.nomeAtividade}
-            localInicio={data.dadosGerais.localInicio}
-            print
-          />
-          <FotosInspecao 
-            readOnly 
-            localData={data.fotosInspecao} 
-            print
-          />
-          <SectionDocumentos 
-            readOnly 
-            localData={data.documentos} 
-            print
-          />
         </div>
         : <p>Carregando...</p>
       }

@@ -147,7 +147,7 @@ export default function Page(){
                         readOnly={false}
                         localData={context.dataSaae?.documentos}
                     /> : null}
-                    {currenteSession === 7 ? <SaaeResumo /> : null}
+                    {currenteSession === 7 ? <SaaeResumo localData={context.dataSaae}/> : null}
                     
                     <NavButoomsSaae currenteSession={currenteSession} setCurrentSession={setCurrentSession}/>                
                 </div>

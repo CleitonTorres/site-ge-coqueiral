@@ -21,9 +21,14 @@
 }
 
 @media print{
+    @page{
+        margin: 10px;
+        size: 'A4';
+    }
     .conteiner{
-      display: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
+      max-width: none !important;
+    }
+    .noPrint{
+        display: none;
     }
 }

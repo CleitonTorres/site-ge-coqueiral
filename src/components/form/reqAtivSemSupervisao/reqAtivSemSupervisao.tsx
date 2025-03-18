@@ -1,11 +1,11 @@
 import { DadosGeraisSaae } from "@/@types/types"
 import { dateFormat2, dateFormat3 } from "@/scripts/globais"
-import styles from './requerimento.module.css';
+import styles from './reqAtivSemSupervisao.module.css';
 
 type Props = {
     localData: DadosGeraisSaae
 }
-export default function Requerimento({localData}:Props){
+export default function RequerimentoAtivSemSup({localData}:Props){
 
     if(!localData) return null;
 

@@ -635,7 +635,7 @@ export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record
  */
 export const printComponent = (
     data: SAAE | InfosPreliminaresSaae[], 
-    field: 'print-data-infosPreliminares' | "print-data") => {
+    field: 'print-data-infosPreliminares' | "print-data" | 'print-data-autoviagem') => {
     //limpa antes de armazenar outros dados.
     localStorage.clear()
 
@@ -646,7 +646,8 @@ export const printComponent = (
     const url = ()=>{
         if(field === 'print-data-infosPreliminares')
             return "/administrativo/area-restrita/printer/infosPreliminares";
-        else return "/administrativo/area-restrita/printer/resumoSaae";
+        else if(field === 'print-data') return "/administrativo/area-restrita/printer/resumoSaae";
+        else return "/administrativo/area-restrita/printer/autoViagem";
     }
     window.open(url(), "_blank");
 };

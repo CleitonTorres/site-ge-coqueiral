@@ -862,8 +862,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 </div>
                 
                 {/* dados da UEL */}
-                <h5>Dados da UEL</h5>
                 <div className={styles.line}>
+                    <h5 style={{width: '100%'}}>Dados da UEL</h5>
                     <div className={styles.collum}>
                         <h1>
                             Numeral da UEL
@@ -1548,101 +1548,99 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 </div>
 
                 {/* rotas do local */}
-                <div className={styles.line}>
-                    {!readOnly ?
-                        <div className={styles.collum} style={{flexDirection: 'row', padding: '6px'}}>
-                            <label htmlFor='rotas'>Criar rotas?</label>
-                            <FaPlus 
-                                className={styles.btnAddAtividade}
-                                onClick={()=>{
-                                    context.setShowModal({
-                                        element:
-                                            <RouteMapComponent 
-                                                initialPosition={
-                                                    context.dataSaae.dadosGerais?.localInicio?.coordenadas ?
-                                                    {
-                                                        lat: context.dataSaae.dadosGerais.localInicio?.coordenadas?.lat,
-                                                        lng: context.dataSaae.dadosGerais.localInicio?.coordenadas?.long
-                                                    } : undefined
+                {!readOnly ?
+                    <div className={styles.collum} style={{flexDirection: 'row', padding: '6px'}}>
+                        <label htmlFor='rotas'>Criar rotas?</label>
+                        <FaPlus 
+                            className={styles.btnAddAtividade}
+                            onClick={()=>{
+                                context.setShowModal({
+                                    element:
+                                        <RouteMapComponent 
+                                            initialPosition={
+                                                context.dataSaae.dadosGerais?.localInicio?.coordenadas ?
+                                                {
+                                                    lat: context.dataSaae.dadosGerais.localInicio?.coordenadas?.lat,
+                                                    lng: context.dataSaae.dadosGerais.localInicio?.coordenadas?.long
+                                                } : undefined
+                                            }
+                                        />,
+                                    styles:['backgroundWhite']
+                                })
+                        }}/>
+                    </div>
+                :null}
+                {localData?.rotas && 
+                <>
+                    <h4>Demais rotas e locais</h4>
+                    {localData?.rotas?.map((rota, index)=>(
+                        <div key={v4()} className={styles.subBoxRotas}> 
+                            {!readOnly ? 
+                                <>
+                                    <span style={{width: 80}}>
+                                        <b style={{fontWeight: 600}}>Título:</b> 
+                                        {rota.title}
+                                    </span>
+                                    <span style={{width: 120}}>
+                                        <b style={{fontWeight: 600}}>Descrição:</b> 
+                                        {rota.description}
+                                    </span>
+                                    <span><b style={{fontWeight: 600}}>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
+                                    <span 
+                                        className='cursorPointer' 
+                                        style={{textDecoration: 'underline', color: 'blue'}}
+                                        onClick={()=>{
+                                            if(!readOnly)
+                                            context.setShowModal({
+                                                element:
+                                                    <RouteMapComponent 
+                                                        initialRota={rota}
+                                                        initialPosition={
+                                                            rota ?
+                                                            {
+                                                                lat: rota.points[0].lat,
+                                                                lng: rota.points[0].lng
+                                                            } : undefined
+                                                        }
+                                                    />,
+                                                styles:['backgroundWhite']
+                                            });
+                                        }}
+                                    >
+                                        <b>Visualizar</b>
+                                    </span>                                
+                                    <FaTrash 
+                                        className={styles.btnRemAtividade}
+                                        onClick={()=>{
+                                            context.setDataSaae((prev)=>{
+                                                const newArray = prev.dadosGerais.rotas?.filter((_, i) => i !== index)
+                                                
+                                                const newData= {
+                                                    ...prev.dadosGerais,
+                                                    rotas: newArray
                                                 }
-                                            />,
-                                        styles:['backgroundWhite']
-                                    })
-                            }}/>
+                                                return{
+                                                    ...prev,
+                                                    dadosGerais: newData
+                                                }
+                                            })
+                                        }}
+                                    />
+                                </>
+                            : <RouteMapComponent 
+                                readonly={true}
+                                initialRota={rota}
+                                initialPosition={
+                                    rota ?
+                                    {
+                                        lat: rota.points[0].lat,
+                                        lng: rota.points[0].lng
+                                    } : undefined
+                                }
+                            />}
                         </div>
-                    :null}
-                    {localData?.rotas && 
-                    <div className={styles.boxRotas} style={{padding: '6px'}}>
-                        <h4>Demais rotas e locais</h4>
-                        {localData?.rotas?.map((rota, index)=>(
-                            <div key={v4()} className={styles.subBoxRotas}> 
-                                {!readOnly ? 
-                                    <>
-                                        <span style={{width: 80}}>
-                                            <b style={{fontWeight: 600}}>Título:</b> 
-                                            {rota.title}
-                                        </span>
-                                        <span style={{width: 120}}>
-                                            <b style={{fontWeight: 600}}>Descrição:</b> 
-                                            {rota.description}
-                                        </span>
-                                        <span><b style={{fontWeight: 600}}>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
-                                        <span 
-                                            className='cursorPointer' 
-                                            style={{textDecoration: 'underline', color: 'blue'}}
-                                            onClick={()=>{
-                                                if(!readOnly)
-                                                context.setShowModal({
-                                                    element:
-                                                        <RouteMapComponent 
-                                                            initialRota={rota}
-                                                            initialPosition={
-                                                                rota ?
-                                                                {
-                                                                    lat: rota.points[0].lat,
-                                                                    lng: rota.points[0].lng
-                                                                } : undefined
-                                                            }
-                                                        />,
-                                                    styles:['backgroundWhite']
-                                                });
-                                            }}
-                                        >
-                                            <b>Visualizar</b>
-                                        </span>                                
-                                        <FaTrash 
-                                            className={styles.btnRemAtividade}
-                                            onClick={()=>{
-                                                context.setDataSaae((prev)=>{
-                                                    const newArray = prev.dadosGerais.rotas?.filter((_, i) => i !== index)
-                                                    
-                                                    const newData= {
-                                                        ...prev.dadosGerais,
-                                                        rotas: newArray
-                                                    }
-                                                    return{
-                                                        ...prev,
-                                                        dadosGerais: newData
-                                                    }
-                                                })
-                                            }}
-                                        />
-                                    </>
-                                : <RouteMapComponent 
-                                    readonly={true}
-                                    initialRota={rota}
-                                    initialPosition={
-                                        rota ?
-                                        {
-                                            lat: rota.points[0].lat,
-                                            lng: rota.points[0].lng
-                                        } : undefined
-                                    }
-                                />}
-                            </div>
-                        ))}
-                    </div>}
-                </div>
+                    ))}
+                </>}
                 
                 {/* coordenadas do local */}
                 <div>
@@ -1689,8 +1687,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 :null}
 
                 {/* programação da atividade */}
-                <div className={styles.line}>
-                    <span>Programação da atividade</span>
+                <div className={`${styles.line} ${styles.bgGreen} ${styles.breakPage}`}>
+                    <span><b>Programação da atividade</b></span>
                 </div>
 
                 {/* cabeçalho da programação */}

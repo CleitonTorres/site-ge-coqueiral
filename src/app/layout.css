@@ -320,17 +320,6 @@
 }
 
 
-
-@media print{
-  @page {
-    margin: 2cm;
-    size: portrait;
-    size: A4;
-    margin: 20px;
-    padding: 20px;
-  }
-}
-
 @keyframes show {
   0%{
       width: 0px;

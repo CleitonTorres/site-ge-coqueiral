@@ -334,7 +334,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     setShowSaae(false);
                 }}
             > 
-                <SaaeResumo hiddeButton={true} />
+                <SaaeResumo hiddeButton={true} localData={context.dataSaae}/>
             </Modal>
         :null}
         </>

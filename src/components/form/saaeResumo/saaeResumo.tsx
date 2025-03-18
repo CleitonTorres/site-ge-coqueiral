@@ -13,16 +13,19 @@ import { Context } from '@/components/context/context';
 import Confirme from '@/components/layout/confirme/confirme';
 import { printComponent } from '@/scripts/globais';
 import Requerimento from '../requerimento/requerimento';
+import { SAAE } from '@/@types/types';
 
 type Props= {
-    hiddeButton?: boolean
+    hiddeButton?: boolean,
+    localData: SAAE | null,
+    print?: boolean
 }
 /**
  * Componente que exibe o resumo antes do envio ou os dados preenchidos de uma SAAE já enviada. 
  * @param {boolean} hiddeButton - Se verdadeiro, não exibe o botão de envio.
  * @returns {JSX.Element} retorna o JSX com o resumo da SAAE.
  */
-export default function SaaeResumo ({hiddeButton}:Props){
+export default function SaaeResumo ({hiddeButton, localData, print}:Props){
     const context = useContext(Context);
 
     useEffect(()=>{
@@ -33,58 +36,76 @@ export default function SaaeResumo ({hiddeButton}:Props){
         <div className={styles.conteiner}>
             <h2>8. Resumo da sua SAAE</h2>
             <span 
+                className={styles.noPrint}
                 style={{cursor:'pointer', textDecoration: 'underline'}}
                 onClick={()=>{
-                    printComponent(context.dataSaae.infosPreliminares, 'print-data-infosPreliminares');
+                    printComponent(localData.infosPreliminares, 'print-data-infosPreliminares');
                 }}
             >
                 Imprimir Infos. Preliminares
             </span>
             
+            {localData?.dadosGerais?.usoTransporteInterMunicipal ? 
             <span 
+                className={styles.noPrint}
                 style={{cursor:'pointer', textDecoration: 'underline'}}
                 onClick={()=>{
-                    printComponent(context.dataSaae, 'print-data');
+                    printComponent(localData.infosPreliminares, 'print-data-autoviagem');
+                }}
+            >
+                Imprimir Autorização de Viagem
+            </span> : null}
+            <span 
+                className={styles.noPrint}
+                style={{cursor:'pointer', textDecoration: 'underline'}}
+                onClick={()=>{
+                    printComponent(localData, 'print-data');
                 }}
             >
                 Imprimir SAAE
             </span>
 
-            <Requerimento localData={context.dataSaae.dadosGerais}/>
+            <Requerimento localData={localData.dadosGerais} />
 
             <DadosGerais 
                 readOnly 
-                idSaae={context.dataSaae?._id} 
-                obsSaae={context.dataSaae?.obs} 
-                statusSaae={context.dataSaae?.status}
-                localData={context.dataSaae?.dadosGerais}
+                idSaae={localData?._id} 
+                obsSaae={localData?.obs} 
+                statusSaae={localData?.status}
+                localData={localData?.dadosGerais}
+                print={print}
             />
             <InfosPreliminares 
                 readOnly
-                localData={context.dataSaae?.infosPreliminares}
+                localData={localData?.infosPreliminares}
+                print={print}
             />
             <InventarioSaae 
                 readOnly
-                localData={context.dataSaae?.inventarioRiscos}
+                localData={localData?.inventarioRiscos}
+                print={print}
             />
             <MatrizRisco 
                 readOnly
-                localData={context.dataSaae?.grauRisco}
+                localData={localData?.grauRisco}
             />
             <PlanoEmergencia 
                 readOnly
-                grauRisco={context.dataSaae?.grauRisco}
-                nomeAtividade={context.dataSaae?.dadosGerais?.nomeAtividade}
-                localInicio={context.dataSaae?.dadosGerais?.localInicio}
-                localData={context.dataSaae?.planoEmergencia}
+                grauRisco={localData?.grauRisco}
+                nomeAtividade={localData?.dadosGerais?.nomeAtividade}
+                localInicio={localData?.dadosGerais?.localInicio}
+                localData={localData?.planoEmergencia}
+                print={print}
             />
             <FotosInspecao 
                 readOnly
-                localData={context.dataSaae?.fotosInspecao}
+                localData={localData?.fotosInspecao}
+                print={print}
             />
             <SectionDocumentos 
                 readOnly
-                localData={context.dataSaae?.documentos}
+                localData={localData?.documentos}
+                print={print}
             />
             {!hiddeButton ? 
             <div className={styles.subConteiner}>
@@ -96,7 +117,7 @@ export default function SaaeResumo ({hiddeButton}:Props){
                         element: <Confirme
                             message='Deseja enviar sua SAAE para análise?'
                             confirme={async()=>{
-                                return await context.handleSendSaae(context.dataSaae);
+                                return await context.handleSendSaae(localData);
                             }}
                             cancele={()=> context.setShowModal(null)}
                         />,
