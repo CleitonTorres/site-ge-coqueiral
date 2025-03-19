@@ -1159,13 +1159,13 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                 <div className={styles.subConteiner}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome</label>
-                        <input
+                        {!readOnly ? <input
                             type='text' 
                             name='prontoSocorro.nome'
                             value={localData?.prontoSocorro?.nome || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.prontoSocorro?.nome || ''}</p>}
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Contatos</label>
@@ -1189,13 +1189,13 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Endereço</label>
-                        <input
+                        {!readOnly ? <input
                             type='text' 
                             name='prontoSocorro.local'
                             value={localData?.prontoSocorro?.local || ''}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.prontoSocorro?.local || ''}</p>}
                     </div>
                 </div>
             </div>
@@ -1206,13 +1206,13 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                 <div className={styles.subConteiner}>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Nome</label>
-                        <input
+                        {!readOnly ? <input
                             type='text' 
                             name='hospital.nome'
                             value={localData?.hospital?.nome || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.hospital?.nome || ""}</p>}
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Contatos</label>
@@ -1236,13 +1236,13 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
                     </div>
                     <div className={styles.boxInput}>
                         <label htmlFor="">Endereço</label>
-                        <input
+                        {!readOnly ? <input
                             type='text' 
                             name='hospital.local'
                             value={localData?.hospital?.local || ""}
                             onChange={(e)=>handleChangeData(e)}
                             readOnly={readOnly}
-                        />
+                        /> : <p>{localData?.hospital?.local || ""}</p>}
                     </div>
                 </div>
             </div> 

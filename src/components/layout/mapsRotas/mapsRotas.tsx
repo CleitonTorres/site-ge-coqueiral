@@ -346,6 +346,8 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 height={400}
                 style={{objectFit: 'contain'}}
                 src={generateStaticMapURL(initialRota?.points)}
+                priority={true}
+                loading="eager"
             />}
         </div>
     );

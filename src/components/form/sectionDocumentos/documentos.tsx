@@ -118,7 +118,8 @@ export const ImagePreview = ({ file, width, height }:{file:File | string, width:
                     window?.open(urlSigned, '_blank')
                 }
             }}
-            loading='lazy'
+            priority={true}
+            loading="eager"
         />
     );
 };

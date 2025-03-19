@@ -13,7 +13,7 @@ export default function PrinterPage() {
   useEffect(() => {
     const loadData = () => {
       const storedData = localStorage.getItem("print-data");
-      console.log("carregou data-print");
+      console.log("carregou data-print", storedData);
       if (storedData) {
         setData(JSON.parse(storedData));
       }
@@ -32,8 +32,21 @@ export default function PrinterPage() {
     };
   }, []);  
 
-  if (!data) return <p>Carregando...</p>;
+  useEffect(() => {
+    const loadImages = () => {
+      document.querySelectorAll("img").forEach((img) => {
+        if (!img.complete) {
+          img.loading = "eager"; // Força o carregamento imediato
+        }
+      });
+    };
+  
+    window.addEventListener("beforeprint", loadImages);
+  
+    return () => window.removeEventListener("beforeprint", loadImages);
+  }, []);
 
+  
   return (
     <>
       <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`}/>
@@ -52,7 +65,7 @@ export default function PrinterPage() {
             <FaPrint size={34} onClick={()=>window.print()} style={{cursor:'pointer'}}/>
           </div>
 
-          <SaaeResumo localData={data} print hiddeButton/>
+          {data ? <SaaeResumo localData={data} print hiddeButton/> : <p>carregando...</p>}
 
         </div>
         : <p>Carregando...</p>

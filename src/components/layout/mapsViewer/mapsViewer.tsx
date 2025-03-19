@@ -114,6 +114,8 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
                 height={400}
                 style={{objectFit: 'contain'}}
                 src={getStaticMapUrl(data.coordenadas?.lat, data.coordenadas?.long, label === "localInicio" ? 'Início' : 'Fim')}
+                priority={true}
+                loading="eager"
             />}
         </div>
     )
