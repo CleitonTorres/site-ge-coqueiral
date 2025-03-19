@@ -113,6 +113,9 @@
     resize: vertical;
     font-weight: 300;
 }
+.flexRowSpace{
+    justify-content: space-between !important;
+}
 .closeBtn{
     position: absolute; 
     right: 40px; 

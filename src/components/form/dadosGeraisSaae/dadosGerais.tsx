@@ -417,7 +417,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         context.setDataSaae((prev)=>{
             if(name === 'gruposConvidados'){
                 const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
-                const existe = prev.dadosGerais.gruposConvidados.find(i=> i.nameUel.includes(trimmedValue));
+                const existe = prev.dadosGerais?.gruposConvidados?.find(i=> i.nameUel.includes(trimmedValue));
                 if(existe) return prev;
 
                 const newData = [...(prev.dadosGerais.gruposConvidados || []), findUel];
@@ -1558,7 +1558,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                     element:
                                         <RouteMapComponent 
                                             initialPosition={
-                                                context.dataSaae.dadosGerais?.localInicio?.coordenadas ?
+                                                localData?.localInicio?.coordenadas ?
                                                 {
                                                     lat: context.dataSaae.dadosGerais.localInicio?.coordenadas?.lat,
                                                     lng: context.dataSaae.dadosGerais.localInicio?.coordenadas?.long
@@ -1576,19 +1576,22 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     {localData?.rotas?.map((rota, index)=>(
                         <div key={v4()} className={styles.subBoxRotas}> 
                             {!readOnly ? 
-                                <>
-                                    <span style={{width: 80}}>
+                                <div className={styles.line}>
+                                    <span style={{width: 80, height: 'auto'}}>
                                         <b style={{fontWeight: 600}}>Título:</b> 
                                         {rota.title}
                                     </span>
-                                    <span style={{width: 120}}>
+                                    <span style={{width: 120, height: 'auto'}}>
                                         <b style={{fontWeight: 600}}>Descrição:</b> 
                                         {rota.description}
                                     </span>
-                                    <span><b style={{fontWeight: 600}}>Distância/KM:</b> {rota.distance?.toFixed(2)}</span>
+                                    <span style={{height: 'auto'}}>
+                                        <b style={{fontWeight: 600}}>Distância/KM:</b> 
+                                        {rota.distance?.toFixed(2)}
+                                    </span>
                                     <span 
                                         className='cursorPointer' 
-                                        style={{textDecoration: 'underline', color: 'blue'}}
+                                        style={{textDecoration: 'underline', color: 'blue', height: 'auto'}}
                                         onClick={()=>{
                                             if(!readOnly)
                                             context.setShowModal({
@@ -1626,7 +1629,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                             })
                                         }}
                                     />
-                                </>
+                                </div>
                             : <RouteMapComponent 
                                 readonly={true}
                                 initialRota={rota}
@@ -1692,7 +1695,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 </div>
 
                 {/* cabeçalho da programação */}
-                <div className={`${styles.line} ${print ? styles.print : ''}`}>
+                <div className={`${styles.line} ${print ? styles.print : ''} ${styles.flexRowSpace}`}>
                     <div className={`${styles.collum} ${styles.width120}`}>
                         <h1 >
                             Data
@@ -1732,7 +1735,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
 
                 {/* dados adicionados à programação */}
                 {localData?.programacao?.map((prog, idx)=>(
-                    <div key={idx+"progragamacao"} className={`${styles.line} ${print ? styles.print : ''}`}>
+                    <div 
+                        key={idx+"progragamacao"} 
+                        className={`${styles.line} ${print ? styles.print : ''} ${styles.flexRowSpace}`}
+                    >
                         <div className={`${styles.collum} ${styles.width120}`}>
                             {!readOnly ? <input
                                 name='data'
@@ -1790,7 +1796,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 ))}
 
                 {!readOnly ? 
-                    <div className={`${styles.line} ${print ? styles.print : ''}`}>
+                    <div className={`${styles.line} ${print ? styles.print : ''} ${styles.flexRowSpace}`}>
                         <div className={`${styles.collum} ${styles.width120}`}>
                             <input
                                 type='date'

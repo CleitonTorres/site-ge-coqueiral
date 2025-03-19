@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { Endereco } from "@/@types/types";
 import { adressToString, getStaticMapUrl } from "@/scripts/globais";
 import Image from "next/image";
+import styles from './mapsViewer.module.css';
 
 type Props = {
     data?: Endereco,
@@ -106,11 +107,7 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
                 data?.address ? data.address : adressToString(data)
             }</h6>
             {!readonly ? 
-                <div 
-                    ref={mapRef} 
-                    style={{width: '100%', height: 'auto' }}
-                >
-                </div> 
+                <div ref={mapRef} className={styles.map}></div> 
             : <Image 
                 alt="mapa"
                 width={600}

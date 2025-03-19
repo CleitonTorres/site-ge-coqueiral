@@ -320,33 +320,32 @@ export default function RouteMapComponent({ readonly, initialRota, initialPositi
                 {!readonly ? <input 
                     type="text" 
                     name="title"
-                    value={formRota.title || initialRota.title || ''}
+                    value={formRota.title || initialRota?.title || ''}
                     onChange={(e) => setFormRota((prev) => ({ ...prev, title: e.target.value }))}
                     readOnly={readonly}
-                /> : <p>{formRota.title || initialRota.title || ''}</p>}
+                /> : <p>{formRota?.title || initialRota?.title || ''}</p>}
             </div>
             <div className ={styles.subConteiner}>
                 <span>Descrição:</span>
                 {!readonly ? <textarea
                     name="description" 
-                    value={formRota.description || initialRota.description || ''}
+                    value={formRota.description || initialRota?.description || ''}
                     onChange={(e) => setFormRota((prev) => ({ ...prev, description: e.target.value }))}
                     readOnly={readonly}
-                /> : <p>{formRota.description || initialRota.description || ''}</p>}
+                /> : <p>{formRota.description || initialRota?.description || ''}</p>}
             </div>
-            <p>Distância total: {formRota.distance?.toFixed(2) || initialRota.distance?.toFixed(2)} km</p>
+            <p>Distância total: {formRota.distance?.toFixed(2) || initialRota?.distance?.toFixed(2)} km</p>
 
             {!readonly ? <div 
                 ref={mapRef} 
                 className={styles.map}
-                style={{width: '100%', height: 'auto' }}
             ></div> :
             <Image 
                 alt="mapa"
                 width={600}
                 height={400}
                 style={{objectFit: 'contain'}}
-                src={generateStaticMapURL(initialRota.points)}
+                src={generateStaticMapURL(initialRota?.points)}
             />}
         </div>
     );

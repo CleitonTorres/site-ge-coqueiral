@@ -1,3 +1,7 @@
+.map{
+    position: relative;
+    height: 500px;
+}
 @media print {
     .nobreak{
         break-before: auto;

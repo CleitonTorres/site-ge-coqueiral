@@ -177,7 +177,7 @@ export function dateFormat2(date:Date | undefined){
         date = typeof date === 'string' ? new Date(date) : date;
 
         // Extrair dia, mês e ano
-        const dia = date.getDate() > 10 ? `0${date.getDate()}` : date.getDate();
+        const dia = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
         const mes = date.getMonth()+1 < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1; // Meses começam em 0
         const ano = date.getFullYear();    
         
