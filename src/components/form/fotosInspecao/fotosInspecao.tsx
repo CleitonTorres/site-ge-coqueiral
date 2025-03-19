@@ -385,7 +385,7 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                         <div  className={styles.boxFotos}>                            
                             {section.fotos?.map((foto, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
-                                    {!print && foto.title ? <div>
+                                    {foto.title ? <div>
                                         <b>Título da imagem:</b> 
                                         {!print ? <input 
                                             name='fotos.title'
@@ -395,7 +395,7 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                                             readOnly={readOnly}
                                         /> : <p>{foto.title || ''}</p>}
                                     </div> : null}
-                                    {!print && foto.description ? <div>
+                                    {foto.description ? <div>
                                         <b>Descrição:</b> 
                                         {!print ? <input 
                                             name='fotos.description'

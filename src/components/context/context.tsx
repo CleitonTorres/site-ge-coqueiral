@@ -844,10 +844,9 @@ export default function Provider({children}:{children:ReactNode}){
           });
 
           setDataSaae({} as SAAE);
-          setSaaeEdit(undefined);
-          
-          //não precisa deletar porque a SAAE editada não fica armazenado nele        
-          // deleteDataStorage('saae', saaeEdit! as number) 
+          setSaaeEdit(undefined);          
+          deleteDataStorage('saae', saaeEdit as number) 
+
           return{
             bool: true,
             text: 'SAAE enviada com sucesso!'
