@@ -59,9 +59,19 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
             let newData = prev.planoEmergencia || {} as PlanoEmergenciaSaae;
 
             if(name.includes('dataInspecao')){
+                let newValue:string | Date = value;
+                
+                if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
+                    const ano = value.split('-')[0]//pega o ano;
+                    if(parseInt(ano) < 2000) newValue = value;
+                    else newValue = new Date(value + "T00:00:00"); 
+                } else {
+                    newValue = value; // Permite digitação parcial sem quebrar o estado
+                }
+
                 newData = {
                     ...newData,
-                    dataInspecao: new  Date(value + 'T00:00')
+                    dataInspecao: newValue
                 }
 
             }else if(name.includes('prontoSocorro')){

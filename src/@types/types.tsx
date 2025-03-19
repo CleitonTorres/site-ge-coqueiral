@@ -122,8 +122,8 @@ export interface DadosGeraisSaae {
     objetivo: string,
     localInicio: Endereco,
     localFim?: Endereco,
-    dataInicio: Date,
-    dataFim: Date,
+    dataInicio: Date | string,
+    dataFim: Date | string,
     horaInicio: string,
     horaFim: string,
     localSaida: string,
@@ -155,7 +155,7 @@ export interface Rota {
     id: string
 }
 export interface ProgramacaoAtividade {
-    data: Date,
+    data: Date | string,
     hora: string,
     duracao: string,
     descricao: string,
@@ -169,7 +169,7 @@ export interface PlanoEmergenciaSaae {
     fichaMedicaRevisada: 'Sim' | 'Não',
     kitPrimeirosSocorros: 'Sim' | 'Não',
     inspesaoLocal: 'Sim' | 'Não',
-    dataInspecao: Date,
+    dataInspecao: Date | string,
     prontoSocorro: {
         nome: string,
         local: string,

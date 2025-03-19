@@ -38,8 +38,10 @@
     text-align: justify;
     border: 1px solid;
 }
+
 .header span{
-    font-size: 11px;
+    font-size: 10px;
+    text-wrap: nowrap;
 }
 .collum, .collum2{
     display: flex;
@@ -53,51 +55,46 @@
     background-color: var(--white);
     width: 120px;
 }
+.collum, .collum2{
+width: 47px;
+}
 .collum span::after{
     content: '';
     animation: loadingDots 1s steps(3, end) infinite;
 }
 
-.addItem {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.addItem, .removeItem{
+    position: absolute;
+    right: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
 }
-.addItem svg path{
+.addItem path{
     color: var(--blue);
 }
-.addItem  svg{
-    font-size: 18px;
-}
-.addItem:hover svg{
+
+.addItem:hover{
     background-color: var(--verde);
     border-radius: 10px;
     padding: 3px;
     cursor: pointer;
 }
-.addItem:active svg{
+.addItem:active{
     padding: 4px;
 }
-.removeItem{
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.removeItem svg path{
+
+.removeItem path{
     color: red;
 }
-.removeItem  svg{
-    font-size: 18px;
-}
-.removeItem:hover svg{
+
+.removeItem:hover{
     background-color: var(--verde);
     border-radius: 10px;
     padding: 3px;
     cursor: pointer;
 }
-.removeItem:active svg{
+.removeItem:active{
     padding: 4px;
 }
 .boxCheckIA{
@@ -120,11 +117,12 @@
     padding-left: 10px;
 }
 .line{
+    position: relative;
     display: flex;
     flex-direction: row;
     width: 100%;
     min-width: 380px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     break-before: auto;
     break-inside: avoid;
 }
@@ -133,6 +131,11 @@
     padding: 6px;
     text-align: center;
 }
+.widthAuto{
+    width: 100% !important;
+    max-width: 210px !important;
+    min-width: 210px !important;
+}
 .print .line h1, .print .line .collum
 {
     font-size: 10px;
@@ -140,11 +143,8 @@
     height: auto!important;
 }
 .print .collum2{
-    width: 50px !important;
-}
-.print .line h1{
-    height: 40px;
-    text-align: center;
+    width: 47px !important;
+    font-size: 10px;
 }
 
 @keyframes loadingDots {
@@ -192,6 +192,15 @@
         break-before: always;
         page-break-before: always;
         display: block;
-        width: 100%;
+    }
+    .widthAuto{
+        width: 100% !important;
+        max-width: 210px;
+        min-width: 210px;
+    }
+    .print .header .collum2{
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 44px;
     }
 }

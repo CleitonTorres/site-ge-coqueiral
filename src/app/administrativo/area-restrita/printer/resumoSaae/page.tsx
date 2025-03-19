@@ -11,12 +11,26 @@ export default function PrinterPage() {
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
   useEffect(() => {
-    // Recupera os dados do localStorage
-    const storedData = localStorage.getItem("print-data");
-    if (storedData && !data) {
-      setData(JSON.parse(storedData));
-    }
-  }, [data]);
+    const loadData = () => {
+      const storedData = localStorage.getItem("print-data");
+      console.log("carregou data-print");
+      if (storedData) {
+        setData(JSON.parse(storedData));
+      }
+    };
+  
+    // Carrega os dados na montagem
+    loadData();
+  
+    // Adiciona um listener para mudanças no localStorage
+    window.addEventListener("storage", loadData);
+  
+    // Remove o listener quando o componente desmontar
+    return () => {
+      localStorage.removeItem("print-data");
+      window.removeEventListener("storage", loadData);
+    };
+  }, []);  
 
   if (!data) return <p>Carregando...</p>;
 

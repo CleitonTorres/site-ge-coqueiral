@@ -281,20 +281,20 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
             :null}
             <div className={`${styles.table} ${print ? styles.print : ''}`}> 
                 {/* cabeçalho */}
-                <div className={styles.line} >
-                    <h1 className={styles.header}>
+                <div className={styles.line}>
+                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
                         Etapa do Evento/Atividade
                     </h1>
-                    <h1 className={styles.header}>
+                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
                         Perigos
                     </h1>
-                    <h1 className={styles.header}>
+                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
                         Danos
                     </h1>
-                    <h1 className={styles.header}>
+                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
                         Controle Operacional
                     </h1>
-                    <h1 className={styles.header}>
+                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
                         Ações mitigadoras
                     </h1>
                     <h1 
@@ -309,15 +309,17 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                     >
                         <span style={{transform: 'rotate(-90deg)'}}>Consequência</span>
                     </h1>
-                    <h1 className={`${styles.header} ${styles.collum2}`} title='Consequência caso o perigo ocorra'>
-                        Nível de Risco
+                    <h1 
+                        className={`${styles.header} ${styles.collum2}`} 
+                        title='Consequência caso o perigo ocorra'>
+                        <span style={{transform: 'rotate(-90deg)'}}>Nível de Risco</span>
                     </h1>
                 </div>
 
                 {/* inputs */}
                 {!readOnly ?
                     <div className={styles.line}>
-                        <div className={styles.collum}>
+                        <div className={`${styles.collum} ${styles.widthAuto}`}>
                             {loading ? <span>gerando dados</span> : null}
                             <textarea
                                 name='atividade'
@@ -328,8 +330,8 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                                 placeholder="Exemplo: remada em caiaque"
                                 style={{
                                     border: 'none', 
-                                    width: '96%',
                                     height: '100%',
+                                    width: '96%',
                                     fontSize: '11px',
                                 }}
                             />                       
@@ -339,7 +341,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             value={atividadeCorrente?.perigo || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
                             placeholder="Exemplo: insolação"
-                            className={`${styles.collum}`}
+                            className={`${styles.collum} ${styles.widthAuto}`}
                             readOnly={readOnly}
                         />
                         <textarea
@@ -347,27 +349,27 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             value={atividadeCorrente?.danos || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
                             placeholder="Exemplo: nauseas, dor de cabeça, fraqueza, queimaduras na pele..."
-                            className={`${styles.collum} `}
+                            className={`${styles.collum}  ${styles.widthAuto}`}
                         />
                         <textarea
                             name='controleOperacional'
                             value={atividadeCorrente?.controleOperacional || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
                             placeholder="Exemplo: orientação para usar roupas leves e adequadas para a atividade, usar cobertura de cabeça, se hidratar regularmente."
-                            className={`${styles.collum} `}
+                            className={`${styles.collum}  ${styles.widthAuto}`}
                         />
                         <textarea
                             name='acoesMitigadoras'
                             value={atividadeCorrente?.acoesMitigadoras || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
                             placeholder="Exemplo: Colocar o participante em repouso em um local sombreado, oferecer hidratação lenta, umedecer a nuca e o rosto."
-                            className={`${styles.collum} `}
+                            className={`${styles.collum}  ${styles.widthAuto}`}
                         />
                         <select
                             name='probabilidade'
                             value={atividadeCorrente?.probabilidade || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
-                            className={`${styles.collum} ${styles.collum2}`}
+                            className={`${styles.collum2}`}
                         >
                             <option value=""></option>
                             <option value="1">1</option>
@@ -380,7 +382,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             name='consequencia'
                             value={atividadeCorrente?.consequencia || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
-                            className={`${styles.collum} ${styles.collum2}`}
+                            className={`${styles.collum2}`}
                         >
                             <option value=""></option>
                             <option value="1">1</option>
@@ -393,17 +395,16 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             name='nivelRisco'
                             value={atividadeCorrente.nivelRisco || ''}
                             onChange={(e) => handleCurrentAtivity(e)}
-                            className={`${styles.collum} ${styles.collum2}`}
+                            className={`${styles.collum2}`}
                         >
                             <option value={atividadeCorrente.nivelRisco || ''}>{(atividadeCorrente?.probabilidade * atividadeCorrente?.consequencia) || ''}</option>
                         </select>
-                        <div className={styles.addItem}>
-                            <FaPlus 
-                                onClick={addItem} 
-                                aria-label='adicionar este item'
-                                title='adicionar este item'
-                            />
-                        </div>
+                        <FaPlus 
+                            onClick={addItem} 
+                            aria-label='adicionar este item'
+                            title='adicionar este item'
+                            className={styles.addItem}
+                        />
                     </div>
                 :null}
 
@@ -415,7 +416,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             name='atividade'
                             value={item?.atividade || ''}
                             onChange={(e) => handleForm(e, idx)}
-                            className={`${styles.collum}`}
+                            className={`${styles.collum} ${styles.widthAuto}`}
                             readOnly={readOnly}
                         />
                         {
@@ -425,12 +426,12 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             value={item?.perigo || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                             readOnly={readOnly}
                         />:
                          <p 
                             key={`${idx}-perigo`}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                         >
                                 {item?.perigo || ''}
                         </p>
@@ -442,12 +443,12 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             value={item?.danos || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                             readOnly={readOnly}
                         />
                         : <p 
                             key={`${idx}-danos`}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                         >
                             {item?.danos || ''}
                         </p>
@@ -459,12 +460,12 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             value={item?.controleOperacional || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                             readOnly={readOnly}
                         />
                         : <p 
                             key={`${idx}-controleOperacional`}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                         >
                             {item?.controleOperacional || ''}
                         </p>
@@ -476,12 +477,12 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                             value={item?.acoesMitigadoras || ''}
                             onChange={(e) => handleForm(e, idx)}
                             onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                             readOnly={readOnly}
                         />
                         : <p 
                             key={`${idx}-acoesMitigadoras`}
-                            className={`${styles.collum} ${styles.alingLeftText}`}
+                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
                         >
                             {item?.acoesMitigadoras || ''}
                         </p>
@@ -503,12 +504,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                                 <option value="5">5</option>
                             </select>
                         :
-                            <input 
-                                key={`${idx}-probabilidade`}
-                                defaultValue={item?.probabilidade}
-                                readOnly={readOnly}
-                                className={`${styles.collum2} ${styles.alingLeftText}`}
-                            />
+                            <p className={`${styles.collum2} ${styles.alingLeftText}`}>{item?.probabilidade}</p>
                         }
                         {
                         !readOnly ?
@@ -527,12 +523,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                                 <option value="5">5</option>
                             </select>
                         :
-                            <input 
-                                key={`${idx}-consequencia`}
-                                defaultValue={item?.consequencia}
-                                className={`${styles.collum2} ${styles.alingLeftText}`}
-                                readOnly={readOnly}
-                            />
+                            <p className={`${styles.collum2} ${styles.alingLeftText}`}>{item?.consequencia}</p>
                         }
                         {!readOnly ?
                             <select                                
@@ -544,19 +535,17 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                                 <option value={item?.nivelRisco}>{item?.nivelRisco}</option>
                             </select>
                             :
-                            <input 
-                                defaultValue={item?.nivelRisco || ''}
-                                readOnly={readOnly}
-                                className={`${styles.collum2} ${styles.alingLeftText}`}
-                            />
+                            <p className={`${styles.collum2} ${styles.alingLeftText}`}>
+                                {item?.nivelRisco || ''}
+                            </p>
                         }
                         {!readOnly ? 
-                            <div className={styles.removeItem}>
-                                <FaMinus 
-                                    onClick={()=>removeItem(idx)} 
-                                    aria-label='remover este item'
-                                    title='remover este item'/>
-                            </div>
+                            <FaMinus 
+                                className={styles.removeItem}
+                                onClick={()=>removeItem(idx)} 
+                                aria-label='remover este item'
+                                title='remover este item'
+                            />
                         :null}
                     </div>
                 ))}

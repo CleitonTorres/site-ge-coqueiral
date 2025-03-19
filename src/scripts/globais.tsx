@@ -146,7 +146,7 @@ export const isBase64 = (string:string)=>{
  * @param {Date | undefined} date - data a ser formatada
  * @returns {string}
  */
-export function dateFormat1(date:Date | undefined){
+export function dateFormat1(date:Date | string | undefined){
     if(!date){
         return ''
     }
@@ -154,12 +154,9 @@ export function dateFormat1(date:Date | undefined){
         // Garantir que o input seja um objeto Date
         date = typeof date === 'string' ? new Date(date) : date;
 
-        // Extrair dia, mês e ano
-        const dia = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate();
-        const mes = date.getMonth()+1 < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1; // Meses começam em 0
-        const ano = date.getFullYear();    
+        const dateFormat = date.toISOString().split("T")[0];
 
-        return `${ano}-${mes}-${dia}`;
+        return dateFormat;
     }
 }
 
@@ -168,7 +165,7 @@ export function dateFormat1(date:Date | undefined){
  * @param {Date | undefined} date - data a ser formatada 
  * @returns {string}
  */
-export function dateFormat2(date:Date | undefined){
+export function dateFormat2(date:Date | string | undefined){
     if(!date){
         return ''
     }

@@ -9,12 +9,24 @@ export default function Page(){
     const [data, setData] = useState<InfosPreliminaresSaae[] | null>(null);
     
     useEffect(() => {
-    // Recupera os dados do localStorage
-    const storedData = localStorage.getItem("print-data-infosPreliminares");
-    if (storedData) {
-        setData(JSON.parse(storedData));
-    }
-    }, []);
+      const loadData = () => {
+        const storedData = localStorage.getItem("print-data-infosPreliminares");
+        if (storedData) {
+          setData(JSON.parse(storedData));
+        }
+      };
+    
+      // Carrega os dados na montagem
+      loadData();
+    
+      // Adiciona um listener para mudanças no localStorage
+      window.addEventListener("storage", loadData);
+    
+      // Remove o listener quando o componente desmontar
+      return () => {
+        window.removeEventListener("storage", loadData);
+      };
+    }, []);  
 
     if (!data) return <p>Carregando...</p>;
 

@@ -44,6 +44,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         const name = e.target.name;
         const value= e.target.value;
 
+        console.log("monitor", name, value)
         context.setDataSaae((prev)=>{
             let newData = prev.dadosGerais;
             if(['horaInicio', 'horaFim'].includes(name)){
@@ -122,10 +123,20 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     }
                 }
             }else if(["dataInicio", 'dataFim'].includes(name)){
-                const date = new Date(value + 'T00:00');
+                let newValue:string | Date = value;
+                
+                if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
+                    const ano = value.split('-')[0]//pega o ano;
+                    if(parseInt(ano) < 2000) newValue = value;
+                    else newValue = new Date(value + "T00:00:00"); 
+                } else {
+                    newValue = value; // Permite digitação parcial sem quebrar o estado
+                }
+
+                console.log('data teste', newValue);
                 newData = {
                     ...newData,
-                    [name]: date
+                    [name]: newValue
                 }
             }else if(name.includes('custoIndividual')){
                 newData = {
@@ -186,10 +197,18 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
 
         setCurrentProgramacao((prev)=>{
             if(name === "data"){
-                const date = new Date(value + `T00:00`);
+                let newValue:string | Date = value;
+                
+                if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
+                    const ano = value.split('-')[0]//pega o ano;
+                    if(parseInt(ano) < 2000) newValue = value;
+                    else newValue = new Date(value + "T00:00:00"); 
+                } else {
+                    newValue = value; // Permite digitação parcial sem quebrar o estado
+                }
                 return{
                     ...prev,
-                    data: date
+                    data: newValue
                 }
             }else if(['hora', 'duracao'].includes(name)){
                 return{
@@ -213,10 +232,19 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 const newProgragacao = (prev.dadosGerais.programacao || []).map((p)=>{
                     if(p.id === itemId){
                         if(name === "data"){
-                            const date = new Date(value + `T00:00`);
+                            let newValue:string | Date = value;
+                
+                            if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
+                                const ano = value.split('-')[0]//pega o ano;
+                                if(parseInt(ano) < 2000) newValue = value;
+                                else newValue = new Date(value + "T00:00:00"); 
+                            } else {
+                                newValue = value; // Permite digitação parcial sem quebrar o estado
+                            }
+
                             return{
                                 ...p,
-                                data: date
+                                data: newValue
                             }
                         }
                         else if(['hora', 'duracao'].includes(name)){
@@ -1258,7 +1286,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input
                             type='date'
                             name='dataInicio'
-                            value={dateFormat1(localData?.dataInicio) || ''}
+                            value={typeof localData?.dataInicio === 'string' ? localData?.dataInicio : dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
