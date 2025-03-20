@@ -261,8 +261,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
 
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
-            <div className={`${styles.boxHead} ${styles.bgGreen}`}>
-                
+            <div className={`${styles.boxHead} ${styles.bgGreen}`}>                
                 <Mathias text={commentIA} show={useIA}/>
                 
                 <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
@@ -279,277 +278,294 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                 />
                 </div>
             :null}
-            <div className={`${styles.table} ${print ? styles.print : ''}`}> 
-                {/* cabeçalho */}
-                <div className={styles.line}>
-                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
-                        Etapa do Evento/Atividade
-                    </h1>
-                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
-                        Perigos
-                    </h1>
-                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
-                        Danos
-                    </h1>
-                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
-                        Controle Operacional
-                    </h1>
-                    <h1 className={`${styles.header} ${styles.widthAuto}`}>
-                        Ações mitigadoras
-                    </h1>
-                    <h1 
-                        className={`${styles.header} ${styles.collum2}`} 
-                        title='Probabilidade do perigo ocorrer'
-                    >
-                        <span style={{transform: 'rotate(-90deg)'}}>Probabilidade</span>
-                    </h1>
-                    <h1 
-                        className={`${styles.header} ${styles.collum2}`} 
-                        title='Consequência caso o perigo ocorra'
-                    >
-                        <span style={{transform: 'rotate(-90deg)'}}>Consequência</span>
-                    </h1>
-                    <h1 
-                        className={`${styles.header} ${styles.collum2}`} 
-                        title='Consequência caso o perigo ocorra'>
-                        <span style={{transform: 'rotate(-90deg)'}}>Nível de Risco</span>
-                    </h1>
-                </div>
+            <table className={`${styles.table} ${print ? styles.print : ''}`}> 
+                <thead>
+                    {/* cabeçalho */}
+                    <tr className={styles.line}>
+                        <th className={`${styles.header} ${styles.widthAuto}`}>
+                            Etapa do Evento/Atividade
+                        </th>
+                        <th className={`${styles.header} ${styles.widthAuto}`}>
+                            Perigos
+                        </th>
+                        <th className={`${styles.header} ${styles.widthAuto}`}>
+                            Danos
+                        </th>
+                        <th className={`${styles.header} ${styles.widthAuto}`}>
+                            Controle Operacional
+                        </th>
+                        <th className={`${styles.header} ${styles.widthAuto}`}>
+                            Ações mitigadoras
+                        </th>
+                        <th 
+                            className={`${styles.header} ${styles.collum2}`} 
+                            title='Probabilidade do perigo ocorrer'
+                        >
+                            <span style={{transform: 'rotate(-90deg)'}}>Probabilidade</span>
+                        </th>
+                        <th 
+                            className={`${styles.header} ${styles.collum2}`} 
+                            title='Consequência caso o perigo ocorra'
+                        >
+                            <span style={{transform: 'rotate(-90deg)'}}>Consequência</span>
+                        </th>
+                        <th
+                            className={`${styles.header} ${styles.collum2}`} 
+                            title='Consequência caso o perigo ocorra'>
+                            <span style={{transform: 'rotate(-90deg)'}}>Nível de Risco</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* inputs */}
+                    {!readOnly ?
+                        <tr className={styles.line}>
+                            <td className={`${styles.collum} ${styles.widthAuto}`}>
+                                {loading ? <span>gerando dados</span> : null}
+                                <textarea
+                                    name='atividade'
+                                    value={atividadeCorrente?.atividade || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                    onBlur={(e)=>handleSubmit(e)}
+                                    onKeyDown={handleKeyDown}
+                                    placeholder="Exemplo: remada em caiaque"
+                                    style={{
+                                        border: 'none', 
+                                        height: '100%',
+                                        width: '96%',
+                                        fontSize: '11px',
+                                    }}
+                                />                       
+                            </td>
+                            <td className={`${styles.collum} ${styles.widthAuto}`}>
+                                <textarea
+                                    name='perigo'
+                                    value={atividadeCorrente?.perigo || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                    placeholder="Exemplo: insolação"                                
+                                    readOnly={readOnly}
+                                />
+                            </td>
 
-                {/* inputs */}
-                {!readOnly ?
-                    <div className={styles.line}>
-                        <div className={`${styles.collum} ${styles.widthAuto}`}>
-                            {loading ? <span>gerando dados</span> : null}
-                            <textarea
-                                name='atividade'
-                                value={atividadeCorrente?.atividade || ''}
-                                onChange={(e) => handleCurrentAtivity(e)}
-                                onBlur={(e)=>handleSubmit(e)}
-                                onKeyDown={handleKeyDown}
-                                placeholder="Exemplo: remada em caiaque"
-                                style={{
-                                    border: 'none', 
-                                    height: '100%',
-                                    width: '96%',
-                                    fontSize: '11px',
-                                }}
-                            />                       
-                        </div>
-                        <textarea
-                            name='perigo'
-                            value={atividadeCorrente?.perigo || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            placeholder="Exemplo: insolação"
-                            className={`${styles.collum} ${styles.widthAuto}`}
-                            readOnly={readOnly}
-                        />
-                        <textarea
-                            name='danos'
-                            value={atividadeCorrente?.danos || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            placeholder="Exemplo: nauseas, dor de cabeça, fraqueza, queimaduras na pele..."
-                            className={`${styles.collum}  ${styles.widthAuto}`}
-                        />
-                        <textarea
-                            name='controleOperacional'
-                            value={atividadeCorrente?.controleOperacional || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            placeholder="Exemplo: orientação para usar roupas leves e adequadas para a atividade, usar cobertura de cabeça, se hidratar regularmente."
-                            className={`${styles.collum}  ${styles.widthAuto}`}
-                        />
-                        <textarea
-                            name='acoesMitigadoras'
-                            value={atividadeCorrente?.acoesMitigadoras || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            placeholder="Exemplo: Colocar o participante em repouso em um local sombreado, oferecer hidratação lenta, umedecer a nuca e o rosto."
-                            className={`${styles.collum}  ${styles.widthAuto}`}
-                        />
-                        <select
-                            name='probabilidade'
-                            value={atividadeCorrente?.probabilidade || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            className={`${styles.collum2}`}
-                        >
-                            <option value=""></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                        <select
-                            name='consequencia'
-                            value={atividadeCorrente?.consequencia || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            className={`${styles.collum2}`}
-                        >
-                            <option value=""></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                        <select
-                            name='nivelRisco'
-                            value={atividadeCorrente.nivelRisco || ''}
-                            onChange={(e) => handleCurrentAtivity(e)}
-                            className={`${styles.collum2}`}
-                        >
-                            <option value={atividadeCorrente.nivelRisco || ''}>{(atividadeCorrente?.probabilidade * atividadeCorrente?.consequencia) || ''}</option>
-                        </select>
-                        <FaPlus 
-                            onClick={addItem} 
-                            aria-label='adicionar este item'
-                            title='adicionar este item'
-                            className={styles.addItem}
-                        />
-                    </div>
-                :null}
+                            <td className={`${styles.collum}  ${styles.widthAuto}`}>
+                                <textarea
+                                    name='danos'
+                                    value={atividadeCorrente?.danos || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                    placeholder="Exemplo: nauseas, dor de cabeça, fraqueza, queimaduras na pele..."
+                                    
+                                />
+                            </td>    
+                            <td className={`${styles.collum}  ${styles.widthAuto}`}>
+                                <textarea
+                                    name='controleOperacional'
+                                    value={atividadeCorrente?.controleOperacional || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                    placeholder="Exemplo: orientação para usar roupas leves e adequadas para a atividade, usar cobertura de cabeça, se hidratar regularmente."
+                                />
+                            </td>
+                            <td className={`${styles.collum}  ${styles.widthAuto}`}>
+                                <textarea
+                                    name='acoesMitigadoras'
+                                    value={atividadeCorrente?.acoesMitigadoras || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                    placeholder="Exemplo: Colocar o participante em repouso em um local sombreado, oferecer hidratação lenta, umedecer a nuca e o rosto."
+                                />
+                            </td>
+                            <td className={`${styles.collum2}`}>
+                                <select
+                                    name='probabilidade'
+                                    value={atividadeCorrente?.probabilidade || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                >
+                                    <option value=""></option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                            <td className={`${styles.collum2}`}>
+                                <select
+                                    name='consequencia'
+                                    value={atividadeCorrente?.consequencia || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                    
+                                >
+                                    <option value=""></option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </td>
+                            <td className={`${styles.collum2}`}>
+                                <select
+                                    name='nivelRisco'
+                                    value={atividadeCorrente.nivelRisco || ''}
+                                    onChange={(e) => handleCurrentAtivity(e)}
+                                >
+                                    <option value={atividadeCorrente.nivelRisco || ''}>{(atividadeCorrente?.probabilidade * atividadeCorrente?.consequencia) || ''}</option>
+                                </select>
+                                <FaPlus 
+                                    onClick={addItem} 
+                                    aria-label='adicionar este item'
+                                    title='adicionar este item'
+                                    className={styles.addItem}
+                                />
+                            </td>
+                        </tr>
+                    :null}
 
-                {/* dados */}
-                {localData?.map((item, idx)=>(
-                    <div className={styles.line} key={`${idx}-atividade`}>
-                        <textarea
-                            key={`${idx}-atividade`}
-                            name='atividade'
-                            value={item?.atividade || ''}
-                            onChange={(e) => handleForm(e, idx)}
-                            className={`${styles.collum} ${styles.widthAuto}`}
-                            readOnly={readOnly}
-                        />
-                        {
-                            !readOnly ? <textarea
-                            key={`${idx}-perigo`}
-                            name='perigo'
-                            value={item?.perigo || ''}
-                            onChange={(e) => handleForm(e, idx)}
-                            onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                            readOnly={readOnly}
-                        />:
-                         <p 
-                            key={`${idx}-perigo`}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                        >
-                                {item?.perigo || ''}
-                        </p>
-                        }
-                        {
-                            !readOnly ? <textarea
-                            key={`${idx}-danos`}
-                            name='danos'
-                            value={item?.danos || ''}
-                            onChange={(e) => handleForm(e, idx)}
-                            onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                            readOnly={readOnly}
-                        />
-                        : <p 
-                            key={`${idx}-danos`}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                        >
-                            {item?.danos || ''}
-                        </p>
-                        }
-                        {
-                            !readOnly ? <textarea
-                            key={`${idx}-controleOperacional`}
-                            name='controleOperacional'
-                            value={item?.controleOperacional || ''}
-                            onChange={(e) => handleForm(e, idx)}
-                            onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                            readOnly={readOnly}
-                        />
-                        : <p 
-                            key={`${idx}-controleOperacional`}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                        >
-                            {item?.controleOperacional || ''}
-                        </p>
-                        }
-                        {
-                            !readOnly ? <textarea
-                            key={`${idx}-acoesMitigadoras`}
-                            name='acoesMitigadoras'
-                            value={item?.acoesMitigadoras || ''}
-                            onChange={(e) => handleForm(e, idx)}
-                            onBlur={(e)=>handleSubmit(e)}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                            readOnly={readOnly}
-                        />
-                        : <p 
-                            key={`${idx}-acoesMitigadoras`}
-                            className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}
-                        >
-                            {item?.acoesMitigadoras || ''}
-                        </p>
-                        }
-                        {
-                        !readOnly ?
-                            <select 
-                                key={`${idx}-probabilidade`}
-                                name='probabilidade'
-                                className={`${styles.collum2} ${styles.alingLeftText}`}
-                                value={item?.probabilidade}
-                                onChange={(e)=>handleForm(e, idx)}
-                            >
-                                <option value=""></option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                        :
-                            <p className={`${styles.collum2} ${styles.alingLeftText}`}>{item?.probabilidade}</p>
-                        }
-                        {
-                        !readOnly ?
-                            <select 
-                                key={`${idx}-consequencia`}
-                                name='consequencia'
-                                className={`${styles.collum2} ${styles.alingLeftText}`}
-                                value={item?.consequencia}
-                                onChange={(e)=>handleForm(e, idx)}
-                            >
-                                <option value=""></option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                        :
-                            <p className={`${styles.collum2} ${styles.alingLeftText}`}>{item?.consequencia}</p>
-                        }
-                        {!readOnly ?
-                            <select                                
-                                name='nivelRisco'
-                                value={item?.nivelRisco || ''}
-                                onChange={(e) => handleForm(e, idx)}
-                                className={`${styles.collum2} ${styles.alingLeftText}`}
-                            >
-                                <option value={item?.nivelRisco}>{item?.nivelRisco}</option>
-                            </select>
-                            :
-                            <p className={`${styles.collum2} ${styles.alingLeftText}`}>
-                                {item?.nivelRisco || ''}
-                            </p>
-                        }
-                        {!readOnly ? 
-                            <FaMinus 
-                                className={styles.removeItem}
-                                onClick={()=>removeItem(idx)} 
-                                aria-label='remover este item'
-                                title='remover este item'
-                            />
-                        :null}
-                    </div>
-                ))}
-            </div>
+                    {/* dados */}
+                    {localData?.map((item, idx)=>(
+                        <tr className={styles.line} key={`${idx}-atividade`}>
+                            <td className={`${styles.collum} ${styles.widthAuto}`}>
+                                <textarea
+                                    key={`${idx}-atividade`}
+                                    name='atividade'
+                                    value={item?.atividade || ''}
+                                    onChange={(e) => handleForm(e, idx)}                                    
+                                    readOnly={readOnly}
+                                />
+                            </td>
+                            <td className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}>
+                                {
+                                    !readOnly ? <textarea
+                                    key={`${idx}-perigo`}
+                                    name='perigo'
+                                    value={item?.perigo || ''}
+                                    onChange={(e) => handleForm(e, idx)}
+                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    readOnly={readOnly}
+                                />:
+                                <p 
+                                    key={`${idx}-perigo`}
+                                >
+                                        {item?.perigo || ''}
+                                </p>
+                                }
+                            </td>
+                            <td className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}>
+                                {
+                                    !readOnly ? <textarea
+                                    key={`${idx}-danos`}
+                                    name='danos'
+                                    value={item?.danos || ''}
+                                    onChange={(e) => handleForm(e, idx)}
+                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    readOnly={readOnly}
+                                />
+                                : <p 
+                                    key={`${idx}-danos`}
+                                >
+                                    {item?.danos || ''}
+                                </p>
+                                }
+                            </td>
+                            <td className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}>
+                                {
+                                    !readOnly ? <textarea
+                                    key={`${idx}-controleOperacional`}
+                                    name='controleOperacional'
+                                    value={item?.controleOperacional || ''}
+                                    onChange={(e) => handleForm(e, idx)}
+                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    readOnly={readOnly}
+                                />
+                                : <p 
+                                    key={`${idx}-controleOperacional`}
+                                >
+                                    {item?.controleOperacional || ''}
+                                </p>
+                                }
+                            </td>
+                            <td className={`${styles.collum} ${styles.alingLeftText} ${styles.widthAuto}`}>
+                                {
+                                    !readOnly ? <textarea
+                                    key={`${idx}-acoesMitigadoras`}
+                                    name='acoesMitigadoras'
+                                    value={item?.acoesMitigadoras || ''}
+                                    onChange={(e) => handleForm(e, idx)}
+                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    readOnly={readOnly}
+                                />
+                                : <p 
+                                    key={`${idx}-acoesMitigadoras`}
+                                >
+                                    {item?.acoesMitigadoras || ''}
+                                </p>
+                                }
+                            </td>
+                            <td className={`${styles.collum2} ${styles.alingLeftText}`}>
+                                {
+                                !readOnly ?
+                                    <select 
+                                        key={`${idx}-probabilidade`}
+                                        name='probabilidade'                                        
+                                        value={item?.probabilidade}
+                                        onChange={(e)=>handleForm(e, idx)}
+                                    >
+                                        <option value=""></option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                :
+                                    <p>{item?.probabilidade}</p>
+                                }
+                            </td>
+                            <td className={`${styles.collum2} ${styles.alingLeftText}`}>
+                                {
+                                !readOnly ?
+                                    <select 
+                                        key={`${idx}-consequencia`}
+                                        name='consequencia'                                        
+                                        value={item?.consequencia}
+                                        onChange={(e)=>handleForm(e, idx)}
+                                    >
+                                        <option value=""></option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                :
+                                    <p>{item?.consequencia}</p>
+                                }
+                            </td>
+                            <td className={`${styles.collum2} ${styles.alingLeftText}`}>
+                                {!readOnly ?
+                                    <select                                
+                                        name='nivelRisco'
+                                        value={item?.nivelRisco || ''}
+                                        onChange={(e) => handleForm(e, idx)}                                        
+                                    >
+                                        <option value={item?.nivelRisco}>{item?.nivelRisco}</option>
+                                    </select>
+                                    :
+                                    <p>
+                                        {item?.nivelRisco || ''}
+                                    </p>
+                                }
+                                {!readOnly ? 
+                                <FaMinus 
+                                    className={styles.removeItem}
+                                    onClick={()=>removeItem(idx)} 
+                                    aria-label='remover este item'
+                                    title='remover este item'
+                                />
+                                :null}
+                            </td>                          
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

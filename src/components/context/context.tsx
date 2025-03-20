@@ -141,35 +141,6 @@ export default function Provider({children}:{children:ReactNode}){
     }
 
     /**
-     * Atualiza o armazenamento local com a SAAE em edição.
-    */
-    const updateStorage = async () => {
-      //SAAEs que não tem um _id do mongo (foram salvas no storage, mas ainda não enviadas para análise).
-      if(typeof saaeEdit === 'number' && saaeEdit !== 0){
-        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit as number});
-      }
-      //cria uma nova SAAE
-      else if(typeof saaeEdit === 'number' && saaeEdit === 0){
-        const key = await putNewData('saae',{dataSaae: {
-          status: 'rascunho'
-        } as SAAE, user: dataUser});
-
-        //ao alterar o estado de saaeEdit com um ID diferente de 0, chama o trigger
-        //para gerar uma nova SAAE em handleStorage.
-        console.log("criado nova saae", key);
-        setSaaeEdit(key as number);   
-      }
-      //salva no storage SAAE em correção.
-      else if(typeof saaeEdit === 'string'){
-        console.log("corrigindo SAAE");
-        
-        //armazena a SAAE no storage.
-        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit});
-        
-      }
-    }
-
-    /**
      * Lida com as opções de cadastar nova SAAE ou editar uma SAAE já enviada.
      * @param {SAAE} data - SAAE a ser enviada.
     */
@@ -866,6 +837,35 @@ export default function Provider({children}:{children:ReactNode}){
       }
     }
 
+    /**
+     * Atualiza o armazenamento local com a SAAE em edição.
+    */
+    const updateStorage = async () => {
+      //SAAEs que não tem um _id do mongo (foram salvas no storage, mas ainda não enviadas para análise).
+      if(typeof saaeEdit === 'number' && saaeEdit !== 0){
+        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit as number});
+      }
+      //cria uma nova SAAE
+      else if(typeof saaeEdit === 'number' && saaeEdit === 0){
+        const key = await putNewData('saae',{dataSaae: {
+          status: 'rascunho'
+        } as SAAE, user: dataUser});
+
+        //ao alterar o estado de saaeEdit com um ID diferente de 0, chama o trigger
+        //para gerar uma nova SAAE em handleStorage.
+        console.log("criado nova saae", key);
+        setSaaeEdit(key as number);   
+      }
+      //salva no storage SAAE em correção.
+      else if(typeof saaeEdit === 'string'){
+        console.log("corrigindo SAAE");
+        
+        //armazena a SAAE no storage.
+        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit});
+        
+      }
+    }
+    
     /**
      * lida com a inclusão e remoção da SAAE para edição
      */

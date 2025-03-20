@@ -259,14 +259,15 @@
 }
 
 @media print {
+    .conteiner{
+        z-index: 0;
+    }
     .breakPage{
         page-break-before: always;
         break-before: always;
-        flex: content;
     }
     .line, .boxRotas, .subBoxRotas{
         break-before: auto;
         break-inside: avoid;
-        flex: content;
     }
 }

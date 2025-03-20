@@ -173,11 +173,10 @@
     .noPrint{
         display: none;
     }
-    .conteiner, .print{
+    .conteiner{
+        z-index: 0;
         break-before: always;
         page-break-before: always;
-        display: block;
-        width: 100%;
     }
     .boxTextarea{
         break-before: auto;
