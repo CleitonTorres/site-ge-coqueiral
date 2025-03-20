@@ -843,9 +843,10 @@ export default function Provider({children}:{children:ReactNode}){
             
           });
 
+          await deleteDataStorage('saae', saaeEdit as number) 
           setDataSaae({} as SAAE);
           setSaaeEdit(undefined);          
-          deleteDataStorage('saae', saaeEdit as number) 
+          
 
           return{
             bool: true,
