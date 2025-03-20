@@ -370,24 +370,22 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                             value={section.title || ''}
                             placeholder='digite aqui...'
                             onChange={(e)=>handleChange(e, idx)}
-                            className={styles.borderBlue}
                             readOnly={readOnly}
                         /> : <p>{section.title || ''}</p>}
                         <p style={{fontWeight: 600}}>Observações do conjunto de fotos:</p>
-                        {!print ? <input 
+                        {!print ? <textarea 
                             name='description'
                             value={section.description || ''}
                             placeholder='digite aqui...'
                             onChange={(e)=>handleChange(e, idx)}
-                            className={styles.borderBlue}
                             readOnly={readOnly}
                         /> : <p>{section.description || ''}</p>}
                         <div  className={styles.boxFotos}>                            
                             {section.fotos?.map((foto, fIdx)=>(
                                 <div key={fIdx+'fotosData'} className={styles.boxDados}>
-                                    {foto.title ? <div>
+                                    {foto.title ? <div style={{display: 'flex', flexDirection: 'column'}}>
                                         <b>Título da imagem:</b> 
-                                        {!print ? <input 
+                                        {!print ? <textarea 
                                             name='fotos.title'
                                             value={foto.title || ''}
                                             placeholder='digite aqui...'
@@ -395,7 +393,7 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
                                             readOnly={readOnly}
                                         /> : <p>{foto.title || ''}</p>}
                                     </div> : null}
-                                    {foto.description ? <div>
+                                    {foto.description ? <div style={{display: 'flex', flexDirection: 'column'}}>
                                         <b>Descrição:</b> 
                                         {!print ? <input 
                                             name='fotos.description'

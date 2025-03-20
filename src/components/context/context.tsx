@@ -224,49 +224,49 @@ export default function Provider({children}:{children:ReactNode}){
 
       // Adicionar arquivos
       data.fotosInspecao?.forEach((item, index) => {
-          item.fotos.forEach((foto, fotoIndex) => {
+          item.fotos?.forEach((foto, fotoIndex) => {
             verificar.push({field: `fotosInspecao-${index}-${fotoIndex}`});
             formData.append(`fotosInspecao-${index}-${fotoIndex}`, foto.doc);
           });
       });
   
       data.documentos?.forEach((item, index) => {
-          item.docs.forEach((doc, docIndex) => {
+          item.docs?.forEach((doc, docIndex) => {
             verificar.push({field: `documentos-${index}-${docIndex}`});
             formData.append(`documentos-${index}-${docIndex}`, doc.doc);
           });
       });
   
       data.planoEmergencia?.espacosSeguros?.acolhimento?.forEach((item, index) => {
-        item.docs.forEach((doc, docIndex) => {
+        item.docs?.forEach((doc, docIndex) => {
           verificar.push({field: `acolhimento-${index}-${docIndex}`});
           formData.append(`acolhimento-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.espacosSeguros?.enfermaria?.forEach((item, index) => {
-        item.docs.forEach((doc, docIndex) => {
+        item.docs?.forEach((doc, docIndex) => {
           verificar.push({field: `enfermaria-${index}-${docIndex}`});
           formData.append(`enfermaria-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.veiculos?.forEach((item, index) => {
-        item.docs.forEach((doc, docIndex) => {
+        item.docs?.forEach((doc, docIndex) => {
           verificar.push({field: `veiculos-${index}-${docIndex}`});
           formData.append(`veiculos-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.atividadePorProfissional?.forEach((item, index) => {
-        item.docs.forEach((doc, docIndex) => {
+        item.docs?.forEach((doc, docIndex) => {
           verificar.push({field: `atividadePorProfissional-${index}-${docIndex}`});
           formData.append(`atividadePorProfissional-${index}-${docIndex}`, doc.doc);
         });
       });
 
       data.planoEmergencia?.profSalvamento?.forEach((item, index) => {
-        item.docs.forEach((doc, docIndex) => {
+        item.docs?.forEach((doc, docIndex) => {
           verificar.push({field: `profSalvamento-${index}-${docIndex}`});
           formData.append(`profSalvamento-${index}-${docIndex}`, doc.doc);
         });
@@ -557,7 +557,7 @@ export default function Provider({children}:{children:ReactNode}){
 
         // Adicionar arquivos
         data.fotosInspecao?.forEach((item, index) => {
-            item.fotos.forEach((foto, fotoIndex) => {
+            item.fotos?.forEach((foto, fotoIndex) => {
               if (foto.doc instanceof File)
                 verificar.push({field: `fotosInspecao-${index}-${fotoIndex}`});
                 formData.append(`fotosInspecao-${index}-${fotoIndex}`, foto.doc);
@@ -565,7 +565,7 @@ export default function Provider({children}:{children:ReactNode}){
         });
     
         data.documentos?.forEach((item, index) => {
-            item.docs.forEach((doc, docIndex) => {
+            item.docs?.forEach((doc, docIndex) => {
               if (doc.doc instanceof File)
                 verificar.push({field: `documentos-${index}-${docIndex}`});
                 formData.append(`documentos-${index}-${docIndex}`, doc.doc);
@@ -573,7 +573,7 @@ export default function Provider({children}:{children:ReactNode}){
         });
     
         data.planoEmergencia?.espacosSeguros?.acolhimento?.forEach((item, index) => {
-          item.docs.forEach((doc, docIndex) => {
+          item.docs?.forEach((doc, docIndex) => {
             if (doc.doc instanceof File)
               verificar.push({field: `acolhimento-${index}-${docIndex}`});
               formData.append(`acolhimento-${index}-${docIndex}`, doc.doc);
@@ -581,7 +581,7 @@ export default function Provider({children}:{children:ReactNode}){
         });
 
         data.planoEmergencia?.espacosSeguros?.enfermaria?.forEach((item, index) => {
-          item.docs.forEach((doc, docIndex) => {
+          item.docs?.forEach((doc, docIndex) => {
             if (doc.doc instanceof File)
             verificar.push({field: `enfermaria-${index}-${docIndex}`});
             formData.append(`enfermaria-${index}-${docIndex}`, doc.doc);
@@ -589,7 +589,7 @@ export default function Provider({children}:{children:ReactNode}){
         });
 
         data.planoEmergencia?.veiculos?.forEach((item, index) => {
-          item.docs.forEach((doc, docIndex) => {
+          item.docs?.forEach((doc, docIndex) => {
             if (doc.doc instanceof File)
             verificar.push({field: `veiculos-${index}-${docIndex}`});
             formData.append(`veiculos-${index}-${docIndex}`, doc.doc);
@@ -597,7 +597,7 @@ export default function Provider({children}:{children:ReactNode}){
         });
 
         data.planoEmergencia?.atividadePorProfissional?.forEach((item, index) => {
-          item.docs.forEach((doc, docIndex) => {
+          item.docs?.forEach((doc, docIndex) => {
             if (doc.doc instanceof File)
             verificar.push({field: `atividadePorProfissional-${index}-${docIndex}`});            
             formData.append(`atividadePorProfissional-${index}-${docIndex}`, doc.doc);
@@ -605,7 +605,7 @@ export default function Provider({children}:{children:ReactNode}){
         });
 
         data.planoEmergencia?.profSalvamento?.forEach((item, index) => {
-          item.docs.forEach((doc, docIndex) => {
+          item.docs?.forEach((doc, docIndex) => {
             if (doc.doc instanceof File)
             verificar.push({field: `profSalvamento-${index}-${docIndex}`});
             formData.append(`profSalvamento-${index}-${docIndex}`, doc.doc);
@@ -847,7 +847,6 @@ export default function Provider({children}:{children:ReactNode}){
           setDataSaae({} as SAAE);
           setSaaeEdit(undefined);          
           
-
           return{
             bool: true,
             text: 'SAAE enviada com sucesso!'

@@ -86,6 +86,7 @@
 .removeBtn{
     position: absolute;
     right: 10px;
+    top: 10px
 }
 .addBtn:hover, .removeBtn:hover{
     cursor: pointer;
@@ -125,10 +126,17 @@
 .boxDados div{
     margin-bottom: 10px;
 }
+.boxDados input, .boxDados textarea{
+    border: none;
+}
 .sectionFotos{
+    position: relative;
     border: solid 1px #000; 
     padding: 5px;
     margin: 3px;
+}
+.sectionFotos textarea, .sectionFotos input{
+    width: 100%;
 }
 .width200{
     width: 200px;

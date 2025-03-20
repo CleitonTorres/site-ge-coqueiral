@@ -22,6 +22,7 @@ export default function Confirme ({message, cancele, confirme}:Props){
             <Mathias show text={textMathias} customClass={['center']}/>
             <button 
                 onClick={async()=>{
+
                     if(loading === undefined){
                         setLoading(true);
 
@@ -30,7 +31,8 @@ export default function Confirme ({message, cancele, confirme}:Props){
 
                         setLoading(resp.bool === undefined ? undefined : false);
                     }else{
-                        context.setShowModal(null);
+                        
+                        if(!loading) context.setShowModal(null);
                     }
                 }
             }>
