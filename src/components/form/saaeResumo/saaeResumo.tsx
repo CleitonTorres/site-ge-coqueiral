@@ -32,6 +32,8 @@ export default function SaaeResumo ({hiddeButton, localData, print}:Props){
         return undefined
     },[]);
     
+    if(!localData) return <span>formulário não carregado</span>
+
     return(
         <div className={styles.conteiner}>
             <h2>8. Resumo da sua SAAE</h2>

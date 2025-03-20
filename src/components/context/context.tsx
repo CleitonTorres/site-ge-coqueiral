@@ -841,54 +841,50 @@ export default function Provider({children}:{children:ReactNode}){
      * Atualiza o armazenamento local com a SAAE em edição.
     */
     const updateStorage = async () => {
-      //SAAEs que não tem um _id do mongo (foram salvas no storage, mas ainda não enviadas para análise).
-      if(typeof saaeEdit === 'number' && saaeEdit !== 0){
-        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit as number});
-      }
       //cria uma nova SAAE
-      else if(typeof saaeEdit === 'number' && saaeEdit === 0){
-        const key = await putNewData('saae',{dataSaae: {
+      if(typeof saaeEdit === 'number' && saaeEdit === 0){
+        const newSaae = {
+          dadosGerais:{},
+          infosPreliminares: [],
+          inventarioRiscos: [],
+          planoEmergencia: {},
+          fotosInspecao: [],
+          documentos:[],
+          grauRisco: {},
           status: 'rascunho'
-        } as SAAE, user: dataUser});
+        } as SAAE;
+
+        const key = await putNewData('saae', {dataSaae: newSaae, user: dataUser});
 
         //ao alterar o estado de saaeEdit com um ID diferente de 0, chama o trigger
-        //para gerar uma nova SAAE em handleStorage.
-        console.log("criado nova saae", key);
-        setSaaeEdit(key as number);   
+        //para gerar uma nova SAAE em handleStorage.   
+        console.log("criado novo saaeEdit", key);     
+        //setDataSaae(newSaae); //o set do dataSaae acontece quando o saaeEdit e alterado abaixo.
+        setSaaeEdit(key as number);        
       }
-      //salva no storage SAAE em correção.
-      else if(typeof saaeEdit === 'string'){
-        console.log("corrigindo SAAE");
-        
-        //armazena a SAAE no storage.
-        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit});
-        
+      //SAAEs que não tem um _id do mongo (foram salvas no storage, mas ainda não enviadas para análise).
+      else{
+        console.log("editando SAAE");
+        putNewData('saae',{dataSaae, user: dataUser, id: saaeEdit as number});
       }
     }
     
     /**
-     * lida com a inclusão e remoção da SAAE para edição
+     * lida com a inclusão e remoção da do id de edição das SAAEs
      */
     const handleStorage = async()=>{
-      //busca SAAEs salvas no storage, mas que ainda não foram enviadas para análise.
-      //e carrega os dados em dataSaae para ser exibino nos formulários.
-      if(typeof saaeEdit === 'number' && saaeEdit !== 0){
-        
-        const newData = (await getAllDataStorage('saae')).find(data=> data.id === saaeEdit);
-        console.log("editando SAAE do rascunho", newData);
-        setDataSaae((prev)=>{          
-          if(newData){
-            return newData.dataSaae
-          }else{
-            return prev
-          }
-        });
-      }
       //cria uma nova SAAE.
-      else if(typeof saaeEdit === 'number' && saaeEdit === 0){
+      if(typeof saaeEdit === 'number' && saaeEdit === 0){
         console.log("criando uma nova SAAE no rascunho");
         updateStorage();
       }
+      //busca SAAEs salvas no storage, mas que ainda não foram enviadas para análise.
+      //e carrega os dados em dataSaae para ser exibino nos formulários.
+      else if(typeof saaeEdit === 'number' && saaeEdit !== 0){        
+        const newData = (await getAllDataStorage('saae')).find(data=> data.id === saaeEdit);
+        console.log("editando SAAE do rascunho", newData);
+        setDataSaae(newData.dataSaae);
+      }      
       //pega dados da SAAE em correção para armazenar no storage.
       else if(typeof saaeEdit === 'string'){
         console.log("entrou na correção de SAAE", saaeEdit)
@@ -938,9 +934,9 @@ export default function Provider({children}:{children:ReactNode}){
     //atualiza o storage quando a SAAE em dataSAAE sofre algum alteração.
     useEffect(()=>{
       if(!dataSaae) return;
-
-      console.log("contexto dataSaae: ", dataSaae);
+      
       if(Object.keys(dataSaae).length > 0 && (typeof saaeEdit === 'number' || typeof saaeEdit === 'string')){
+        console.log("contexto dataSaae: ", dataSaae);
         updateStorage();
         debugStorage();
       };      

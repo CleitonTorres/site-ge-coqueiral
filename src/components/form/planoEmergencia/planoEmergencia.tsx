@@ -1050,6 +1050,8 @@ export default function PlanoEmergencia ({readOnly, localData, grauRisco, localI
         })
     }
 
+    if(!localData) return <span>formulário não carregado</span>
+
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}> 
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>

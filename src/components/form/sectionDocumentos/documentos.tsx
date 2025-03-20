@@ -326,6 +326,8 @@ export default function SectionDocumentos({readOnly, localData, print}:Props){
     }
     //----------------
 
+    if(!localData) return <span>formulário não carregado</span>
+
     return(
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <h2 className={styles.bgGreen}>7. Documentos adicionais:</h2>

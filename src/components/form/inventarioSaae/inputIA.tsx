@@ -259,6 +259,8 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
         });
     },[atividadeCorrente.probabilidade, atividadeCorrente.consequencia])
 
+    if(!localData) return <span>formulário não carregado</span>
+
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>                

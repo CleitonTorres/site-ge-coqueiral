@@ -646,6 +646,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
     //     console.log("dados gerais", localData);
     // });
 
+    if(!localData) return <span>formulário não carregado</span>
+    
     return(
         <div 
             className={`${styles.conteiner}`} 

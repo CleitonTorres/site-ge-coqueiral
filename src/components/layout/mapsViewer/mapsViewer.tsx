@@ -19,6 +19,7 @@ type Props = {
 export default function MapsComponent ({label, data, readonly, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
     const zoom = 14;
+
     const loadMapAddress = async()=>{
         if(!mapRef.current)return;
         if(!data) return;
@@ -46,13 +47,27 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
         
         if(!data.coordenadas?.lat ||  !data.coordenadas?.long){
             console.log("entrou no marcador pelo endereço")
-            geocoder.geocode({ address }, async(results, status) => {
+            geocoder.geocode({ 
+                address,
+                language: 'pt-BR',
+                region: 'BR'
+             }, async(results, status) => {
                 if (status === "OK") {
                     if(!results) return;
 
-                    const location = results[0].geometry.location;
+                    // Filtrar por tipos de local mais precisos
+                    const preciseResult = results.find(result => 
+                        result.types.includes("street_address") || 
+                        result.types.includes("premise")
+                    ) || results[0];
+
+                    const clickedAddress = preciseResult.formatted_address;
+                    console.log('Endereço mais preciso:', clickedAddress);
+
+                    const location = preciseResult.geometry.location;  
                     map.setCenter(location);                
                     setLatLong(location.lat(), location.lng(), label)
+                    
                     new AdvancedMarkerElement({
                         position: location,
                         map: map,
@@ -70,15 +85,29 @@ export default function MapsComponent ({label, data, readonly, setLatLong}:Props
             // Converte as coordenadas para um endereço
             const coord = {lat: parseFloat(latLng.lat()), lng: parseFloat(latLng.lng())};
 
-            console.log('coordenadas clicada', coord)
+            // console.log('coordenadas clicada', coord)
             geocoder.geocode({ location: coord, language: 'pt-BR', region: 'BR' }, (results, status) => {
                 if (status === "OK") {
                     if (results && results[0]) {
-                        const clickedAddress = results[0].formatted_address;
+                        // Filtrar por tipos de local mais precisos
+                        const preciseResult = results.find(result => 
+                            result.types.includes("street_address") || 
+                            result.types.includes("premise")
+                        ) || results[0];
 
+                        let clickedAddress1 = preciseResult.formatted_address;
+                        
+                        // Se não houver um endereço exato, usar o Plus Code
+                        const plusCode = results[0].plus_code;
+                        if (!clickedAddress1 && plusCode) {
+                            clickedAddress1 = plusCode.compound_code;
+                        }
+                        // console.log('Endereço mais preciso:', clickedAddress1);
+                        
+                        // const clickedAddress = results[0].formatted_address;
                         // Atualiza o estado ou faz algo com o endereço encontrado
-                        console.log('endereço', clickedAddress)
-                        setLatLong(coord.lat, coord.lng, label, clickedAddress);
+                        // console.log('endereço errado', clickedAddress)
+                        setLatLong(coord.lat, coord.lng, label, clickedAddress1);
                     } else {
                         console.warn("Nenhum endereço encontrado para esta localização.");
                     }

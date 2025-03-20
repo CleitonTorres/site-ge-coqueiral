@@ -119,6 +119,8 @@ export default function InfosPreliminares ({readOnly, localData, print}:Props){
         })
     }
 
+    if(!localData) return <span>formulário não carregado</span>
+
     return(
         <div 
             className={`${styles.conteiner} ${print ? styles.print : undefined}`} 
