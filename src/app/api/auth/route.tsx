@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
             ...dataForm,
             _id: new ObjectId().toString()
         };
+        
         await collection.insertOne({ 
             ...user, 
             password: encryptPassword(user.password),

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { v4 } from 'uuid';
 import NewsPage from '@/components/layout/newsPage/newsPage';
 import { Context } from '@/components/context/context';
+import { uels } from '@/components/data-training/data-training';
 
 export default function Page(){
     const context = useContext(Context);
@@ -28,10 +29,26 @@ export default function Page(){
         const value = e.target.value;
 
         setDataNewUser((prev)=>{
-            if(name === 'numUel'){
+            if(name === 'nameUel'){
+                const findUel = uels.find(i=> i.nameUel.includes(value));                               
                 return{
                     ...prev,
-                    [name]: parseInt(value)
+                    dadosUel: {
+                        ...prev.dadosUel,
+                        cidadeUels: findUel.cidadeUel,
+                        nameUel: findUel.nameUel,
+                        numUel: findUel.numUel,
+                        ufUel: findUel.ufUel,
+                    }
+                }
+            }
+            else if(name.includes('dadosUel')){                
+                return{
+                    ...prev,
+                    dadosUel: {
+                        ...prev.dadosUel,
+                        [name.split('.')[1]]: value
+                    }
                 }
             }
             return{
@@ -287,7 +304,7 @@ export default function Page(){
                 </div>
                 {actions === 1 && ["Admin", "Dirigente"].includes(context.dataUser.nivelAcess) ? 
                 <form className={`${styles.subConteiner}`} method='POST'>
-                    <h4>Cadastrar novo usuário</h4> 
+                    <h4>Cadastrar novo usuário</h4>
                     <div className={styles.boxInputs}>
                         <div className={styles.boxInput}> 
                             <label htmlFor="user">Nome</label>                   
@@ -296,27 +313,6 @@ export default function Page(){
                                 name='name' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.name || '' }
-                                placeholder='Nome'
-                            />
-                        </div>
-                        <div className={styles.boxInput}> 
-                            <label htmlFor="user">Numeral da UEL</label>                   
-                            <input 
-                                type="number" 
-                                name='numUel' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.dadosUel?.numUel || '' }
-                                placeholder='numeral da UEL'
-                            />
-                        </div>
-                        <div className={styles.boxInput}> 
-                            <label htmlFor="user">Nome da UEL</label>                   
-                            <input 
-                                type="text" 
-                                name='nameUel' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.dadosUel?.nameUel || '' }
-                                placeholder='nome da UEL'
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -326,7 +322,6 @@ export default function Page(){
                                 name='registro' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.registro || '' }
-                                placeholder='registro escoteiro'
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -356,7 +351,6 @@ export default function Page(){
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.ramo || '' }
                             >
-                                <option value=""></option>
                                 {[
                                     '',
                                     'Lobinho', 
@@ -387,7 +381,7 @@ export default function Page(){
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.nivelAcess || '' }
                             >
-                                {['', 'Escotista', 'Dirigente'].map(item=> (
+                                {['', 'Escotista', 'Dirigente', 'Regional-admin'].map(item=> (
                                     <option value={item} key={v4()}>{item}</option>
                                 ))}
                             </select>
@@ -399,7 +393,6 @@ export default function Page(){
                                 name='tel' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.tel || '' }
-                                placeholder='celular'
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -409,7 +402,6 @@ export default function Page(){
                                 name='email' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.email || '' }
-                                placeholder='e-mail'
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -419,7 +411,6 @@ export default function Page(){
                                 name='user' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.user || '' }
-                                placeholder='Nome de usuário'
                             />
                         </div>
                         <div className={styles.boxInput}>
@@ -427,10 +418,59 @@ export default function Page(){
                             <input 
                                 type="password" 
                                 name='password'
-                                placeholder='senha'
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.password || '' }
                             /> 
+                        </div>
+                    </div>
+                    <div className={styles.boxInput}>
+                        <div className={styles.boxInput}> 
+                            <label htmlFor="nameUel">UEL</label>
+                            <select
+                                name='nameUel' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.dadosUel?.nameUel || '' }
+                            >
+                                <option value=""></option>
+                                {uels.sort((a,b)=>{
+                                    const item1 = a.numUel;
+                                    const item2 = b.numUel;
+                                    if(item1 > item2){
+                                        return 1
+                                    }else if(item1 < item2){
+                                        return -1
+                                    }else return 0;
+                                }).map(uel=> (
+                                    <option value={uel.nameUel} key={uel.nameUel}>{`${uel.numUel || ''} ${uel.ufUel || ''} - ${uel.nameUel || ''}`}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Presidente da UEL</label>                   
+                            <input 
+                                type="text" 
+                                name='dadosUel.presidenteUel' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.dadosUel?.presidenteUel || '' }
+                            />
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Registro do(a) Presidente da UEL</label>                   
+                            <input 
+                                type="text" 
+                                name='dadosUel.regEscoteiroPresidente' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.dadosUel?.regEscoteiroPresidente || '' }
+                            />
+                        </div>
+                        <div className={styles.boxInput}>
+                            <label htmlFor="user">Contato do(a) Presidente da UEL</label>                   
+                            <input 
+                                type="text" 
+                                name='dadosUel.telPresidente' 
+                                onChange={(e)=>handleData(e)}
+                                value={dataNewUser.dadosUel?.telPresidente || '' }
+                            />
                         </div>
                     </div>
                     <button onClick={(e)=>submit(e)}>
