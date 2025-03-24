@@ -1,15 +1,17 @@
 .conteiner{
     position: relative;
-}
-.boxAvatar{
-    position: absolute;
+    width: 1200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    right:10px;
-    top: -50px;
-    width: 100px;
-    height: 100px;
+    animation: fadeIn 1s;
+}
+.boxAvatar{
+    position: absolute;
+    left: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
     z-index: 1;
     background-color: var(--blue);
     border: none;
@@ -20,6 +22,19 @@
     border-radius: 50%;
 }
 .center {
-    right: 0px;
+    left: 37%;
     top:  -150px;
+}
+.left {
+    left: 16.5%;
+    top: -92px;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }    
 }

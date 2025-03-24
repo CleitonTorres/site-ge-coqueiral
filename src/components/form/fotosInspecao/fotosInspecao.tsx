@@ -1,5 +1,5 @@
 'use client'
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './fotosInspecao.module.css';
 import { calcTotalFilesMB } from '@/scripts/globais';
 import { FormFotosInspecao } from '@/@types/types';
@@ -289,6 +289,20 @@ export default function FotosInspecao({readOnly, localData, print}:Props){
         })
     }
     //----------------
+
+    useEffect(() => {
+        const loadImages = () => {
+          document.querySelectorAll("img").forEach((img) => {
+            if (!img.complete) {
+              img.loading = "eager"; // Força o carregamento imediato
+            }
+          });
+        };
+      
+        window.addEventListener("beforeprint", loadImages);
+      
+        return () => window.removeEventListener("beforeprint", loadImages);
+    }, []);
 
     if(!localData) return <span>formulário não carregado</span>
 

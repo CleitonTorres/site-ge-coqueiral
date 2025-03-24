@@ -264,7 +264,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>                
-                <Mathias text={commentIA} show={useIA}/>
+                <Mathias text={commentIA} show={useIA} customClass={['left']}/>
                 
                 <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
                 <h1>3. Inventário de Riscos:</h1>

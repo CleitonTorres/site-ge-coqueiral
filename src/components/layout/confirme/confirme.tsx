@@ -20,25 +20,27 @@ export default function Confirme ({message, cancele, confirme}:Props){
     return(
         <div className={styles.conteiner}>
             <Mathias show text={textMathias} customClass={['center']}/>
-            <button 
-                onClick={async()=>{
+            <div style={{display:'flex', justifyContent:'center'}}>
+                <button 
+                    onClick={async()=>{
 
-                    if(loading === undefined){
-                        setLoading(true);
+                        if(loading === undefined){
+                            setLoading(true);
 
-                        const resp = await confirme();
-                        setTextMathias(resp.text);
+                            const resp = await confirme();
+                            setTextMathias(resp.text);
 
-                        setLoading(resp.bool === undefined ? undefined : false);
-                    }else{
-                        
-                        if(!loading) context.setShowModal(null);
+                            setLoading(resp.bool === undefined ? undefined : false);
+                        }else{
+                            
+                            if(!loading) context.setShowModal(null);
+                        }
                     }
-                }
-            }>
-                {!loading ? 'Ok' : <LoadIcon showHide customClass="size30"/>}
-            </button>
-            {loading === undefined ? <button onClick={cancele}>Cancelar</button> :null}
+                }>
+                    {!loading ? 'Ok' : <LoadIcon showHide customClass="size30"/>}
+                </button>
+                {loading === undefined ? <button onClick={cancele}>Cancelar</button> :null}
+            </div>
         </div>
     )
 }

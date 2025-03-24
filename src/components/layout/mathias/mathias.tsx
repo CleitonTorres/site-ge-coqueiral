@@ -36,8 +36,7 @@ export default function Mathias ({text, show, customClass}:Props){
                         src={'/icons/assistente-mathias.png'}
                     />
                     <Texting text={text} speed={50} customClass={customClass}/>
-                </div>
-            
+                </div>            
         </div>
     )
 }
