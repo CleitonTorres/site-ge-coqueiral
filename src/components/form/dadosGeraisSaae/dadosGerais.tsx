@@ -38,7 +38,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
     const [inputGruposConvidados, setInputGruposConvidados] = useState('');
     const [atividadesList, setAtividadesList] = useState<string[]>([]);
     const [inicioFim, setInicioFim] = useState(false);
-    
+    const [resetMap, setResetMap] = useState(false);
+    const [resetMapFim, setResetMapFim] = useState(false);
+
     const handleForm = (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
         const name = e.target.name;
@@ -631,6 +633,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 dadosGerais: newData
             }
         })
+        setResetMap(!resetMap);//atualiza o mapa.
+        setResetMapFim(!resetMapFim); //atualiza o mapa.
         //updateContext(newData);
     }
 
@@ -641,10 +645,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             return newData
         });
     },[])
-
-    // useEffect(()=>{
-    //     console.log("dados gerais", localData);
-    // });
 
     if(!localData) return <span>formulário não carregado</span>
     
@@ -1089,7 +1089,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localInicio.cep'
                             value={localData?.localInicio?.cep || ''}
                             onChange={(e) => handleForm(e)}
-                            onBlur={(e)=>getCep(e)}
+                            onBlur={(e)=>{
+                                getCep(e);
+                                setResetMap(!resetMap);
+                            }}
                             placeholder="CEP do local da atividade"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1103,6 +1106,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localInicio.logradouro'
                             value={localData?.localInicio?.logradouro || ''}
                             onChange={(e) => handleForm(e)}
+                            onBlur={()=>setResetMap(!resetMap)}
                             placeholder="logradouro"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
@@ -1117,6 +1121,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localInicio.bairro'
                             value={localData?.localInicio?.bairro || ''}
                             onChange={(e) => handleForm(e)}
+                            onBlur={()=>setResetMap(!resetMap)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
@@ -1130,6 +1135,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localInicio.municipio'
                             value={localData?.localInicio?.municipio || ''}
                             onChange={(e) => handleForm(e)}
+                            onBlur={()=>setResetMap(!resetMap)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
@@ -1142,6 +1148,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localInicio.uf'
                             value={localData?.localInicio?.uf || ''}
                             onChange={(e) => handleForm(e)}
+                            onBlur={()=>setResetMap(!resetMap)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         />   
@@ -1172,7 +1179,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='localFim.cep'
                                 value={localData?.localFim?.cep || ''}
                                 onChange={(e) => handleForm(e)}
-                                onBlur={(e)=>getCep(e)}
+                                onBlur={(e)=>{
+                                    getCep(e);
+                                    setResetMapFim(!resetMapFim);
+                                }}
                                 placeholder="CEP do local da atividade"
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1186,6 +1196,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='localFim.logradouro'
                                 value={localData?.localFim?.logradouro || ''}
                                 onChange={(e) => handleForm(e)}
+                                onBlur={()=>setResetMapFim(!resetMapFim)}
                                 placeholder="logradouro"
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
@@ -1200,6 +1211,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='localFim.bairro'
                                 value={localData?.localFim?.bairro || ''}
                                 onChange={(e) => handleForm(e)}
+                                onBlur={()=>setResetMapFim(!resetMapFim)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
@@ -1213,6 +1225,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='localFim.municipio'
                                 value={localData?.localFim?.municipio || ''}
                                 onChange={(e) => handleForm(e)}
+                                onBlur={()=>setResetMapFim(!resetMapFim)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
@@ -1225,6 +1238,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='localFim.uf'
                                 value={localData?.localFim?.uf || ''}
                                 onChange={(e) => handleForm(e)}
+                                onBlur={()=>setResetMapFim(!resetMapFim)}
                                 className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />   
@@ -1693,6 +1707,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             setLatLong={latLongSet}
                             data={localData?.localInicio}
                             readonly={readOnly}
+                            reset={resetMap}
                         />
                     :null}                    
                 </div>
@@ -1714,6 +1729,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         setLatLong={latLongSet}
                         data={localData?.localFim}
                         readonly={readOnly}
+                        reset={resetMapFim}
                     />                   
                 </div>
                 </>                 

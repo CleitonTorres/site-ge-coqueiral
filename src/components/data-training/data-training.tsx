@@ -105,9 +105,33 @@ export const uels:DadosBasicosUEL[] = [
         ufUel: 'ES'
     },
     {
+        numUel: 8,
+        nameUel: 'Grupo Escoteiro Pedro Nolasco',
+        cidadeUel: 'João Neiva',
+        ufUel: 'ES'
+    },
+    {
         numUel: 11,
         nameUel: 'Grupo Escoteiro do Mar Ilha de Vitória',
         cidadeUel: 'Vitória',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 12,
+        nameUel: 'Grupo Escoteiro Marista',
+        cidadeUel: 'Colatina',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 16,
+        nameUel: 'Grupo Escoteiro Barão de Teffé',
+        cidadeUel: 'Vila Velha',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 17,
+        nameUel: 'Grupo Escoteiro Cidade das Cachoeiras',
+        cidadeUel: 'Afonso Cláudio',
         ufUel: 'ES'
     },
     {
@@ -117,15 +141,39 @@ export const uels:DadosBasicosUEL[] = [
         ufUel: 'ES'
     },
     {
+        numUel: 21,
+        nameUel: 'Grupo Escoteiro Guarany',
+        cidadeUel: 'Pinheiros',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 23,
+        nameUel: 'Grupo Escoteiro Nhambu Ecoporanga',
+        cidadeUel: 'Ecoporanga',
+        ufUel: 'ES'
+    },
+    {
         numUel: 25,
         nameUel: 'Grupo Escoteiro Jequitibá',
         cidadeUel: 'Aracruz',
         ufUel: 'ES'
     },
     {
+        numUel: 34,
+        nameUel: 'Grupo Escoteiro Mimoso do Sul',
+        cidadeUel: 'Mimoso do Sul',
+        ufUel: 'ES'
+    },    
+    {
         numUel: 35,
         nameUel: 'Grupo Escoteiro Linhares',
         cidadeUel: 'Linhares',
+        ufUel: 'ES'
+    },
+    {
+        numUel: 47,
+        nameUel: 'Grupo Escoteiro do Ar Agnes Baden-Powell',
+        cidadeUel: 'São Mateus',
         ufUel: 'ES'
     },
     {
