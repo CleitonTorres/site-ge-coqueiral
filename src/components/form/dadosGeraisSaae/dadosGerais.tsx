@@ -3,14 +3,15 @@ import { ChangeEvent, FocusEvent, Fragment, KeyboardEvent, useContext, useEffect
 import styles from './dadosGerais.module.css';
 import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types';
 import { v4 } from 'uuid';
-import { addTime, cleamText, dateFormat1, dateFormat2, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { addTime, cleamText, dateFormat1, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
+import { FaPlus } from "react-icons/fa";
 import { dataBaseSaae, Odss, tiposAtividade, uels } from '@/components/data-training/data-training';
 import { Context } from '@/components/context/context';
 
 import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
 import RouteMapComponent from '@/components/layout/mapsRotas/mapsRotas';
 import { FaTrash } from 'react-icons/fa6';
+import Programacao from '@/components/layout/programacao/programacao';
 
 type Props = {
     readOnly: boolean,
@@ -1736,185 +1737,16 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 :null}
 
                 {/* programação da atividade */}
-                <div className={styles.line}>                    
-                    <div className={`${styles.bgGreen}`} style={{width: '100%'}}>
-                        <span><b>Programação da atividade</b></span>
-                    </div>
-
-                    {/* cabeçalho da programação */}
-                    <div className={`${styles.line} ${print ? styles.print : ''} ${styles.flexRowSpace}`}>
-                        <div className={`${styles.collum} ${styles.width120}`}>
-                            <h1 >
-                                Data
-                            </h1>
-                        </div>
-                        <div className={`${styles.collum} ${styles.width100}`}>
-                            <h1>
-                                Hora
-                            </h1>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>
-                                Duração (no formato hora)
-                            </h1>
-                        </div>
-                        <div className={`${styles.collum} ${styles.width260}`}>
-                            <h1>
-                                Descrição
-                            </h1>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>
-                                Material Necessário
-                            </h1>
-                        </div>
-                        <div className={`${styles.collum} ${styles.width100}`}>
-                            <h1>
-                                Responsável
-                            </h1>
-                        </div> 
-                        {!readOnly ? <div className={`${styles.collum} ${styles.width100}`}>
-                            <h1>
-                                Add/Rem
-                            </h1>
-                        </div>:null}
-                    </div>
-
-                    {/* dados adicionados à programação */}
-                    {localData?.programacao?.map((prog, idx)=>(
-                        <div 
-                            key={idx+"progragamacao"} 
-                            className={`${styles.line} ${print ? styles.print : ''} ${styles.flexRowSpace}`}
-                        >
-                            <div className={`${styles.collum} ${styles.width120}`}>
-                                {!readOnly ? <input
-                                    name='data'
-                                    value={dateFormat2(prog?.data) || ''}
-                                    onChange={(e)=>handleEditProgramacao(e, prog.id)}
-                                /> : <p>{dateFormat2(prog?.data) || ''}</p>}
-                            </div>
-                            <div  className={`${styles.collum} ${styles.width100}`}>
-                                {!readOnly ? <input
-                                    name='hora'
-                                    value={prog?.hora  || ''}
-                                    onChange={(e)=>handleEditProgramacao(e, prog.id)}
-                                /> : <p>{prog?.hora  || ''}</p>}
-                            </div>
-                            <div className={styles.collum}>
-                                {!readOnly ? <input
-                                    name='duracao' 
-                                    value={prog?.duracao || ''}
-                                    onChange={(e)=>handleEditProgramacao(e, prog.id)}
-                                />: <p>{prog?.duracao || ''}</p>}
-                            </div>
-                            <div className={`${styles.collum} ${styles.width260}`}>
-                                {!readOnly ? <textarea 
-                                    name='descricao'
-                                    value={prog?.descricao || ''}
-                                    readOnly={readOnly}
-                                    onChange={(e)=>handleEditProgramacao(e, prog.id)}
-                                />: <p>{prog?.descricao || ''}</p>}
-                            </div>
-                            <div className={styles.collum}>
-                                {!readOnly ? <input
-                                    name='materialNecessario' 
-                                    value={prog?.materialNecessario || ''}
-                                    onChange={(e)=>handleEditProgramacao(e, prog.id)}
-                                /> : <p>{prog?.materialNecessario || ''}</p>}
-                            </div>
-                            <div className={`${styles.collum} ${styles.width100}`}>
-                                {!readOnly ? <input
-                                    name='responsavel' 
-                                    value={prog?.responsavel || ''}
-                                    onChange={(e)=>handleEditProgramacao(e, prog.id)}
-                                    className={styles.inputProgramacao}
-                                /> : <p>{prog?.responsavel || ''}</p>}
-                            </div>
-                            {!readOnly ?
-                                <div className={`${styles.collum} ${styles.width100}`}>
-                                    <FaMinus  
-                                        size={18} 
-                                        className={`${styles.btnRemAtividade}`}
-                                        onClick={()=>removeAtividade(idx+1)} 
-                                    />
-                                </div>
-                            :null}
-                        </div>
-                    ))}
-
-                    {/* inputs da programação */}
-                    {!readOnly ? 
-                        <div className={`${styles.line} ${print ? styles.print : ''} ${styles.flexRowSpace}`}>
-                            <div className={`${styles.collum} ${styles.width120}`}>
-                                <input
-                                    type='date'
-                                    name='data'
-                                    value={dateFormat1(currentProgramacao?.data) || ''}
-                                    onChange={(e) => handleFormProgramacao(e)}
-                                    className={`${styles.collum} ${styles.width120}`}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                            <div className={`${styles.collum} ${styles.width100}`}>
-                                <input
-                                    type='text'
-                                    name='hora'
-                                    value={currentProgramacao?.hora || ''}
-                                    onChange={(e) => handleFormProgramacao(e)}
-                                    className={`${styles.collum} ${styles.width100} ${styles.textAlingCenter}`}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                            <div className={styles.collum}>
-                                <input
-                                    type='text'
-                                    name='duracao'
-                                    value={currentProgramacao?.duracao || ''}
-                                    onChange={(e) => handleFormProgramacao(e)}
-                                    className={`${styles.collum} ${styles.textAlingCenter}`}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                            <div className={`${styles.collum} ${styles.width260}`}>
-                                <textarea
-                                    name='descricao'
-                                    value={currentProgramacao?.descricao || ''}
-                                    onChange={(e) => handleFormProgramacao(e)}
-                                    className={`${styles.collum} ${styles.width260}`}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                            <div className={styles.collum}>
-                                <input
-                                    type='text'
-                                    name='materialNecessario'
-                                    value={currentProgramacao?.materialNecessario || ''}
-                                    onChange={(e) => handleFormProgramacao(e)}
-                                    className={`${styles.collum}`}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                            <div className={`${styles.collum} ${styles.width100}`}>
-                                <input
-                                    type='text'
-                                    name='responsavel'
-                                    value={currentProgramacao?.responsavel || ''}
-                                    onChange={(e) => handleFormProgramacao(e)}
-                                    className={`${styles.collum}`}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                            <div className={`${styles.collum} ${styles.width100}`}>
-                                <FaPlus
-                                    size={18} 
-                                    className={styles.btnAddAtividade}
-                                    onClick={addAtividade}
-                                    style={{height: 50}}
-                                />
-                            </div>
-                        </div>
-                    :null}
-                </div>
+                <Programacao 
+                    addAtividade={addAtividade}
+                    currentProgramacao={currentProgramacao}
+                    handleEditProgramacao={handleEditProgramacao}
+                    handleFormProgramacao={handleFormProgramacao}
+                    readOnly={readOnly}
+                    print={print}
+                    programacao={localData.programacao}
+                    removeAtividade={removeAtividade}
+                />
             </div>        
         </div>
     )
