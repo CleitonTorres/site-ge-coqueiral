@@ -102,7 +102,7 @@ export default function Page(){
     }
 
     return(
-        <Section customClass={['flexCollTop', 'fullWidth', 'minHeight']} title="Sessão SAAE">
+        <Section customClass={['flexCollTop', 'fullWidth', 'minHeight']}>
            <ViewSaaes tipo="regional"/>
 
            <ViewSaaes tipo="user"/>

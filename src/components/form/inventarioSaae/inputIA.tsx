@@ -1,7 +1,7 @@
 'use client'
 import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { InventarioSaaeType } from '@/@types/types';
+import { GrauRisco, InventarioSaaeType } from '@/@types/types';
 import styles from './inputIA.module.css';
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { Context } from '@/components/context/context';
@@ -104,8 +104,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                 }
             });
 
-            const nivelRisco = calcNivelRisco(newData)
-
+            const nivelRisco = calcNivelRisco(newData, prev.grauRisco);            
             return{
                 ...prev,
                 grauRisco: nivelRisco,
@@ -168,7 +167,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                     ...prev.inventarioRiscos || [],
                     ...newData
                 ];
-                const nivelRisco = calcNivelRisco(data);
+                const nivelRisco = calcNivelRisco(data, prev.grauRisco);
                 
                 return{
                     ...prev,
@@ -195,7 +194,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                 nivelRisco: !isNaN(atividadeCorrente.nivelRisco) ? atividadeCorrente.nivelRisco : 0
             } as InventarioSaaeType];
 
-            const nivelRisco = calcNivelRisco(newData)
+            const nivelRisco = calcNivelRisco(newData, prev.grauRisco);
             
             return {
                 ...prev,
@@ -226,26 +225,32 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
         }
     };
 
-    const calcNivelRisco = (data:InventarioSaaeType[])=>{
+    const calcNivelRisco = (data:InventarioSaaeType[], prevNivelRisco: GrauRisco)=>{
+        const grauRiscoZero = {
+            color: '' as  "" | "green" | "yellow" | "orange" | "red",
+            value: 0
+        };
+
         if(data){
             const maiorRisco = data.reduce((prev, current)=>{
                 return prev.nivelRisco > current.nivelRisco ? prev : current;
-            },data[0]);
+            }, data[0]);
   
-            if(!maiorRisco) return {
-                color: '' as  "" | "green" | "yellow" | "orange" | "red",
-                value: 0
-            };
-  
-            return {
+            // if(!maiorRisco) {
+            //     const compareNivelRisco = prevNivelRisco?.value > grauRiscoZero.value ? prevNivelRisco : grauRiscoZero;
+            //     return compareNivelRisco;
+            // }
+            
+            const curretGrauRisco = {
                 color: setColor(maiorRisco.nivelRisco) as  "" | "green" | "yellow" | "orange" | "red",
                 value: maiorRisco.nivelRisco
             }
+
+            const compareNivelRisco = prevNivelRisco?.value > curretGrauRisco.value ? prevNivelRisco : curretGrauRisco;
+            return compareNivelRisco
         }else{
-            return {
-                color: '' as  "" | "green" | "yellow" | "orange" | "red",
-                value: 0
-            };
+            const compareNivelRisco = prevNivelRisco?.value > grauRiscoZero.value ? prevNivelRisco : grauRiscoZero;
+            return compareNivelRisco;
         }
     }
 

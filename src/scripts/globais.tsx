@@ -1,4 +1,4 @@
-import { CEP, DataNews, Endereco, InfosPreliminaresSaae, ProfileProps, SAAE } from "@/@types/types";
+import { CEP, DataNews, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -679,7 +679,7 @@ export const getStaticMapUrl = (lat: number, lng: number, label: string) => {
  * Cria um URL de imagem estática do google maps para rotas.
  * @param {number} points - latitude da coordenada. 
  * @param {string} label - rótulo da coordenada. 
- * @returns 
+ * @returns
  */
 export const generateStaticMapURL = (points: { lat: number; lng: number }[]) => {
     if (!points || points.length === 0) return "";
@@ -705,5 +705,13 @@ export const generateStaticMapURL = (points: { lat: number; lng: number }[]) => 
 
     return `${baseUrl}?size=${size}&path=color:red|weight:3|${path}${markersParam}&key=${API_KEY}`;
 };
+
+export const addNivelRisco = (currentNivelRisco: GrauRisco, newValue: GrauRisco) => {
+    if(!newValue) return currentNivelRisco;
+    
+    const compareNivelRisco = currentNivelRisco?.value > newValue.value ? currentNivelRisco : newValue;
+
+    return compareNivelRisco;
+}
 
 

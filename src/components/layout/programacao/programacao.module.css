@@ -7,6 +7,12 @@
     flex-wrap: nowrap;
     margin-bottom: 10px;
 }
+.headerProgramacao{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
 .conteiner h1{
     font-size: 14px;
     padding: 6px;
@@ -15,82 +21,45 @@
 .bgGreen{
     background-color: var(--verde);
     margin-top: 20px;
-    padding-left: 10px;
 }
-.line{
-    position: relative;
+.addProgramacaoRamo{
+    background-color: var(--blue);
+    padding: 0 6px;
+    color: white !important;
+    font-size: 14px !important;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    max-width: 220px;
 }
-.collum{
+.addProgramacaoRamo:hover{
+    cursor: pointer;
+    opacity: 0.8;
+}
+.addProgramacaoRamo option{
+    color: white;
+}
+.titleProgramacoes{
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 12px;
-    border: 1px solid;
-    resize: none;
-    min-height: 90px;
-    padding: 6px;
-    text-align: justify;
+    padding: 0 3px;
+    border-top: 1px solid var(--blue);
+    border-right: 1px solid var(--blue);
+    opacity: 0.5;
+    font-size: 15px;
+    text-wrap: nowrap;
 }
-.collum h1{
-    text-wrap: wrap;
-    word-break: break-all;
-}
-.collum input, .collum textarea{
-    width: 100%;
-    border: none;
-    font-size: 12px;
-}
-.headerAddRem{
-    position: absolute;
-    right: -70px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.addProg, .removeProg{
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.width1{
-    width: 10%;
-}
-.width2{
-    width: 20%;
-}
-.width3{
-    width: 40%;
-}
-
-.addProg path{
-    color: var(--blue);
-}
-
-.addProg:hover{
-    background-color: var(--verde);
-    border-radius: 10px;
-    padding: 3px;
+.titleProgramacoes:hover{
     cursor: pointer;
 }
-.addProg:active{
-    padding: 4px;
+.borderLeft{
+    border-left: 1px solid var(--blue);
 }
-
-.removeProg path{
+.excluirProg{
     color: red;
+    margin: 0px 3px;
+    z-index: 10;
 }
-
-.removeProg:hover{
-    background-color: var(--verde);
-    border-radius: 10px;
-    padding: 3px;
-    cursor: pointer;
-}
-.removeProg:active{
-    padding: 4px;
+.activeTitle{
+    border-top: 2px solid var(--blue);
+    font-weight: 700;
+    font-size: 16px;
+    opacity: 1;
 }

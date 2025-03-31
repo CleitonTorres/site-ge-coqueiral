@@ -1,17 +1,19 @@
 'use client'
-import { ChangeEvent, FocusEvent, Fragment, KeyboardEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import styles from './dadosGerais.module.css';
-import { DadosGeraisSaae, Endereco, ProgramacaoAtividade } from '@/@types/types';
+import { DadosGeraisSaae, Endereco, GrauRisco, ProgramacaoAtividade, ProgramacaoRamos } from '@/@types/types';
 import { v4 } from 'uuid';
-import { addTime, cleamText, dateFormat1, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
+import { addNivelRisco, addTime, cleamText, dateFormat1, formatToHourMin, getDadosCEP, maskcep, maskMoeda, masktel, temApenasNumeros } from '@/scripts/globais';
 import { FaPlus } from "react-icons/fa";
-import { dataBaseSaae, Odss, tiposAtividade, uels } from '@/components/data-training/data-training';
+import { atividades, Odss, uels } from '@/components/data-training/data-training';
 import { Context } from '@/components/context/context';
 
 import MapsComponent from '@/components/layout/mapsViewer/mapsViewer';
 import RouteMapComponent from '@/components/layout/mapsRotas/mapsRotas';
 import { FaTrash } from 'react-icons/fa6';
 import Programacao from '@/components/layout/programacao/programacao';
+import Mathias from '@/components/layout/mathias/mathias';
+import Confirme from '@/components/layout/confirme/confirme';
 
 type Props = {
     readOnly: boolean,
@@ -37,10 +39,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
     const [odss, setOdss] = useState('');
     const [inputRamo, setInputRamo] = useState('');
     const [inputGruposConvidados, setInputGruposConvidados] = useState('');
-    const [atividadesList, setAtividadesList] = useState<string[]>([]);
     const [inicioFim, setInicioFim] = useState(false);
     const [resetMap, setResetMap] = useState(false);
     const [resetMapFim, setResetMapFim] = useState(false);
+    const [showDescricaoAtiv, setShowDescricaoAtiv] = useState('');
 
     const handleForm = (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
@@ -54,6 +56,20 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 newData = {
                     ...newData,
                     [name]: formatToHourMin(value)
+                }
+            }else if(name.includes('usoTransporteInterMunicipal')){
+                const newGrauRisco = value === 'Sim' ? {
+                    color: 'orange',
+                    value: 10,
+                } as GrauRisco : undefined;
+
+                return {
+                    ...prev,
+                    grauRisco: addNivelRisco(prev.grauRisco, newGrauRisco),
+                    dadosGerais:{
+                        ...prev.dadosGerais,
+                        usoTransporteInterMunicipal: value as 'Sim' | 'Não'
+                    }
                 }
             }else if(name.includes("localInicio")){
                 //localInicio.coordenadas.long
@@ -193,7 +209,11 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         })        
     }
 
-    const handleFormProgramacao= (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
+    //essa função lida com o controle de estado dos inputs usados para 
+    //fornecer os dados da programação
+    const handleFormProgramacao= (
+        e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+    )=>{
         e.preventDefault();
         const name = e.target.name;
         const value= e.target.value;
@@ -226,59 +246,121 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         })
     }
 
-    const handleEditProgramacao = (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>, itemId: number)=>{
+    //essa função lida com a edição dos valores já inseridos na programação.
+    const handleEditProgramacao = (
+        e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>, 
+        itemId: number,
+        nomeRamo: string
+    )=>{
         e.preventDefault();
         const name = e.target.name;
         const value= e.target.value;
         try{
-            context.setDataSaae((prev)=>{
-                const newProgragacao = (prev.dadosGerais.programacao || []).map((p)=>{
-                    if(p.id === itemId){
-                        if(name === "data"){
-                            let newValue:string | Date = value;
-                
-                            if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
-                                const ano = value.split('-')[0]//pega o ano;
-                                if(parseInt(ano) < 2000) newValue = value;
-                                else newValue = new Date(value + "T00:00:00"); 
-                            } else {
-                                newValue = value; // Permite digitação parcial sem quebrar o estado
-                            }
+            if(!nomeRamo || nomeRamo === ''){
+                context.setDataSaae((prev)=>{
+                    const newProgragacao = (prev.dadosGerais.programacao || []).map((p)=>{
+                        if(p.id === itemId){
+                            if(name === "data"){
+                                let newValue:string | Date = value;
+                    
+                                if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
+                                    const ano = value.split('-')[0]//pega o ano;
+                                    if(parseInt(ano) < 2000) newValue = value;
+                                    else newValue = new Date(value + "T00:00:00"); 
+                                } else {
+                                    newValue = value; // Permite digitação parcial sem quebrar o estado
+                                }
 
+                                return{
+                                    ...p,
+                                    data: newValue
+                                }
+                            }
+                            else if(['hora', 'duracao'].includes(name)){
+                                return{
+                                    ...p,
+                                    [name]: formatToHourMin(value)
+                                }
+                            }
                             return{
                                 ...p,
-                                data: newValue
+                                [name]: value
                             }
+                        }else{
+                            return p
                         }
-                        else if(['hora', 'duracao'].includes(name)){
-                            return{
-                                ...p,
-                                [name]: formatToHourMin(value)
-                            }
+                    });
+
+                    return {
+                        ...prev,
+                        dadosGerais:{
+                            ...prev.dadosGerais,
+                            programacao: newProgragacao
                         }
-                        return{
-                            ...p,
-                            [name]: value
-                        }
-                    }else{
-                        return p
-                    }
+                    };
                 });
+            }else{
+                context.setDataSaae((prev)=>{
+                    const newProgRamo = prev.dadosGerais?.programacaoRamos?.map(r=>{
+                        if(r.ramo === nomeRamo){
+                            const newProgragacao = (r.programacao || []).map((p)=>{
+                                if(p.id === itemId){
+                                    if(name === "data"){
+                                        let newValue:string | Date = value;
+                            
+                                        if (value.length === 10) {  // Garantir que tenha o formato completo "YYYY-MM-DD"
+                                            const ano = value.split('-')[0]//pega o ano;
+                                            if(parseInt(ano) < 2000) newValue = value;
+                                            else newValue = new Date(value + "T00:00:00"); 
+                                        } else {
+                                            newValue = value; // Permite digitação parcial sem quebrar o estado
+                                        }
+        
+                                        return{
+                                            ...p,
+                                            data: newValue
+                                        }
+                                    }
+                                    else if(['hora', 'duracao'].includes(name)){
+                                        return{
+                                            ...p,
+                                            [name]: formatToHourMin(value)
+                                        }
+                                    }
+                                    return{
+                                        ...p,
+                                        [name]: value
+                                    }
+                                }else{
+                                    return p
+                                }
+                            });
 
-                return {
-                    ...prev,
-                    dadosGerais:{
-                        ...prev.dadosGerais,
-                        programacao: newProgragacao
+                            return {
+                                ...r,
+                                programacao: newProgragacao
+                            }
+                        }else{
+                            return r;
+                        }
+                    });
+
+                    return {
+                        ...prev,
+                        dadosGerais:{
+                            ...prev.dadosGerais,
+                            programacaoRamos: newProgRamo
+                        }
                     }
-                };
-            });
+                })
+            }
         }catch(e){
             console.log(e);
         }
     }
 
-    const addAtividade = async()=>{
+    //adiciona a atividade (trecho da programação) a programação.
+    const addAtividade = async(nomeRamo: string)=>{
         if(!currentProgramacao.data || !currentProgramacao.duracao || !currentProgramacao.hora || !currentProgramacao.descricao){
             alert("Faltam campos obrigatórios na programação!")
             return;
@@ -288,8 +370,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             return
         }
 
-        await updateContext(currentProgramacao)
+        await updateContext(currentProgramacao, nomeRamo)
 
+        //limpa o formulario de inputs
         setCurrentProgramacao((prev)=>{
             const { time } = addTime(prev.hora, prev.duracao);
             return{
@@ -298,98 +381,187 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             } as ProgramacaoAtividade
         });
     }    
-    
-    const updateContext = async (programacao:ProgramacaoAtividade)=>{
-        try{
+    //remove uma atividade (trecho da programação) da programação.
+    const removeAtividade = (idx:number, nomeRamo: string)=>{
+        //programação geral.
+        if(nomeRamo === ''){
             context.setDataSaae((prev)=>{
-                const newProgragacao = prev.dadosGerais.programacao ? [
-                    ...prev.dadosGerais.programacao,
-                    {
-                        ...programacao, 
-                        descricao: programacao.descricao || '',
-                        responsavel: programacao.responsavel || '',
-                        materialNecessario: programacao.materialNecessario || '',
-                        id: prev.dadosGerais.programacao.length+1,
+                const filter = prev.dadosGerais.programacao.filter(prog=> prog.id !== idx);
+                const rename = filter.map((prog, idx)=> {
+                    return{
+                        ...prog,
+                        id: idx+1
                     } as ProgramacaoAtividade
-                ] : [{...programacao, id: 1}]
-    
+                });
+        
+                const dadosGerais= {
+                    ...prev.dadosGerais, 
+                    programacao: rename
+                }
+        
                 return{
                     ...prev,
-                    dadosGerais: {
+                    dadosGerais
+                }
+            })
+        }
+        //programação por ramo
+        else{
+            context.setDataSaae((prev)=>{
+                const newProgRamo = prev.dadosGerais?.programacaoRamos?.map(r=>{
+                    if(r.ramo === nomeRamo){
+                        const filter = r.programacao.filter(prog=> prog.id !== idx);
+                        const rename = filter.map((prog, idx)=> {
+                            return{
+                                ...prog,
+                                id: idx+1
+                            } as ProgramacaoAtividade
+                        });
+
+                        return {
+                            ...r,
+                            programacao: rename
+                        }
+                    }else{
+                        return r;
+                    }
+                });
+
+                return{
+                    ...prev,
+                    dadosGerais:{
                         ...prev.dadosGerais,
-                        programacao: newProgragacao
+                        programacaoRamos: newProgRamo
                     }
                 }
-            });
-        }catch(e){
-            console.log(e);
+            })
         }
     }
-    const removeAtividade = (idx:number)=>{
+
+    //adiciona uma tabela de programação de ramo à SAAE.
+    const addProgramacaoRamo = (nomeRamo: string)=>{
         context.setDataSaae((prev)=>{
-            const filter = prev.dadosGerais.programacao.filter(prog=> prog.id !== idx);
-            const rename = filter.map((prog, idx)=> {
-                return{
-                    ...prog,
-                    id: idx+1
-                } as ProgramacaoAtividade
-            });
-    
-            const dadosGerais= {
-                ...prev.dadosGerais, 
-                programacao: rename
-            }
-    
-            return{
-                ...prev,
-                dadosGerais
-            }
-        })
-        //updateContext(newData);
-    }
-
-    const getAtividade = (e: FocusEvent<HTMLInputElement, Element>)=>{
-        e.preventDefault();
-        const value = e.target.value;
-
-        if(value === ""){
-            return;
-        }
-
-        context.setDataSaae((prev)=>{
-            const atividade = dataBaseSaae.find(ativ=> ativ.produto?.includes(value));
-            let newData= prev.dadosGerais;
-            
-            if(atividade){
-                setInicioFim(atividade.localFim ? true : false);
-                newData = {
-                    ...newData,
-                    nomeAtividade: atividade.produto,
-                    tipoAtividade: atividade.atividade,
-                    odss: atividade.ods,
-                    localInicio: {
-                        logradouro: atividade.localInicio?.logradouro,
-                        bairro: atividade.localInicio?.bairro,
-                        municipio: atividade.localInicio.municipio,
-                        uf: atividade.localInicio.uf,
-                        cep: atividade.localInicio.cep
-                    },
-                    localFim: atividade.localFim ? {
-                        logradouro: atividade.localFim?.logradouro,
-                        bairro: atividade.localFim?.bairro,
-                        municipio: atividade.localFim.municipio,
-                        uf: atividade.localFim.uf,
-                        cep: atividade.localFim.cep
-                    } : undefined
-                } as DadosGeraisSaae;
-            }
+            const existe = prev.dadosGerais.programacaoRamos?.find(i=> i.ramo === nomeRamo);
+            if(existe) return prev;
 
             return {
                 ...prev,
-                dadosGerais: newData
+                dadosGerais:{
+                    ...prev.dadosGerais,
+                    programacaoRamos: prev.dadosGerais.programacaoRamos ? [
+                        ...prev.dadosGerais.programacaoRamos,
+                        {
+                            ramo: nomeRamo,
+                            programacao: []
+                        } as ProgramacaoRamos
+                    ] : [{
+                        ramo: nomeRamo,
+                        programacao: []
+                    } as ProgramacaoRamos]
+                }
             }
         })
     }
+
+    //remove uma tabela de programação de ramo da SAAE.
+    const removeProgramacaoRamo = (nomeRamo:string)=>{
+        context.setShowModal({
+            element: <Confirme 
+                message={`Tem certeza que deseja remover essa programação ${nomeRamo}?`}
+                confirme={async()=>{
+                    try{
+                        context.setDataSaae((prev)=>{
+                            const filter = prev.dadosGerais.programacaoRamos?.filter(i=> i.ramo !== nomeRamo);
+                            return {
+                                ...prev,
+                                dadosGerais:{
+                                    ...prev.dadosGerais,
+                                    programacaoRamos: filter
+                                }
+                            }
+                        });
+
+                        return {
+                            bool: true,
+                            text: 'Programação removida com sucesso!'
+                        };
+                    }catch(e){
+                        console.log(e);
+                        return {
+                            bool: false,
+                            text: 'Erro ao remover programação!'
+                        };
+                    }
+                }}
+                cancele={()=>context.setShowModal(null)}
+            />
+        })
+        
+    }
+
+    //atualiza o dataSAAE no contexto.
+    const updateContext = async (programacao:ProgramacaoAtividade, nomeRamo:string)=>{
+        try{
+            //programação geral
+            if(nomeRamo === ""){
+                context.setDataSaae((prev)=>{
+                    const newProgragacao = prev.dadosGerais.programacao ? [
+                        ...prev.dadosGerais.programacao,
+                        {
+                            ...programacao, 
+                            descricao: programacao.descricao || '',
+                            responsavel: programacao.responsavel || '',
+                            materialNecessario: programacao.materialNecessario || '',
+                            id: prev.dadosGerais.programacao.length+1,
+                        } as ProgramacaoAtividade
+                    ] : [{...programacao, id: 1}]
+        
+                    return{
+                        ...prev,
+                        dadosGerais: {
+                            ...prev.dadosGerais,
+                            programacao: newProgragacao
+                        }
+                    }
+                });
+            }
+            //programação por ramo
+            else{
+                context.setDataSaae((prev)=>{
+                    const newProgRamo = prev.dadosGerais.programacaoRamos?.map(r=>{
+                        if(r.ramo === nomeRamo){ //uma nova programação de ramo é criada quando se seleciona no select "add programação de ramo"
+                            const newProgragacao = r.programacao ? [
+                                ...r.programacao,
+                                {
+                                    ...programacao, 
+                                    descricao: programacao.descricao || '',
+                                    responsavel: programacao.responsavel || '',
+                                    materialNecessario: programacao.materialNecessario || '',
+                                    id: r.programacao.length+1,
+                                } as ProgramacaoAtividade
+                            ] : [{...programacao, id: 1}]
+                
+                            return{
+                                ...r,
+                                programacao: newProgragacao
+                            }
+                        }else{
+                            return r
+                        }
+                    });
+                    return {
+                        ...prev,
+                        dadosGerais:{
+                            ...prev.dadosGerais,
+                            programacaoRamos: newProgRamo
+                        }
+                    }
+                })
+            }
+        }catch(e){
+            console.log(e);
+        }
+    }   
 
     //busca o endereço da empresa.
     const getCep = (e:ChangeEvent<HTMLInputElement>)=>{
@@ -461,6 +633,23 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 }
             }
             else if (!prev.dadosGerais[name]?.includes(trimmedValue)) {
+                if(name === 'tipoAtividade'){
+                    const findAtividade = atividades.find(i=> i.tipo.includes(trimmedValue));
+                    const newData = [...(prev.dadosGerais.tipoAtividade || []), findAtividade.tipo];
+
+                    //verifica se o grau de risco da atividade selecionada é maior que a existente.
+                    //se for, substitui ele pelo de maior valor.
+                    const grauRisco = findAtividade.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
+                    return{
+                        ...prev,
+                        grauRisco: grauRisco,
+                        dadosGerais: {
+                            ...prev.dadosGerais,
+                            tipoAtividade: newData
+                        }
+                    }
+                }
+
                 const newArray = prev.dadosGerais[name] ? [
                     ...prev.dadosGerais[name],
                     trimmedValue
@@ -505,6 +694,22 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         }
                     }
                 }
+                else if(name === 'tipoAtividade'){
+                    const findAtividade = atividades.find(i=> i.tipo.includes(trimmedValue));
+                    const newData = [...(prev.dadosGerais.tipoAtividade || []), findAtividade.tipo];
+
+                    //verifica se o grau de risco da atividade selecionada é maior que a existente.
+                    //se for, substitui ele pelo de maior valor.
+                    const grauRisco = findAtividade.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
+                    return{
+                        ...prev,
+                        grauRisco: grauRisco,
+                        dadosGerais: {
+                            ...prev.dadosGerais,
+                            tipoAtividade: newData
+                        }
+                    }
+                }
                 else if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
                     const newArray = prev.dadosGerais[name] ? [
                         ...prev.dadosGerais[name],
@@ -539,7 +744,10 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             context.setDataSaae((prev)=>{
                 if(name === 'gruposConvidados'){
                     const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
-                    const newData = [...(prev.dadosGerais.gruposConvidados || []), findUel];
+                    //impede duplicatas.
+                    const newData = (prev.dadosGerais.gruposConvidados || []).find(i=> i.nameUel.includes(trimmedValue)) ? 
+                        (prev.dadosGerais.gruposConvidados || []) :
+                        [...(prev.dadosGerais.gruposConvidados || []), findUel];
                     return{
                         ...prev,
                         dadosGerais: {
@@ -548,7 +756,24 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         }
                     }
                 }
-                else if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {
+                if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {                    
+                    if(name === 'tipoAtividade'){
+                        const findAtividade = atividades.find(i=> i.tipo.includes(trimmedValue));
+                        const newData = [...(prev.dadosGerais.tipoAtividade || []), findAtividade.tipo];
+    
+                        //verifica se o grau de risco da atividade selecionada é maior que a existente.
+                        //se for, substitui ele pelo de maior valor.
+                        const grauRisco = findAtividade.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
+                        return{
+                            ...prev,
+                            grauRisco: grauRisco,
+                            dadosGerais: {
+                                ...prev.dadosGerais,
+                                tipoAtividade: newData
+                            }
+                        }
+                    }
+
                     const newArray = prev.dadosGerais[name] ? [
                         ...prev.dadosGerais[name],
                         trimmedValue
@@ -558,7 +783,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         ...prev.dadosGerais,
                         [name]: newArray
                     }
-                    //updateContext(newData);
                     return{
                         ...prev,
                         dadosGerais: newData
@@ -639,14 +863,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         //updateContext(newData);
     }
 
-    useEffect(()=>{
-        //carrega a lista de atividades.
-        setAtividadesList(()=>{
-            const newData = dataBaseSaae?.map(ativ=> `${ativ.produto}`)
-            return newData
-        });
-    },[])
-
     if(!localData) return <span>formulário não carregado</span>
     
     return(
@@ -671,19 +887,13 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         {!print ? <input
                             type='text'
                             name='nomeAtividade'
-                            list='listAtividades'
                             value={localData?.nomeAtividade || ''}
                             onChange={(e) => handleForm(e)}
-                            onBlur={(e)=>getAtividade(e)}
                             placeholder="nome da atividade"
                             className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.nomeAtividade || ''}</p>}
-                        <datalist id='listAtividades'>
-                            {atividadesList.map(ativ=> (
-                                <option value={ativ} key={ativ}>{ativ}</option>
-                            ))}
-                        </datalist>
+                        
                     </div>
                     <div className={styles.collum3}>
                         <h1>
@@ -704,8 +914,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             readOnly={readOnly}
                         />
                         <datalist id="options">
-                            {tiposAtividade.sort((a,b)=> a.localeCompare(b)).map(ativ=> (
-                                <option value={ativ} key={ativ}>{ativ}</option>
+                            {atividades.sort((a,b)=> a.tipo.localeCompare(b.tipo)).map(ativ=> (
+                                <option value={ativ.tipo} key={ativ.tipo}>{ativ.tipo}</option>
                             ))}
                         </datalist>
                         
@@ -718,6 +928,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 <div
                                     key={index+'tags'}
                                     className={styles.boxTags}
+                                    onMouseEnter={()=> setShowDescricaoAtiv(tag)}
+                                    onMouseLeave={()=> setShowDescricaoAtiv('')}
                                 >
                                 {tag}
                                     {!readOnly ? 
@@ -730,6 +942,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                             x
                                         </button>
                                     :null}
+                                    <Mathias 
+                                        show={showDescricaoAtiv === tag} 
+                                        text={atividades.find(i=> i.tipo === tag)?.descricao || 'A descrição desta atividade não foi cadastrada.'}/>
                                 </div>
                             ))}
                         </div>
@@ -1737,8 +1952,11 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 :null}
 
                 {/* programação da atividade */}
+
                 <Programacao 
                     addAtividade={addAtividade}
+                    addProgramacaoRamo={addProgramacaoRamo}
+                    removeProgramacaoRamo={removeProgramacaoRamo}
                     currentProgramacao={currentProgramacao}
                     handleEditProgramacao={handleEditProgramacao}
                     handleFormProgramacao={handleFormProgramacao}
@@ -1746,7 +1964,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     print={print}
                     programacao={localData.programacao}
                     removeAtividade={removeAtividade}
-                />
+                    programacaoRamo={localData?.programacaoRamos}
+                /> 
             </div>        
         </div>
     )

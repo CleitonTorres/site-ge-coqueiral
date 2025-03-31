@@ -4,7 +4,7 @@
     flex: content;
     flex-direction: column; 
     justify-content: flex-start;
-    width: 100vw;
+    width: 100%;
     margin-top: 6px;
     padding: 20px;
     overflow: hidden;

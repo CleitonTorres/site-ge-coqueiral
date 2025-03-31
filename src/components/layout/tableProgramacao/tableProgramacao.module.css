@@ -1,0 +1,83 @@
+.line{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.collum{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    border: 1px solid;
+    resize: none;
+    /* min-height: 90px; */
+    padding: 6px;
+    text-align: justify;
+}
+.collum h1{
+    text-wrap: wrap;
+    word-break: break-all;
+}
+.collum input, .collum textarea{
+    width: 100%;
+    border: none;
+    font-size: 12px;
+}
+.width1{
+    width: 10%;
+}
+.width2{
+    width: 20%;
+}
+.width3{
+    width: 40%;
+}
+.width4{
+    width: 100%;
+}
+.textSize14{
+    font-size: 16px !important;
+    font-weight: 700;
+}
+.headerAddRem{
+    position: absolute;
+    right: -70px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.addProg, .removeProg{
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.addProg path{
+    color: var(--blue);
+}
+
+.addProg:hover{
+    background-color: var(--verde);
+    border-radius: 10px;
+    padding: 3px;
+    cursor: pointer;
+}
+.addProg:active{
+    padding: 4px;
+}
+
+.removeProg path{
+    color: red;
+}
+
+.removeProg:hover{
+    background-color: var(--verde);
+    border-radius: 10px;
+    padding: 3px;
+    cursor: pointer;
+}
+.removeProg:active{
+    padding: 4px;
+}

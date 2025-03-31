@@ -260,6 +260,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                     </div>  
                             
                     {dataStorage.filter(item=> item.dataSaae?.status === 'rascunho')
+                    ?.sort((a,b)=> a.dataSaae?.dadosGerais?.nomeAtividade?.localeCompare(b.dataSaae?.dadosGerais?.nomeAtividade || '') || 0)
                     ?.map((storage, idx)=>(
                         <div key={idx+'listaSAAEs'} className={styles.boxInput}>
                             <label htmlFor={`saae-${storage.id}`}>
@@ -305,7 +306,8 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                         <h4>SAAEs Enviadas</h4> 
                         <h4>Status</h4>  
                     </div>                                                            
-                    {context.listSaaes?.map((saae, idx)=>(
+                    {context.listSaaes?.sort((a,b)=> a.dadosGerais.nomeAtividade?.localeCompare(b.dadosGerais.nomeAtividade || ''))
+                    ?.map((saae, idx)=>(
                         <div key={idx+'listaSAAEs'} className={`${styles.boxInput} cursorPointer`} onClick={()=>{
                             if(['aprovada', 'enviada'].includes(saae.status)){
                                 printComponent(saae, 'print-data');

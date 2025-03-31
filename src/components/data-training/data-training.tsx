@@ -1,4 +1,4 @@
-import { DadosBasicosUEL, DataBaseSaae, ProfileProps } from "@/@types/types"
+import { Atividade, DadosBasicosUEL, DataBaseSaae, ProfileProps } from "@/@types/types"
 
 export const userTest = [
     {
@@ -183,6 +183,193 @@ export const uels:DadosBasicosUEL[] = [
         ufUel: 'ES'
     },
 ]
+export const atividades:Atividade[] = [
+    {
+        tipo: "Caminhada em ambiente urbano",
+        descricao: "Caminhada em áreas pavimentadas, como calçadas, parques urbanos e ruas seguras.",
+        grauRisco: {
+            color: "green",
+            value: 3
+        }
+    },
+    {
+        tipo: "Caminhada em ambiente rural",
+        descricao: "Caminhada em estradas de terra, trilhas abertas e terrenos levemente irregulares.",
+        grauRisco: {
+            color: "yellow",
+            value: 5
+        }
+    },
+    {
+        tipo: "Caminhada em ambiente natural",
+        descricao: "Caminhada em trilhas fechadas, com obstáculos naturais e possível travessia de rios.",
+        grauRisco: {
+            color: "orange",
+            value: 10
+        }
+    },
+    {
+        tipo: "Rapel até 15m",
+        descricao: "Descida controlada em paredões de até 15 metros, com equipamentos adequados e supervisão.",
+        grauRisco: {
+            color: "yellow",
+            value: 6
+        }
+    },
+    {
+        tipo: "Rapel até 30m",
+        descricao: "Descida controlada em paredões de até 30 metros, exigindo mais experiência e técnica.",
+        grauRisco: {
+            color: "orange",
+            value: 10
+        }
+    },
+    {
+        tipo: "Rapel até 60m",
+        descricao: "Descida em paredões de até 60 metros, necessitando equipamentos avançados e treinamento.",
+        grauRisco: {
+            color: "red",
+            value: 15
+        }
+    },
+    {
+        tipo: "Rapel até 100m",
+        descricao: "Descida em paredões acima de 60 metros, com alto risco e necessidade de técnicas especializadas.",
+        grauRisco: {
+            color: "red",
+            value: 20
+        }
+    },
+    {
+        tipo: "Escalada artificial até 5m",
+        descricao: "Escalada em paredes artificiais de até 5 metros, com equipamentos de segurança.",
+        grauRisco: {
+            color: "green",
+            value: 3
+        }
+    },
+    {
+        tipo: "Escalada artificial até 20m",
+        descricao: "Escalada em paredes artificiais de até 20 metros, exigindo técnicas básicas.",
+        grauRisco: {
+            color: "yellow",
+            value: 6
+        }
+    },
+    {
+        tipo: "Escalada em ambiente natural até 20m",
+        descricao: "Escalada em rochas naturais de até 20 metros, com riscos adicionais devido ao ambiente.",
+        grauRisco: {
+            color: "orange",
+            value: 10
+        }
+    },
+    {
+        tipo: "Natação em piscina",
+        descricao: "Natação em piscina com profundidade controlada e supervisão.",
+        grauRisco: {
+            color: "green",
+            value: 3
+        }
+    },
+    {
+        tipo: "Natação em lago ou rio",
+        descricao: "Natação em águas naturais com correnteza leve e profundidade moderada.",
+        grauRisco: {
+            color: "yellow",
+            value: 5
+        }
+    },
+    {
+        tipo: "Natação em mar aberto",
+        descricao: "Natação em mar aberto, sujeito a correntes marítimas e condições imprevisíveis.",
+        grauRisco: {
+            color: "orange",
+            value: 10
+        }
+    },
+    {
+        tipo: "Banho de rio",
+        descricao: "Atividade recreativa em rios de correnteza fraca, com águas rasas.",
+        grauRisco: {
+            color: "yellow",
+            value: 4
+        }
+    },
+    {
+        tipo: "Banho de cachoeira rasa",
+        descricao: "Banho em cachoeira com águas rasas e pouco fluxo.",
+        grauRisco: {
+            color: "yellow",
+            value: 5
+        }
+    },
+    {
+        tipo: "Banho de cachoeira profunda",
+        descricao: "Banho em cachoeira com águas profundas e forte fluxo de água.",
+        grauRisco: {
+            color: "orange",
+            value: 10
+        }
+    },
+    {
+        tipo: "Remada em lago",
+        descricao: "Remada em lagoas ou lagos calmos, com uso de caiaques ou canoas.",
+        grauRisco: {
+            color: "yellow",
+            value: 6
+        }
+    },
+    {
+        tipo: "Remada em rio",
+        descricao: "Remada em rios com correnteza moderada, exigindo experiência básica.",
+        grauRisco: {
+            color: "orange",
+            value: 10
+        }
+    },
+    {
+        tipo: "Navegação a vela",
+        descricao: "Atividade de navegação em barcos à vela em lagos ou mares calmos.",
+        grauRisco: {
+            color: "yellow",
+            value: 6
+        }
+    },
+    {
+        tipo: "Navegação em barco até 5m",
+        descricao: "Navegação em pequenos barcos a motor ou remo, exigindo medidas de segurança.",
+        grauRisco: {
+            color: "orange",
+            value: 8
+        }
+    },
+    {
+        tipo: "Jogos escoteiros em ambiente urbano",
+        descricao: "Atividades recreativas e de orientação em áreas urbanas.",
+        grauRisco: {
+            color: "green",
+            value: 2
+        }
+    },
+    {
+        tipo: "Jogos escoteiros na praia, sem banho de mar",
+        descricao: "Atividades recreativas em ambiente de praia, com risco de exposição ao sol.",
+        grauRisco: {
+            color: "yellow",
+            value: 5
+        }
+    },
+    {
+        tipo: "Jogos escoteiros na praia, com banho de mar",
+        descricao: "Atividades recreativas em ambiente de praia, com riscos de afogamento e exposição ao sol.",
+        grauRisco: {
+            color: "yellow",
+            value: 5
+        }
+    }
+];
+
 export const dataBaseSaae:DataBaseSaae[] = [
     {
         produto: 'Trilha dos Camarás',

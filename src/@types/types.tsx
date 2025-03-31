@@ -145,6 +145,7 @@ export interface DadosGeraisSaae {
     linkMapa: string,
     rotas?:Rota[],
     programacao: ProgramacaoAtividade[],
+    programacaoRamos?: ProgramacaoRamos[],
     dadosUel: DadosUEL
 }
 export interface Rota {
@@ -162,6 +163,10 @@ export interface ProgramacaoAtividade {
     materialNecessario: string,
     responsavel: string
     id: number
+}
+export interface ProgramacaoRamos {
+    ramo: string,
+    programacao: ProgramacaoAtividade[]
 }
 export interface PlanoEmergenciaSaae {
     localInicio: Endereco,
@@ -274,4 +279,10 @@ export interface CEP{
     logradouro: string,
     siafi: string,
     uf: string
+}
+
+export interface Atividade{
+    tipo: string,
+    descricao: string,
+    grauRisco: GrauRisco,
 }

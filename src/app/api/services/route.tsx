@@ -3,10 +3,23 @@ import { closeDatabase, connectToDatabase } from "@/scripts/connectDB";
 import axios from "axios";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
-
 import { Storage } from "@google-cloud/storage";
 import { parseGoogleStorageUrl } from "@/scripts/globais";
 
+import { BodyEmail, newSAAEEmail } from "@/components/emailTemplates/newSaae";
+import util from 'util';
+import nodemailer from 'nodemailer';
+
+// Configurar o transporte SMTP para o seu provedor de e-mail
+const transporter = nodemailer.createTransport({
+    host: `${process.env.NEXT_PUBLIC_EMAIL_HOST}`,
+    port: 465, // Porta SMTP padrão (pode variar, consulte as configurações do seu provedor)
+    secure: true, // true para SSL, false para STARTTLS
+    auth: {
+      user: 'gep@paralegalsolucoes.com.br',
+      pass: process.env.NEXT_PUBLIC_PASS_EMAIL_GEP,
+    },
+});
 
 interface ServiceAccountCredentials {
     type: string;
@@ -55,6 +68,7 @@ const getInstagramFeed = async (limit?:string) => {
   return response.json();
 };
 
+
 export async function GET(req: NextRequest) {
     const authorization = req.headers.get('Authorization');
     const matchAuth = authorization === `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
@@ -65,8 +79,8 @@ export async function GET(req: NextRequest) {
     
     // Parseando os parâmetros da URL (query params)
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
-    const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey' | 'printPDF'
-    | 'proxyPDF';
+    const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey' 
+    | 'printPDF' | 'proxyPDF' | 'sendEmail';
     const slug = url.searchParams.get('slug') as string;
 
     if(service === 'news'){
@@ -161,6 +175,37 @@ export async function GET(req: NextRequest) {
             console.error('Erro ao buscar o PDF via proxy:', err);
             return NextResponse.json({ error: 'Erro ao buscar o arquivo' }, { status: 500 });
         }
+    }else if(service === 'sendEmail'){
+        const bodyEmail = url.searchParams.get('bodyEmail') as string;
+        const bodyParse = bodyEmail ? JSON.parse(bodyEmail) as  BodyEmail: undefined;
+        
+        if(!bodyParse || !bodyParse?.user || !bodyParse?.saae){
+            return NextResponse.json({error: "Corpo do email não informado"}, {status: 500});
+        }
+
+        // Renderizar o componente React para HTML
+        const corpoDoEmailHTML = newSAAEEmail({body: bodyParse});
+
+        // Configurar a mensagem
+        const mailOptions = {
+            from: 'remetente',
+            to: 'destinatario',
+            cc: 'destinatario',
+            subject: `Nova SAAE de ${bodyParse.user}, do  ${bodyParse.user.dadosBasicosUels.numUel} ${bodyParse.user.dadosBasicosUels.ufUel} ${bodyParse.user.dadosBasicosUels.nameUel}.`,
+            html: corpoDoEmailHTML,
+        };
+
+        // Enviar o e-mail
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Erro ao tentar enviar e-mail", util.inspect(error));
+                return NextResponse.json({error: "Erro ao enviar e-mail"}, {status: 500});
+            } else {
+                console.log(util.inspect(info));
+                return NextResponse.json({message: 'E-mail enviado: ' + util.inspect(info.messageId)}, {status: 200});
+            }
+        });
+
     }else{
         return NextResponse.json({ error: "Requisição não reconhecida." }, { status: 405 });
     }
