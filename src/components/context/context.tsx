@@ -823,6 +823,7 @@ export default function Provider({children}:{children:ReactNode}){
             text: 'SAAE enviada com sucesso!'
           }
         }else{
+          console.log('erro no response de edite saae', response)
           return{
             bool: true,
             text: 'Ocorreu um errro ao tentar atualizar a SAAE'
