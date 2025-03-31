@@ -154,6 +154,9 @@ export function dateFormat1(date:Date | string | undefined){
         // Garantir que o input seja um objeto Date
         date = typeof date === 'string' ? new Date(date) : date;
 
+        const testDate = new Date(date).getTime();
+        if(isNaN(testDate)) return '';
+
         const dateFormat = date.toISOString().split("T")[0];
 
         return dateFormat;
@@ -172,6 +175,9 @@ export function dateFormat2(date:Date | string | undefined){
     else{
         // Garantir que o input seja um objeto Date
         date = typeof date === 'string' ? new Date(date) : date;
+
+        const testDate = new Date(date).getTime();
+        if(isNaN(testDate)) return '';
 
         // Extrair dia, mês e ano
         const dia = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
