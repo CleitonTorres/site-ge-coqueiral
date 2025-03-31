@@ -82,8 +82,9 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
             >
                 <div className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <input
+                        type="date"
                         name='data'
-                        value={dateFormat2(prog?.data) || ''}
+                        value={dateFormat1(prog?.data) || ''}
                         onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
                     /> : <p>{dateFormat2(prog?.data) || ''}</p>}
                 </div>
