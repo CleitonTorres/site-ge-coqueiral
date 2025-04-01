@@ -57,7 +57,7 @@ export default function SaaeResumo ({hiddeButton, localData, print}:Props){
             >
                 Imprimir Autorização de Viagem
             </span> : null}
-            <span 
+            {!print ? <span 
                 className={styles.noPrint}
                 style={{cursor:'pointer', textDecoration: 'underline'}}
                 onClick={()=>{
@@ -65,7 +65,7 @@ export default function SaaeResumo ({hiddeButton, localData, print}:Props){
                 }}
             >
                 Imprimir SAAE
-            </span>
+            </span> : null}
 
             <Requerimento localData={localData.dadosGerais} />
 

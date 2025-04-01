@@ -613,7 +613,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         const name = e.target.name as 'tipoAtividade' | 'odss' | 'gruposConvidados';
 
         // Adicionar o valor ao array se não for vazio e não for duplicado
-        const trimmedValue = value.trim();
+        const trimmedValue = value.trim().replace(/,$/, '');
 
         if(!trimmedValue) return;
 
@@ -681,7 +681,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
 
         if (value.includes(',')) {
             // Adicionar o valor ao array se não for vazio e não for duplicado
-            const trimmedValue = value.trim();
+            const trimmedValue = value.trim().replace(/,$/, '');
             context.setDataSaae((prev)=>{
                 if(name === 'gruposConvidados'){
                     const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
@@ -740,7 +740,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         const name = e.currentTarget.name as 'tipoAtividade' | 'odss' | 'gruposConvidados';
         if (e.key === 'Enter') {
             // Adicionar o valor ao array se não for vazio e não for duplicado
-            const trimmedValue = value.trim();
+            const trimmedValue = value.trim().replace(/,$/, '');
             context.setDataSaae((prev)=>{
                 if(name === 'gruposConvidados'){
                     const findUel = uels.find(i=> i.nameUel.includes(trimmedValue));
@@ -884,13 +884,12 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <h1>
                             Nome da atividade
                         </h1>
-                        {!print ? <input
+                        {!readOnly ? <input
                             type='text'
                             name='nomeAtividade'
                             value={localData?.nomeAtividade || ''}
                             onChange={(e) => handleForm(e)}
                             placeholder="nome da atividade"
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.nomeAtividade || ''}</p>}
                         
@@ -910,7 +909,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             }}
                             onKeyDown={handleKeyDown}
                             onBlur={handleKeyBlur}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                         <datalist id="options">
@@ -949,6 +947,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             ))}
                         </div>
                     </div>
+
+                    {/* ODSs   */}
                     <div className={styles.collum3}>
                         <h1>
                             ODSs
@@ -964,7 +964,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             }}
                             onKeyDown={handleKeyDown}
                             onBlur={handleKeyBlur}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                         <datalist id="optionsODS">
@@ -1005,7 +1004,9 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 </div>                                
                             ))}
                         </div>
-                    </div>      
+                    </div>    
+
+                    {/* ramos   */}
                     <div className={styles.collum}>
                         <h1>
                             Ramo(s)
@@ -1023,7 +1024,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             onBlur={handleKeyBlur}
                             onKeyDown={handleKeyDown}
                             placeholder="precione Enter ou vírgula para inserir"
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                         <datalist id='listRamos'>
@@ -1068,7 +1068,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='atividadeNaoSupervisionada'
                                 value={localData?.atividadeNaoSupervisionada || ''}
                                 onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
                             >
                                 <option value=""></option>
                                 <option value="Sim">Sim</option>
@@ -1077,7 +1076,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             :
                             <input 
                                 defaultValue={localData?.atividadeNaoSupervisionada || ''}
-                                className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
                         }
@@ -1091,7 +1089,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='usoTransporteInterMunicipal'
                                 value={localData?.usoTransporteInterMunicipal || ''}
                                 onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
                             >
                                 <option value=""></option>
                                 <option value="Sim">Sim</option>
@@ -1101,7 +1098,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             <input 
                                 defaultValue={localData?.usoTransporteInterMunicipal || ''}
                                 readOnly={readOnly}
-                                className={`${styles.collum}`}
                             />
                         }
                     </div>    
@@ -1119,7 +1115,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.numUel'
                             value={localData?.dadosUel?.numUel || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.numUel || ''}</p>}
                     </div>
@@ -1132,7 +1127,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.nameUel'
                             value={localData?.dadosUel?.nameUel || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.nameUel || ''}</p>}
                     </div>
@@ -1145,7 +1139,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.cidadeUels'
                             value={localData?.dadosUel?.cidadeUels || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.cidadeUels || ''}</p>}
                     </div>
@@ -1158,7 +1151,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.ufUel'
                             value={localData?.dadosUel?.ufUel || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.ufUel || ''}</p>}
                     </div>
@@ -1171,7 +1163,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.presidenteUel'
                             value={localData?.dadosUel?.presidenteUel || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.presidenteUel || ''}</p>}
                     </div>
@@ -1184,7 +1175,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.regEscoteiroPresidente'
                             value={localData?.dadosUel?.regEscoteiroPresidente || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.regEscoteiroPresidente || ''}</p>}
                     </div>
@@ -1197,7 +1187,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dadosUel.telPresidente'
                             value={localData?.dadosUel?.telPresidente || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.dadosUel?.telPresidente || ''}</p>}
                     </div>
@@ -1220,7 +1209,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             }}
                             onKeyDown={handleKeyDown}
                             onBlur={handleKeyBlur}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                         <datalist id="optionsUels">
@@ -1264,7 +1252,8 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                     </div>
                 </div>
                 {/* local/endereço */}
-                <div className={`${styles.line} ${styles.margin0}`}>                    
+                <div className={`${styles.line} ${styles.margin0}`}>  
+                    <h5 style={{width: '100%'}}>Local onde a atividade irá acontecer</h5>                  
                     {!readOnly ? 
                     <div className={styles.boxCheck}>
                         <span title="Local onde será realizada?">
@@ -1310,7 +1299,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 setResetMap(!resetMap);
                             }}
                             placeholder="CEP do local da atividade"
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />  
                     </div>
@@ -1324,9 +1312,21 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             onChange={(e) => handleForm(e)}
                             onBlur={()=>setResetMap(!resetMap)}
                             placeholder="logradouro"
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.localInicio?.logradouro || ''}</p>}
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>
+                            Complemento
+                        </h1>
+                        <input
+                            type='text'
+                            name='localInicio.complemento'
+                            value={localData?.localInicio?.complemento || ''}
+                            onChange={(e) => handleForm(e)}
+                            onBlur={()=>setResetMap(!resetMap)}
+                            readOnly={readOnly}
+                        />
                     </div>
                     <div className={styles.collum}>
                         <h1>
@@ -1338,7 +1338,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             value={localData?.localInicio?.bairro || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={()=>setResetMap(!resetMap)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1352,7 +1351,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             value={localData?.localInicio?.municipio || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={()=>setResetMap(!resetMap)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1365,7 +1363,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             value={localData?.localInicio?.uf || ''}
                             onChange={(e) => handleForm(e)}
                             onBlur={()=>setResetMap(!resetMap)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />   
                     </div>
@@ -1520,7 +1517,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dataInicio'
                             value={dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1533,7 +1529,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='horaInicio'
                             value={localData?.horaInicio || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1545,7 +1540,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localSaida'
                             value={localData?.localSaida || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.localSaida || ''}</p>}
                     </div>
@@ -1557,7 +1551,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='localChegada'
                             value={localData?.localChegada || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         /> : <p>{localData?.localChegada || ''}</p>}
                     </div>
@@ -1570,7 +1563,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='dataFim'
                             value={dateFormat1(localData?.dataFim) || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1583,7 +1575,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='horaFim'
                             value={localData?.horaFim || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>                  
@@ -1600,7 +1591,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='meioTransporte'
                             value={localData?.meioTransporte || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1613,7 +1603,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='custoIndividual'
                             value={localData?.custoIndividual || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1631,7 +1620,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             list='listResponsaveis'
                             value={localData?.coordenador || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                         <datalist id='listResponsaveis'>
@@ -1649,7 +1637,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='regCoordenador'
                             value={localData?.regCoordenador || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1662,7 +1649,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='telCoordenador'
                             value={localData?.telCoordenador || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1675,7 +1661,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                             name='emailCoordenador'
                             value={localData?.emailCoordenador || ''}
                             onChange={(e) => handleForm(e)}
-                            className={`${styles.collum}`}
                             readOnly={readOnly}
                         />
                     </div>
@@ -1688,7 +1673,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='nivelFormacaoCoordenador'
                                 value={localData?.nivelFormacaoCoordenador || ''}
                                 onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
                             >
                                 {
                                     ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
@@ -1698,7 +1682,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 <input 
                                     defaultValue={localData?.nivelFormacaoCoordenador || ''}
                                     readOnly={readOnly}
-                                    className={`${styles.collum}`}
                                 />
                         }
                     </div>
@@ -1717,7 +1700,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='nomeSupervisor'
                                 value={localData?.nomeSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
                         </div>
@@ -1730,7 +1712,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='regSupervisor'
                                 value={localData?.regSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
                         </div>
@@ -1743,7 +1724,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 name='telSupervisor'
                                 value={localData?.telSupervisor || ''}
                                 onChange={(e) => handleForm(e)}
-                                className={`${styles.collum}`}
                                 readOnly={readOnly}
                             />
                         </div>
@@ -1756,7 +1736,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                     name='nivelFormacaoSupervisor'
                                     value={localData?.nivelFormacaoSupervisor || ''}
                                     onChange={(e) => handleForm(e)}
-                                    className={`${styles.collum}`}
                                 >
                                     {
                                         ['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (<option value={item} key={v4()}>{item}</option>))
@@ -1766,7 +1745,6 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                                 <input 
                                     defaultValue={localData?.nivelFormacaoSupervisor || ''}
                                     readOnly={readOnly}
-                                    className={`${styles.collum}`}
                                 />
                             }
                         </div>                        

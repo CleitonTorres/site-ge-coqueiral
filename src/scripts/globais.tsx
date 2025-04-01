@@ -666,7 +666,16 @@ export const printComponent = (
 export const adressToString = (adress?:Endereco)=>{
     if(!adress) return '';
 
-    return `${adress.logradouro || ''}, ${adress.bairro || ''}, ${adress.municipio || ''}, ${adress.municipio || ''}, ${adress.cep || ''}`
+    return [
+        adress.logradouro,
+        adress.bairro,
+        adress.complemento,
+        adress.municipio,
+        adress.uf, // Corrigi aqui, pois estava repetindo `municipio`
+        adress.cep
+    ]
+    .filter(Boolean) // Remove valores vazios, null ou undefined
+    .join(', '); // Junta os elementos com ", "
 }
 
 /**
@@ -678,7 +687,7 @@ export const adressToString = (adress?:Endereco)=>{
  */
 export const getStaticMapUrl = (lat: number, lng: number, label: string) => {
     const API_KEY = `${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`; // Substitua pela sua chave
-    return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=19&size=600x300&maptype=roadmap
+    return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=19&size=600x300&maptype=satellite
     &markers=color:red%7Clabel:${label}%7C${lat},${lng}
     &key=${API_KEY}`;
 };

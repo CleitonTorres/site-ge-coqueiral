@@ -19,7 +19,7 @@ type Props = {
 }
 export default function MapsComponent ({label, data, readonly, reset, setLatLong}:Props){
     const mapRef = useRef<HTMLDivElement | null>(null);
-    const zoom = 18;
+    const zoom = 16;
 
     const loadMapAddress = async()=>{
         if(!mapRef.current)return;
@@ -31,7 +31,8 @@ export default function MapsComponent ({label, data, readonly, reset, setLatLong
             center: {lat: -19.932268, lng: -40.140781}, // Localização padrão inicial (Coqueiral de Aracruz),
             zoom,
             mapId: `MY_NEXTJS_MAPID_${label}`,
-            clickableIcons: true
+            clickableIcons: true,
+            mapTypeId: 'satellite'
         };
         const map = new google.maps.Map(mapRef.current, mapOptions);
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;

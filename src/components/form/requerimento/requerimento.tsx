@@ -1,5 +1,5 @@
 import { DadosGeraisSaae } from "@/@types/types"
-import { dateFormat2, dateFormat3 } from "@/scripts/globais"
+import { adressToString, dateFormat2, dateFormat3 } from "@/scripts/globais"
 import styles from './requerimento.module.css';
 
 type Props = {
@@ -17,7 +17,7 @@ export default function Requerimento({localData}:Props){
                 Atendendo à resolução regional 007/2014.  Eu <b>{localData?.coordenador}</b> do <b>{`${localData.dadosUel?.numUel || 'não informado'} ES ${localData.dadosUel?.nameUel || 'não informado'}`}</b>, 
                 vem por meio deste solicitar à Direção Regional dos Escoteiros do Brasil – ES a autorização
                 para a realização da atividade externa denominada <b>{localData?.nomeAtividade}</b>, 
-                que será realizada no dia <b>{dateFormat2(localData?.dataInicio)}</b> e demais informações conforme SAAE anexa. 
+                que será realizada no(s) dia(s) <b>{dateFormat2(localData?.dataInicio)}</b> à <b>{dateFormat2(localData.dataFim)}</b>, no local <b>{adressToString(localData.localInicio)}</b> e demais informações conforme SAAE anexa. 
             </p>
             <p>
                 {`${localData.dadosUel?.cidadeUels || 'Não informado'}, ${dateFormat3(new Date())}`}

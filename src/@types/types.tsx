@@ -71,7 +71,8 @@ export interface Endereco {
     uf: string,
     cep: string,
     coordenadas?: {lat: number, long: number},
-    address?: string
+    address?: string,
+    complemento?: string
 }
 
 export interface DataStorage {
