@@ -206,6 +206,9 @@ export function dateFormat3(input: Date | undefined): string {
     // Garantir que o input seja um objeto Date
     const date = typeof input === 'string' ? new Date(input) : input;
 
+    const testDate = new Date(date).getTime();
+    if(isNaN(testDate)) return '';
+
     // Extrair dia, mês e ano
     const dia = date.getDate();
     const mes = date.getMonth(); // Meses começam em 0

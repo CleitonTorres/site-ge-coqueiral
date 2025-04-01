@@ -787,10 +787,15 @@ export default function Provider({children}:{children:ReactNode}){
         }
         //---------------------------------
         
-        const update = verifyObjSAAE(locationOriginalSAAE, {...data, status: 'enviada'});
+        const update = verifyObjSAAE(locationOriginalSAAE, {...data}); 
 
         console.log('resultado da verificação do update', update)
-
+        if(Object.keys(update).length === 0){
+          return{
+            bool: true,
+            text: 'Desculpe, mas não encontrei alterações para serem salvas!'
+          }
+        }
         const formDataUpdate = new FormData();
         formDataUpdate.append('idSaae', data._id);
         formDataUpdate.append('saaeData', JSON.stringify(update));
@@ -806,7 +811,7 @@ export default function Provider({children}:{children:ReactNode}){
           setListSaaes((prev)=> {
             const newData = prev.map(saae=> {
               if(saae._id === data._id){
-                return {...data, status: 'enviada'}
+                return {...data}
               }else return saae
             });
 

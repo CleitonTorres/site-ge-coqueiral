@@ -114,12 +114,29 @@ export default function SaaeResumo ({hiddeButton, localData, print}:Props){
                 <Botton 
                     customClass={['marginTop20']}
                     title='Enviar' 
+                    titleHover='Enviar para análise'
                     action={()=>{
                     context.setShowModal({
                         element: <Confirme
                             message='Deseja enviar sua SAAE para análise?'
                             confirme={async()=>{
-                                return await context.handleSendSaae(localData);
+                                return await context.handleSendSaae({...localData, status: 'enviada'});
+                            }}
+                            cancele={()=> context.setShowModal(null)}
+                        />,
+                        styles:['backgroundBlue']
+                    })
+                }}/>
+                <Botton 
+                    customClass={['marginTop20']}
+                    title='Salvar' 
+                    titleHover='Salvar na nuvem, mas não enviar para análise.'
+                    action={()=>{
+                    context.setShowModal({
+                        element: <Confirme
+                            message='Deseja salvar sua SAAE na nuvem?'
+                            confirme={async()=>{
+                                return await context.handleSendSaae({...localData});
                             }}
                             cancele={()=> context.setShowModal(null)}
                         />,

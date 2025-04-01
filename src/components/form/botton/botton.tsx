@@ -7,10 +7,11 @@ type Props = {
     title: string,
     imageURL?: string,
     customClass?: string[],
-    action?: ()=>void
+    action?: ()=>void,
+    titleHover?: string
 }
 
-export default function Botton ({title, imageURL, customClass, action}: Props){
+export default function Botton ({title, imageURL, customClass, titleHover, action}: Props){
     const [customStyles, setCustomStyles] = useState('');
 
     useEffect(()=>{
@@ -26,7 +27,11 @@ export default function Botton ({title, imageURL, customClass, action}: Props){
     },[customClass]);
 
     return(
-        <button className={`${styles.conteiner} ${customStyles}`} onClick={action}>
+        <button 
+            className={`${styles.conteiner} ${customStyles}`} 
+            onClick={action}
+            title={titleHover}
+        >
             {imageURL ? <Image 
                 alt=''
                 width={26}

@@ -1518,7 +1518,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input
                             type='date'
                             name='dataInicio'
-                            value={typeof localData?.dataInicio === 'string' ? localData?.dataInicio : dateFormat1(localData?.dataInicio) || ''}
+                            value={dateFormat1(localData?.dataInicio) || ''}
                             onChange={(e) => handleForm(e)}
                             className={`${styles.collum}`}
                             readOnly={readOnly}

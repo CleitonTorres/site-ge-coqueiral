@@ -7,6 +7,7 @@
     font-weight: 300;
     border: 2px var(--primary) solid;
     transition: 0.5s;
+    margin: 3px;
 }
 .conteiner:hover{
     background-color: var(--white);
