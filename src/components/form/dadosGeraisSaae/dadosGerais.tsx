@@ -1932,17 +1932,17 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 {/* programação da atividade */}
 
                 <Programacao 
-                    addAtividade={addAtividade}
-                    addProgramacaoRamo={addProgramacaoRamo}
-                    removeProgramacaoRamo={removeProgramacaoRamo}
+                    programacao={localData.programacao}
+                    programacaoRamo={localData?.programacaoRamos}
                     currentProgramacao={currentProgramacao}
+                    addAtividade={addAtividade}
+                    removeAtividade={removeAtividade}
+                    addProgramacaoRamo={addProgramacaoRamo}
+                    removeProgramacaoRamo={removeProgramacaoRamo}                    
                     handleEditProgramacao={handleEditProgramacao}
                     handleFormProgramacao={handleFormProgramacao}
                     readOnly={readOnly}
-                    print={print}
-                    programacao={localData.programacao}
-                    removeAtividade={removeAtividade}
-                    programacaoRamo={localData?.programacaoRamos}
+                    print={print}                                                            
                 /> 
             </div>        
         </div>

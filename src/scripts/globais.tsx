@@ -1,4 +1,4 @@
-import { CEP, DataNews, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, SAAE } from "@/@types/types";
+import { CEP, DataNews, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, ProgramacaoAtividade, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -724,6 +724,12 @@ export const generateStaticMapURL = (points: { lat: number; lng: number }[]) => 
     return `${baseUrl}?size=${size}&path=color:red|weight:3|${path}${markersParam}&key=${API_KEY}`;
 };
 
+/**
+ * Compara os níveis de risco informados e retorna o maior risco.
+ * @param {GrauRisco} currentNivelRisco - grau de risco atual da SAAE.
+ * @param {GrauRisco} newValue - grau de risco a ser comparado com o atual.
+ * @returns {GrauRisco} - retorna o maior grau de risco.
+ */
 export const addNivelRisco = (currentNivelRisco: GrauRisco, newValue: GrauRisco) => {
     if(!newValue) return currentNivelRisco;
     
@@ -732,4 +738,72 @@ export const addNivelRisco = (currentNivelRisco: GrauRisco, newValue: GrauRisco)
     return compareNivelRisco;
 }
 
+/**
+ * alterna itens de um array entre suas posições.
+ * @param {ProgramacaoAtividade[]} arr 
+ * @param {number} index1 - index do item a ser movido.
+ * @param {number} index2 - posição de destino do item movido.
+ * @returns {ProgramacaoAtividade[]} - array reordenado.
+ */
+export const swapItems = (arr:ProgramacaoAtividade[], index1:number, index2:number) => {
+    if (index1 < 0 || index2 < 0 || index1 >= arr.length || index2 >= arr.length) return arr; // Evita erros
+
+    [arr[index1], arr[index2]] = [arr[index2], arr[index1]]; // Troca os itens   
+
+    return arr;
+};
+
+/**
+ * lida com a movimentação dos itens em um array.
+ * @param {ProgramacaoAtividade[]} arr - array a ser reordenado.
+ * @param {number} index - posição atual do item a ser movido.
+ * @param {'up' | 'down'} direction - direção que o item será movido.
+ * @returns {ProgramacaoAtividade[]} - programação ou array reordenado.
+ */
+export const moveItem = (arr: ProgramacaoAtividade[], index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+
+    if (newIndex < 0 || newIndex >= arr.length) return arr; // Evita posições inválidas
+
+    // Troca os itens e retorna o array atualizado
+    return adjustScheduleTimes(swapItems(arr, index, newIndex), index, direction);
+};
+
+export const adjustScheduleTimes = (arr: ProgramacaoAtividade[], index: number, direction: "up" | "down") => {
+    const newArr = [...arr]; // Cria uma cópia do array para evitar mutações
+
+    // Determina a posição inicial para recalcular os horários
+    const startIndex = direction === "up" ? index - 1 : index;
+
+    // Se for o primeiro item, não há nada para recalcular
+    if (startIndex < 0) return newArr;
+
+    // Define a hora inicial como a hora do item anterior ao que foi movido
+    let currentTime = newArr[startIndex].hora;
+
+    // Percorre os itens a partir do startIndex e ajusta os horários
+    for (let i = startIndex + 1; i < newArr.length; i++) {
+        const prevItem = newArr[i - 1];
+        const prevTime = timeToMinutes(prevItem.hora);
+        const prevDuration = timeToMinutes(prevItem.duracao);
+
+        // Atualiza a hora do item atual
+        currentTime = minutesToTime(prevTime + prevDuration);
+        newArr[i] = { ...newArr[i], hora: currentTime };
+    }
+
+    return newArr;
+};
+
+// Função para converter string "HH:mm" para minutos
+export const timeToMinutes = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+};
+// Função para converter minutos para string "HH:mm"
+export const minutesToTime = (totalMinutes: number) => {
+    const hours = Math.floor(totalMinutes / 60).toString().padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+};
 

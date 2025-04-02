@@ -1,8 +1,11 @@
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { BsArrowDownSquareFill, BsArrowUpSquareFill } from "react-icons/bs";
 import styles from './tableProgramacao.module.css';
 import { ProgramacaoAtividade } from "@/@types/types";
-import { dateFormat1, dateFormat2 } from "@/scripts/globais";
-import { useEffect } from "react";
+import { dateFormat1, dateFormat2, moveItem } from "@/scripts/globais";
+import { useContext, useEffect, useState } from "react";
+import { Context } from "@/components/context/context";
+import Mathias from "../mathias/mathias";
 
 type Props = {
     readOnly: boolean,
@@ -21,8 +24,26 @@ type Props = {
 }
 export default function TableProgramacao({readOnly, nomeRamo, programacao, currentProgramacao, addAtividade, removeAtividade,
     handleEditProgramacao, handleFormProgramacao}:Props){
-    
-    
+    const context = useContext(Context);
+    const [showDicaDescricao, setShowDicaDescricao] = useState(false);
+
+    const handleMoveItem = (arr: ProgramacaoAtividade[], index: number, direction: "up" | "down")=>{ 
+        if(index === 0 && direction === 'up') return;
+        if(index === arr.length-1 && direction === 'down') return;
+
+        context.setDataSaae((prev)=>{
+            const newArr = [...moveItem([...arr], index, direction)]; //força a atualização do estado.
+            console.log('novo array', newArr)
+            return{
+                ...prev,
+                dadosGerais:{
+                    ...prev.dadosGerais,
+                    programacao: newArr
+                }
+            }
+        })
+    }
+
     useEffect(()=>{
         console.log("programacao selecionada", programacao)
     },[programacao]);
@@ -80,6 +101,10 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                 key={idx+"progragamacao"} 
                 className={`${styles.line}`}
             >
+                <div className={styles.boxBtnMoves}>
+                    <BsArrowUpSquareFill onClick={()=>handleMoveItem(programacao, idx, 'up')}/>
+                    <BsArrowDownSquareFill onClick={()=>handleMoveItem(programacao, idx, 'down')}/>
+                </div>
                 <div className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <input
                         type="date"
@@ -168,13 +193,22 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         readOnly={readOnly}
                     />
                 </div>
-                <div className={`${styles.collum} ${styles.width3}`}>
+                <div 
+                    className={`${styles.collum} ${styles.width3}`}
+                    onMouseEnter={()=>setShowDicaDescricao(true)}
+                    onMouseLeave={()=>setShowDicaDescricao(false)}
+                >
                     <textarea
                         name='descricao'
                         value={currentProgramacao?.descricao || ''}
                         onChange={(e) => handleFormProgramacao(e)}
                         className={`${styles.collum} ${styles.width260}`}
                         readOnly={readOnly}
+                    />
+                    <Mathias 
+                        show={showDicaDescricao} 
+                        text="Em descrições longas, inicie ela com uma palavra chave seguida de 'traço' para facilitar sua gestão de risco."
+                        customClass={['center']}
                     />
                 </div>
                 <div className={`${styles.collum} ${styles.width2}`}>

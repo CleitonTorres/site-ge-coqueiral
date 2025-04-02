@@ -74,26 +74,27 @@ export default function Programacao({
         {!print ?
         <>
         {selectedProg !== '' && programacaoRamo.find(i=> i.ramo === selectedProg) ?
-            <TableProgramacao 
+            <TableProgramacao                
+                currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
+                programacao={programacaoRamo?.find(item => item.ramo === selectedProg)?.programacao || []}                
                 addAtividade={()=>addAtividade(selectedProg)} 
                 removeAtividade={removeAtividade} 
-                currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-                programacao={programacaoRamo?.find(item => item.ramo === selectedProg)?.programacao || []}
-                readOnly={readOnly}
                 handleEditProgramacao={handleEditProgramacao}
                 handleFormProgramacao={handleFormProgramacao}
                 nomeRamo={selectedProg}
+                readOnly={readOnly}
             />
         :
             <TableProgramacao 
-                addAtividade={addAtividade} 
-                removeAtividade={removeAtividade} 
+                 
                 currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-                programacao={programacao}
-                readOnly={readOnly}
+                programacao={programacao}                
+                addAtividade={addAtividade} 
+                removeAtividade={removeAtividade}
                 handleEditProgramacao={handleEditProgramacao}
                 handleFormProgramacao={handleFormProgramacao}
                 nomeRamo=''
+                readOnly={readOnly}
                 print={print}
             />
         }

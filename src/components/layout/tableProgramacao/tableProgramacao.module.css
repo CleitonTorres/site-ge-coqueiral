@@ -81,3 +81,21 @@
 .removeProg:active{
     padding: 4px;
 }
+.boxBtnMoves{
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.boxBtnMoves svg:hover path{
+    color: var(--verde);
+    cursor: pointer;
+}
+
+.boxBtnMoves svg:active {
+    scale: 0.8;
+}

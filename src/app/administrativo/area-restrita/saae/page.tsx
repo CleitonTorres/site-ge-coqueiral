@@ -127,6 +127,9 @@ export default function Page(){
                     {currenteSession === 2 ? <InventarioSaae 
                         readOnly={false}
                         localData={context.dataSaae?.inventarioRiscos}
+                        programacao={[...context.dataSaae.dadosGerais?.programacao,
+                            ...(context.dataSaae?.dadosGerais?.programacaoRamos?.flatMap(p=> p.programacao) || [])
+                        ]}
                     /> : null}
                     {currenteSession === 3 ? <MatrizRisco 
                         readOnly={false}

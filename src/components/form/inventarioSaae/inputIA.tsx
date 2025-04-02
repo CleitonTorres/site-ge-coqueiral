@@ -1,7 +1,7 @@
 'use client'
 import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { GrauRisco, InventarioSaaeType } from '@/@types/types';
+import { GrauRisco, InventarioSaaeType, ProgramacaoAtividade } from '@/@types/types';
 import styles from './inputIA.module.css';
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { Context } from '@/components/context/context';
@@ -11,6 +11,7 @@ import Mathias from '@/components/layout/mathias/mathias';
 type Props = {
     readOnly: boolean,
     localData: InventarioSaaeType[],
+    programacao: ProgramacaoAtividade[],
     print?: boolean
 }
 
@@ -18,9 +19,10 @@ type Props = {
  * Componente que gerencia o inventário de riscos de uma SAAE.
  * @param {boolean} readOnly - Define se o componente é somente leitura.
  * @param {InventarioSaaeType[]} localData - Dados locais do componente.
+ * @param {ProgramacaoAtividade[]} programacao - dados da programação para serem listados.
  * @param {boolean} print - Define se o componente será impresso.
  */
-const InventarioSaae = ({readOnly, localData, print}:Props) => {
+const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
     const context = useContext(Context);
 
     const [atividadeCorrente, setAtividadeCorrente] = useState({} as InventarioSaaeType);
@@ -28,6 +30,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
     const [loading, setLoading] = useState(false);
     const [useIA, setUseIA] = useState(false);
     const [commentIA, setCommentIA] = useState("Sempre Alerta chefe! Por favor, digite uma atividade para que eu possa lhe ajudar!");
+    const [atividadeResumida, setAtividadeResumida] = useState<string[]>([]);
 
     const handleCurrentAtivity = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
@@ -216,7 +219,7 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
         })
     }
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         
         if (e.key === 'Enter') {
@@ -254,6 +257,31 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
         }
     }
 
+    const handleResumeProgramacao = async()=>{
+        if(!programacao || programacao.length === 0) return;
+
+        const descricaoAtividade = programacao?.map(p=> p.descricao);
+
+        const split = descricaoAtividade?.map(d=> d.split('-')[0]);
+        setAtividadeResumida(split);
+        
+        // const formData = new FormData();
+        // formData.append('input', JSON.stringify(descricaoAtividade));
+        // formData.append('service', 'iaResumeProg');
+
+        // const resp = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/mathias`, formData,{
+        //     headers:{
+        //         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+        //     }
+        // });
+
+        // console.log(resp.data);
+        // if(resp.data?.summary){
+        //     setAtividadeResumida(resp.data.summary)
+        // }
+        
+    }
+
     useEffect(()=>{
         const value = atividadeCorrente.probabilidade * atividadeCorrente.consequencia;
         setAtividadeCorrente((prev)=>{
@@ -263,6 +291,10 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
             }
         });
     },[atividadeCorrente.probabilidade, atividadeCorrente.consequencia])
+
+    useEffect(()=>{
+        handleResumeProgramacao();
+    },[]);
 
     if(!localData) return <span>formulário não carregado</span>
 
@@ -329,8 +361,9 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                         <tr className={styles.line}>
                             <td className={`${styles.collum} ${styles.widthAuto}`}>
                                 {loading ? <span>gerando dados</span> : null}
-                                <textarea
-                                    name='atividade'
+                                <input
+                                    name='atividade' 
+                                    list='ativresumida'                                   
                                     value={atividadeCorrente?.atividade || ''}
                                     onChange={(e) => handleCurrentAtivity(e)}
                                     onBlur={(e)=>handleSubmit(e)}
@@ -342,7 +375,12 @@ const InventarioSaae = ({readOnly, localData, print}:Props) => {
                                         width: '96%',
                                         fontSize: '11px',
                                     }}
-                                />                       
+                                />
+                                <datalist id='ativresumida'>
+                                    {atividadeResumida.map((a, i)=> (
+                                        <option key={'ativ'+i}>{a}</option>
+                                    ))}
+                                </datalist>                    
                             </td>
                             <td className={`${styles.collum} ${styles.widthAuto}`}>
                                 <textarea
