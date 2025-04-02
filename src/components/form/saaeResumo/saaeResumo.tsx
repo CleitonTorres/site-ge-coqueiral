@@ -82,7 +82,8 @@ export default function SaaeResumo ({hiddeButton, localData, print}:Props){
                 localData={localData?.infosPreliminares}
                 print={print}
             />
-            <InventarioSaae 
+            <InventarioSaae
+                programacao={[]} 
                 readOnly
                 localData={localData?.inventarioRiscos}
                 print={print}

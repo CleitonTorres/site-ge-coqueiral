@@ -96,14 +96,14 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
         </div>
 
         {/* dados adicionados à programação */}
-        {programacao?.map((prog, idx)=>(
+        {programacao?.map((prog, idx, arr)=>(
             <div 
                 key={idx+"progragamacao"} 
                 className={`${styles.line}`}
             >
                 <div className={styles.boxBtnMoves}>
-                    <BsArrowUpSquareFill onClick={()=>handleMoveItem(programacao, idx, 'up')}/>
-                    <BsArrowDownSquareFill onClick={()=>handleMoveItem(programacao, idx, 'down')}/>
+                    {idx !== 0 ? <BsArrowUpSquareFill onClick={()=>handleMoveItem(programacao, idx, 'up')}/> : null}
+                    {idx !== arr.length-1  ? <BsArrowDownSquareFill onClick={()=>handleMoveItem(programacao, idx, 'down')}/> : null}
                 </div>
                 <div className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <input
