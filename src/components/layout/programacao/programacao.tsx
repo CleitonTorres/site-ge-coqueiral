@@ -2,44 +2,70 @@ import styles from './programacao.module.css';
 import { ChangeEvent, useState } from 'react';
 import { ProgramacaoAtividade, ProgramacaoRamos } from '@/@types/types';
 import TableProgramacao from '../tableProgramacao/tableProgramacao';
+import { printComponent } from '@/scripts/globais';
 
 type Props = {
     readOnly: boolean,
     print: boolean,
     programacao: ProgramacaoAtividade[],
+    nomeRamo?: string, //usado no print para exibir o ramo da programação.
     programacaoRamo?: ProgramacaoRamos[],
-    currentProgramacao: ProgramacaoAtividade,
-    handleFormProgramacao: (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => void,
-    handleEditProgramacao: (
+    currentProgramacao?: ProgramacaoAtividade,
+    addAtividade?:  (nomeRamo: string) => Promise<void>,
+    removeAtividade?: (idx: number, nomeRamo:string) => void,
+    handleFormProgramacao?: (e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => void,
+    handleEditProgramacao?: (
         e: ChangeEvent<HTMLTextAreaElement> | ChangeEvent<HTMLInputElement>, 
         itemId: number,
         nomeRamo: string
     ) => void,
-    addAtividade:  (nomeRamo: string) => Promise<void>,
-    removeAtividade: (idx: number, nomeRamo:string) => void,
-    addProgramacaoRamo: (nomeRamo: string) => void,
-    removeProgramacaoRamo:(nomeRamo: string)=>void
+    
+    addProgramacaoRamo?: (nomeRamo: string) => void,
+    removeProgramacaoRamo?:(nomeRamo: string)=>void
 }
 export default function Programacao({
-    readOnly, print, programacao, programacaoRamo,
+    readOnly, print, programacao, programacaoRamo, nomeRamo,
     currentProgramacao, handleFormProgramacao, addProgramacaoRamo, removeProgramacaoRamo,
     handleEditProgramacao, addAtividade, removeAtividade}: Props) {
     const [selectedProg, setSelectedProg] = useState('');
 
     const handleRemoveProg = (nomeRamo:string)=>{
-        removeProgramacaoRamo(nomeRamo);
+        if(removeProgramacaoRamo) removeProgramacaoRamo(nomeRamo);
         setSelectedProg('');
     }
 
   return (
-    <div className={styles.conteiner}>                    
-        <div className={`${styles.bgGreen} ${styles.headerProgramacao}`}>
+    <div className={`${styles.conteiner}`}>                    
+        {!print ? 
             <span 
-                className={`${styles.titleProgramacoes} ${selectedProg === '' ? styles.activeTitle : ''}`}
-                onClick={() => setSelectedProg('')}
+                className='link'
+                onClick={()=>{
+                  if(programacaoRamo && selectedProg){
+                    const prog = programacaoRamo.find(i=> i.ramo === selectedProg);
+                    printComponent({programacao: prog.programacao, ramo: selectedProg}, 'print-data-progAtividade');
+                  }else{
+                    printComponent({programacao, ramo: ''}, 'print-data-progAtividade')
+                  }
+                }}
             >
-                <b>Programação da atividade Geral</b>
+                imprimir programação selecionada
             </span>
+        : null}
+        <div className={`${styles.bgGreen} ${styles.headerProgramacao}`}>
+            {!print ?
+                <span 
+                    className={`${styles.titleProgramacoes} ${selectedProg === '' ? styles.activeTitle : ''}`}
+                    onClick={() => setSelectedProg('')}
+                >
+                    <b>Programação da atividade Geral</b>
+                </span>
+            :
+                <span 
+                    className={`${styles.titleProgramacoes} ${styles.activeTitle}`}
+                >
+                    {nomeRamo ? <b>Programação da atividade {nomeRamo}</b> : <b>Programação da atividade Geral</b>}
+                </span>
+            }
             {!print && programacaoRamo?.map((item, idx) => (
                 <span 
                     key={idx+'progRamo'} 
@@ -58,7 +84,7 @@ export default function Programacao({
             {!print ? <select 
                 className={styles.addProgramacaoRamo}
                 onChange={(e)=>{
-                    addProgramacaoRamo(e.target.value);
+                    if(addProgramacaoRamo) addProgramacaoRamo(e.target.value);
                     setSelectedProg(e.target.value);
                 }}
                 value={'Add programação de ramo'}
@@ -73,60 +99,59 @@ export default function Programacao({
         
         {!print ?
         <>
-        {selectedProg !== '' && programacaoRamo.find(i=> i.ramo === selectedProg) ?
-            <TableProgramacao                
-                currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-                programacao={programacaoRamo?.find(item => item.ramo === selectedProg)?.programacao || []}                
-                addAtividade={()=>addAtividade(selectedProg)} 
-                removeAtividade={removeAtividade} 
-                handleEditProgramacao={handleEditProgramacao}
-                handleFormProgramacao={handleFormProgramacao}
-                nomeRamo={selectedProg}
-                readOnly={readOnly}
-            />
-        :
-            <TableProgramacao 
-                 
-                currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-                programacao={programacao}                
-                addAtividade={addAtividade} 
-                removeAtividade={removeAtividade}
-                handleEditProgramacao={handleEditProgramacao}
-                handleFormProgramacao={handleFormProgramacao}
-                nomeRamo=''
-                readOnly={readOnly}
-                print={print}
-            />
-        }
+            {selectedProg !== '' && programacaoRamo.find(i=> i.ramo === selectedProg) ?
+                <TableProgramacao                
+                    currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
+                    programacao={programacaoRamo?.find(item => item.ramo === selectedProg)?.programacao || []}                
+                    addAtividade={addAtividade}
+                    removeAtividade={removeAtividade} 
+                    handleEditProgramacao={handleEditProgramacao}
+                    handleFormProgramacao={handleFormProgramacao}
+                    nomeRamo={selectedProg}
+                    readOnly={readOnly}
+                />
+            :
+                <TableProgramacao                  
+                    currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
+                    programacao={programacao}                
+                    addAtividade={addAtividade} 
+                    removeAtividade={removeAtividade}
+                    handleEditProgramacao={handleEditProgramacao}
+                    handleFormProgramacao={handleFormProgramacao}
+                    nomeRamo=''
+                    readOnly={readOnly}
+                    print={print}
+                />
+            }
         </>
         : 
         <>
-        <TableProgramacao 
-            addAtividade={addAtividade} 
-            removeAtividade={removeAtividade} 
-            currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-            programacao={programacao || []}            
-            handleEditProgramacao={handleEditProgramacao}
-            handleFormProgramacao={handleFormProgramacao}
-            nomeRamo={''} //programação geral
-            readOnly={readOnly}
-            print={print}
-        />
-        {programacaoRamo?.map((p, idx)=>(
             <TableProgramacao 
                 addAtividade={addAtividade} 
                 removeAtividade={removeAtividade} 
                 currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-                programacao={p.programacao}
-                readOnly={readOnly}
+                programacao={programacao || []}            
                 handleEditProgramacao={handleEditProgramacao}
                 handleFormProgramacao={handleFormProgramacao}
-                nomeRamo={p.ramo} //programação por ramo
+                nomeRamo={''} //programação geral
+                readOnly={readOnly}
                 print={print}
-                key={p.ramo+idx}
             />
-        ))
-        }
+            {programacaoRamo?.map((p, idx)=>(
+                <TableProgramacao 
+                    addAtividade={addAtividade} 
+                    removeAtividade={removeAtividade} 
+                    currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
+                    programacao={p.programacao}
+                    readOnly={readOnly}
+                    handleEditProgramacao={handleEditProgramacao}
+                    handleFormProgramacao={handleFormProgramacao}
+                    nomeRamo={p.ramo} //programação por ramo
+                    print={print}
+                    key={p.ramo+idx}
+                />
+            ))
+            }
         </>
         }
     </div>

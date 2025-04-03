@@ -33,6 +33,7 @@
     align-items: center;
     justify-content: flex-start;
     align-items: flex-start;
+    flex: 1 1 auto;
     width: 200px;
     font-size: 12px;
     text-align: justify;
@@ -187,7 +188,7 @@
         break-before: always;
         page-break-before: always;
         display: block;
-        width: 100%;
+        width: 100vw;
     }
     .boxInput, .subConteiner{
         break-before: auto;

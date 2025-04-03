@@ -5,9 +5,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow: hidden;
-    margin: 20px;
     padding: 10px;
-    padding-left: 40px;
 }
 
 @media print {

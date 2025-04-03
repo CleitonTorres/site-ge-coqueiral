@@ -8,21 +8,21 @@ import { Context } from "@/components/context/context";
 import Mathias from "../mathias/mathias";
 
 type Props = {
+    programacao: ProgramacaoAtividade[],
     readOnly: boolean,
     print?: boolean,
-    nomeRamo?: string,
-    programacao: ProgramacaoAtividade[],
-    currentProgramacao: ProgramacaoAtividade,
-    handleFormProgramacao: (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void,
-    handleEditProgramacao: (
+    nomeRamo?: string,    
+    currentProgramacao?: ProgramacaoAtividade,
+    handleFormProgramacao?: (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void,
+    handleEditProgramacao?: (
         e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>, 
         itemId: number,
         nomeRamo: string
     ) => void,
-    addAtividade:  (nomeRamo:string) => Promise<void>,
-    removeAtividade: (idx: number, nomeRamo: string) => void
+    addAtividade?:  (nomeRamo:string) => Promise<void>,
+    removeAtividade?: (idx: number, nomeRamo: string) => void
 }
-export default function TableProgramacao({readOnly, nomeRamo, programacao, currentProgramacao, addAtividade, removeAtividade,
+export default function TableProgramacao({print, readOnly, nomeRamo, programacao, currentProgramacao, addAtividade, removeAtividade,
     handleEditProgramacao, handleFormProgramacao}:Props){
     const context = useContext(Context);
     const [showDicaDescricao, setShowDicaDescricao] = useState(false);
@@ -34,11 +34,32 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
         context.setDataSaae((prev)=>{
             const newArr = [...moveItem([...arr], index, direction)]; //força a atualização do estado.
             console.log('novo array', newArr)
-            return{
-                ...prev,
-                dadosGerais:{
-                    ...prev.dadosGerais,
-                    programacao: newArr
+            
+            if(!nomeRamo || nomeRamo === '' ){
+                return{
+                    ...prev,
+                    dadosGerais:{
+                        ...prev.dadosGerais,
+                        programacao: newArr
+                    }
+                }
+            }else{
+                const newProgRamo = prev.dadosGerais.programacaoRamos?.map((r=>{
+                    if(r.ramo === nomeRamo){
+                        return {
+                            ...r,
+                            programacao: newArr
+                        }
+                    }else{
+                        return r;
+                    }
+                }));
+                return{
+                    ...prev,
+                    dadosGerais:{
+                        ...prev.dadosGerais,
+                        programacaoRamos: newProgRamo
+                    }
                 }
             }
         })
@@ -101,30 +122,31 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                 key={idx+"progragamacao"} 
                 className={`${styles.line}`}
             >
-                <div className={styles.boxBtnMoves}>
+                {!print ? <div className={styles.boxBtnMoves}>
                     {idx !== 0 ? <BsArrowUpSquareFill onClick={()=>handleMoveItem(programacao, idx, 'up')}/> : null}
                     {idx !== arr.length-1  ? <BsArrowDownSquareFill onClick={()=>handleMoveItem(programacao, idx, 'down')}/> : null}
-                </div>
+                </div> :null}
+                
                 <div className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <input
                         type="date"
                         name='data'
                         value={dateFormat1(prog?.data) || ''}
-                        onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
+                        onChange={handleEditProgramacao ? (e)=>handleEditProgramacao(e, prog.id, nomeRamo) : undefined}
                     /> : <p>{dateFormat2(prog?.data) || ''}</p>}
                 </div>
                 <div  className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <input
                         name='hora'
                         value={prog?.hora  || ''}
-                        onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
+                        onChange={handleEditProgramacao ? (e)=>handleEditProgramacao(e, prog.id, nomeRamo) : undefined}
                     /> : <p>{prog?.hora  || ''}</p>}
                 </div>
                 <div className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <input
                         name='duracao' 
                         value={prog?.duracao || ''}
-                        onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
+                        onChange={handleEditProgramacao ? (e)=>handleEditProgramacao(e, prog.id, nomeRamo) : undefined}
                     />: <p>{prog?.duracao || ''}</p>}
                 </div>
                 <div className={`${styles.collum} ${styles.width3}`}>
@@ -132,21 +154,21 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         name='descricao'
                         value={prog?.descricao || ''}
                         readOnly={readOnly}
-                        onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
+                        onChange={handleEditProgramacao ? (e)=>handleEditProgramacao(e, prog.id, nomeRamo) : undefined}
                     />: <p>{prog?.descricao || ''}</p>}
                 </div>
                 <div className={`${styles.collum} ${styles.width2}`}>
                     {!readOnly ? <textarea
                         name='materialNecessario'
                         value={prog?.materialNecessario || ''}
-                        onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
+                        onChange={handleEditProgramacao ? (e)=>handleEditProgramacao(e, prog.id, nomeRamo) : undefined}
                     /> : <p>{prog?.materialNecessario || ''}</p>}
                 </div>
                 <div className={`${styles.collum} ${styles.width1}`}>
                     {!readOnly ? <textarea
                         name='responsavel' 
                         value={prog?.responsavel || ''}
-                        onChange={(e)=>handleEditProgramacao(e, prog.id, nomeRamo)}
+                        onChange={handleEditProgramacao ? (e)=>handleEditProgramacao(e, prog.id, nomeRamo) : undefined}
                         className={styles.inputProgramacao}
                     /> : <p>{prog?.responsavel || ''}</p>}
                 </div>
@@ -154,7 +176,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                     <FaMinus  
                         size={18} 
                         className={`${styles.removeProg}`}
-                        onClick={()=>removeAtividade(idx+1, nomeRamo)} 
+                        onClick={removeAtividade ? ()=>removeAtividade(idx+1, nomeRamo) : undefined} 
                     />
                 :null}
             </div>
@@ -168,7 +190,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         type='date'
                         name='data'
                         value={dateFormat1(currentProgramacao?.data) || ''}
-                        onChange={(e) => handleFormProgramacao(e)}
+                        onChange={handleFormProgramacao ? (e) => handleFormProgramacao(e) : undefined}
                         className={`${styles.collum} ${styles.width120}`}
                         readOnly={readOnly}
                     />
@@ -178,7 +200,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         type='text'
                         name='hora'
                         value={currentProgramacao?.hora || ''}
-                        onChange={(e) => handleFormProgramacao(e)}
+                        onChange={handleFormProgramacao ? (e) => handleFormProgramacao(e) : undefined}
                         className={`${styles.collum} ${styles.width1} ${styles.textAlingCenter}`}
                         readOnly={readOnly}
                     />
@@ -188,7 +210,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         type='text'
                         name='duracao'
                         value={currentProgramacao?.duracao || ''}
-                        onChange={(e) => handleFormProgramacao(e)}
+                        onChange={handleFormProgramacao ? (e) => handleFormProgramacao(e) : undefined}
                         className={`${styles.collum} ${styles.textAlingCenter}`}
                         readOnly={readOnly}
                     />
@@ -201,7 +223,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                     <textarea
                         name='descricao'
                         value={currentProgramacao?.descricao || ''}
-                        onChange={(e) => handleFormProgramacao(e)}
+                        onChange={handleFormProgramacao ? (e) => handleFormProgramacao(e) : undefined}
                         className={`${styles.collum} ${styles.width260}`}
                         readOnly={readOnly}
                     />
@@ -216,7 +238,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         type='text'
                         name='materialNecessario'
                         value={currentProgramacao?.materialNecessario || ''}
-                        onChange={(e) => handleFormProgramacao(e)}
+                        onChange={handleFormProgramacao ? (e) => handleFormProgramacao(e) : undefined}
                         className={`${styles.collum}`}
                         readOnly={readOnly}
                     />
@@ -226,7 +248,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                         type='text'
                         name='responsavel'
                         value={currentProgramacao?.responsavel || ''}
-                        onChange={(e) => handleFormProgramacao(e)}
+                        onChange={handleFormProgramacao ? (e) => handleFormProgramacao(e) : undefined}
                         className={`${styles.collum}`}
                         readOnly={readOnly}
                     />
@@ -234,7 +256,7 @@ export default function TableProgramacao({readOnly, nomeRamo, programacao, curre
                 <FaPlus
                     size={18} 
                     className={styles.addProg}
-                    onClick={()=>addAtividade(nomeRamo)}
+                    onClick={addAtividade ? ()=>addAtividade(nomeRamo) : undefined}
                 />
             </div>
         :null}

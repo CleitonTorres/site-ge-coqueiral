@@ -1,4 +1,4 @@
-import { CEP, DataNews, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, ProgramacaoAtividade, SAAE } from "@/@types/types";
+import { CEP, DataNews, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, ProgramacaoAtividade, ProgramacaoRamos, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -640,8 +640,9 @@ export const verifyObjSAAE = (objetoOriginal: SAAE, objetoEditado: SAAE): Record
  * @param {'print-data-infosPreliminares' | 'print-dat'} field - rótulo que identifica qual componente está sendo impresso.
  */
 export const printComponent = (
-    data: SAAE | InfosPreliminaresSaae[], 
-    field: 'print-data-infosPreliminares' | "print-data" | 'print-data-autoviagem') => {
+    data: SAAE | InfosPreliminaresSaae[] | ProgramacaoRamos, 
+    field: 'print-data-infosPreliminares' | "print-data" 
+        | 'print-data-autoviagem' | 'print-data-progAtividade') => {
     //limpa antes de armazenar outros dados.
     localStorage.clear()
 
@@ -650,10 +651,10 @@ export const printComponent = (
 
     // Abre a página de impressão
     const url = ()=>{
-        if(field === 'print-data-infosPreliminares')
-            return "/administrativo/area-restrita/printer/infosPreliminares";
+        if(field === 'print-data-infosPreliminares') return "/administrativo/area-restrita/printer/infosPreliminares";
         else if(field === 'print-data') return "/administrativo/area-restrita/printer/resumoSaae";
-        else return "/administrativo/area-restrita/printer/autoViagem";
+        else if(field === 'print-data-autoviagem') return "/administrativo/area-restrita/printer/autoViagem";
+        else return "/administrativo/area-restrita/printer/programacao";
     }
     window.open(url(), "_blank");
 };
@@ -769,38 +770,54 @@ export const moveItem = (arr: ProgramacaoAtividade[], index: number, direction: 
     return adjustScheduleTimes(swapItems(arr, index, newIndex), index, direction);
 };
 
+/**
+ * Recalcula a hora das atividades apartir do item movido. É feito depois do reordenamento do moveItem().
+ * @param {ProgramacaoAtividade[]} arr - array contendo a programação. 
+ * @param {number} index - index do item movido. 
+ * @param {'up' | 'down'} direction - direção do item movido
+ * @returns {ProgramacaoAtividade[]} - programação com as horas recalculadas.
+ */
 export const adjustScheduleTimes = (arr: ProgramacaoAtividade[], index: number, direction: "up" | "down") => {
     const newArr = [...arr]; // Cria uma cópia do array para evitar mutações
 
-    // Determina a posição inicial para recalcular os horários
-    const startIndex = direction === "up" ? index - 1 : index;
+    //verificação feita após o reordenamento dos itens.
+    //pega a hora do item movido.
+    let currentTime = direction === 'up' ? newArr[index].hora : newArr[index+1].hora;
 
-    // Se for o primeiro item, não há nada para recalcular
-    if (startIndex < 0) return newArr;
+    //determina onde começa a atualização da hora.
+    const startIndex = direction === 'up' ? index-1 : index; 
 
-    // Define a hora inicial como a hora do item anterior ao que foi movido
-    let currentTime = newArr[startIndex].hora;
+    for (let i = startIndex; i < newArr.length; i++) {
+        if(i !== startIndex){
+            const prevItem = newArr[i - 1];
+            const prevTime = timeToMinutes(prevItem.hora);
+            const prevDuration = timeToMinutes(prevItem.duracao);
 
-    // Percorre os itens a partir do startIndex e ajusta os horários
-    for (let i = startIndex + 1; i < newArr.length; i++) {
-        const prevItem = newArr[i - 1];
-        const prevTime = timeToMinutes(prevItem.hora);
-        const prevDuration = timeToMinutes(prevItem.duracao);
+            // Atualiza a hora do item atual
+            currentTime = minutesToTime(prevTime + prevDuration);
+        }
 
-        // Atualiza a hora do item atual
-        currentTime = minutesToTime(prevTime + prevDuration);
         newArr[i] = { ...newArr[i], hora: currentTime };
     }
 
     return newArr;
 };
 
-// Função para converter string "HH:mm" para minutos
+/**
+ * Função para converter string "HH:mm" para minutos
+ * @param {string} time - hora a ser convertida de string "HH:MM" para minutos. 
+ * @returns {number} hora convertida em minutos.
+ */
 export const timeToMinutes = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
 };
-// Função para converter minutos para string "HH:mm"
+
+/**
+ * Função para converter minutos para string "HH:mm"
+ * @param {number} totalMinutes - minutos a serem convertidos para string "HH:MM" 
+ * @returns {string} minutos convertidos em string "HH:MM"
+ */
 export const minutesToTime = (totalMinutes: number) => {
     const hours = Math.floor(totalMinutes / 60).toString().padStart(2, "0");
     const minutes = (totalMinutes % 60).toString().padStart(2, "0");

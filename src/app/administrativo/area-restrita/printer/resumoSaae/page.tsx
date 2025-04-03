@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import styles from '../page.module.css';
 import { FaPrint } from "react-icons/fa";
 import SaaeResumo from "@/components/form/saaeResumo/saaeResumo";
+import Mathias from "@/components/layout/mathias/mathias";
+import Modal from "@/components/layout/modal/modal";
 
 export default function PrinterPage() {
   const [data, setData] = useState<SAAE | null>(null);
@@ -65,10 +67,13 @@ export default function PrinterPage() {
             <FaPrint size={34} onClick={()=>window.print()} style={{cursor:'pointer'}}/>
           </div>
 
-          {data ? <SaaeResumo localData={data} print hiddeButton/> : <p>carregando...</p>}
+          {data ? <SaaeResumo localData={data} print hiddeButton/> :  
+            <Modal>
+              <Mathias show text="Estou carregando os dados da sua impressão"/>
+            </Modal>}
 
         </div>
-        : <p>Carregando...</p>
+        : <p>carregando</p>
       }
     </>
     

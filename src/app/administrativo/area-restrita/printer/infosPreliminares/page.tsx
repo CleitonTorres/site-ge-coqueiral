@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from '../page.module.css';
 import { FaPrint } from "react-icons/fa";
 import InfosPreliminares from "@/components/form/infosPreliminaresSaae/infosPreliminares";
+import Mathias from "@/components/layout/mathias/mathias";
 
 export default function Page(){
     const [data, setData] = useState<InfosPreliminaresSaae[] | null>(null);
@@ -28,11 +29,11 @@ export default function Page(){
       };
     }, []);  
 
-    if (!data) return <p>Carregando...</p>;
+    if (!data) return  <Mathias show text="Estou carregando os dados da sua impressão"/>;
 
     return(
         <div className={styles.page}>
-            <div 
+          <div 
             className={styles.noPrint} 
             style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}
           >

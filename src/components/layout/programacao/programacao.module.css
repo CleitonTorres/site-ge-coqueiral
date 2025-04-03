@@ -4,7 +4,6 @@
     flex-direction: column;
     width: 100%;
     min-width: 380px;
-    flex-wrap: nowrap;
     margin-bottom: 10px;
 }
 .headerProgramacao{
@@ -62,4 +61,11 @@
     font-weight: 700;
     font-size: 16px;
     opacity: 1;
+}
+
+@media print {
+    .conteiner{
+        padding: 0;
+        width: 100vw;
+    }
 }
