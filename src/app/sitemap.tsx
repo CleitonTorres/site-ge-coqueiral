@@ -53,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             { url: `${baseUrl}/metodo-escoteiro`, lastModified: new Date().toISOString() },
             { url: `${baseUrl}/mutcom`, lastModified: new Date().toISOString() },
             { url: `${baseUrl}/muteco`, lastModified: new Date().toISOString() },
-            { url: `${baseUrl}/noticias`, lastModified: new Date().toISOString() },
+            { url: `${baseUrl}/aconteceu`, lastModified: new Date().toISOString() },
             { url: `${baseUrl}/progressao`, lastModified: new Date().toISOString() },
             { url: `${baseUrl}/projeto-educativo`, lastModified: new Date().toISOString() },
             { url: `${baseUrl}/protecao-infantojuvenil`, lastModified: new Date().toISOString() },

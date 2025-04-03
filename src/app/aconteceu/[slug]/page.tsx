@@ -51,7 +51,9 @@ export default async function Page({ params }: PageProps) {
             <h1 className={styles.title}>{noticia.title}</h1>
             {noticia.imageID ? 
                 <div className={styles.conteinerImg}>
-                    <Carrocel urlImages={typeof noticia.imageID === 'string' ? [noticia.imageID] : noticia.imageID}/>
+                    <Carrocel 
+                        urlImages={typeof noticia.imageID === 'string' ? [noticia.imageID] : noticia.imageID}
+                    />
                 </div>                
             :null}
             <div className={styles.dataLocal}>

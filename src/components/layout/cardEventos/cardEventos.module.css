@@ -2,14 +2,15 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
     align-items: center;
     background-color: var(--white);
-    width: 330px;
-    height: auto;
     border: 2px solid var(--white);
     margin: 10px;
-    min-height: 355px;
+    width: 300px;
+    height: 355px;
     overflow: hidden;
+
 }
 .card h1{
     font-size: 16px;
@@ -18,9 +19,7 @@
     font-weight: 300;
 }
 .banner{
-    width: auto;
-    height: 300px;
-    object-fit: cover;
+    object-fit: contain;
 }
 .boxData {
     position: absolute;
@@ -39,8 +38,10 @@
     font-size: 12px;
     font-weight: 300;
     padding: 6px;
-    text-align: center;
+    text-align: justify;
     margin-top: 20px;
+    overflow: hidden;
+    text-overflow: clip;
 }
 .boxLocation{
     display: flex;

@@ -152,7 +152,7 @@ function Home() {
           </a>
         </Box>
         <Botton
-          title='VER TODOS'
+          title='EVENTOS'
           action={()=>window.open('/eventos', '_self')}
         />
       </Section>
@@ -186,7 +186,7 @@ function Home() {
         </Box>
         <Botton
           title='VER TODAS'
-          action={()=>window.open('/noticias', '_self')}
+          action={()=>window.open('/aconteceu', '_self')}
         />
       </Section>
 

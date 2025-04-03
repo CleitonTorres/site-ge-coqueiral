@@ -57,6 +57,8 @@ const Carrocel = ({customClass, urlImages}:Props) => {
                             height={200}
                             placeholder='blur'
                             blurDataURL={handleUrl(post)}
+                            loading = "eager"
+                            priority={true}
                         />
                     </div>
                     ))}
