@@ -1,8 +1,9 @@
 import styles from './programacao.module.css';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ProgramacaoAtividade, ProgramacaoRamos } from '@/@types/types';
 import TableProgramacao from '../tableProgramacao/tableProgramacao';
 import { printComponent } from '@/scripts/globais';
+import { usePathname } from 'next/navigation';
 
 type Props = {
     readOnly: boolean,
@@ -27,15 +28,24 @@ export default function Programacao({
     readOnly, print, programacao, programacaoRamo, nomeRamo,
     currentProgramacao, handleFormProgramacao, addProgramacaoRamo, removeProgramacaoRamo,
     handleEditProgramacao, addAtividade, removeAtividade}: Props) {
+    const pathname = usePathname();
     const [selectedProg, setSelectedProg] = useState('');
+    const [urlPrintProgramacao, setUrlPrintProgramacao] = useState(false);
 
     const handleRemoveProg = (nomeRamo:string)=>{
         if(removeProgramacaoRamo) removeProgramacaoRamo(nomeRamo);
         setSelectedProg('');
     }
 
+    useEffect(() => {
+    if (pathname && pathname.includes('/programacao')) {
+      setUrlPrintProgramacao(true);
+    }
+  }, [pathname])
+
   return (
     <div className={`${styles.conteiner}`}>                    
+        
         {!print ? 
             <span 
                 className='link'
@@ -98,6 +108,7 @@ export default function Programacao({
         </div>
         
         {!print ?
+        //visualização das programações fora do ambiente de impressão.
         <>
             {selectedProg !== '' && programacaoRamo.find(i=> i.ramo === selectedProg) ?
                 <TableProgramacao                
@@ -125,7 +136,17 @@ export default function Programacao({
             }
         </>
         : 
-        <>
+        <> 
+            {/* visualização das programações no ambiente de impressão do Resumo SAAE. */}           
+            <span 
+                className={`link ${styles.noPrint}`}
+                onClick={()=>{
+                    printComponent({programacao, ramo: ''}, 'print-data-progAtividade')
+                }}
+            >
+                {/*oculta o botão de print na página de print da Programação */}
+                {urlPrintProgramacao ? `` : "imprimir programação geral"}
+            </span>
             <TableProgramacao 
                 addAtividade={addAtividade} 
                 removeAtividade={removeAtividade} 
@@ -138,6 +159,16 @@ export default function Programacao({
                 print={print}
             />
             {programacaoRamo?.map((p, idx)=>(
+                <>
+                    <span 
+                        className={`link ${styles.noPrint}`}
+                        onClick={()=>{
+                            printComponent({programacao: p.programacao, ramo: p.ramo}, 'print-data-progAtividade');
+                        }}
+                    >
+                        Imprimir programação - {p.ramo}
+                    </span>
+                
                 <TableProgramacao 
                     addAtividade={addAtividade} 
                     removeAtividade={removeAtividade} 
@@ -150,6 +181,7 @@ export default function Programacao({
                     print={print}
                     key={p.ramo+idx}
                 />
+                </>
             ))
             }
         </>
