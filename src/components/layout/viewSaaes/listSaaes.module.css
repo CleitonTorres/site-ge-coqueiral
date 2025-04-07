@@ -3,15 +3,16 @@
     width: 100vw;
     max-width: 1200px;
     flex-wrap: wrap;
-
 }
 .subConteiner{
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 300px;
+    max-width: 600px;
     border: 2px solid var(--blue);
     margin: 6px;
-    padding: 6px;
-    max-width: 300px;
+    padding: 6px;    
     overflow-y: scroll;
 }
 .subConteinerRegional{

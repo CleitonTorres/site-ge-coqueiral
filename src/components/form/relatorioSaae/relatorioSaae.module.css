@@ -1,0 +1,109 @@
+.conteiner{
+    position: relative;
+    display: flex;
+    transition: 0.4s;
+    animation: fadeIn 0.8s linear forwards;
+    z-index: 1;
+} 
+.conteiner h2{
+    font-weight: 400;
+    font-size: 12px;
+}
+.table{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+.line{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    min-width: 380px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.line h1{
+    font-size: 14px;
+    padding: 6px;
+    text-align: center;
+}
+.collum{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 12px;
+    text-align: justify;
+    border: 1px solid;
+    margin: 3px;
+    padding: 2px;
+    flex: 1 1 auto;
+    min-width: 200px;
+}
+
+.collum div{
+    display: flex;
+    width: 100%;    
+}
+.collum textarea{
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    border: 1px solid var(--azul);
+    font-size: 12px;
+    padding: 6px;
+    border: none;
+    text-align: justify;
+}
+.collum div textarea{
+    width: 100%;
+    height: 100%;
+    min-height: 50px;
+    border: 1px solid var(--azul);
+    font-size: 12px;
+    padding: 6px;
+    border: none;
+    text-align: justify;
+}
+.btnAddOcorrencia{
+    margin-left: 5px;
+}
+.btnAddOcorrencia:hover, .btnRemOcorrencia:hover{
+    cursor: pointer;
+}
+.btnAddOcorrencia:active, .btnRemOcorrencia:active{
+    padding: 4px;
+}
+.btnAddOcorrencia path{
+    color: blue;
+}
+.btnRemOcorrencia path{
+    color: red;
+}
+.boxButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+/* customClass */
+.bgGreen{
+    background-color: var(--verde);
+    margin-top: 20px;
+    padding-left: 10px;
+}
+
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}

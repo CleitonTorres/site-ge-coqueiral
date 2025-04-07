@@ -159,7 +159,7 @@ export default function Programacao({
                 print={print}
             />
             {programacaoRamo?.map((p, idx)=>(
-                <>
+                <div key={p.ramo+idx}>
                     <span 
                         className={`link ${styles.noPrint}`}
                         onClick={()=>{
@@ -169,19 +169,18 @@ export default function Programacao({
                         Imprimir programação - {p.ramo}
                     </span>
                 
-                <TableProgramacao 
-                    addAtividade={addAtividade} 
-                    removeAtividade={removeAtividade} 
-                    currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
-                    programacao={p.programacao}
-                    readOnly={readOnly}
-                    handleEditProgramacao={handleEditProgramacao}
-                    handleFormProgramacao={handleFormProgramacao}
-                    nomeRamo={p.ramo} //programação por ramo
-                    print={print}
-                    key={p.ramo+idx}
-                />
-                </>
+                    <TableProgramacao 
+                        addAtividade={addAtividade} 
+                        removeAtividade={removeAtividade} 
+                        currentProgramacao={currentProgramacao}//se refere aos inputs da linha da programação a serem inseridos.
+                        programacao={p.programacao}
+                        readOnly={readOnly}
+                        handleEditProgramacao={handleEditProgramacao}
+                        handleFormProgramacao={handleFormProgramacao}
+                        nomeRamo={p.ramo} //programação por ramo
+                        print={print}
+                    />
+                </div>
             ))
             }
         </>

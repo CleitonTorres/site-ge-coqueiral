@@ -88,11 +88,19 @@ export interface SAAE {
     planoEmergencia: PlanoEmergenciaSaae,
     fotosInspecao: FormFotosInspecao[],
     documentos: FormDocs[],
-    status: string,
+    status: 'rascunho' | 'enviada' | 'aprovada' | 'reprovada' | 'pendente',
+    relatorio?: RelatorioSAAE,
     obs?: string,
     _id: string
 }
-
+export interface RelatorioSAAE {
+    _id: string,
+    relatorio: string,
+    quantidadeJovens: number,
+    quantidadeVoluntarios: number,
+    ocorrenciasEnfermaria: string[],
+    ocorrenciasGraves: string[],
+}
 export interface GrauRisco {
     color: 'green' | 'yellow' | 'orange' | 'red' | '',
     value: number

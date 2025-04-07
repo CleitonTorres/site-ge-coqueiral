@@ -23,7 +23,7 @@ type PropsContext ={
   setListSaaes: Dispatch<SetStateAction<SAAE[]>>,
   setTester: Dispatch<SetStateAction<ProfileProps | undefined>>,
   tester: ProfileProps | undefined,
-  setShowModal: Dispatch<SetStateAction<{element: JSX.Element, styles?: string[]} | null>>,
+  setShowModal: Dispatch<SetStateAction<{element: JSX.Element, styles?: string[], onClose?: ()=>void} | null>>,
   elementoToPrint: JSX.Element | null, 
   setElementoToPrint: Dispatch<SetStateAction<JSX.Element | null>>
 }
@@ -67,7 +67,10 @@ export default function Provider({children}:{children:ReactNode}){
     //identificação da SAAE para edição.
     const [saaeEdit, setSaaeEdit] = useState<number | string | undefined>();
 
-    const [showModal, setShowModal] = useState<{element: JSX.Element, styles?: string[]} | null>(null);
+    const [showModal, setShowModal] = useState<{
+        onClose?: ()=>void,
+        element: JSX.Element, 
+        styles?: string[]} | null>(null);
 
     /**
      * Recupera as notícias do DB para o site.
@@ -956,7 +959,10 @@ export default function Provider({children}:{children:ReactNode}){
         }}>
           {children}
           {showModal ?
-            <Modal customClass={showModal.styles ? [...showModal.styles, 'alingCenter'] : ['alingCenter']}>
+            <Modal 
+              customClass={showModal.styles ? [...showModal.styles, 'alingCenter'] : ['alingCenter']}
+              actionClose={showModal.onClose}
+            >
                 {showModal.element}
             </Modal>
           :null}

@@ -11,6 +11,7 @@ import Confirme from "../confirme/confirme";
 import axios from "axios";
 import Botton from "@/components/form/botton/botton";
 import { printComponent } from "@/scripts/globais";
+import RelatorioSaae from "@/components/form/relatorioSaae/relatorioSaae";
 
 type ListSaaeProps = {
     tipo: 'user' | 'regional'
@@ -33,7 +34,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
         setCurrentSAAEResponse((prev)=>{
             return{
                 ...prev || {} as SAAE,
-                status: value,
+                status: value as "rascunho" | "enviada" | "aprovada" | "reprovada" | "pendente",
                 obs: ["pendente", "reprovada"].includes(value) ? "SAAE " + value + " pelo motivo..." : "SAAE " + value
             }
         });
@@ -303,25 +304,62 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                 {/* SAAEs enviadas para análise */}
                 <div className={`${styles.subConteiner}`}>
                     <div className={styles.header}>
-                        <h4>SAAEs Enviadas</h4> 
-                        <h4>Status</h4>  
+                        <h4 className={styles.collum01}>SAAEs Enviadas</h4> 
+                        <h4 className={styles.collum02}>Status</h4> 
+                        <h4 className={styles.collum02}>Relatório</h4> 
                     </div>                                                            
                     {context.listSaaes?.sort((a,b)=> a.dadosGerais.nomeAtividade?.localeCompare(b.dadosGerais.nomeAtividade || ''))
                     ?.map((saae, idx)=>(
-                        <div key={idx+'listaSAAEs'} className={`${styles.boxInput} cursorPointer`} onClick={()=>{
-                            if(['aprovada', 'enviada'].includes(saae.status)){
-                                printComponent(saae, 'print-data');
-                            }else{
-                                context.setSaaeEdit((prev)=> {
-                                    if(prev === saae._id) return undefined
-                                    return saae._id
-                                });
-                            }
-                        }}>
-                            <label htmlFor={`saae-${idx}`} className="cursorPointer">
+                        <div 
+                            key={idx+'listaSAAEs'} 
+                            className={`${styles.boxInput} cursorPointer`}
+                        >
+                            <label 
+                                htmlFor={`saae-${idx}`} 
+                                className={`${styles.cursorPointer} ${styles.collum01}`}
+                                onClick={()=>{
+                                    if(['aprovada', 'enviada'].includes(saae.status)){
+                                        printComponent(saae, 'print-data');
+                                    }else{
+                                        context.setSaaeEdit((prev)=> {
+                                            if(prev === saae._id) return undefined
+                                            return saae._id
+                                        });
+                                    }
+                                }}
+                            >
                                 {saae?.dadosGerais?.nomeAtividade || 'Sem nome atividade'}
                             </label>
-                            <label htmlFor="" className="cursorPointer">{saae.status || 'enviada'}</label>
+                            <label 
+                                htmlFor="" 
+                                className={`cursorPointer ${styles.collum02}`}
+                            >
+                                {saae.status || 'enviada'}
+                            </label>
+                            <label 
+                                htmlFor="" 
+                                className={`${saae.status === 'aprovada' ? styles.cursorPointer : ''} ${styles.collum02}`}
+                                onClick={()=>{
+                                    if(saae.status === 'aprovada'){
+                                        //seta a saae editada para o contexto.
+                                        context.setSaaeEdit((prev)=> {
+                                            if(prev === saae._id) return undefined
+                                            return saae._id
+                                        });
+
+                                        //exibe o modal para edição do relatório da SAAE.
+                                        context.setShowModal({
+                                            element: <RelatorioSaae/>,
+                                            styles:['backgroundWhite', 'alingTop', 'paddin30'],
+                                            onClose: ()=>{
+                                                context.setSaaeEdit(undefined);
+                                            }
+                                        })
+                                    }
+                                }}
+                            >
+                                {saae.relatorio ? 'enviado' : 'pendente'}
+                            </label>
                         </div>
                     ))}
                 </div>                    
