@@ -17,6 +17,7 @@ import { userTest } from "@/components/data-training/data-training";
 import FormLogin from "@/components/form/formLogin/formLogin";
 import ViewSaaes from "@/components/layout/viewSaaes/listSaaes";
 import NavButoomsSaae from "@/components/layout/navButtomsSaae/navButtomsSaae";
+import Dashboard from "@/components/layout/dashboard/dashboard";
 
 /**
  * Componente que gerencia os modulos de uma SAAE para prenchimento.
@@ -156,7 +157,7 @@ export default function Page(){
                 </div>
             :null}
 
-            
+            <Dashboard listSaaes={context.listSaaes}/>
         </Section>
     )
 }
