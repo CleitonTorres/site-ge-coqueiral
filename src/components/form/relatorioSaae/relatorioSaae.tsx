@@ -138,6 +138,17 @@ export default function RelatorioSaae({readOnly}:Props) {
                             <p>{context.dataSaae?.relatorio?.quantidadeVoluntarios || ''}</p>
                         }
                     </div>
+                    <div className={styles.collum}>
+                        <h1>Link com os feedbacks dos participantes</h1>
+                        {!readOnly ? <input 
+                            type='text'
+                            name='linkFeedbacks'
+                            value={context.dataSaae?.relatorio?.linkFeedbacks || ''}
+                            onChange={(e)=>handleForm(e)}
+                        /> :
+                            <p>{context.dataSaae?.relatorio?.linkFeedbacks || ''}</p>
+                        }
+                    </div>
                 </div>
                 <div className={styles.line}>
                     <div className={styles.collum}>
