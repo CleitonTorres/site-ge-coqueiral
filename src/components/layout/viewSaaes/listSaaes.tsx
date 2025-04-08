@@ -12,6 +12,8 @@ import axios from "axios";
 import Botton from "@/components/form/botton/botton";
 import { printComponent } from "@/scripts/globais";
 import RelatorioSaae from "@/components/form/relatorioSaae/relatorioSaae";
+import { IoRefreshSharp } from "react-icons/io5";
+import Mathias from "../mathias/mathias";
 
 type ListSaaeProps = {
     tipo: 'user' | 'regional'
@@ -139,6 +141,55 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
         setDataStorage(saaes);
     }
 
+    //busca as SAAEs do usuário enviadas para análise.
+    const getSaaes = async()=>{
+        try{
+            context.setShowModal({
+                element: <Mathias show text="Atualizando lista de SAAEs"/>
+            });
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+                params:{
+                    service: 'getSaae'
+                },
+                headers:{
+                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                }
+            });
+
+            const data = response.data as {saaes: SAAE[]};
+            console.log(data.saaes)
+            context.setListSaaes(data.saaes);
+
+            context.setShowModal({
+                element: <Confirme 
+                    message="Lista de SAAEs atualizada com sucesso" 
+                    confirme={async()=>{
+                        context.setShowModal(null);
+                        return {
+                            bool: true,
+                            text: 'Lista de SAAEs atualizada com sucesso!'
+                        }
+                    }}/>
+            });
+        }catch(error){
+            if (axios.isAxiosError(error)) {
+                // Se o erro for gerado pelo Axios
+                console.error("Erro Axios:", error.response?.data || error.message);
+                
+                // Capturando os detalhes da resposta
+                if (error.response) {
+                console.error("Status:", error.response.status);
+                console.error("Dados:", error.response.data);
+                }
+            } else {
+                // Se for outro tipo de erro
+                console.error("Erro inesperado:", error);
+            }
+
+            alert("Ocorreu um erro ao tentar recuperar a lista de SAAEs")
+        }
+    }
+
     useEffect(()=>{
         setShowObs(()=>{
             if(currentSAAEResponse?.status && 
@@ -245,6 +296,14 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
 
         {tipo === 'user'?
             <>
+            <IoRefreshSharp 
+                size={32} 
+                color="blue" 
+                cursor={'pointer'} 
+                style={{margin: 20}}
+                title="Atualizar lista de SAAEs"
+                onClick={getSaaes}
+            />
             <h1 className={styles.title}>SUAS SAAEs</h1>
             <div className={`${styles.conteiner}`}>
                 {/* Rascunhos de SAAEs (não enviadas) */}
@@ -323,7 +382,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                     }else{
                                         context.setSaaeEdit((prev)=> {
                                             if(prev === saae._id) return undefined
-                                            return saae._id
+                                            return saae._id as string
                                         });
                                     }
                                 }}
@@ -344,7 +403,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                         //seta a saae editada para o contexto.
                                         context.setSaaeEdit((prev)=> {
                                             if(prev === saae._id) return undefined
-                                            return saae._id
+                                            return saae._id as string
                                         });
 
                                         //exibe o modal para edição do relatório da SAAE.
@@ -353,6 +412,7 @@ export default function ViewSaaes({tipo}: ListSaaeProps) {
                                             styles:['backgroundWhite', 'alingTop', 'paddin30'],
                                             onClose: ()=>{
                                                 context.setSaaeEdit(undefined);
+                                                deleteDataStorage('saae', saae._id as string);
                                             }
                                         })
                                     }

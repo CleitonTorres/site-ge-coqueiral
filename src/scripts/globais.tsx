@@ -824,3 +824,13 @@ export const minutesToTime = (totalMinutes: number) => {
     return `${hours}:${minutes}`;
 };
 
+export const copyToClipboard = (text: string)=> {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        alert("Texto copiado!");
+      })
+      .catch((err) => {
+        console.error("Erro ao copiar o texto: ", err);
+      });
+  }
+  

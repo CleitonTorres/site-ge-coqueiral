@@ -1,10 +1,10 @@
-import { DataNews, ResponseRecaptcha } from "@/@types/types";
+import { DataNews, Feedbacks, ResponseRecaptcha, SAAE } from "@/@types/types";
 import { closeDatabase, connectToDatabase } from "@/scripts/connectDB";
 import axios from "axios";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { Storage } from "@google-cloud/storage";
-import { parseGoogleStorageUrl } from "@/scripts/globais";
+import { adressToString, dateFormat2, parseGoogleStorageUrl } from "@/scripts/globais";
 
 import { BodyEmail, newSAAEEmail } from "@/components/emailTemplates/newSaae";
 import util from 'util';
@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
     // Parseando os parâmetros da URL (query params)
     const url = new URL(req.url); // Cria uma URL para extrair os parâmetros
     const service = url.searchParams.get("service") as "me" | "users" | "news" | 'getSaae' | 'getUrlKey' 
-    | 'printPDF' | 'proxyPDF' | 'sendEmail';
+    | 'printPDF' | 'proxyPDF' | 'sendEmail' | 'getSaaeById';
     const slug = url.searchParams.get('slug') as string;
 
     if(service === 'news'){
@@ -119,6 +119,21 @@ export async function GET(req: NextRequest) {
         closeDatabase();
 
         return NextResponse.json({saaes}, {status: 200});         
+    }else if(service === 'getSaaeById'){
+        const idSaae = url.searchParams.get('idSaae') as string;
+        const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/getSaae"); 
+        const collection = db.collection('saae');
+    
+        const data = await collection.findOne<SAAE>({_id: new ObjectId(idSaae)});
+    
+        //fecha o DB.
+        closeDatabase();
+
+        return NextResponse.json({
+            nomeAtividade: data.dadosGerais.nomeAtividade,
+            dataAtividade: `${dateFormat2(data.dadosGerais.dataInicio)} à ${dateFormat2(data.dadosGerais.dataFim)}`,
+            local: adressToString(data.dadosGerais.localInicio),
+        }, {status: 200});         
     }else if(service === 'getUrlKey'){
         const fileUrl = url.searchParams.get('fileUrl');
         const expiresInMs: number= parseInt(url.searchParams.get('expiresIn') || '1') * 60 * 60 * 1000
@@ -276,6 +291,24 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json(resp, {status: 200});
             
+        }else if(service === 'saveFeedback'){
+            const data = body.data as Feedbacks;
+            if(!data || !idSaae)  
+                return NextResponse.json({error: "Falta dados para a atualização"}, {status: 500});
+
+            // Conectando ao banco de dados
+            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postFeedback");
+            const collection = db.collection<SAAE>('saae');
+
+            const resp = await collection.updateOne({
+                _id: new ObjectId(idSaae)
+            },{
+                $push: {
+                    feedbacks: data
+                }
+            });
+
+            return NextResponse.json(resp, {status: 200});
         }else{
             return NextResponse.json({error: "Metodo não reconhecido"}, {status: 500});
         }

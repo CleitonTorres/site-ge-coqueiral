@@ -117,7 +117,7 @@ export default function Page(){
                     {currenteSession === 0 ? <DadosGerais 
                         readOnly={false}
                         localData={context.dataSaae?.dadosGerais}
-                        idSaae={context.dataSaae?._id}
+                        idSaae={context.dataSaae?._id as string}
                         obsSaae={context.dataSaae?.obs}
                         statusSaae={context.dataSaae?.status}
                     /> : null}

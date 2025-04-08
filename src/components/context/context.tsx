@@ -800,7 +800,7 @@ export default function Provider({children}:{children:ReactNode}){
           }
         }
         const formDataUpdate = new FormData();
-        formDataUpdate.append('idSaae', data._id);
+        formDataUpdate.append('idSaae', data._id as string);
         formDataUpdate.append('saaeData', JSON.stringify(update));
 
         const response = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/updateSaae/`, formDataUpdate, {
@@ -901,8 +901,10 @@ export default function Provider({children}:{children:ReactNode}){
         //verifica primeiro se já tem um rascunho salvo.
         //se não tiver, pega os dados salvos na nuvem.
         const verifyStorage = await getDataStorage('saae', saaeEdit);
+        const saaeDB = listSaaes.find(s=> s._id === saaeEdit);
         setDataSaae((prev)=>{          
-          const saae = verifyStorage?.dataSaae || listSaaes.find(s=> s._id === saaeEdit);      
+          // const saae = verifyStorage?.dataSaae || saaeDB; 
+          const saae = {...saaeDB, ...verifyStorage?.dataSaae};      
           if(saae){
             return saae
           }else{

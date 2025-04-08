@@ -1,7 +1,7 @@
 import styles from './relatorioSaae.module.css';
 import { ChangeEvent, useContext, useState } from 'react';
 import { Context } from '@/components/context/context';
-import { adressToString, dateFormat2 } from '@/scripts/globais';
+import { adressToString, copyToClipboard, dateFormat2 } from '@/scripts/globais';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import Botton from '../botton/botton';
 import Confirme from '@/components/layout/confirme/confirme';
@@ -139,7 +139,7 @@ export default function RelatorioSaae({readOnly}:Props) {
                         }
                     </div>
                     <div className={styles.collum}>
-                        <h1>Link com os feedbacks dos participantes</h1>
+                        <h1>Link para o feedbacks dos participantes</h1>
                         {!readOnly ? <input 
                             type='text'
                             name='linkFeedbacks'
@@ -148,8 +148,65 @@ export default function RelatorioSaae({readOnly}:Props) {
                         /> :
                             <p>{context.dataSaae?.relatorio?.linkFeedbacks || ''}</p>
                         }
+                        <a 
+                            href={`/feedbacks/${context.dataSaae?._id}`}
+                            target='_blank'
+                            className='link'
+                            onClick={()=>copyToClipboard(`https://19.escoteiroses.org.br/feedbacks/${context.dataSaae?._id}`)}
+                        >
+                            Link para coletar os feedbacks
+                        </a>
                     </div>
                 </div>
+
+                <div className={styles.line}>
+                    <h1>Feedbacks dos participantes</h1>
+                </div>
+                {context.dataSaae?.feedbacks?.map((item, index)=>(
+                    <div className={`${styles.line} ${styles.bgGreen}`} key={index+'feedbacks'}>
+                        <div className={styles.collum}> 
+                            <h1>Participante</h1>                               
+                            <p>{item.participante}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Tipo de participante</h1>
+                            <p>{item?.tipoParticipante || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>E-mail do participante</h1>
+                            <p>{item?.emailParticipante || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Data do feedback</h1>
+                            <p>{dateFormat2(item?.dataFeedback) || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Comentário</h1>
+                            <p>{item?.comentarios || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Avaliação geral (1 a 5)</h1>
+                            <p>{item?.avaliacao || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Sugestão de melhoria</h1>
+                            <p>{item?.melhoria || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Ponto alto da atividade</h1>
+                            <p>{item?.pontoAlto || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Se sentiu seguro durante a atividade?</h1>
+                            <p>{item?.seguro || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Permitiu uso das respostas para melhorar novos eventos/atividades?</h1>
+                            <p>{item?.privacidade || ''}</p>
+                        </div>
+                    </div>
+                ))}
+
                 <div className={styles.line}>
                     <div className={styles.collum}>
                         <h1>Relatório da atividade</h1>

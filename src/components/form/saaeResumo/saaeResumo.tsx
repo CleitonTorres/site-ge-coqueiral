@@ -71,7 +71,7 @@ export default function SaaeResumo ({hiddeButton, localData, print}:Props){
 
             <DadosGerais 
                 readOnly 
-                idSaae={localData?._id} 
+                idSaae={localData?._id as string} 
                 obsSaae={localData?.obs} 
                 statusSaae={localData?.status}
                 localData={localData?.dadosGerais}

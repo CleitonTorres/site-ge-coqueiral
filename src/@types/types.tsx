@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb"
+
 export interface ResponseRecaptcha{
     action: string,
     challenge_ts: string,
@@ -90,8 +92,9 @@ export interface SAAE {
     documentos: FormDocs[],
     status: 'rascunho' | 'enviada' | 'aprovada' | 'reprovada' | 'pendente',
     relatorio?: RelatorioSAAE,
+    feedbacks?: Feedbacks[],
     obs?: string,
-    _id: string
+    _id: string | ObjectId,
 }
 export interface RelatorioSAAE {
     _id: string,
@@ -102,6 +105,22 @@ export interface RelatorioSAAE {
     ocorrenciasEnfermaria: string[],
     ocorrenciasGraves: string[],
 }
+export interface Feedbacks{
+    nomeAtividade: string,
+    dataAtividade: string,
+    local: string,
+    participante: string,
+    tipoParticipante: 'Jovem' | 'Escotista' | 'Pai' | 'Mãe' | 'Responsável' | 'Staff' | 'Outros',
+    emailParticipante: string,
+    melhoria: string,
+    dataFeedback: Date | string,
+    avaliacao: number,
+    pontoAlto: string,
+    seguro: string,
+    comentarios: string,
+    privacidade: 'Sim' | 'Não',
+}
+
 export interface GrauRisco {
     color: 'green' | 'yellow' | 'orange' | 'red' | '',
     value: number
