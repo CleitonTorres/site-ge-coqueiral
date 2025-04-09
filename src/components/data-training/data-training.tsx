@@ -185,6 +185,38 @@ export const uels:DadosBasicosUEL[] = [
 ]
 export const atividades:Atividade[] = [
     {
+        tipo: "Acampamento até 10 pessoas",
+        descricao: "Acampamento pequeno de até 10 pessoas.",
+        grauRisco: {
+            color: "green",
+            value: 3
+        }
+    },
+    {
+        tipo: "Acampamento até 30 pessoas",
+        descricao: "Acampamento médio porte com até 30 pessoas. Acampamentos de tropa ou de confraternização de ramo.",
+        grauRisco: {
+            color: "yellow",
+            value: 6
+        }
+    },
+    {
+        tipo: "Acampamento com mais de 30 pessoas",
+        descricao: "Acampamento de grande porte porte com mais de 30 pessoas. Como acampamentos de grupo.",
+        grauRisco: {
+            color: "orange",
+            value: 12
+        }
+    },
+    {
+        tipo: "Acampamento com mais de 100 pessoas",
+        descricao: "Acampamento de grande porte como acampamentos regionais.",
+        grauRisco: {
+            color: "red",
+            value: 25
+        }
+    },
+    {
         tipo: "Caminhada em ambiente urbano",
         descricao: "Caminhada em áreas pavimentadas, como calçadas, parques urbanos e ruas seguras.",
         grauRisco: {

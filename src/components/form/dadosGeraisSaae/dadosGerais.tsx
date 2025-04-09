@@ -635,14 +635,14 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
             else if (!prev.dadosGerais[name]?.includes(trimmedValue)) {
                 if(name === 'tipoAtividade'){
                     const findAtividade = atividades.find(i=> i.tipo.includes(trimmedValue));
-                    const newData = [...(prev.dadosGerais.tipoAtividade || []), findAtividade.tipo];
+                    const newData = [...(prev.dadosGerais.tipoAtividade || []), trimmedValue];
 
                     //verifica se o grau de risco da atividade selecionada é maior que a existente.
                     //se for, substitui ele pelo de maior valor.
-                    const grauRisco = findAtividade.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
+                    const grauRisco = findAtividade?.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
                     return{
                         ...prev,
-                        grauRisco: grauRisco,
+                        grauRisco: grauRisco || {color: 'green', value: 0},
                         dadosGerais: {
                             ...prev.dadosGerais,
                             tipoAtividade: newData
@@ -696,14 +696,14 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 }
                 else if(name === 'tipoAtividade'){
                     const findAtividade = atividades.find(i=> i.tipo.includes(trimmedValue));
-                    const newData = [...(prev.dadosGerais.tipoAtividade || []), findAtividade.tipo];
+                    const newData = [...(prev.dadosGerais.tipoAtividade || []), trimmedValue];
 
                     //verifica se o grau de risco da atividade selecionada é maior que a existente.
                     //se for, substitui ele pelo de maior valor.
-                    const grauRisco = findAtividade.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
+                    const grauRisco = findAtividade?.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
                     return{
                         ...prev,
-                        grauRisco: grauRisco,
+                        grauRisco: grauRisco || {color: 'green', value: 0},
                         dadosGerais: {
                             ...prev.dadosGerais,
                             tipoAtividade: newData
@@ -759,14 +759,14 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                 if (trimmedValue && !prev.dadosGerais[name]?.includes(trimmedValue)) {                    
                     if(name === 'tipoAtividade'){
                         const findAtividade = atividades.find(i=> i.tipo.includes(trimmedValue));
-                        const newData = [...(prev.dadosGerais.tipoAtividade || []), findAtividade.tipo];
+                        const newData = [...(prev.dadosGerais.tipoAtividade || []), trimmedValue];
     
                         //verifica se o grau de risco da atividade selecionada é maior que a existente.
                         //se for, substitui ele pelo de maior valor.
-                        const grauRisco = findAtividade.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
+                        const grauRisco = findAtividade?.grauRisco.value > (prev.grauRisco?.value || 0) ? findAtividade.grauRisco : prev.grauRisco;
                         return{
                             ...prev,
-                            grauRisco: grauRisco,
+                            grauRisco: grauRisco || {color: 'green', value: 0},
                             dadosGerais: {
                                 ...prev.dadosGerais,
                                 tipoAtividade: newData
@@ -901,7 +901,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
                         <input 
                             list="options" 
                             name='tipoAtividade'
-                            value={atividade}
+                            value={atividade} 
                             placeholder='precione Enter ou vírgula para inserir'
                             onChange={(e) => {
                                 setAtividade(e.target.value);

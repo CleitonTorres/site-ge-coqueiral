@@ -5,6 +5,7 @@ import { adressToString, copyToClipboard, dateFormat2 } from '@/scripts/globais'
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import Botton from '../botton/botton';
 import Confirme from '@/components/layout/confirme/confirme';
+import Mathias from '@/components/layout/mathias/mathias';
 
 type Props= {
     readOnly?: boolean
@@ -14,7 +15,8 @@ export default function RelatorioSaae({readOnly}:Props) {
     const context = useContext(Context);
     const [curentOcorrenciasEnf, setCurrentOcorrenciasEnf] = useState<string>('');
     const [curentOcorrenciasGraves, setCurrentOcorrenciasGraves] = useState<string>('');
-    
+    const [showMathias, setShowMathias] = useState<{id: number, text: string}>({id: 0, text: ''});
+
     const handleCurrentForm = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
         e.preventDefault();
         const name = e.target.name;
@@ -60,9 +62,12 @@ export default function RelatorioSaae({readOnly}:Props) {
         })
     }
 
-    const addOcorrencia = (tipo: 'ocorrenciasEnfermaria' | 'ocorrenciasGraves')=>{        
+    const addOcorrencia = (tipo: 'ocorrenciasEnfermaria' | 'ocorrenciasGraves')=>{  
+        if(tipo === 'ocorrenciasEnfermaria' && !curentOcorrenciasEnf) return;
+        if(tipo === 'ocorrenciasGraves' && !curentOcorrenciasGraves) return;
+
         context.setDataSaae((prev)=>{
-            const obj = (prev.relatorio || {})[tipo];
+            const obj = (prev.relatorio || {})[tipo] || [];
             const newArray = obj?.concat(tipo === 'ocorrenciasEnfermaria' ? `${obj.length+1} - ${curentOcorrenciasEnf}` : `${obj.length+1} - ${curentOcorrenciasGraves}`) 
                 || [tipo === 'ocorrenciasEnfermaria' ? `${obj.length+1} - ${curentOcorrenciasEnf}` : `${obj.length+1} - ${curentOcorrenciasGraves}`];
 
@@ -214,6 +219,11 @@ export default function RelatorioSaae({readOnly}:Props) {
                     </div>
                 </div>
 
+                <Mathias 
+                    show={showMathias.id !== 0} 
+                    text={showMathias.text}
+                />
+
                 <div className={styles.line}> 
                     <div className={styles.collum}>
                         <h1>Ocorrências de enfermaria</h1>
@@ -222,13 +232,15 @@ export default function RelatorioSaae({readOnly}:Props) {
                                 name='curentOcorrenciasEnf'
                                 value={curentOcorrenciasEnf || ''}
                                 onChange={(e)=>handleCurrentForm(e)}
+                                onMouseEnter={()=>setShowMathias({id: 1, text: 'Descreva e adicione individualmente cada ocorrências. Exemplo: Picada de inseto desconhecido na mão de Joãozinho, foi tratado com higienização e uma pomada antialergica.'})}
+                                onMouseLeave={()=>setShowMathias({id: 0, text: ''})}
                             />
                             <FaPlus 
                                 className={styles.btnAddOcorrencia}
                                 onClick={()=>addOcorrencia('ocorrenciasEnfermaria')} 
                             />
                         </div> : null}
-                    
+
                         {context.dataSaae?.relatorio?.ocorrenciasEnfermaria?.map((item, index)=>(
                             <div key={index+'enf'} className={styles.collum}>
                                 {!readOnly ?
@@ -248,6 +260,7 @@ export default function RelatorioSaae({readOnly}:Props) {
                         ))}
                     </div>
                 </div>
+
                 <div className={styles.line}> 
                     <div className={styles.collum}>
                         <h1>Ocorrências de graves</h1>
@@ -256,6 +269,8 @@ export default function RelatorioSaae({readOnly}:Props) {
                                 name='curentOcorrenciasGraves'
                                 value={curentOcorrenciasGraves || ''} 
                                 onChange={(e)=>handleCurrentForm(e)}
+                                onMouseEnter={()=>setShowMathias({id: 2, text: 'Descreva e adicione individualmente cada ocorrências. Exemplo: Corte profundo na mão direita de Maria, foi higienização e feito curativo e encaminhada para pronto socorro para dar pontos. A família foi comunicada.'})}
+                                onMouseLeave={()=>setShowMathias({id: 0, text: ''})}
                             />
                             <FaPlus 
                                 className={styles.btnAddOcorrencia}

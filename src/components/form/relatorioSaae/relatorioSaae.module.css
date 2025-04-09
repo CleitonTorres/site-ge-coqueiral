@@ -33,6 +33,7 @@
     text-align: center;
 }
 .collum{
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
