@@ -140,14 +140,6 @@ export default function RelatorioSaae({readOnly}:Props) {
                     </div>
                     <div className={styles.collum}>
                         <h1>Link para o feedbacks dos participantes</h1>
-                        {!readOnly ? <input 
-                            type='text'
-                            name='linkFeedbacks'
-                            value={context.dataSaae?.relatorio?.linkFeedbacks || ''}
-                            onChange={(e)=>handleForm(e)}
-                        /> :
-                            <p>{context.dataSaae?.relatorio?.linkFeedbacks || ''}</p>
-                        }
                         <a 
                             href={`/feedbacks/${context.dataSaae?._id}`}
                             target='_blank'
@@ -203,6 +195,10 @@ export default function RelatorioSaae({readOnly}:Props) {
                         <div className={styles.collum}>
                             <h1>Permitiu uso das respostas para melhorar novos eventos/atividades?</h1>
                             <p>{item?.privacidade || ''}</p>
+                        </div>
+                        <div className={styles.collum}>
+                            <h1>Data da resposta</h1>
+                            <p>{dateFormat2(item?.dataFeedback) || ''}</p>
                         </div>
                     </div>
                 ))}

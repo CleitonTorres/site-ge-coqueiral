@@ -99,7 +99,6 @@ export interface SAAE {
 export interface RelatorioSAAE {
     _id: string,
     relatorio: string,
-    linkFeedbacks: string,
     quantidadeJovens: number,
     quantidadeVoluntarios: number,
     ocorrenciasEnfermaria: string[],
