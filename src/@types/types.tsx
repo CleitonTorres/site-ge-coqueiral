@@ -97,12 +97,13 @@ export interface SAAE {
     _id: string | ObjectId,
 }
 export interface RelatorioSAAE {
-    _id: string,
+    // _id: string,
     relatorio: string,
     quantidadeJovens: number,
     quantidadeVoluntarios: number,
     ocorrenciasEnfermaria: string[],
     ocorrenciasGraves: string[],
+    questoesVariadas?: QuestoesVariadas[]
 }
 export interface Feedbacks{
     nomeAtividade: string,
@@ -112,12 +113,18 @@ export interface Feedbacks{
     tipoParticipante: 'Jovem' | 'Escotista' | 'Pai' | 'Mãe' | 'Responsável' | 'Staff' | 'Outros',
     emailParticipante: string,
     melhoria: string,
-    dataFeedback: Date | string,
-    avaliacao: number,
     pontoAlto: string,
+    dataFeedback: Date | string,
+    avaliacao: number,    
     seguro: string,
     comentarios: string,
     privacidade: 'Sim' | 'Não',
+    questoesVariadas?:QuestoesVariadas[]
+}
+
+export interface QuestoesVariadas{
+    pergunta: string,
+    resposta: number | undefined
 }
 
 export interface GrauRisco {

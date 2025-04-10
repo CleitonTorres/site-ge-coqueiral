@@ -49,6 +49,7 @@
 
 .collum div{
     display: flex;
+    align-items: center;
     width: 100%;    
 }
 .collum textarea{
@@ -73,6 +74,7 @@
 }
 .btnAddOcorrencia{
     margin-left: 5px;
+    font-size: 18px;
 }
 .btnAddOcorrencia:hover, .btnRemOcorrencia:hover{
     cursor: pointer;

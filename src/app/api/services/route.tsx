@@ -133,6 +133,7 @@ export async function GET(req: NextRequest) {
             nomeAtividade: data.dadosGerais.nomeAtividade,
             dataAtividade: `${dateFormat2(data.dadosGerais.dataInicio)} à ${dateFormat2(data.dadosGerais.dataFim)}`,
             local: adressToString(data.dadosGerais.localInicio),
+            questoesVariadas: data.relatorio?.questoesVariadas || []
         }, {status: 200});         
     }else if(service === 'getUrlKey'){
         const fileUrl = url.searchParams.get('fileUrl');

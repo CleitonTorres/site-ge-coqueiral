@@ -1,5 +1,5 @@
 'use client';
-import { Feedbacks } from '@/@types/types';
+import { Feedbacks, QuestoesVariadas } from '@/@types/types';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styles from './formFeedbacks.module.css';
@@ -25,6 +25,7 @@ export default function FeedbackForm({ idSaae, onSubmit }: FeedbackFormProps) {
         melhoria: '',
         seguro: '',
         comentarios: '',
+        questoesVariadas: []
     } as Feedbacks);
 
     const searchSaae = async()=>{
@@ -44,12 +45,14 @@ export default function FeedbackForm({ idSaae, onSubmit }: FeedbackFormProps) {
                     nomeAtividade: string,
                     dataAtividade: string,
                     local: string,
+                    questoesVariadas: QuestoesVariadas[]
                 };
                 setForm(prev => ({ 
                     ...prev, 
                     nomeAtividade: data?.nomeAtividade,
                     dataAtividade: data.dataAtividade,
                     local: data.local,
+                    questoesVariadas: data.questoesVariadas || []
                 }));
             }else{
                 throw new Error('Erro ao buscar dados do SAAE');
@@ -58,16 +61,39 @@ export default function FeedbackForm({ idSaae, onSubmit }: FeedbackFormProps) {
             console.error(err);
             alert('Erro ao buscar dados do SAAE');}
     }
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+        idx?: number, 
+        valor?: number
+    ) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+        if(name.includes('questoesVariadas')){
+            setForm(prev=>{
+                const newArray = prev.questoesVariadas.map((i, idxI)=>{
+                    if(idxI === idx){
+                        return{
+                            ...i,
+                            resposta: valor
+                        }
+                    }else{
+                        return i
+                    }
+                })
+                return{
+                    ...prev,
+                    questoesVariadas: newArray
+                }
+            })
+        }else{
+            setForm(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if(!form.pontoAlto || !form.melhoria || !form.seguro || !form.avaliacao) return alert('Preencha todos os campos obrigatórios!');
-        const resp = await onSubmit({...form, dataFeedback: new Date()});
-        if(resp) setForm({} as Feedbacks);
+        await onSubmit({...form, dataFeedback: new Date()});
+        // if(resp) setForm({} as Feedbacks);
     };
 
     useEffect(()=>{
@@ -136,7 +162,7 @@ export default function FeedbackForm({ idSaae, onSubmit }: FeedbackFormProps) {
             </label>
 
             <label className={styles.box}>
-                Avaliação geral (1 a 5):
+                Avaliação geral (1 a 5), o que achou do evento?
                 <input 
                     type="number" 
                     name="avaliacao" 
@@ -145,6 +171,29 @@ export default function FeedbackForm({ idSaae, onSubmit }: FeedbackFormProps) {
                     onChange={handleChange} 
                 />
             </label>
+
+            {form.questoesVariadas?.map((idSaae, idx)=>(
+                <div className={`${styles.box}`} key={idx+'asks'}>
+                    {idSaae.pergunta}
+                    <div className={styles.flexRow}>
+                        {[1, 2, 3, 4, 5].map((v, idxV)=> (
+                            <label 
+                                className={`${styles.box}`}
+                                key={'input'+idxV}
+                            >
+                                {v}
+                                <input 
+                                    className={styles.radio}
+                                    type="radio" 
+                                    name={`questoesVariadas-${idx}`} 
+                                    value={v} 
+                                    onChange={(e)=>handleChange(e, idx, v)} 
+                                />
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            ))}
 
             <div className={styles.box}>
                 <textarea                 

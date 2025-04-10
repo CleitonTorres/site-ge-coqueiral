@@ -6,6 +6,7 @@ import { FaPlus, FaTrash } from 'react-icons/fa';
 import Botton from '../botton/botton';
 import Confirme from '@/components/layout/confirme/confirme';
 import Mathias from '@/components/layout/mathias/mathias';
+import { RelatorioSAAE } from '@/@types/types';
 
 type Props= {
     readOnly?: boolean
@@ -16,6 +17,7 @@ export default function RelatorioSaae({readOnly}:Props) {
     const [curentOcorrenciasEnf, setCurrentOcorrenciasEnf] = useState<string>('');
     const [curentOcorrenciasGraves, setCurrentOcorrenciasGraves] = useState<string>('');
     const [showMathias, setShowMathias] = useState<{id: number, text: string}>({id: 0, text: ''});
+    const [currentAsk, setCurrentAsk] = useState('');
 
     const handleCurrentForm = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
         e.preventDefault();
@@ -157,56 +159,44 @@ export default function RelatorioSaae({readOnly}:Props) {
                 </div>
 
                 <div className={styles.line}>
-                    <h1>Feedbacks dos participantes</h1>
+                    <h1>Definir perguntas variadas</h1>
                 </div>
-                {context.dataSaae?.feedbacks?.map((item, index)=>(
-                    <div className={`${styles.line} ${styles.bgGreen}`} key={index+'feedbacks'}>
-                        <div className={styles.collum}> 
-                            <h1>Participante</h1>                               
-                            <p>{item.participante}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Tipo de participante</h1>
-                            <p>{item?.tipoParticipante || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>E-mail do participante</h1>
-                            <p>{item?.emailParticipante || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Data do feedback</h1>
-                            <p>{dateFormat2(item?.dataFeedback) || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Comentário</h1>
-                            <p>{item?.comentarios || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Avaliação geral (1 a 5)</h1>
-                            <p>{item?.avaliacao || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Sugestão de melhoria</h1>
-                            <p>{item?.melhoria || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Ponto alto da atividade</h1>
-                            <p>{item?.pontoAlto || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Se sentiu seguro durante a atividade?</h1>
-                            <p>{item?.seguro || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Permitiu uso das respostas para melhorar novos eventos/atividades?</h1>
-                            <p>{item?.privacidade || ''}</p>
-                        </div>
-                        <div className={styles.collum}>
-                            <h1>Data da resposta</h1>
-                            <p>{dateFormat2(item?.dataFeedback) || ''}</p>
+                <div className={styles.line}>
+                    <div className={styles.collum}>
+                        <div>
+                            <h1>Insira sua pergunta (as avaliações sempre serão de 1 a 5)</h1>
+                            <textarea 
+                                value={currentAsk}
+                                onChange={(e)=>setCurrentAsk(e.target.value)}
+                            />
+                            <FaPlus 
+                                className={styles.btnAddOcorrencia}
+                                onClick={()=>{
+                                    if(!currentAsk || currentAsk === '') return;
+                                    context.setDataSaae((prev)=>{
+                                        const asks = prev.relatorio?.questoesVariadas || [];
+                                        const newArray = [...asks, {pergunta: currentAsk, resposta: undefined}];
+                                        
+                                        return {
+                                            ...prev,
+                                            relatorio:{
+                                                ...prev.relatorio || {} as RelatorioSAAE,
+                                                questoesVariadas: newArray
+                                            }
+                                        };
+                                    });
+                                    setCurrentAsk('');
+                                }}
+                            />
                         </div>
                     </div>
-                ))}
+                </div>
+                <div className={styles.line}>
+                    {context.dataSaae?.relatorio?.questoesVariadas
+                        ?.map((i, idx)=> <div className={styles.collum} key={idx+'questions'}>
+                        <p >{i.pergunta}</p>
+                    </div>)}                                                                      
+                </div>
 
                 <div className={styles.line}>
                     <div className={styles.collum}>
@@ -298,6 +288,66 @@ export default function RelatorioSaae({readOnly}:Props) {
                 </div>
             </div>
             
+            <div className={styles.line}>
+                <h1>Feedbacks dos participantes</h1>
+            </div>
+            {context.dataSaae?.feedbacks?.map((item, index)=>(
+                <div className={`${styles.line} ${styles.bgGreen}`} key={index+'feedbacks'}>
+                    <div className={styles.collum}> 
+                        <h1>Participante</h1>                               
+                        <p>{item.participante}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Tipo de participante</h1>
+                        <p>{item?.tipoParticipante || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>E-mail do participante</h1>
+                        <p>{item?.emailParticipante || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Data do feedback</h1>
+                        <p>{dateFormat2(item?.dataFeedback) || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Comentário</h1>
+                        <p>{item?.comentarios || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Avaliação geral (1 a 5)</h1>
+                        <p>{item?.avaliacao || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Sugestão de melhoria</h1>
+                        <p>{item?.melhoria || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Ponto alto da atividade</h1>
+                        <p>{item?.pontoAlto || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Se sentiu seguro durante a atividade?</h1>
+                        <p>{item?.seguro || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Permitiu uso das respostas para melhorar novos eventos/atividades?</h1>
+                        <p>{item?.privacidade || ''}</p>
+                    </div>
+                    <div className={styles.collum}>
+                        <h1>Data da resposta</h1>
+                        <p>{dateFormat2(item?.dataFeedback) || ''}</p>
+                    </div>
+                    <div className={styles.line}>
+                    {item?.questoesVariadas?.map((i, idx)=>(
+                        <div className={styles.collum} key={idx+'question'}>
+                            <h1>{i.pergunta}</h1>
+                            <p>{i.resposta}</p>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+            ))}
+
             {!readOnly ? 
             <div className={styles.boxButton}>
                 <Botton 

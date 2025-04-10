@@ -29,8 +29,8 @@ export default function Dashboard({listSaaes}: Props) {
         value,
     }));
 
-    const totalEnfermaria = listSaaes.reduce((acc, s) => acc + (s.relatorio?.ocorrenciasEnfermaria.length || 0), 0);
-    const totalGraves = listSaaes.reduce((acc, s) => acc + (s.relatorio?.ocorrenciasGraves.length || 0), 0);
+    const totalEnfermaria = listSaaes.reduce((acc, s) => acc + (s.relatorio?.ocorrenciasEnfermaria?.length || 0), 0);
+    const totalGraves = listSaaes.reduce((acc, s) => acc + (s.relatorio?.ocorrenciasGraves?.length || 0), 0);
 
     const pieData2 = [
     { id: 'Enfermaria', label: 'Enfermaria', value: totalEnfermaria },
@@ -43,7 +43,7 @@ export default function Dashboard({listSaaes}: Props) {
         graves: saae.relatorio?.ocorrenciasGraves?.length || 0,
     }));
 
-    if(listSaaes.length === 0){ return <h6>sem dados para mostrar</h6>}
+    if(listSaaes?.length === 0){ return <h6>sem dados para mostrar</h6>}
     return(
         <div className={styles.conteiner}>
             <div className={styles.content}>
