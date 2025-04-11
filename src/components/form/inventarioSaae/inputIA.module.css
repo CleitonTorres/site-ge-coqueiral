@@ -120,10 +120,23 @@
 }
 .boxCheckIA{
     position: relative; 
-    height: 30px; 
+    height: 40px; 
     display: flex; 
     flex-direction: row;
     align-items: center
+}
+.boxCheckIA button {
+    position: relative;
+    width: 100px;
+    height: 30px;
+    margin-left: 10px;
+    background-color: var(--blue);
+    color: var(--white);
+    font-weight: 700;
+}
+.boxCheckIA button:hover{
+    cursor: pointer;
+    scale: 1.05;
 }
 
 /* custom */

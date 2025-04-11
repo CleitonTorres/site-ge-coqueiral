@@ -21,6 +21,10 @@ export interface BodyEmail {
   }
 }
 
+/**
+ * Converte o objeto com dados do email para uma string html.
+ * @param {EmailBody} body - objeto com os dados do corpo do email. 
+ */
 export function newSAAEEmail ({body}:EmailBody) {
   const html = `
   <div>

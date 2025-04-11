@@ -50,6 +50,7 @@ export default function DadosGerais({readOnly, localData, obsSaae, idSaae, statu
         const value= e.target.value;
 
         console.log("monitor", name, value)
+
         context.setDataSaae((prev)=>{
             let newData = prev.dadosGerais;
             if(['horaInicio', 'horaFim'].includes(name)){

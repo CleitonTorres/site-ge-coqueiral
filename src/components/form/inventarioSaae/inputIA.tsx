@@ -1,5 +1,5 @@
 'use client'
-import { ChangeEvent, FocusEvent, KeyboardEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { GrauRisco, InventarioSaaeType, ProgramacaoAtividade } from '@/@types/types';
 import styles from './inputIA.module.css';
@@ -28,7 +28,6 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
     const [atividadeCorrente, setAtividadeCorrente] = useState({} as InventarioSaaeType);
 
     const [loading, setLoading] = useState(false);
-    const [useIA, setUseIA] = useState(false);
     const [commentIA, setCommentIA] = useState("Sempre Alerta chefe! Por favor, digite uma atividade para que eu possa lhe ajudar!");
     const [atividadeResumida, setAtividadeResumida] = useState<string[]>([]);
 
@@ -116,18 +115,25 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
         })        
     }
 
-    const handleSubmit = async (e?: FocusEvent<HTMLTextAreaElement> | FocusEvent<HTMLInputElement>, valor?: string ) => {
+    const handleSubmit = async (e?: MouseEvent<HTMLButtonElement>, valor?: string ) => {
         e?.preventDefault();
-        const value = e?.target.value || valor;
+        const value = valor;
 
-        //console.log("no submit", value)
-        if(!useIA)return;
+        // console.log("no submit", value)
 
-        if(!value) return;
+        // if(!useIA)return;
+
+        if(!value) {
+            setCommentIA('Você me informou um campo em branco, digite uma atividade antes de solicitar a busca.')
+            return
+        };
 
         const verify = localData?.find(ativ=> ativ.atividade === atividadeCorrente.atividade);
         console.log(verify);
-        if(verify) return;
+        if(verify) {
+            setCommentIA('A gente já analisou essa atividade, por favor, informe outra.')
+            return;
+        };
 
         setLoading(true);
         try { 
@@ -162,7 +168,8 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
                     probabilidade: 0,
                     nivelRisco: 0
                 } as InventarioSaaeType
-            });           
+            }); 
+
             setCommentIA(Response.comment || '')
             
             context.setDataSaae((prev)=>{
@@ -263,23 +270,7 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
         const descricaoAtividade = programacao?.map(p=> p.descricao);
 
         const split = descricaoAtividade?.map(d=> d.split('-')[0]);
-        setAtividadeResumida(split);
-        
-        // const formData = new FormData();
-        // formData.append('input', JSON.stringify(descricaoAtividade));
-        // formData.append('service', 'iaResumeProg');
-
-        // const resp = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/mathias`, formData,{
-        //     headers:{
-        //         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
-        //     }
-        // });
-
-        // console.log(resp.data);
-        // if(resp.data?.summary){
-        //     setAtividadeResumida(resp.data.summary)
-        // }
-        
+        setAtividadeResumida(split);        
     }
 
     useEffect(()=>{
@@ -301,20 +292,19 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
     return (
         <div className={styles.conteiner} style={{marginTop: readOnly ? '30px' : '0px'}}>
             <div className={`${styles.boxHead} ${styles.bgGreen}`}>                
-                <Mathias text={commentIA} show={useIA} customClass={['left']}/>
+                <Mathias text={commentIA} show customClass={['left']}/>
                 
                 <h6>item 6.5.1 da ISO 21101 e itens 7.5, 7.6, 9.1 da Política Nacional de Gestão de Risco</h6>
                 <h1>3. Inventário de Riscos:</h1>
             </div>
             {!readOnly ?
                 <div className={styles.boxCheckIA}>
-                <label htmlFor="" style={{fontSize: '14px'}}>Usar IA Mathias?</label>
-                <input  
-                    style={{position: 'relative', marginLeft: '10px'}}
-                    type="checkbox" 
-                    checked={useIA} 
-                    onChange={()=>setUseIA(prev=> !prev)}
-                />
+                    <label htmlFor="" style={{fontSize: '14px'}}>Usar IA Mathias?</label>
+                    <button  
+                        onClick={(e)=>handleSubmit(e, atividadeCorrente?.atividade || '')}
+                    >
+                        Ok
+                    </button>
                 </div>
             :null}
             <table className={`${styles.table} ${print ? styles.print : ''}`}> 
@@ -366,7 +356,7 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
                                     list='ativresumida'                                   
                                     value={atividadeCorrente?.atividade || ''}
                                     onChange={(e) => handleCurrentAtivity(e)}
-                                    onBlur={(e)=>handleSubmit(e)}
+                                    // onBlur={(e)=>handleSubmit(e)}
                                     onKeyDown={handleKeyDown}
                                     placeholder="Exemplo: remada em caiaque"
                                     style={{
@@ -483,7 +473,7 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
                                     name='perigo'
                                     value={item?.perigo || ''}
                                     onChange={(e) => handleForm(e, idx)}
-                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    // onBlur={(e)=>handleSubmit(e)}                                    
                                     readOnly={readOnly}
                                 />:
                                 <p 
@@ -500,7 +490,7 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
                                     name='danos'
                                     value={item?.danos || ''}
                                     onChange={(e) => handleForm(e, idx)}
-                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    // onBlur={(e)=>handleSubmit(e)}                                    
                                     readOnly={readOnly}
                                 />
                                 : <p 
@@ -517,7 +507,7 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
                                     name='controleOperacional'
                                     value={item?.controleOperacional || ''}
                                     onChange={(e) => handleForm(e, idx)}
-                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    // onBlur={(e)=>handleSubmit(e)}                                    
                                     readOnly={readOnly}
                                 />
                                 : <p 
@@ -534,7 +524,7 @@ const InventarioSaae = ({readOnly, localData, programacao, print}:Props) => {
                                     name='acoesMitigadoras'
                                     value={item?.acoesMitigadoras || ''}
                                     onChange={(e) => handleForm(e, idx)}
-                                    onBlur={(e)=>handleSubmit(e)}                                    
+                                    // onBlur={(e)=>handleSubmit(e)}                                    
                                     readOnly={readOnly}
                                 />
                                 : <p 

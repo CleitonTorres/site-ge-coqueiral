@@ -372,7 +372,8 @@ export function temApenasNumeros(str:string) {
  * @returns {boolean} string formatada
  */
 export function maskMoeda(value:string | number) {
-    if(!value) {return "0"}
+    console.log(value)
+    if(!value) {return ""}
     let v = '';
     
     if(typeof value !== "string") {
@@ -383,6 +384,8 @@ export function maskMoeda(value:string | number) {
 
     v =  v.replace(/(\d+)(\d{2})$/, "$1,$2");
     v =  v.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    
+    if(v === '0') return   "R$ ";
     
     return  "R$ " + v;
 }

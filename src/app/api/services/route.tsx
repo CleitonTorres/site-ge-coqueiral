@@ -12,13 +12,11 @@ import nodemailer from 'nodemailer';
 
 // Configurar o transporte SMTP para o seu provedor de e-mail
 const transporter = nodemailer.createTransport({
-    host: `${process.env.NEXT_PUBLIC_EMAIL_HOST}`,
-    port: 465, // Porta SMTP padrão (pode variar, consulte as configurações do seu provedor)
-    secure: true, // true para SSL, false para STARTTLS
+    service: 'gmail',
     auth: {
       user: 'gep@paralegalsolucoes.com.br',
-      pass: process.env.NEXT_PUBLIC_PASS_EMAIL_GEP,
-    },
+      pass: process.env.NEXT_PUBLIC_PASS_EMAIL,
+    }
 });
 
 interface ServiceAccountCredentials {
@@ -195,17 +193,17 @@ export async function GET(req: NextRequest) {
         const bodyEmail = url.searchParams.get('bodyEmail') as string;
         const bodyParse = bodyEmail ? JSON.parse(bodyEmail) as  BodyEmail: undefined;
         
-        if(!bodyParse || !bodyParse?.user || !bodyParse?.saae){
+        if(!bodyParse || !bodyParse?.user || !bodyParse?.user.email || !bodyParse?.saae){
             return NextResponse.json({error: "Corpo do email não informado"}, {status: 500});
         }
 
         // Renderizar o componente React para HTML
         const corpoDoEmailHTML = newSAAEEmail({body: bodyParse});
-
+        
         // Configurar a mensagem
         const mailOptions = {
             from: 'remetente',
-            to: 'destinatario',
+            to: `${bodyParse.user.email}`,
             cc: 'destinatario',
             subject: `Nova SAAE de ${bodyParse.user}, do  ${bodyParse.user.dadosBasicosUels.numUel} ${bodyParse.user.dadosBasicosUels.ufUel} ${bodyParse.user.dadosBasicosUels.nameUel}.`,
             html: corpoDoEmailHTML,
