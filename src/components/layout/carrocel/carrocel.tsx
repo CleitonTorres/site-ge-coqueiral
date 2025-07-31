@@ -52,13 +52,14 @@ const Carrocel = ({customClass, urlImages}:Props) => {
                     <div className={styles.carouselItem} key={idx+'previewBanner'}>
                         <Image
                             src={handleUrl(post)} 
-                            alt={'Post do Instagram'}
+                            alt={'foto'}
                             width={200}
                             height={200}
                             placeholder='blur'
                             blurDataURL={handleUrl(post)}
                             loading = "eager"
                             priority={true}
+                            unoptimized
                         />
                     </div>
                     ))}

@@ -21,7 +21,7 @@ export default function Page(){
     const [keyWords, setKeyWords] = useState<string>('');
 
     //arquivos anexados.
-    const [file, setFile] = useState<File[]>([]);
+    const [files, setFiles] = useState<{file:File, fileName:string}[]>([]);
 
     const handleData = (e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
         e.preventDefault();
@@ -111,8 +111,8 @@ export default function Page(){
 
     const handleUpload = (e:ChangeEvent<HTMLInputElement>)=>{
         e.preventDefault();
-        const files = e.target.files;        
-        const fileListArray = files ? Array.from(files) as File[] : [];
+        const filesData = e.target.files;        
+        const fileListArray = filesData ? Array.from(filesData) as File[] : [];
 
         if(fileListArray.length > 9){
             alert("O limite de imagens é 9 imagens por notícia");
@@ -120,7 +120,7 @@ export default function Page(){
         }
 
         if(fileListArray){
-            setFile((prev)=>{
+            setFiles((prev)=>{
                 for (const file of fileListArray) {
                     const fileSize = parseFloat(calcTotalFilesMB(file));
                     if(fileSize > 9){
@@ -128,29 +128,46 @@ export default function Page(){
                         return prev;
                     }
                 }                   
-
-                return fileListArray
+                const newData = fileListArray.map((f)=>{
+                    return {
+                        fileName: f.name,
+                        file: f
+                    }
+                })
+                return newData
             });
         }
     }
     
     const handleImageChange = () => {
-        for (let i= 0; i < file.length; i++) {
-            const match = file[i] instanceof Blob;
-            if(!match) break;
-            
-            const reader = new FileReader();
-            reader.onload = () => {
+        let data:string[] = [];
+        if(files.length === 0){
             setDataNews((prev)=>{
                 return{
                     ...prev,
-                    imageID: prev.imageID ? [... prev.imageID, reader.result as string] : [reader.result as string] // Define a URL da imagem no estado
+                    imageID: []
                 }
             })
+        }
+        for (let i= 0; i < files.length; i++) {
+            const match = files[i].file instanceof Blob;
+            if(!match) break;
+            
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                data = [...data, reader.result as string]
+                setDataNews((prev)=>{
+                    return{
+                        ...prev,
+                        imageID: data
+                    }
+                })
             };
-            reader.readAsDataURL(file[i]); // Lê o arquivo como uma URL base64   
+            reader.readAsDataURL(files[i].file); // Lê o arquivo como uma URL base64   
         }        
     }
+
 
     const handleActions = (id:number)=>{
         if(actions === id){
@@ -203,12 +220,12 @@ export default function Page(){
             let idImage:string[]= [];
 
             //enviar os arquivos para nuvem.
-            if (file && file.length > 0)  {
+            if (files && files.length > 0)  {
                 
                 const formData = new FormData();
                 
-                for (let index = 0; index < file.length; index++) {
-                    formData.append(`file-${index}`, file[index], file[index].name);
+                for (let index = 0; index < files.length; index++) {
+                    formData.append(`file-${index}`, files[index].file, files[index].fileName);
                 }
 
                 //anexas os arquivos para serem enviados por e-mail.
@@ -264,13 +281,20 @@ export default function Page(){
         }
     }
 
+    const removeFile = (fileName:string)=>{
+        const newData = files.filter(file=> file.fileName !== fileName);
+
+        setFiles(()=>{
+            return newData;
+        });
+    }
     useEffect(()=>{
         context.recoverProfile();
     },[]);
 
     useEffect(()=>{
-            handleImageChange();
-    },[file]);
+        handleImageChange();
+    },[files]);
     
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
@@ -511,14 +535,25 @@ export default function Page(){
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">ID da imagem do banner (1000x600)</label>
-                            <input 
-                                type="file" 
-                                name='upload' 
-                                accept='image/*'
-                                multiple
-                                onChange={(e)=>handleUpload(e)}
-                            />
+                            <label htmlFor="user">
+                                Resolução ideal da imagem do banner (1000x600)<br/>
+                                máximo 6 imagens
+                                <input 
+                                    type="file" 
+                                    name='upload' 
+                                    accept='.jpeg, .png, .jpg'
+                                    multiple
+                                    onChange={(e)=>handleUpload(e)}
+                                />
+                            </label>
+                            {files.map((f, i)=>(
+                                <p key={f.fileName+i} className={styles.itensFotos}>
+                                    {f.fileName}
+                                    <span onClick={()=>removeFile(f.fileName)}>X</span>
+                                </p>
+                            ))
+
+                            }
                         </div>
                         <div className={`${styles.boxInput}`}> 
                             <label htmlFor="user">Link do mapa</label>                   
@@ -541,24 +576,26 @@ export default function Page(){
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Palavras chaves</label>                   
-                            <input 
-                                name='keyWords' 
-                                onChange={(e)=>handleKeysWorld(e)}
-                                onKeyDown={(e)=>{if(e.key === 'Enter') {
-                                    e.preventDefault();
-                                    if(e.currentTarget?.value.length <= 1) return;
-                                    setDataNews((prev)=>{
-                                        return{
-                                            ...prev,
-                                            keywords: [...prev.keywords || [], e.currentTarget?.value.split(',')[0]]
-                                        }
-                                    });
-                                    setKeyWords('');
-                                }}}
-                                value={keyWords || '' }
-                                placeholder='use a vírgula ou enter'
-                            />
+                            <label htmlFor="user">
+                                Palavras chaves                  
+                                <input 
+                                    name='keyWords' 
+                                    onChange={(e)=>handleKeysWorld(e)}
+                                    onKeyDown={(e)=>{if(e.key === 'Enter') {
+                                        e.preventDefault();
+                                        if(e.currentTarget?.value.length <= 1) return;
+                                        setDataNews((prev)=>{
+                                            return{
+                                                ...prev,
+                                                keywords: [...prev.keywords || [], e.currentTarget?.value.split(',')[0]]
+                                            }
+                                        });
+                                        setKeyWords('');
+                                    }}}
+                                    value={keyWords || '' }
+                                    placeholder='use a vírgula ou enter'
+                                />
+                            </label> 
                             <div className={styles.keyWords}>
                                 {dataNews.keywords?.map((item, index)=>(
                                     <div key={index+"keysworld"} style={{position: 'relative', paddingRight: '16px'}}>

@@ -21,6 +21,7 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
 }
 .boxInput{
     display: flex;
@@ -111,10 +112,12 @@
     position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    gap: 6px;
     flex-wrap: wrap;
     width: 100%;
+    max-width: 350px;
 }
 .keyWords div{
     margin: 5px;
@@ -123,7 +126,19 @@
     color: var(--white);
     border-radius: 5px;
 }
-
+.itensFotos{
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    margin-left: 3px;
+}
+.itensFotos span{
+    font-weight: 700;
+}
+.itensFotos span:hover{
+    cursor: pointer;
+    scale: 0.9;
+}
 @media (max-width: 991px){
     .title{
         font-size: 24px;
