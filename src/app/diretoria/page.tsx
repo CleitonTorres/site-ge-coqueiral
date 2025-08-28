@@ -41,13 +41,13 @@ export default function Page(){
                             alt=''
                             width={200}
                             height={300}
-                            src={'/images/adulto08.jpg'}
+                            src={'/images/diretoria/dirdme.jpg'}
                         />
                         <p>
-                            Natália Aparecida Da Silva Baracho Morais
+                            Ana Paula Corrêa Do Carmo
                         </p> 
                         <p>
-                            Diretora Financeira</p>                  
+                            Diretora de Método Educativo</p>                  
                     </div>
                     <div className={`${styles.card} boxShadow`}>
                         <Image 
@@ -61,7 +61,7 @@ export default function Page(){
                             Natália Aparecida Da Silva Baracho Morais
                         </p> 
                         <p>
-                            Ana Paula Corrêa Do Carmo</p>                  
+                            Diretora Financeira</p>                  
                     </div>
                 </div>                
              </div>
