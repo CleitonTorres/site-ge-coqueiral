@@ -7,7 +7,7 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth', 'margin0']}>
             <h1 className={styles.title}>Conselhos</h1>
             <div className={styles.conteiner}>
-            <h1 className={styles.subTitle}>Conselho Fiscal</h1>
+                <h1 className={styles.subTitle}>Conselho Fiscal - 2025/2027</h1>
                 <div className={styles.subConteiner}>
                     <div className={`${styles.card} boxShadow`}>
                         <Image 
@@ -45,7 +45,7 @@ export default function Page(){
                             width={200}
                             height={300}
                             quality={100}
-                            src={'/images/adulto08.jpg'}
+                            src={'/images/conselho-fiscal/conselho3.jpeg'}
                         />
                         <p>
                             Fábia Ravani Lamas
