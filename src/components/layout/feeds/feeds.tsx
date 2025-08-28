@@ -49,7 +49,7 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
   useEffect(() => {
     const fetchInstagramFeed = async () => {
       try {
-        const response = await axios.post('/api/services',{
+        const response = await axios.post('/api/services',{ 
             service: 'feedInsta',
             limit: limit
         },{

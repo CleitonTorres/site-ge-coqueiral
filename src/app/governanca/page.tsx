@@ -78,11 +78,21 @@ export default function Page(){
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://drive.google.com/file/d/1lQxWNaJAWJsEeja5TaF6h1HyLmT_m17A/view?usp=sharing" target='_blank'>Balanço Consolidado 2024</a>
+                            <a 
+                                href="https://drive.google.com/file/d/1lQxWNaJAWJsEeja5TaF6h1HyLmT_m17A/view?usp=sharing" 
+                                target='_blank'
+                            >
+                                Balanço Consolidado 2024
+                            </a>
                         </li>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://drive.google.com/file/d/1aiIe26AHB76TTpt2nzEoWsnu0lqXRZzh/view?usp=sharing">Parecer Comissão Fiscal AGO 2025</a>
+                            <a 
+                                target='_blank'
+                                href="https://drive.google.com/file/d/1aiIe26AHB76TTpt2nzEoWsnu0lqXRZzh/view?usp=sharing"
+                            >
+                                Parecer Comissão Fiscal AGO 2025
+                            </a>
                         </li>
                     </ul>
                 </div>

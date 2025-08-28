@@ -60,7 +60,11 @@ export default function Card({dataNews}:{dataNews:DataNews}){
                     alt="card"
                     width={400}
                     height={150}
-                    style={{objectFit: 'cover', width: '98%'}}
+                    style={{
+                        objectFit: 'contain',
+                        backgroundColor: 'rgba(158,184,59, 0.5)', 
+                        width: '100%'
+                    }}
                     src={handleTypeUrl(dataNews)}
                 />
             :null}

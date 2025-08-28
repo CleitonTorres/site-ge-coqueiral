@@ -8,7 +8,12 @@
     max-width: var(--widthLarge);
 }
 .subConteiner{
-    margin: 20px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 10px 0px;
     width: 100%
 }
 .title{
@@ -32,11 +37,11 @@
     flex-direction: column;
     justify-content: first baseline;
     align-items: center;
+    flex: 1 1 300px;
     background-color: var(--white);
-    width: 330px;
     height: auto;
+    max-width: 300px;
     border: 2px solid var(--white);
-    margin: 10px;
     min-height: 475px;
 }
 .card img {

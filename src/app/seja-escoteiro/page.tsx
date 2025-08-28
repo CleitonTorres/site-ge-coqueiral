@@ -190,7 +190,10 @@ export default function Page(){
 
             <div className={`${styles.conteiner} ${styles.paddingBottom40}`}>
                 <h1 className={`${styles.title} ${styles.colorWhite}`}>Então, vamos?</h1>
-                <div className={`${styles.card2} boxShadow cursorPointer`} onClick={()=>window.open('https://forms.gle/f2KAtTNn2F6ovqFk6', '_blank')}>
+                <div 
+                    className={`${styles.card2} boxShadow cursorPointer`} 
+                    onClick={()=>window.open('https://docs.google.com/forms/d/e/1FAIpQLSdvUXvLZDgq2DtyireflAp8CmyV0s2LaGp1xeYrfBXnONGG6A/viewform?usp=header', '_blank')}
+                >
                     <Image 
                         alt=''
                         width={200}
@@ -201,7 +204,10 @@ export default function Page(){
                         Seja um escoteiro                   
                     </p>                    
                 </div>
-                <div className={`${styles.card2} boxShadow cursorPointer`} onClick={()=>window.open('https://forms.gle/f2KAtTNn2F6ovqFk6', '_blank')}>
+                <div 
+                    className={`${styles.card2} boxShadow cursorPointer`} 
+                    onClick={()=>window.open('https://docs.google.com/forms/d/e/1FAIpQLSdvUXvLZDgq2DtyireflAp8CmyV0s2LaGp1xeYrfBXnONGG6A/viewform?usp=header', '_blank')}
+                >
                     <Image 
                         alt=''
                         width={200}

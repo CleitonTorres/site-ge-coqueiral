@@ -1,81 +1,82 @@
 'use client'
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './carrocel.module.css';
 import { IoIosArrowBack, IoIosArrowForward  } from "react-icons/io";
 import { handleUrl } from '@/scripts/globais';
 
 type Props = {
-  customClass?: string[],
+  customClass?: string[] | string,
   urlImages: string[]
 }
-const Carrocel = ({customClass, urlImages}:Props) => {
-    const [customStyles, setCustomStyles] = useState('');
-    const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-    // Função para navegar para o próximo post
-    const goToNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % urlImages.length); // Vai para o próximo post e loopa
-    };
+const Carrocel = ({ customClass, urlImages }: Props) => {
+  const [customStyles, setCustomStyles] = useState('');
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-    // Função para navegar para o post anterior
-    const goToPrev = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + urlImages.length) % urlImages.length); // Vai para o post anterior e loopa
-    };
+  // monta classes personalizadas
+  useEffect(() => {
+    if (Array.isArray(customClass)) {
+      let newString = '';
+      for (const item of customClass) {
+        newString += styles[item] + " ";         
+      }
+      setCustomStyles(newString)
+    } else {
+      setCustomStyles(customClass ? styles[customClass] : '') 
+    }
+  }, [customClass]);
 
-    useEffect(()=>{
-        if(Array.isArray(customClass)){
-            let newString = '';
-            for (const item of customClass) {
-                newString += styles[item] + " ";         
-            }
-            setCustomStyles(newString)
-        }else{
-            setCustomStyles(customClass ? styles[customClass] : '') 
-        }
-    },[customClass]);
+  // função para ir para próximo item
+  const goToNext = () => {
+    if (!carouselRef.current) return;
+    const width = carouselRef.current.clientWidth;
+    carouselRef.current.scrollBy({ left: width, behavior: "smooth" });
+  };
 
-    // Troca automática de imagem a cada 5 segundos
-    useEffect(() => { 
-        const interval = setInterval(() => {
-            goToNext(); // Chama a função para ir para o próximo post
-        }, 5000); // 5 segundos
+  // função para ir para item anterior
+  const goToPrev = () => {
+    if (!carouselRef.current) return;
+    const width = carouselRef.current.clientWidth;
+    carouselRef.current.scrollBy({ left: -width, behavior: "smooth" });
+  };
 
-        return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
-    }, [currentIndex]);
+  // troca automática de imagem a cada 5s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      goToNext();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-    return(
-        <div className={`${styles.conteiner} ${customStyles}`}>
-            <div className={styles.carousel}>
-                <div className={styles.carouselWrapper} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-                    {urlImages.map((post, idx) => (
-                    <div className={styles.carouselItem} key={idx+'previewBanner'}>
-                        <Image
-                            src={handleUrl(post)} 
-                            alt={'foto'}
-                            width={200}
-                            height={200}
-                            placeholder='blur'
-                            blurDataURL={handleUrl(post)}
-                            loading = "eager"
-                            priority={true}
-                            unoptimized
-                        />
-                    </div>
-                    ))}
-                </div>
+  return (
+    <div className={`${styles.conteiner} ${customStyles}`}>
+      <div className={styles.carousel} ref={carouselRef}>
+        {urlImages.map((post, idx) => (
+          <div className={styles.carouselItem} key={idx + 'previewBanner'}>
+            <Image
+              src={handleUrl(post)} 
+              alt={'foto'}
+              width={1200}
+              height={600}
+              quality={100}
+              style={{ width: "100%", height: "auto" }}
+              priority
+              unoptimized
+            />
+          </div>
+        ))}
+      </div>
 
-                {/* Botões de Navegação */}
-                
-                {urlImages.length > 2 ?
-                    <div className={styles.navigation}>
-                        <IoIosArrowBack onClick={goToPrev} className={styles.navButton} size={36}/>
-                        <IoIosArrowForward onClick={goToNext} className={styles.navButton} size={36}/>
-                    </div>
-                :null}
-            </div>
+      {/* Botões de Navegação */}
+      {urlImages.length > 1 ? (
+        <div className={styles.navigation}>
+          <IoIosArrowBack onClick={goToPrev} className={styles.navButton} size={36}/>
+          <IoIosArrowForward onClick={goToNext} className={styles.navButton} size={36}/>
         </div>
-    )
+      ) : null}
+    </div>
+  )
 }
 
 export default Carrocel;

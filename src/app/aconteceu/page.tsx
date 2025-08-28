@@ -6,10 +6,10 @@ import CardEventos from '@/components/layout/cardEventos/cardEventos';
 import { useContext } from 'react';
 import { Context } from '@/components/context/context';
 import { v4 } from 'uuid';
+import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 
 export default function Page(){
     const context = useContext(Context);
-
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <div className={styles.conteiner}>
@@ -22,7 +22,8 @@ export default function Page(){
                     className={styles.image}
                 />            
                 <div className={styles.subConteiner}>
-                    {context.dataNews?.filter(news=> !news.evento).map(news=>(
+                    {context.dataNews ?
+                        context.dataNews.filter(news=> !news.evento).map(news=>(
                         <CardEventos 
                             key={v4()}
                             dataNews={
@@ -41,7 +42,7 @@ export default function Page(){
                             }
                         />
                     ))
-                    }                    
+                    : <LoadIcon showHide/>}                    
                 </div>
             </div>
         </Section>

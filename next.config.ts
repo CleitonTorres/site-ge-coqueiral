@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
         port: '',
       },{
         protocol: 'https',
+        hostname: 'scontent.cdninstagram.com',
+      },{
+        protocol: 'https',
         hostname: 'storage.googleapis.com',
         port: ''
       },

@@ -1,118 +1,69 @@
-.conteiner{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    min-width: var(--minWidth);
-    max-width: var(--widthLarge);
-    overflow: hidden;
-}
-.conteiner h1{
-    margin: 10px auto;
-}
-.content{ 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.item{
-    max-width: 200px;
-    margin: 10px;
-}
-.item a, .carouselItem a{
-    font-size: 10px;
-    font-weight: 700;
-}
-.item a:hover, .carouselItem a:hover{
-    text-decoration: underline;
-}
-.item p, .carouselItem p {
-    font-size: 12px;
-    max-height: 200px;
-    overflow-y: scroll;
-    padding: 3px;
-    width: 100%;
-}
-.textWhite .item, .textWhite .item, .textWhite .item{
-    color: var(--white);
+.conteiner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  min-width: var(--minWidth);
+  max-width: var(--widthLarge);
+  overflow: hidden;
 }
 
 /* Container do carrossel */
 .carousel {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-.carouselWrapper {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
 .carouselItem {
-    min-width: 100%; /* Cada slide ocupa 100% da largura do container */
-    flex-shrink: 0;
-    height: auto;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    animation: fadeIn 0.5s linear forwards;
-    overflow: hidden;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.carouselItem p {
-    padding-left: 10px;
+
+.carouselItem img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  background-color: #000; /* opcional, fundo atrás da imagem */
 }
-.carouselItem img{
-    object-fit: cover;
-    width: auto;
-    height: 400px;
-}
+
+/* Navegação */
 .navigation {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-    padding: 0 16px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 16px;
 }
 
 .navButton {
-    background-color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    opacity: 0.5;
+  background-color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.5;
 }
 
 .navButton:hover {
-    background-color: #555;
+  background-color: #555;
+  color: #fff;
 }
 
-@keyframes fadeIn {
-    0%{
-        opacity: 0;
-    }
-    100%{
-        opacity: 1;
-    }
-}
+/* responsividade */
 @media (max-width: 450px) {
-    .content div{
-        max-width: 120px;
-        margin: 1px;
-        margin-bottom: 10px;
-    }
-    .content div img, .content div video{
-        width: 100%;
-        height: 120px;
-    }
-    .content div p{
-        height: 120px;
-    }
+  .carouselItem img {
+    max-height: 250px;
+  }
 }
