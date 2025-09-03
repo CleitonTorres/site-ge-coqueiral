@@ -114,9 +114,8 @@
 }
 .imageMenu{
   position: absolute;
-  left: 110px;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  left: 10px;
+  top: 40px;
   border-bottom: 2px solid var(--azul);
 }
 .boxLogoUEB{

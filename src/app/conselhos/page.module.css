@@ -10,9 +10,9 @@
 .subConteiner{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
-    gap: 10px;
+    gap: 30px;
     margin: 10px 0px;
     width: 100%
 }
@@ -62,6 +62,9 @@
     }
     .title{
         height: 120px;
-        width: 400px
+    }
+    .subTitle{
+        font-size: 22px;
+        margin-left: 20px;
     }
 }

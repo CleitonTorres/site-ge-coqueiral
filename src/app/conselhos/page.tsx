@@ -75,7 +75,7 @@ export default function Page(){
                             width={200}
                             height={300}
                             quality={100}
-                            src={'/images/adulto08.jpg'}
+                            src={'/images/conselho-fiscal/conselho4.jpeg'}
                         />
                         <p>
                             Leonardo Reis Milagres
