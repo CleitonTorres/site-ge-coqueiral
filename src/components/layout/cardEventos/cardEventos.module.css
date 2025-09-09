@@ -19,7 +19,7 @@
     font-weight: 300;
 }
 .banner{
-    object-fit: contain;
+    object-fit: cover;
 }
 .boxData {
     position: absolute;

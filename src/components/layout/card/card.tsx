@@ -65,7 +65,7 @@ export default function Card({dataNews}:{dataNews:DataNews}){
                         backgroundColor: 'rgba(158,184,59, 0.5)', 
                         width: '100%'
                     }}
-                    src={handleTypeUrl(dataNews)}
+                    src={handleTypeUrl(Array.isArray(dataNews.imageID) ? dataNews.imageID[0] : dataNews.imageID)} 
                 />
             :null}
             <h4>{dateFormat3(dataNews.date) || ''}</h4>

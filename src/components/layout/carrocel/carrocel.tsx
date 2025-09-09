@@ -60,7 +60,6 @@ const Carrocel = ({ customClass, urlImages }: Props) => {
               width={1200}
               height={600}
               quality={100}
-              style={{ width: "100%", height: "auto" }}
               priority
               unoptimized
             />

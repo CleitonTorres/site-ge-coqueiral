@@ -18,6 +18,8 @@
 }
 .conteiner h1{
     width: 90%;
+    font-size: 18px;
+    text-align: left;
 }
 
 @media (max-width: 500px){

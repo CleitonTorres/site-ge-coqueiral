@@ -168,7 +168,6 @@ export default function Page(){
         }        
     }
 
-
     const handleActions = (id:number)=>{
         if(actions === id){
             setAction(undefined)
@@ -536,8 +535,9 @@ export default function Page(){
                         </div>
                         <div className={styles.boxInput}>
                             <label htmlFor="user">
-                                Resolução ideal da imagem do banner (1000x600)<br/>
-                                máximo 6 imagens
+                                Resolução ideal da imagem do banner (1200x600)<br/>
+                                máximo 6 imagens <br/>
+                                <s>A primeira imagem carregada será usada de capa.</s>
                                 <input 
                                     type="file" 
                                     name='upload' 

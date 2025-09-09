@@ -18,7 +18,7 @@ export default function CardEventos({dataNews}:Props){
                 alt=''
                 width={300}
                 height={200}
-                src={handleTypeUrl(dataNews)}
+                src={handleTypeUrl(Array.isArray(dataNews.imageID) ? dataNews.imageID[0] : dataNews.imageID)}
                 className={styles.banner}
             /> 
             <h1>{dataNews.title}</h1>

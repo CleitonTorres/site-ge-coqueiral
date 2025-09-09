@@ -97,6 +97,9 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
                   width={200}
                   height={200}
                   style={{ width: '100%', borderRadius: '8px' }}
+                  quality={100}
+                  priority
+                  unoptimized
                 />
               ) : post.media_type === 'VIDEO' ? (
                 <video controls style={{ width: '100%' }}>
@@ -127,6 +130,7 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
                       width={200}
                       height={200}
                       priority
+                      unoptimized
                       quality={100}
                     />
                   ) : post.media_type === 'VIDEO' ? (

@@ -1,4 +1,4 @@
-import { CEP, DataNews, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, ProgramacaoAtividade, ProgramacaoRamos, SAAE } from "@/@types/types";
+import { CEP, Endereco, GrauRisco, InfosPreliminaresSaae, ProfileProps, ProgramacaoAtividade, ProgramacaoRamos, SAAE } from "@/@types/types";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { getDocument } from 'pdfjs-dist';
@@ -462,14 +462,9 @@ export const setColor = (nivelRisco: number | undefined)=>{
 /**
  * Função que verifica se a string é uma URL válida ou um ID do google drive
  * @param {DataNews} dataNews 
- * @returns {string} url da imagem
  */
-export const handleTypeUrl = (dataNews:DataNews)=>{
-    if(typeof dataNews.imageID === 'string') {
-        return isBase64(dataNews.imageID) || isValidURL(dataNews.imageID) || isRelativeURL(dataNews.imageID) ? dataNews.imageID : `https://drive.google.com/uc?export=download&id=${dataNews.imageID}`
-    }else {
-        return isBase64(dataNews.imageID[0]) || isValidURL(dataNews.imageID[0]) || isRelativeURL(dataNews.imageID[0]) ? dataNews.imageID[0] : `https://drive.google.com/uc?export=download&id=${dataNews.imageID[0]}`
-    }
+export const handleTypeUrl = (imageID:string)=>{
+    return isBase64(imageID) || isValidURL(imageID) || isRelativeURL(imageID) ? imageID : `https://drive.google.com/uc?export=download&id=${imageID}`
 }
 
 /**
