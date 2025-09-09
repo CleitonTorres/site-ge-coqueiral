@@ -60,10 +60,10 @@ export default function Page(){
                             width={200}
                             height={300}
                             quality={100}
-                            src={'/images/adulto08.jpg'}
+                            src={'/images/conselho-fiscal/conselho5.jpeg'}
                         />
                         <p>
-                            Maria Eugenia Freire B. Lavagna
+                            Maria Eugenia Freire B. Lavagna 
                         </p> 
                         <p>
                             1ª Suplente
