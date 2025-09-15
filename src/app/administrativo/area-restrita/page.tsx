@@ -134,7 +134,7 @@ export default function Page(){
                         file: f
                     }
                 })
-                return newData
+                return [...(prev || []), ...newData]
             });
         }
     }
@@ -582,15 +582,15 @@ export default function Page(){
                                     name='keyWords' 
                                     onChange={(e)=>handleKeysWorld(e)}
                                     onKeyDown={(e)=>{if(e.key === 'Enter') {
-                                        e.preventDefault();
                                         if(e.currentTarget?.value.length <= 1) return;
                                         setDataNews((prev)=>{
                                             return{
                                                 ...prev,
-                                                keywords: [...prev.keywords || [], e.currentTarget?.value.split(',')[0]]
+                                                keywords: [...prev.keywords || [], e.currentTarget?.value]
                                             }
                                         });
                                         setKeyWords('');
+                                        e.preventDefault(); //previne o envio do form após teclar enter.
                                     }}}
                                     value={keyWords || '' }
                                     placeholder='use a vírgula ou enter'
