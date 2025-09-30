@@ -18,6 +18,7 @@
     text-align: justify;
     width: 100%;
     padding: 0px 10px;
+    white-space: break-spaces;
 }
 .paragraph a {
     text-decoration: underline;
