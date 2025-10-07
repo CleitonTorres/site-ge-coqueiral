@@ -8,6 +8,7 @@ import { dateFormat3 } from "@/scripts/globais";
 import Image from "next/image";
 import styles from './page.module.css';
 import axios from "axios";
+import ShareButton from "@/components/layout/shareButton/shareButton";
 
 type PageProps = {
     params: Promise<{ slug: string }>;
@@ -70,6 +71,13 @@ export default async function Page({ params }: PageProps) {
                     <h6><a href={noticia.linkMaps}>Local</a></h6>
                 </div>
                 :null}
+
+                
+                <ShareButton
+                    title={noticia.title}
+                    text={noticia.paragraph}
+                    url={`${process.env.NEXT_PUBLIC_ROOT_URL}/aconteceu/${noticia.slug}`}
+                />
             </div>
             <TextFormatter text={noticia.paragraph}/>
         </Section>
