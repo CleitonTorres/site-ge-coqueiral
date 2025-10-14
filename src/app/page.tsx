@@ -162,7 +162,12 @@ function Home() {
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
         
         <Box customClass={['fullWidth', 'flexRowTopWrap']}>
-          {context?.dataNews?.filter(news=> !news.destaque).map((news)=>{            
+          {context?.dataNews
+          ?.sort((a, b)=> {
+            const dateA = a.date ? new Date(a.date).getTime() : 0;
+            const dateB = b.date ? new Date(b.date).getTime() : 0;
+            return dateB - dateA
+          }).map((news)=>{            
             return(
               <Card
                 key={v4()}
