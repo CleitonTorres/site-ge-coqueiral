@@ -62,7 +62,7 @@ export default function Card({dataNews}:{dataNews:DataNews}){
                     height={150}
                     style={{
                         objectFit: 'contain',
-                        backgroundColor: 'rgba(158,184,59, 0.5)', 
+                        backgroundColor: 'transparent', 
                         width: '100%'
                     }}
                     src={handleTypeUrl(Array.isArray(dataNews.imageID) ? dataNews.imageID[0] : dataNews.imageID)} 

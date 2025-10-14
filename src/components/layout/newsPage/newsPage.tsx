@@ -23,10 +23,10 @@ const TextLink = (text:string)=> {
     const combinedPattern = new RegExp(`${urlPattern.source}`, 'g');
   
     // Divide o texto em partes
-    const parts = text.split(combinedPattern);
+    const parts = (text || '').split(combinedPattern);
   
     // Encontra todos os CNPJs na string
-    const matches = [...text.matchAll(combinedPattern)];
+    const matches = [...(text || '').matchAll(combinedPattern)];
   
     // Mapeia e renderiza partes do texto, tornando CNPJs clicáveis
     return (
