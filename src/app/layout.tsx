@@ -57,7 +57,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     return (
       <html lang="pt-BR">
         <head>
-            <title>19º/ES Grupo Escoteiro Coqueiral</title>
+            <title>19º ES Grupo Escoteiro Coqueiral</title>
             <meta name="google-site-verification" content="RJr9dk5TXSf7loXF4hfxMGts_RSZp63yB6crb-bUSCI" />
             <meta name="google-site-verification" content="c7o2q50eN9ml30c4yZ6gkc4a0Qd0C0eQMvSGzbaESo8" />
         </head>

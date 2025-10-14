@@ -40,6 +40,7 @@ export default async function Page({ params }: PageProps) {
             <meta name="description" content={noticia?.paragraph} />
             <meta name="keywords" content={noticia?.keywords?.join(', ')} />
             <meta property="og:title" content={noticia?.title} />
+            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
             <meta property="og:description" content={noticia?.paragraph} />
             <meta property="og:image" content={`${noticia?.imageID}`} />
             <meta property="og:url" content={`https://19.escoteiroses.org.br/${noticia?._id}`} />
