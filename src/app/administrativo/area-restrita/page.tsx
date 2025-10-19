@@ -9,10 +9,10 @@ import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 import axios from 'axios';
 import { v4 } from 'uuid';
 import NewsPage from '@/components/layout/newsPage/newsPage';
-import { Context } from '@/components/context/context';
+import Provider, { Context } from '@/components/context/context';
 import { uels } from '@/components/data-training/data-training';
 
-export default function Page(){
+function Page(){
     const context = useContext(Context);
     const [dataNewUser, setDataNewUser] = useState({} as ProfileProps);
     const [showModal, setShowModal] = useState(false);
@@ -30,7 +30,7 @@ export default function Page(){
 
         setDataNewUser((prev)=>{
             if(name === 'nameUel'){
-                const findUel = uels.find(i=> i.nameUel.includes(value));                               
+                const findUel = (uels || []).find(i=> i.nameUel.includes(value));                               
                 return{
                     ...prev,
                     dadosUel: {
@@ -546,7 +546,7 @@ export default function Page(){
                                     onChange={(e)=>handleUpload(e)}
                                 />
                             </label>
-                            {files.map((f, i)=>(
+                            {files?.map((f, i)=>(
                                 <p key={f.fileName+i} className={styles.itensFotos}>
                                     {f.fileName}
                                     <span onClick={()=>removeFile(f.fileName)}>X</span>
@@ -618,7 +618,7 @@ export default function Page(){
                             </div>
                         </div>
                         <div className={styles.boxTextArea}>
-                            <label htmlFor="user">Parágrafo (* para negrito, /p para parágrafo)</label>                   
+                            <label htmlFor="user">Texto</label>                   
                             <textarea 
                                 name='paragraph' 
                                 onChange={(e)=>handleDataNews(e)}
@@ -633,8 +633,7 @@ export default function Page(){
                 </form>
                 <div className={styles.subConteiner} style={{maxWidth: 'var(--widthLarge)'}}>
                     <h4>Preview da Notícia</h4>
-                    <NewsPage 
-                        idNews=''
+                    <NewsPage
                         origem='cadastro'
                         dataNews={dataNews}
                     />
@@ -650,4 +649,10 @@ export default function Page(){
             }
         </Section>
     )
+}
+
+export default function PageLogin(){
+    return <Provider>
+        <Page />
+    </Provider>;
 }

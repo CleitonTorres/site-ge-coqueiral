@@ -3,15 +3,13 @@ import Section from '@/components/layout/sections/section';
 import styles from './newsPage.module.css';
 import Image from 'next/image';
 import { dateFormat3 } from '@/scripts/globais';
-import { Fragment, useContext, useEffect, useState } from 'react';
-import { Context } from '@/components/context/context';
+import { useEffect, useState } from 'react';
 import { DataNews } from '@/@types/types';
 import Carrocel from '../carrocel/carrocel';
 import Head from 'next/head';
 
 type Props = {
     origem: 'cadastro' | 'view',
-    idNews?: string,
     dataNews?: DataNews
 }
 
@@ -54,9 +52,8 @@ export const TextFormatter = ({ text }: { text: string }) => {
 };
 
 
-export default function NewsPage({idNews, dataNews}:Props) {
-    const context = useContext(Context);
-    const [news, setNews] = useState(context?.dataNews.find(news=> news._id === idNews));
+export default function NewsPage({dataNews}:Props) {
+    const [news, setNews] = useState<DataNews>(null);
     const schemaData = {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
@@ -72,7 +69,6 @@ export default function NewsPage({idNews, dataNews}:Props) {
 
     useEffect(()=>{
         if(dataNews){
-            console.log(dataNews)
             setNews(dataNews)
         }
     },[dataNews]);

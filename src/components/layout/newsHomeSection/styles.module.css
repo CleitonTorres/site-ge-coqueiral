@@ -1,0 +1,47 @@
+.conteiner{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 400px;
+    margin: 10px;
+    padding: 6px;
+}
+.content:hover{
+    cursor: pointer;
+}
+.content p{
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.content h1{
+    width: 90%;
+    font-size: 18px;
+    text-align: left;
+}
+.section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    width: 100vw;
+    min-width: var(--minWidth);
+}
+
+@media (max-width: 500px){
+    .conteiner{
+        width: 96%;
+    }
+}

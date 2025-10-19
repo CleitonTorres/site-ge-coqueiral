@@ -822,6 +822,10 @@ export const minutesToTime = (totalMinutes: number) => {
     return `${hours}:${minutes}`;
 };
 
+/**
+ * Copia um texto para a área de transferência do usuário.
+ * @param text 
+ */
 export const copyToClipboard = (text: string)=> {
     navigator.clipboard.writeText(text)
       .then(() => {
@@ -830,5 +834,6 @@ export const copyToClipboard = (text: string)=> {
       .catch((err) => {
         console.error("Erro ao copiar o texto: ", err);
       });
-  }
+}
+
   

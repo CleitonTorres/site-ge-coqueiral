@@ -3,7 +3,7 @@
     margin-bottom: 50px;
 }
 
-.flexRowCenter{
+.flexRowCenter{ 
     display: flex;
     flex-direction: row;
     align-items: center;

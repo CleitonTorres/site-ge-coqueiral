@@ -1,19 +1,13 @@
-'use client'
-import { Context } from '@/components/context/context';
-import Botton from '@/components/form/botton/botton';
+'use server'
 import Banner from '@/components/layout/banner/banner';
 import Box from '@/components/layout/box/box';
-import Card from '@/components/layout/card/card';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import InstagramFeed from '@/components/layout/feeds/feeds';
+import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
 import Section from '@/components/layout/sections/section';
 import Image from 'next/image';
-import { useContext } from 'react';
-import { v4 } from 'uuid';
 
 function Home() {
-  const context = useContext(Context);
-
   return (
     <>
       <Banner 
@@ -151,49 +145,11 @@ function Home() {
             />
           </a>
         </Box>
-        <Botton
-          title='EVENTOS'
-          action={()=>window.open('/eventos', '_self')}
-        />
+        <a href='/eventos' target='_self'></a>
       </Section>
     
       {/* notícias */}
-      <Section customClass={['fullWidth']}>
-        <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>
-        
-        <Box customClass={['fullWidth', 'flexRowTopWrap']}>
-          {context?.dataNews
-          ?.sort((a, b)=> {
-            const dateA = a.date ? new Date(a.date).getTime() : 0;
-            const dateB = b.date ? new Date(b.date).getTime() : 0;
-            return dateB - dateA
-          }).map((news)=>{            
-            return(
-              <Card
-                key={v4()}
-                dataNews={{
-                  date: news.date,
-                  title:  news.title || "",
-                  paragraph:  news.paragraph || "",
-                  imageID: news.imageID,
-                  _id: news._id,
-                  slug: news.slug,
-                  linkMaps: '',
-                  keywords:[''],
-                  evento: false,
-                  destaque: news.destaque
-                }}           
-              />
-            )
-          })
-
-          }
-        </Box>
-        <Botton
-          title='VER TODAS'
-          action={()=>window.open('/aconteceu', '_self')}
-        />
-      </Section>
+      <NewsHomeSection />
 
       {/* empresas parceiras */}
       <Section customClass={['fullWidth', 'flexCollTop']}>

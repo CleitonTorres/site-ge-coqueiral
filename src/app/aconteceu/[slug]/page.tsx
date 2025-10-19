@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { DataNews } from '@/@types/types';
 import { TextFormatter } from '@/components/layout/newsPage/newsPage';
-import Head from "next/head";
 import Section from "@/components/layout/sections/section";
 import Carrocel from "@/components/layout/carrocel/carrocel";
 import { dateFormat3 } from "@/scripts/globais";
@@ -17,38 +16,12 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
     const slug = (await (params)).slug;
     const noticia = await getNewsData(slug) as DataNews;
-    const schemaData = {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": noticia?.title,
-        "description": noticia?.paragraph,
-        "image": noticia?.imageID,
-        "datePublished": noticia?.date,
-        "author": {
-          "@type": "Person",
-          "name": "19º ES Grupo Escoteiro Coqueiral",
-        },
-    };
+    
     if (!noticia) {
         return <div>Notícia não encontrada</div>;
     }
 
     return(
-        <>
-        <Head>
-            <title>{noticia?.title} | Seu Site</title>
-            <meta name="description" content={noticia?.paragraph} />
-            <meta name="keywords" content={noticia?.keywords?.join(', ')} />
-            <meta property="og:title" content={noticia?.title} />
-            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
-            <meta property="og:description" content={noticia?.paragraph} />
-            <meta property="og:image" content={`${noticia?.imageID}`} />
-            <meta property="og:url" content={`https://19.escoteiroses.org.br/${noticia?._id}`} />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-            />
-        </Head>
         <Section customClass={['flexCollTop', 'maxWidth']}>
             <h1 className={styles.title}>{noticia.title}</h1>
             {noticia.imageID ? 
@@ -82,7 +55,6 @@ export default async function Page({ params }: PageProps) {
             </div>
             <TextFormatter text={noticia.paragraph}/>
         </Section>
-        </>
     )
 }
 
@@ -110,7 +82,7 @@ async function getNewsData(slug: string) {
 export async function generateStaticParams() {
     try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
-            params: {service: 'news'},
+            params: {service: 'news'}, 
             headers: {
                 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
             }
