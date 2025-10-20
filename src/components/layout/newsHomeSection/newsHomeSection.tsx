@@ -83,7 +83,7 @@ export default async function NewsHomeSection() {
                             >
                                 {news.imageID ?
                                     <Image
-                                        alt="card"
+                                        alt={`${news.keywords?.join(', ')}`}
                                         width={400}
                                         height={150}
                                         style={{
@@ -91,6 +91,7 @@ export default async function NewsHomeSection() {
                                             backgroundColor: 'transparent', 
                                             width: '100%'
                                         }}
+                                        about={`${news.keywords?.join(', ')}`}
                                         src={handleTypeUrl(Array.isArray(news.imageID) ? news.imageID[0] : news.imageID)} 
                                     />
                                 :null}

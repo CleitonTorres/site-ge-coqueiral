@@ -2,19 +2,32 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
-import Head from 'next/head';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Dia de Semear Paz",
+    description:
+      "Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos...",
+    keywords:
+      "cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, social, crianças, dia de semear paz",
+    authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
+    icons: {
+      icon: "/favicon.ico",
+    },
+    metadataBase: new URL('https://www.19.escoteiroses.org.br/projetos/dia-de-semear-paz'),
+    openGraph: {
+        title: "Dia de Semear Paz",
+        description:
+            "Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos...",
+        images: [],
+        url: 'www.19.escoteiroses.org.br/projetos/dia-de-semear-paz'
+    }
+  };
+}
 
 export default function Page(){
     return(
-        <>
-        <Head>
-            <title>Dia de Semear Paz</title>
-            <meta name="description" content="Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos sofridos pelas crianças afetadas pelas chuvas em Mimoso do Sul" />
-            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
-            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Dia de Semear Paz</h1>
             <div className={styles.conteiner}>
@@ -85,6 +98,5 @@ export default function Page(){
                 </div>
             </div>
         </Section>
-        </>
     )
 }

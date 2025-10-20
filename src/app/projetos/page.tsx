@@ -1,21 +1,33 @@
-'use client'
+'use server'
 import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
-import Head from 'next/head';
+import { Metadata } from 'next';
 
-export default function Page(){
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Projetos do Coqueiral",
+    description:
+      "Aqui você vai encontrar todos os projetos que o 19º Grupo Escoteiro Coqueiral desenvolve.",
+    keywords:
+      "cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira",
+    authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
+    icons: {
+      icon: "/favicon.ico",
+    },
+    metadataBase: new URL('https://www.19.escoteiroses.org.br/projetos/'),
+    openGraph: {
+        title: "Projetos do Coqueiral",
+        description:
+            "Aqui você vai encontrar todos os projetos que o 19º Grupo Escoteiro Coqueiral desenvolve.",
+        images: [],
+        url: 'www.19.escoteiroses.org.br/projetos/'
+    }
+  };
+}
 
+function Page(){
     return(
-        <>
-        <Head>
-            <title>Projetos do Coqueiral</title>
-            <meta name="description" content="Aqui você vai encontrar todos os projetos que o 19º Grupo Escoteiro Coqueiral desenvolve." />
-            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
-            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <div className={styles.conteiner}>
                 <h1 className={styles.title}>Projetos dos Grupo Escoteiro Coqueiral</h1>
@@ -116,7 +128,8 @@ export default function Page(){
                     </li>
                 </ul>
             </div>
-        </Section> 
-        </>
+        </Section>
     )
 }
+
+export default Page;

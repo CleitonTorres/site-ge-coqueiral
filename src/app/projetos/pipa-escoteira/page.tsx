@@ -2,19 +2,32 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
-import Head from 'next/head';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+        title: "Pipa Escoteira",
+        description:
+        "Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite....",
+        keywords:
+        "cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira",
+        authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
+        icons: {
+        icon: "/favicon.ico",
+        },
+        metadataBase: new URL('https://www.19.escoteiroses.org.br/projetos/pipa-escoteira'),
+        openGraph: {
+            title: "Pipa Escoteira",
+            description:
+                "Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite....",
+            images: [],
+            url: 'www.19.escoteiroses.org.br/projetos/pipa-escoteira'
+        }
+    };
+}
 
 export default function Page(){
     return(
-        <>
-        <Head>
-            <title>Pipa Escoteira</title>
-            <meta name="description" content="Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite ao contato com o céu aberto, ao vento no rosto e à alegria genuína das brincadeiras ao ar livre. É também a cena terna do avô ensinando o neto a montar sua primeira pipa, compartilhando paciência, sabedoria e afeto em cada detalhe. Para os mais velhos, ver crianças correndo com pipas coloridas desperta lembranças de sua própria infância, reacendendo sentimentos de alegria e pertencimento. Assim, a pipa deixa de ser apenas brinquedo e torna-se símbolo de união, memória e continuidade daquilo que nos faz humanos." />
-            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
-            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Pipa Escoteira</h1>
             <div className={styles.conteiner}>
@@ -108,6 +121,5 @@ export default function Page(){
                 </div>
             </div>
         </Section>
-        </>
     )
 }

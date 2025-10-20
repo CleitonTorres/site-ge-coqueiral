@@ -5,19 +5,32 @@ import Carrocel from '@/components/layout/carrocel/carrocel';
 import Box from '@/components/layout/box/box';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import Link from 'next/link';
-import Head from 'next/head';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Acampa Canoa",
+    description:
+      "O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela...",
+    keywords:
+      "cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, esporte nautico, velas, caiaque, pesca, tracking",
+    authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
+    icons: {
+      icon: "/favicon.ico",
+    },
+    metadataBase: new URL('https://www.19.escoteiroses.org.br/projetos/acampa-canoa'),
+    openGraph: {
+        title: "Acampa Canoa",
+        description:
+            "O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela...",
+        images: [],
+        url: 'www.19.escoteiroses.org.br/projetos/acampa-canoa'
+    }
+  };
+}
 
 export default function Page(){
     return(
-        <>
-        <Head>
-            <title>Acampa Canoa</title>
-            <meta name="description" content="O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela chefia Sênior do 19º Grupo Escoteiro Coqueiral, Coqueiral, Aracruz/ES, que tem a finalidade de aprimorar os jovens em técnicas náuticas como condução de embarcações a remo e pesca. A 2ª Edição do Acampa Canoa que irá acontecer em 23 a 25/01/2026." />
-            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
-            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <link rel="icon" href="/favicon.ico" />
-        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Acampa Canoa</h1>
             <div className={styles.conteiner}>
@@ -212,6 +225,5 @@ export default function Page(){
                 </div>
             </div>
         </Section>
-        </>
     )
 }

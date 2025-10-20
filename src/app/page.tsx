@@ -5,23 +5,37 @@ import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmp
 import InstagramFeed from '@/components/layout/feeds/feeds';
 import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
 import Section from '@/components/layout/sections/section';
-import Head from 'next/head';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
+// Configurar SEO dinâmico
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "19º ES Grupo Escoteiro Coqueiral",
+    description:
+      "O 19º Grupo Escoteiro Coqueiral (19º GE Coqueiral), é filiado à União dos Escoteiros do Brasil (UEB) ...",
+    keywords:
+      "escoteiros, ueb, capixaba, coqueiral, aracruz, litoral, praia mais bonita do es, educação não formal, cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira",
+    authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
+    icons: {
+      icon: "/favicon.ico",
+    },
+    metadataBase: new URL("https://19.escoteiroses.org.br"),
+    openGraph: {
+          title: "19º ES Grupo Escoteiro Coqueiral",
+          description: "O 19º Grupo Escoteiro Coqueiral (19º GE Coqueiral), é filiado à União dos Escoteiros do Brasil (UEB) ...",
+          images: [],
+          url: 'https://19.escoteiroses.org.br/'
+    }
+  };
+}
 
 function Home() {
   return (
     <>
-      <Head>
-        <title>19º ES Grupo Escoteiro Coqueiral</title>
-        <meta name="description" content="O 19º Grupo Escoteiro Coqueiral (19º GE Coqueiral), é filiado à União dos Escoteiros do Brasil (UEB), fundada em 04/09/1988, associação civil de direito privado e sem fins lucrativos, reconhecido como Entidade de Interesse Público Municipal (Lei 2651/03) e Estadual (Lei 12.133/24), de caráter educacional, cultural, beneficente, filantrópico e comunitário, destinado à prática da educação informal sob a forma do Escotismo, com sede na Av. Vinháticos, s/n, anexo à Oficina de Artes, Bairro Coqueiral, CEP 29.199-00, Aracruz." />
-          <meta name="keywords" content="escoteiros, ueb, capixaba, coqueiral, educação não formal, cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
-          <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Banner 
-        title='19º/ES Grupo Escoteiro Coqueiral.' 
+        title='19º ES Grupo Escoteiro Coqueiral.' 
         subTitle='Educação para a vida'
         paragraph='Venha fazer parte deste Movimento que já conta com mais de 57 milhões de pessoas em todo o mundo.'
         imageURL='/logo/logo.png'
