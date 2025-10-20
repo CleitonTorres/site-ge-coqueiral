@@ -224,6 +224,33 @@ export default function Page(){
                     </div>
                 </div>
             </div>
+            <div style={{
+                border: '1px solid var(--cinza-escuro)', 
+                borderRadius: '8px',
+                width: 300, 
+                height: 'auto',
+                padding: 10,
+                marginTop: 40
+            }}>
+                <Link 
+                    href={'https://photos.app.goo.gl/7J37NqUfdenihuLs7'} 
+                    target='_blank'
+                >
+                    <h2 
+                        className={styles.subtitle}
+                        style={{textAlign: 'center'}}
+                    >
+                        Veja nosso álbum de fotos.
+                    </h2>                    
+                    <Image 
+                        alt='esporte, escoteiros, aracruz, coqueiral, nautico, canoa, velas, caiaque, rio, mar, lagoa'
+                        src={'/images/projetos/acampa-canoa/acampa-canoa (3).jpg'}
+                        width={300}
+                        height={200}
+                        style={{objectFit: 'contain', height: 'auto', width: '100%'}}
+                    />
+                </Link>
+            </div>
         </Section>
     )
 }

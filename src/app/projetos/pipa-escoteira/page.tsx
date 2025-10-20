@@ -3,6 +3,7 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -118,6 +119,32 @@ export default function Page(){
                     <p className={styles.paragraph}>
                         Soltar pipas é muito mais do que brincar: é costurar memórias no céu. Em cada linha esticada há um elo entre gerações, onde o avô ensina o neto e a infância redescobre o vento. No colorido das pipas, guardam-se lembranças que atravessam o tempo e mantêm viva a essência simples e humana de brincar ao ar livre.
                     </p>
+                </div>
+                <div style={{
+                    border: '1px solid var(--cinza-escuro)', 
+                    borderRadius: '8px',
+                    width: 300, 
+                    height: 'auto',
+                    padding: '10px'
+                }}>
+                    <Link 
+                        href={'https://photos.app.goo.gl/DZaDEzy7tYve1SQd7'} 
+                        target='_blank'
+                    >
+                        <h2 
+                            className={styles.subtitle}
+                            style={{textAlign: 'center'}}
+                        >
+                            Veja nosso álbum de fotos.
+                        </h2>                    
+                        <Image 
+                            alt='pipas, escoteiros, aracruz, coqueiral, cultura'
+                            src={'/images/projetos/pipa-escoteira/pipas (2).jpeg'}
+                            width={300}
+                            height={200}
+                            style={{objectFit: 'contain', height: 'auto', width: '100%'}}
+                        />
+                    </Link>
                 </div>
             </div>
         </Section>
