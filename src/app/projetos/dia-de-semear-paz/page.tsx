@@ -15,7 +15,7 @@ export default function Page(){
                         height={350}
                         src={'/images/mensageiros-da-paz (4).jpg'}
                         className={styles.image}
-                    />
+                    /> 
                     <p className={styles.paragraph}>
                         Em decorrência das fortes chuvas ocorridas no dia 22/23 de Março de 2024 na região de Mimoso do Sul no ES as quais ocasionaram alagamentos de porte nunca registrado no Estado do ES, várias famílias sofreram e ficaram sem abrigo, e perderam os seus bens materiais nessa ocasião.
                         Entre os afetados, inúmeras crianças as quais além de terem perdido seus bens materiais, sofreram impactos sociais e psicológicos que ficarão gravados em suas vidas.

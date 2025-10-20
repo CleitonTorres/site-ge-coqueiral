@@ -6,6 +6,7 @@ import InstagramFeed from '@/components/layout/feeds/feeds';
 import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
 import Section from '@/components/layout/sections/section';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function Home() {
   return (
@@ -62,11 +63,83 @@ function Home() {
         </Box>
       </Section>
 
+      {/* Projetos */}
+      <Section customClass={['fullWidth', 'minWidth']}>
+        <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Nossos Projetos</h1>
+        <Box customClass={['margin', 'flexRowWrap']}>
+          <Link 
+            href={'/projetos/acampa-canoa'} 
+            target='_self' 
+            className='cardProjetos'
+          >
+            <Image 
+              alt='imagem acampa canoa'
+              width={408}
+              height={178}
+              src={'/images/projetos/acampa-canoa/acampa-canoa01.jpg'}
+            />
+            <span>Acampa Canoa (Esporte/Educação)</span>
+          </Link>
+          <Link 
+            href={'/projetos/pipa-escoteira'} 
+            target='_self' 
+            className='cardProjetos'
+          >
+            <Image 
+              alt='imagem do projeto Pipa Escoteira'
+              width={408}
+              height={178}
+              src={'/images/projetos/pipa-escoteira/pipa-escoteira01.jpeg'}
+            />
+            <span>Pipa Escoteira (Cultura)</span>
+          </Link>
+          <Link 
+            href={'/projetos/dia-de-semear-paz'} 
+            target='_self' 
+            className='cardProjetos'
+          >
+            <Image 
+              alt=""
+              width={970}
+              height={350}
+              src={'/images/mensageiros-da-paz (4).jpg'}
+            /> 
+            <span>Dia de Semear Paz (Defesa/Social/Comunidade)</span>
+          </Link>
+          <Link 
+            href={'/projetos/escoteiros-pela-biodiversidade'} 
+            target='_self' 
+            className='cardProjetos'
+          >
+            <Image 
+              alt=""
+              width={970}
+              height={350}
+              src={'/images/biodiversidade (1).jpg'}
+            />
+            <span>Escoteiros pela Biodiversidade (Meio Ambiente)</span>
+          </Link>
+          <Link 
+            href={'/projetos/escoteiro-dev'}  
+            target='_self' 
+            className='cardProjetos'
+          >
+            <Image 
+              alt=""
+              width={970}
+              height={350}
+              src={'/images/escoteiro-dev.jpg'}
+            /> 
+            <span>Escoteiro Dev (Cultura/Educação/Tecnologia)</span>
+          </Link>
+        </Box>
+      </Section>
+
       {/* destaques */}
       <Section customClass={['fullWidth', 'minWidth']}>
         <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
         <Box customClass={['margin', 'flexRowWrap']}>
-          <a 
+          <Link 
             href='/seja-escoteiro' 
             target='_self' 
             style={{position: 'relative'}}
@@ -80,8 +153,8 @@ function Home() {
               style={{objectFit: 'contain'}}
               className='destaquesImg'
             />
-          </a>
-          <a 
+          </Link>
+          <Link 
             href='/empresa-parceira' 
             target='_self' 
             style={{position: 'relative'}} 
@@ -128,8 +201,8 @@ function Home() {
                 padding: 3
               }}
             />
-          </a>
-          <a 
+          </Link>
+          <Link 
             href='/espacos-seguros' 
             target='_self' 
             style={{position: 'relative'}}
@@ -143,11 +216,11 @@ function Home() {
               style={{objectFit: 'contain'}}
               className='destaquesImg'
             />
-          </a>
+          </Link>
         </Box>
-        <a href='/eventos' target='_self'></a>
+        <Link href='/eventos' target='_self'></Link>
       </Section>
-    
+            
       {/* notícias */}
       <NewsHomeSection />
 
@@ -171,7 +244,7 @@ function Home() {
             <CardEmpresaParceira 
               nameEmpresa='Vaa Canoeiros' 
               logoURL='/logo/empresas-parceira/vaaCanoneiros.png'
-              linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros.cpp/#'}
+              linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros/'}
             />
           </Box>
           <Box customClass={['margin', 'flexRowWrap', 'width300']}>
@@ -180,6 +253,13 @@ function Home() {
               logoURL='/logo/empresas-parceira/logoRadical.png'
               linkSiteEmpresa={'https://radicaloficial.com.br/'}
             />
+          </Box>
+          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
+              <CardEmpresaParceira 
+                  nameEmpresa='Club da Orla'
+                  logoURL='/logo/empresas-parceira/logoClub.jpg'
+                  linkSiteEmpresa='https://www.instagram.com/clubedaorla/'
+              />
           </Box>
         </Section>
       </Section>

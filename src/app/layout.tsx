@@ -280,9 +280,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                         <li>
                                             <a href="/espacos-seguros">Espaços Seguros</a>
                                         </li>
-                                        <li>
-                                            <a href="/projetos">Nossos Projetos</a>
-                                        </li>
                                     </ul>
                                 </li>
                                 <li className='subItensContents'>
@@ -299,10 +296,14 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                 <li className='subItensContents'>
                                     <ul className='subTitle'>Projetos</ul>
                                     <ul className='subItens'>
-                                        <li><a href="/escoteiro-dev">Escoteiro Dev</a></li>
+                                        <li><a href="/projetos/escoteiro-dev">Escoteiro Dev</a></li>
                                         <li><a href="/muteco">MutEco</a></li>
                                         <li><a href="/mutcom">MutCom</a></li>
                                         <li><a href="/edu-escoteira">Educação Escoteira</a></li>
+                                        <li><a href="/projetos/acampa-canoa">Acampa Canoa</a></li>
+                                        <li><a href="/projetos/dia-de-semear-paz">Dia de Semear Paz</a></li>
+                                        <li><a href="/projetos/escoteiros-pela-biodiversidade">Escoteiros pela Biodiversidade</a></li>
+                                        <li><a href="/projetos/pipa-escoteira">Pipa Escoteira</a></li>
                                     </ul>
                                 </li>
                             </div>

@@ -71,48 +71,48 @@ export default async function NewsHomeSection() {
 
         return (
             <section className={styles.section}>
-            <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>        
-            <div className={styles.conteiner}>
-                {news
-                ?.map((news)=>{            
-                    return(
-                        <Link 
-                            href={`/aconteceu/${news.slug}`}
-                            key={news._id}
-                            className={styles.content}
-                        >
-                            {news.imageID ?
-                                <Image
-                                    alt="card"
-                                    width={400}
-                                    height={150}
-                                    style={{
-                                        objectFit: 'contain',
-                                        backgroundColor: 'transparent', 
-                                        width: '100%'
-                                    }}
-                                    src={handleTypeUrl(Array.isArray(news.imageID) ? news.imageID[0] : news.imageID)} 
-                                />
-                            :null}
-                            <h4>{dateFormat3(news.date)}</h4>
-                            <h1>{news.title}</h1>
-                            {formatText(news.paragraph)[0] || ''}                        
-                        </Link> 
-                    )
-                })}
-            </div>
-            <Link 
-                href='/aconteceu' 
-                target='_self' 
-                style={{
-                    color: 'white', 
-                    fontWeight: 600, 
-                    backgroundColor: 'var(--azul-escuro)',
-                    padding: '10px 20px',
-                }}
-            >
-                VER TODAS
-            </Link>
+                <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>        
+                <div className={styles.conteiner}>
+                    {news
+                    ?.map((news)=>{            
+                        return(
+                            <Link 
+                                href={`/aconteceu/${news.slug}`}
+                                key={news._id}
+                                className={styles.content}
+                            >
+                                {news.imageID ?
+                                    <Image
+                                        alt="card"
+                                        width={400}
+                                        height={150}
+                                        style={{
+                                            objectFit: 'contain',
+                                            backgroundColor: 'transparent', 
+                                            width: '100%'
+                                        }}
+                                        src={handleTypeUrl(Array.isArray(news.imageID) ? news.imageID[0] : news.imageID)} 
+                                    />
+                                :null}
+                                <h4>{dateFormat3(news.date)}</h4>
+                                <h1>{news.title}</h1>
+                                {formatText(news.paragraph)[0] || ''}                        
+                            </Link> 
+                        )
+                    })}
+                </div>
+                <Link 
+                    href='/aconteceu' 
+                    target='_self' 
+                    style={{
+                        color: 'white', 
+                        fontWeight: 600, 
+                        backgroundColor: 'var(--azul-escuro)',
+                        padding: '10px 20px',
+                    }}
+                >
+                    VER TODAS
+                </Link>
             </section>      
         );
     } catch (err) {

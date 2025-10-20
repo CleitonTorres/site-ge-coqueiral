@@ -15,7 +15,7 @@ export default function Page(){
                         height={350}
                         src={'/images/biodiversidade (1).jpg'}
                         className={styles.image}
-                    />
+                    /> 
                     <p className={styles.paragraph}>
                         Em fevereiro de 2024 os jovens do Grupo Escoteiro Coqueiral realizaram o projeto Escoteiros pela Biodiversidade. Cada ramo executou algum serviço
                         em prol da proteção da nossa biodiversidade nativa. Os lobinhos separararm sementes e prepararam saquinhos, os escoteiros fizeram caixas de coleteta 
