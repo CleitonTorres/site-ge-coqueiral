@@ -5,9 +5,19 @@ import Carrocel from '@/components/layout/carrocel/carrocel';
 import Box from '@/components/layout/box/box';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import Link from 'next/link';
+import Head from 'next/head';
 
 export default function Page(){
     return(
+        <>
+        <Head>
+            <title>Acampa Canoa</title>
+            <meta name="description" content="O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela chefia Sênior do 19º Grupo Escoteiro Coqueiral, Coqueiral, Aracruz/ES, que tem a finalidade de aprimorar os jovens em técnicas náuticas como condução de embarcações a remo e pesca. A 2ª Edição do Acampa Canoa que irá acontecer em 23 a 25/01/2026." />
+            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
+            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="icon" href="/favicon.ico" />
+        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Acampa Canoa</h1>
             <div className={styles.conteiner}>
@@ -22,7 +32,7 @@ export default function Page(){
                     <br />
                     <br />
                     <p className={styles.paragraph}>
-                        O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela chefia Sênior do 19º Grupo Escoteiro Coqueiral, Coqueiral, Aracruz/ES, que tem a finalidade de aprimorar os jovens em técnicas náuticas como condução de embarcações a remo e pesca. Esta proposta é destinada a captação de patrocínios para a 2ª Edição do Acampa Canoa que irá acontecer em 23 a 25/01/2026.
+                        O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela chefia Sênior do 19º Grupo Escoteiro Coqueiral, Coqueiral, Aracruz/ES, que tem a finalidade de aprimorar os jovens em técnicas náuticas como condução de embarcações a remo e pesca. A 2ª Edição do Acampa Canoa que irá acontecer em 23 a 25/01/2026.
                     </p>
                     <Carrocel urlImages={[
                         '/images/projetos/acampa-canoa/acampa-canoa (1).jpeg',
@@ -202,5 +212,6 @@ export default function Page(){
                 </div>
             </div>
         </Section>
+        </>
     )
 }

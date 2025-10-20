@@ -2,9 +2,19 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
+import Head from 'next/head';
 
 export default function Page(){
     return(
+        <>
+        <Head>
+            <title>Escoteiros pela Biodiversidade</title>
+            <meta name="description" content="Catalogar e georeferenciar algumas espécies invasoras que estão proximos à mata ciliar da lagoa de Coqueiral." />
+            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
+            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="icon" href="/favicon.ico" />
+        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Escoteiros pela Biodiversidade</h1>
             <div className={styles.conteiner}>
@@ -50,5 +60,6 @@ export default function Page(){
                 </div>
             </div>
         </Section>
+        </>
     )
 }

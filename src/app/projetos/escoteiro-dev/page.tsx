@@ -1,9 +1,19 @@
 import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
+import Head from 'next/head';
 
 export default function Page(){
     return(
+        <>
+        <Head>
+            <title>Pipa Escoteira</title>
+            <meta name="description" content="O Escoteiro Dev é um curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos, entidade de utilidade pública municipal, de caráter educacional, cultural, beneficente, filantrópico e comunitário, destinado à prática da educação informal sob a forma do Escotismo, com sede na Av. dos Coqueiros, s/n, anexo a Oficina de Artes, Coqueiral, Aracruz/ES, CEP 29.199-054." />
+            <meta name="keywords" content="cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
+            <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="icon" href="/favicon.ico" />
+        </Head>
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Escoteiro Dev</h1>
             <div className={styles.conteiner}>
@@ -19,7 +29,7 @@ export default function Page(){
                     <br />
                     
                     <p className={styles.paragraph}>
-                        A presente curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos, entidade de utilidade pública municipal, de caráter educacional, cultural, beneficente, filantrópico e comunitário, destinado à prática da educação informal sob a forma do Escotismo, com sede na Av. dos Coqueiros, s/n, anexo a Oficina de Artes, Coqueiral, Aracruz/ES, CEP 29.199-054.                    
+                        O Escoteiro Dev é um curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos, entidade de utilidade pública municipal, de caráter educacional, cultural, beneficente, filantrópico e comunitário, destinado à prática da educação informal sob a forma do Escotismo, com sede na Av. dos Coqueiros, s/n, anexo a Oficina de Artes, Coqueiral, Aracruz/ES, CEP 29.199-054.                    
                     </p>
                     <br />
                     <h1 className={styles.subTitle}>
@@ -72,5 +82,6 @@ export default function Page(){
                 </div>
             </div>
         </Section>
+        </>
     )
 }

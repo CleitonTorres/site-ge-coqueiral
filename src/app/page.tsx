@@ -5,12 +5,21 @@ import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmp
 import InstagramFeed from '@/components/layout/feeds/feeds';
 import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
 import Section from '@/components/layout/sections/section';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 
 function Home() {
   return (
     <>
+      <Head>
+        <title>19º ES Grupo Escoteiro Coqueiral</title>
+        <meta name="description" content="O 19º Grupo Escoteiro Coqueiral (19º GE Coqueiral), é filiado à União dos Escoteiros do Brasil (UEB), fundada em 04/09/1988, associação civil de direito privado e sem fins lucrativos, reconhecido como Entidade de Interesse Público Municipal (Lei 2651/03) e Estadual (Lei 12.133/24), de caráter educacional, cultural, beneficente, filantrópico e comunitário, destinado à prática da educação informal sob a forma do Escotismo, com sede na Av. Vinháticos, s/n, anexo à Oficina de Artes, Bairro Coqueiral, CEP 29.199-00, Aracruz." />
+          <meta name="keywords" content="escoteiros, ueb, capixaba, coqueiral, educação não formal, cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira" />
+          <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Banner 
         title='19º/ES Grupo Escoteiro Coqueiral.' 
         subTitle='Educação para a vida'
@@ -133,6 +142,18 @@ function Home() {
             <span>Escoteiro Dev (Cultura/Educação/Tecnologia)</span>
           </Link>
         </Box>
+        <Link 
+            href='/projetos' 
+            target='_self' 
+            style={{
+                color: 'white', 
+                fontWeight: 600, 
+                backgroundColor: 'var(--azul-escuro)',
+                padding: '10px 20px',
+            }}
+        >
+            VER TODOS
+        </Link>
       </Section>
 
       {/* destaques */}

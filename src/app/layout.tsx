@@ -56,7 +56,6 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     return (
       <html lang="pt-BR">
         <head>
-            <title>19º ES Grupo Escoteiro Coqueiral</title>
             <meta name="google-site-verification" content="RJr9dk5TXSf7loXF4hfxMGts_RSZp63yB6crb-bUSCI" />
             <meta name="google-site-verification" content="c7o2q50eN9ml30c4yZ6gkc4a0Qd0C0eQMvSGzbaESo8" />
         </head>
@@ -294,7 +293,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                                     </ul>
                                 </li>
                                 <li className='subItensContents'>
-                                    <ul className='subTitle'>Projetos</ul>
+                                    <ul className='subTitle'>
+                                        <a href="/projetos">Projetos</a>
+                                    </ul>
                                     <ul className='subItens'>
                                         <li><a href="/projetos/escoteiro-dev">Escoteiro Dev</a></li>
                                         <li><a href="/muteco">MutEco</a></li>

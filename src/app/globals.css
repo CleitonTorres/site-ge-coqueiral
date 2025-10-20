@@ -209,6 +209,10 @@ body {
   height: 60%;
   object-fit: cover;
 }
+.cardProjetos span{
+  text-align: center;
+  width: 100%;
+}
 /* recaptcha */
 .grecaptcha-badge{
   position: absolute !important;
