@@ -59,54 +59,57 @@ export default function Page(){
                         '/images/projetos/acampa-canoa/acampa-canoa (6).jpg',
                         '/images/projetos/acampa-canoa/acampa-canoa (7).jpg',
                     ]} />
-                    <ol>
-                        <ul className={styles.subTitle}>
-                            Objetivos do Acampa Canoa – Ramo Sênior
-                        </ul>
-                        <li className={styles.paragraph}>
-                            Desenvolver habilidades de vida ao ar livre.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Promover a prática de técnicas de pernoite ao relento, orientação e segurança em atividades aquáticas, condução de embarcações a remo e pesca.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Estimular o trabalho em equipe e a liderança.                    
-                        </li>
-                        <li className={styles.paragraph}>
-                            Proporcionar situações em que os jovens assumam responsabilidades, tomem decisões e aprendam a liderar de forma cooperativa.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Valorizar a prática do Escotismo Náutico.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Incentivar o contato com a canoagem e outras modalidades aquáticas como oportunidade de lazer, disciplina e superação de desafios.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Fortalecer o espírito de fraternidade escoteira.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Criar momentos de integração, convivência saudável e amizade entre os jovens do Ramo Sênior (14,5 a 17 anos).
-                        </li>
-                        <li className={styles.paragraph}>
-                            Despertar consciência ambiental.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Estimular o cuidado com os rios, lagoas e áreas naturais utilizadas, reforçando atitudes de preservação e respeito ao meio ambiente.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Estimular a superação pessoal e coletiva.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Encorajar os jovens a vencer seus próprios limites, desenvolver resiliência e enfrentar desafios com confiança e segurança.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Proporcionar experiências marcantes que contribuam com a formação do caráter.
-                        </li>
-                        <li className={styles.paragraph}>
-                            Oferecer vivências únicas em contato com a natureza, fortalecendo a identidade e o pertencimento ao movimento escoteiro.
-                        </li>
-                    </ol>
                     <br />
+
+                    <div className={styles.subConteiner}>
+                        <h2 className={styles.subTitle}>
+                            Objetivos do Acampa Canoa – Ramo Sênior
+                        </h2>
+                        <p className={styles.paragraph}>
+                            1 - Desenvolver habilidades de vida ao ar livre.
+                        </p>
+                        <p className={styles.paragraph}>
+                            2 - Promover a prática de técnicas de pernoite ao relento, orientação e segurança em atividades aquáticas, condução de embarcações a remo e pesca.
+                        </p>
+                        <p className={styles.paragraph}>
+                            3 - Estimular o trabalho em equipe e a liderança.                    
+                        </p>
+                        <p className={styles.paragraph}>
+                            4 - Proporcionar situações em que os jovens assumam responsabilidades, tomem decisões e aprendam a liderar de forma cooperativa.
+                        </p>
+                        <p className={styles.paragraph}>
+                            5 - Valorizar a prática do Escotismo Náutico.
+                        </p>
+                        <p className={styles.paragraph}>
+                            6 - Incentivar o contato com a canoagem e outras modalidades aquáticas como oportunidade de lazer, disciplina e superação de desafios.
+                        </p>
+                        <p className={styles.paragraph}>
+                            7 - Fortalecer o espírito de fraternidade escoteira.
+                        </p>
+                        <p className={styles.paragraph}>
+                            8 - Criar momentos de integração, convivência saudável e amizade entre os jovens do Ramo Sênior (14,5 a 17 anos).
+                        </p>
+                        <p className={styles.paragraph}>
+                            9 - Despertar consciência ambiental.
+                        </p>
+                        <p className={styles.paragraph}>
+                            10 - Estimular o cuidado com os rios, lagoas e áreas naturais utilizadas, reforçando atitudes de preservação e respeito ao meio ambiente.
+                        </p>
+                        <p className={styles.paragraph}>
+                            11 - Estimular a superação pessoal e coletiva.
+                        </p>
+                        <p className={styles.paragraph}>
+                            12 - Encorajar os jovens a vencer seus próprios limites, desenvolver resiliência e enfrentar desafios com confiança e segurança.
+                        </p>
+                        <p className={styles.paragraph}>
+                            13 - Proporcionar experiências marcantes que contribuam com a formação do caráter.
+                        </p>
+                        <p className={styles.paragraph}>
+                            14 - Oferecer vivências únicas em contato com a natureza, fortalecendo a identidade e o pertencimento ao movimento escoteiro.
+                        </p>
+                    </div>
+
+                    <h2 className={styles.subTitle}>Primeira Edição do Acampa Canoa</h2>
                     <p className={styles.paragraph}>
                         A primeira edição do foi o Acampa Canoa 2025, que aconteceu de 07 à 09/02/2025, reuniu 22 jovens de diferentes grupos escoteiros, de diferentes localidades como Cachoeiro de Itapemirim, Vila Velha, Vitória e Aracruz. E a expectativa para o Acampa Canoa 2026 é aumentar nossa capacidade de infra para atender ao menos 32 jovens, incluindo jovens escoteiros de Linhares.<br/>
                         Não podemos deixar de ressalvar que já contamos com o apoio do: <br/>
@@ -118,8 +121,7 @@ export default function Page(){
                     </p>
                     <br />
                     <iframe 
-                        width="560" 
-                        height="315" 
+                        className={styles.video}
                         src="https://www.youtube.com/embed/YLkBr_TdjeM?si=AywYpcNHWKTxTCdZ" 
                         title="YouTube video player" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -198,7 +200,8 @@ export default function Page(){
                         display: 'flex', 
                         gap: 20, 
                         alignItems: 'center', 
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
                     }}>
                         <Box customClass={['margin', 'flexRowWrap', 'width300']}>
                             <CardEmpresaParceira 
@@ -230,7 +233,8 @@ export default function Page(){
                 width: 300, 
                 height: 'auto',
                 padding: 10,
-                marginTop: 40
+                marginTop: 40,
+                flexWrap: 'wrap',
             }}>
                 <Link 
                     href={'https://photos.app.goo.gl/7J37NqUfdenihuLs7'} 

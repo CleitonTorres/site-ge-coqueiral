@@ -300,18 +300,20 @@ function Home() {
       </Section>
 
       <Section customClass={['fullWidth', 'flexCollTop']}>
-        <h1 
-          style={{fontSize: '8vw', fontWeight: 300, width: '100%', marginLeft: '20px'}}
-        >
-          Não há ensino que se compare ao exemplo.
-        </h1>
-        <Image 
-          alt='imagem seja escoteiro'
-          width={340}
-          height={108}
-          src={'/icons/home-phrase.png'}
-          style={{marginLeft: 300, objectFit: 'contain'}}
-        />
+        <div className='boxFraseBP'>
+          <h1 
+            style={{fontSize: '4em', fontWeight: 300, width: '100%', textAlign: 'center'}}
+          >
+            Não há ensino que se compare ao exemplo.
+          </h1>
+          <Image 
+            alt='assinatura baden powell'
+            width={340}
+            height={108}
+            src={'/icons/home-phrase.png'}
+            style={{objectFit: 'contain'}}
+          />
+        </div>
         <Image 
           alt='figura de um escoteiro'
           width={300}

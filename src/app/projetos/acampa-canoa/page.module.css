@@ -61,7 +61,10 @@
     width: 150px;
     margin: 10px;
 }
-
+.video{
+    width: 560px; 
+    height: 315px;
+}
 @media (max-width: 991px){
     .subTitle{
         margin-left: 20px;
@@ -72,5 +75,9 @@
     .recuo{
         padding-left: 0px;
         margin-left: 10px;
+    }
+    .video{
+        width: 100%; 
+        height: auto;
     }
 }

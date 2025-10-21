@@ -9,6 +9,7 @@ import './layout.css'
 import Script from 'next/script';
 import Breadcrumb from '@/components/layout/breadcrumb/breadCrumb';
 import { usePathname } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next"
 
 import { GlobalWorkerOptions } from 'pdfjs-dist';
 
@@ -492,7 +493,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         </li>
                     </ul>
                 </nav>
-
+                <Analytics />
                 <div className='flexCollCenter boxIcon margin10 cursorPointer'>
                     <FaInstagram size={26} color='var(--verde)' onClick={()=>{
                         window.open('https://www.instagram.com/19escoqueiral/', '_blank')

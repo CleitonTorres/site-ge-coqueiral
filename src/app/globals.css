@@ -213,6 +213,18 @@ body {
   text-align: center;
   width: 100%;
 }
+.boxFraseBP{
+  border-left: 4px solid var(--verde);
+  padding-left: 10px;
+  margin: 10px;
+  font-style: italic;
+  font-size: 18px;
+  width: 80%;
+}
+.boxFraseBP img{
+  margin-right: 10px;
+}
+
 /* recaptcha */
 .grecaptcha-badge{
   position: absolute !important;
@@ -237,6 +249,13 @@ body {
   }
   .cardProjetos{
     height: auto;
+  }
+  .boxFraseBP{
+    font-size: 14px;
+    width: 100%;
+  }
+  .boxFraseBP img{
+    width: 200px;
   }
 }
 @media print{
