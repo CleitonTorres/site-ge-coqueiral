@@ -2,6 +2,7 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
+import Projetos from '@/components/layout/projetos/projetos';
 
 export default function Page(){
     return(
@@ -61,6 +62,7 @@ export default function Page(){
                         <a href="/seja-escoteiro" className='link'>Veja mais sobre o ESCOTISMO</a>                    
                     </p>
                 </div>
+                <Projetos/>
             </div>
         </Section>
     )

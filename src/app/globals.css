@@ -191,6 +191,14 @@ body {
   cursor: pointer;
   text-decoration: underline var(--blue);
 }
+.projetos{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 .cardProjetos{
   border: 1px solid var(--cinza-escuro);
   border-radius: 8px;

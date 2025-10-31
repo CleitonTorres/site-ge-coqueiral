@@ -4,6 +4,7 @@ import Box from '@/components/layout/box/box';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import InstagramFeed from '@/components/layout/feeds/feeds';
 import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
+import Projetos from '@/components/layout/projetos/projetos';
 import Section from '@/components/layout/sections/section';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -87,88 +88,7 @@ function Home() {
       </Section>
 
       {/* Projetos */}
-      <Section customClass={['fullWidth', 'minWidth']}>
-        <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Nossos Projetos</h1>
-        <Box customClass={['margin', 'flexRowWrap']}>
-          <Link 
-            href={'/projetos/acampa-canoa'} 
-            target='_self' 
-            className='cardProjetos'
-          >
-            <Image 
-              alt='imagem acampa canoa'
-              width={408}
-              height={178}
-              src={'/images/projetos/acampa-canoa/acampa-canoa01.jpg'}
-            />
-            <span>Acampa Canoa (Esporte/Educação)</span>
-          </Link>
-          <Link 
-            href={'/projetos/pipa-escoteira'} 
-            target='_self' 
-            className='cardProjetos'
-          >
-            <Image 
-              alt='imagem do projeto Pipa Escoteira'
-              width={408}
-              height={178}
-              src={'/images/projetos/pipa-escoteira/pipa-escoteira01.jpeg'}
-            />
-            <span>Pipa Escoteira (Cultura)</span>
-          </Link>
-          <Link 
-            href={'/projetos/dia-de-semear-paz'} 
-            target='_self' 
-            className='cardProjetos'
-          >
-            <Image 
-              alt=""
-              width={970}
-              height={350}
-              src={'/images/mensageiros-da-paz (4).jpg'}
-            /> 
-            <span>Dia de Semear Paz (Defesa/Social/Comunidade)</span>
-          </Link>
-          <Link 
-            href={'/projetos/escoteiros-pela-biodiversidade'} 
-            target='_self' 
-            className='cardProjetos'
-          >
-            <Image 
-              alt=""
-              width={970}
-              height={350}
-              src={'/images/biodiversidade (1).jpg'}
-            />
-            <span>Escoteiros pela Biodiversidade (Meio Ambiente)</span>
-          </Link>
-          <Link 
-            href={'/projetos/escoteiro-dev'}  
-            target='_self' 
-            className='cardProjetos'
-          >
-            <Image 
-              alt=""
-              width={970}
-              height={350}
-              src={'/images/escoteiro-dev.jpg'}
-            /> 
-            <span>Escoteiro Dev (Cultura/Educação/Tecnologia)</span>
-          </Link>
-        </Box>
-        <Link 
-            href='/projetos' 
-            target='_self' 
-            style={{
-                color: 'white', 
-                fontWeight: 600, 
-                backgroundColor: 'var(--azul-escuro)',
-                padding: '10px 20px',
-            }}
-        >
-            VER TODOS
-        </Link>
-      </Section>
+      <Projetos />
 
       {/* destaques */}
       <Section customClass={['fullWidth', 'minWidth']}>
