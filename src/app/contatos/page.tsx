@@ -17,7 +17,7 @@ export default function Page(){
                         className={styles.image}
                     />
                     <p className={styles.paragraph}>
-                        O 19° Grupo Escoteiro Coqueiral, atua no Bairro Coqueiral, Aracruz/ES, a 37 anos. Atualmente estamos funcionado no anexo à Oficina de Artes. Aos sábados de 08 às 10:30h.
+                        O 19° Grupo Escoteiro Coqueiral, atua no Bairro Coqueiral, Aracruz/ES, a 37 anos. Atualmente estamos funcionado no anexo à Oficina de Artes. Aos sábados de 14:30 às 17:00h.
                     </p>
                     <br />
                     <div className={styles.coluna}>
