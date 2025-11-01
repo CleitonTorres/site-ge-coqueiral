@@ -36,7 +36,7 @@ export default function Projetos(){
                     className='cardProjetos'
                 >
                     <Image 
-                    alt='imagem do projeto Pipa Escoteira'
+                    alt='imagem do projeto Pipa Escoteira, cultura, tradições, escotismo, jovens, aracruz, grupo escoteiro coqueiral, atividades culturais, educação cultural'
                     width={408}
                     height={178}
                     src={'/images/projetos/pipa-escoteira/pipa-escoteira01.jpeg'}

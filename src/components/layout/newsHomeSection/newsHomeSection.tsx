@@ -54,6 +54,7 @@ export default async function NewsHomeSection() {
                 Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`,
             },
             cache: 'force-cache', // SEO friendly
+            next: { revalidate: 60 }
             }
         );
 

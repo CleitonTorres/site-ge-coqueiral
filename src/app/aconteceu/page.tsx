@@ -15,6 +15,7 @@ export default async function Page(){
                 Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`,
             },
             cache: 'force-cache', // SEO friendly
+            next: { revalidate: 60 }
             }
         );
 
