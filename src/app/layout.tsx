@@ -7,7 +7,6 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import './globals.css';
 import './layout.css'
 import Script from 'next/script';
-import Breadcrumb from '@/components/layout/breadcrumb/breadCrumb';
 import { usePathname } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next"
 
@@ -420,9 +419,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                         </div>
                     </div>
                 </nav>
-                
-                <Breadcrumb />
-                
+                                
                 <div className='linhaDoeAgora'>
                     <span>Contribua com os Escoteiros de Coqueiral</span> 
                     <a href="/doe">DOE AGORA</a>

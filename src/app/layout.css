@@ -196,7 +196,7 @@
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  bottom: -207px;
+  top: 25px;
   left: -10px;
   width: var(--widthLarge);
   z-index: 10;

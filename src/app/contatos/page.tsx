@@ -62,7 +62,7 @@ export default function Page(){
                         <a href="/seja-escoteiro" className='link'>Veja mais sobre o ESCOTISMO</a>                    
                     </p>
                 </div>
-                <Projetos/>
+                <Projetos resume/>
             </div>
         </Section>
     )

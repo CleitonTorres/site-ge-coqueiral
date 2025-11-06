@@ -2,7 +2,10 @@ import Link from "next/link";
 import Box from "../box/box";
 import Image from "next/image";
 
-export default function Projetos(){
+type Props = {
+    resume: boolean;
+};
+export default function Projetos({resume}: Props){
     return(
         <section className="projetos">
             {/* Projetos */}
@@ -44,17 +47,22 @@ export default function Projetos(){
                     <span>Pipa Escoteira (Cultura)</span>
                 </Link>
                 <Link 
-                    href={'/projetos/dia-de-semear-paz'} 
+                    href={'/projetos/oleo-na-reciclagem'}  
                     target='_self' 
                     className='cardProjetos'
                 >
                     <Image 
-                    alt="serviço social, defesa social, comunidade, escotismo, jovens, voluntariado, aracruz, grupo escoteiro coqueiral"
-                    width={970}
-                    height={350}
-                    src={'/images/mensageiros-da-paz (4).jpg'}
-                    /> 
-                    <span>Dia de Semear Paz (Defesa/Social/Comunidade)</span>
+                        alt='meio ambiente, reciclagem, óleo de cozinha, logística reversa, escotismo, jovens, aracruz, grupo escoteiro coqueiral' 
+                        width={970}
+                        height={350} 
+                        loading='eager'
+                        quality={100}
+                        priority
+                        unoptimized
+                        src={'/images/projetos/oleo/oleo.png'}
+                        about='projeto de meio ambiente meio ambiente que coleta óleo usado de cozinha e destina a reciclagem.'
+                    />
+                    <span>De Óleo na Reciclagem (Meio Ambiente/Logística Reversa) </span>
                 </Link>
                 <Link 
                     href={'/projetos/escoteiros-pela-biodiversidade'} 
@@ -75,15 +83,15 @@ export default function Projetos(){
                     className='cardProjetos'
                 >
                     <Image 
-                    alt="tecnologia, cultura digital, educação tecnológica, escotismo, jovens, aracruz, grupo escoteiro coqueiral"
-                    width={970}
-                    height={350}
-                    src={'/images/escoteiro-dev.jpg'}
+                        alt="tecnologia, cultura digital, educação tecnológica, escotismo, jovens, aracruz, grupo escoteiro coqueiral"
+                        width={970}
+                        height={350}
+                        src={'/images/escoteiro-dev.jpg'}
                     /> 
                     <span>Escoteiro Dev (Cultura/Educação/Tecnologia)</span>
                 </Link>
                 </Box>
-                <Link 
+                {resume ? <Link 
                     href='/projetos' 
                     target='_self' 
                     style={{
@@ -96,7 +104,23 @@ export default function Projetos(){
                     }}
                 >
                     VER TODOS
-                </Link>
+                </Link> : 
+                <>
+                    <Link 
+                        href={'/projetos/dia-de-semear-paz'} 
+                        target='_self' 
+                        className='cardProjetos'
+                    >
+                        <Image 
+                        alt="serviço social, defesa social, comunidade, escotismo, jovens, voluntariado, aracruz, grupo escoteiro coqueiral"
+                        width={970}
+                        height={350}
+                        src={'/images/mensageiros-da-paz (4).jpg'}
+                        /> 
+                        <span>Dia de Semear Paz (Defesa/Social/Comunidade)</span>
+                    </Link>
+                </>
+                }
         </section>
     )
 }

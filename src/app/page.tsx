@@ -88,7 +88,7 @@ function Home() {
       </Section>
 
       {/* Projetos */}
-      <Projetos />
+      <Projetos resume/>
 
       {/* destaques */}
       <Section customClass={['fullWidth', 'minWidth']}>
