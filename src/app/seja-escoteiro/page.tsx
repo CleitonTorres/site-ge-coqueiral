@@ -31,6 +31,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/senior08.jpg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Fazer parte de uma fraternidade global com mais de 57 milhões de pessoas mundo afora. Como escoteiro, estamos diretamente conectados com povos dos quatro cantos do Planeta, compartilhando valores e construindo laços que duram a vida inteira.
@@ -42,6 +45,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/senior09.jpg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Ser amante da natureza de forma ativa. Isso quer dizer: buscar para si mesmo e para a sociedade um desenvolvimento sustentável, contribuindo com a preservação do meio ambiente e dos ecossistemas que dele fazem parte.
@@ -53,6 +59,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/senior05.jpg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Buscar seu crescimento pessoal continuamente, a fim de alcançar sua autonomia para tornar-se capaz de tomar suas próprias decisões e traçar um projeto de vida em conformidade com os seus valores e princípios. 
@@ -64,6 +73,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/adulto02.jpg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Trabalhar em benefício do próximo e em prol da paz, sendo solidário a seus semelhantes e sensível às questões sociais através do voluntariado e da participação ativa em questões determinantes da sua comunidade.
@@ -75,6 +87,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/senior10.jpg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Responsabilizar-se pelo bem-estar coletivo, bem como por sua própria saúde, seja ela física, mental ou espiritual, atuando de maneira consciente e equilibrada na sua vida pessoal e nas demais relações de convívio social.
@@ -86,6 +101,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/senior06.jpeg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Descobrir e aprimorar suas potencialidades, criando oportunidades para exercitar sua criatividade e realizando análise crítica sobre suas atitudes, a fim de tornar-se um cidadão e líder responsável, pioneiro na construção de um mundo melhor.
@@ -100,6 +118,9 @@ export default function Page(){
                     height={150}
                     src={'/images/bussola.png'}
                     className={styles.bussola}
+                    unoptimized={true}
+                        quality={100}
+                        loading='eager'
                 />
                 <h1 className={`${styles.title} ${styles.colorGreen}`}>Por que ser escoteiro?</h1>
                 <Image 
@@ -131,6 +152,9 @@ export default function Page(){
                             width={200}
                             height={200}
                             src={'/images/lobos03.png'}
+                            unoptimized={true}
+                            quality={100}
+                            loading='eager'
                         />
                         <h1 className={styles.titleRamos}>Ramo Lobinho</h1>
                         <p className={styles.paragraphRamos}>
@@ -143,6 +167,9 @@ export default function Page(){
                             width={200}
                             height={200}
                             src={'/images/escoteiros06.png'}
+                            unoptimized={true}
+                            quality={100}
+                            loading='eager'
                         />
                         <h1 className={styles.titleRamos}>Ramo escoteiro</h1>
                         <p className={styles.paragraphRamos}>
@@ -155,6 +182,9 @@ export default function Page(){
                             width={200}
                             height={200}
                             src={'/images/senior03.jpg'}
+                            unoptimized={true}
+                            quality={100}
+                            loading='eager'
                         />
                         <h1 className={styles.titleRamos}>Ramo sênior</h1>
                         <p className={styles.paragraphRamos}>
@@ -167,6 +197,9 @@ export default function Page(){
                             width={200}
                             height={200}
                             src={'/images/cla02.jpg'}
+                            unoptimized={true}
+                            quality={100}
+                            loading='eager'
                         />
                         <h1 className={styles.titleRamos}>Ramo pioneiro</h1>
                         <p className={styles.paragraphRamos}>
@@ -179,6 +212,9 @@ export default function Page(){
                             width={200}
                             height={200}
                             src={'/images/adulto01.jpeg'}
+                            unoptimized={true}
+                            quality={100}
+                            loading='eager'
                         />
                         <h1 className={styles.titleRamos}>Adulto voluntário</h1>
                         <p className={styles.paragraphRamos}>
@@ -199,6 +235,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/senior05.jpg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Seja um escoteiro                   
@@ -213,6 +252,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/adulto03.png'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         Seja um voluntário                   
@@ -224,6 +266,9 @@ export default function Page(){
                         width={200}
                         height={200}
                         src={'/images/grupo01.jpeg'}
+                        unoptimized={true}
+                        quality={100}
+                        loading='eager'
                     />
                     <p>
                         abra sua UEL                    
