@@ -3,10 +3,16 @@ import Section from '@/components/layout/sections/section';
 import styles from './page.module.css';
 import Image from 'next/image';
 import Banner from '@/components/layout/banner/banner';
+import Head from 'next/head';
 
 export default function Page(){
     return(
         <>
+        <Head>
+            <title>Seja Escoteiro - Escoteiros de Coqueiral</title>
+            <meta name='keywords' content='Escoteiros em Coqueiral, Aracruz, Seja Escoteiro, Movimento Escoteiro, Escotismo, Junte-se aos Escoteiros, Educação não-formal, Voluntariado, Ramo Lobinho, Ramo Escoteiro, Ramo Sênior, Ramo Pioneiro, Adulto Voluntário' />
+            <meta name="description" content="Junte-se aos Escoteiros do Brasil e faça parte do maior movimento juvenil de educação não-formal do mundo." />
+        </Head>
         <Section customClass={['flexCollTop', 'fullWidth', 'margin0']}>
             <Image 
                 alt=""
