@@ -30,6 +30,7 @@
     text-align: justify;
     width: 100%;
     font-weight: 300;
+    font-size: 18px;
 }
 .image{
     margin: 0 auto;
@@ -63,6 +64,7 @@
     }
     .paragraph{
         padding: 20px;
+        font-size: 16px;
     }
     .recuo{
         padding-left: 0px;

@@ -3,6 +3,7 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import Carrocel from '@/components/layout/carrocel/carrocel';
+import Link from 'next/link';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -115,6 +116,24 @@ export default function Page(){
                     <br />
                 </div>
             </div>
+            <Link 
+                href={'https://photos.app.goo.gl/Yn5JQcgKcwGL7pjH6'} 
+                target='_blank'
+            >
+                <h2 
+                    className={styles.subtitle}
+                    style={{textAlign: 'center'}}
+                >
+                    Veja nosso álbum de fotos.
+                </h2>                    
+                <Image 
+                    alt='esporte, escoteiros, aracruz, coqueiral, nautico, canoa, velas, caiaque, rio, mar, lagoa'
+                    src={'/images/projetos/oleo/oleo (2).jpg'}
+                    width={300}
+                    height={200}
+                    style={{objectFit: 'contain', height: 'auto', width: '100%'}}
+                />
+            </Link>
         </Section>
     )
 }
