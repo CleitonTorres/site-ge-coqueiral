@@ -45,7 +45,6 @@ export default async function Page({ params }: PageProps) {
                     <h6><a href={noticia.linkMaps}>Local</a></h6>
                 </div>
                 :null}
-
                 
                 <ShareButton
                     title={noticia.title}
