@@ -79,10 +79,10 @@ export default function Page(){
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
                             <a 
-                                href="https://drive.google.com/file/d/1lQxWNaJAWJsEeja5TaF6h1HyLmT_m17A/view?usp=sharing" 
+                                href="https://drive.google.com/drive/u/2/folders/1Uv0ywn7KWN49RmAmTLoJoaPuG_SNghaz" 
                                 target='_blank'
                             >
-                                Balanço Consolidado 2024
+                                Docs Contábeis 2024
                             </a>
                         </li>
                         <li className='boxShadow cursoPointer'>
