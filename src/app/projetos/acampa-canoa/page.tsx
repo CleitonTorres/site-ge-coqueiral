@@ -6,6 +6,7 @@ import Box from '@/components/layout/box/box';
 import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -34,6 +35,14 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Acampa Canoa</h1>
             <div className={styles.conteiner}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
+                    <ShareButton
+                        title={"Acampa Canoa Sênior"}
+                        text={"O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela chefia Sênior do 19º Grupo Escoteiro Coqueiral, Coqueiral, Aracruz/ES, que tem a finalidade de aprimorar os jovens em técnicas náuticas como condução de embarcações a remo e pesca."}
+                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/acampa-canoa/`}
+                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/acampa-canoa/acampa-canoa01.jpg`}
+                    />
+                </div>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""

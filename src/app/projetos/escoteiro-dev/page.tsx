@@ -3,6 +3,7 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -31,6 +32,14 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Escoteiro Dev</h1>
             <div className={styles.conteiner}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
+                    <ShareButton
+                        title={"Escoteiro Dev"}
+                        text={"O Escoteiro Dev é um curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos..."}
+                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/escoteiro-dev/`}
+                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/escoteiro-dev.jpg`}
+                    />
+                </div>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""

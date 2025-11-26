@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Metadata } from 'next';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import Link from 'next/link';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -32,6 +33,14 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>De Oléo na Reciclagem</h1>
             <div className={styles.conteiner}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
+                    <ShareButton
+                        title={"De Óleo na Reciclagem"}
+                        text={"O objetivo deste projeto é estruturar e operacionalizar um serviço de coleta, transporte e destinação adequada de óleo vegetal usado, gerado por residências e pequenos comércios e residências nos bairros Coqueiral, Sauê e Santa Cruz..."}
+                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/oleo-na-reciclagem/`}
+                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/oleo/oleo.png`}
+                    />
+                </div>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""

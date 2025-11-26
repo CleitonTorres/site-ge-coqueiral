@@ -50,6 +50,7 @@ export default async function Page({ params }: PageProps) {
                     title={noticia.title}
                     text={noticia.paragraph}
                     url={`${process.env.NEXT_PUBLIC_ROOT_URL}/aconteceu/${noticia.slug}`}
+                    imageUrl={noticia.imageID ? (typeof noticia.imageID === 'string' ? noticia.imageID : noticia.imageID[0]) : ''}
                 />
             </div>
             <TextFormatter text={noticia.paragraph}/>

@@ -3,6 +3,7 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -31,6 +32,14 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Escoteiros pela Biodiversidade</h1>
             <div className={styles.conteiner}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
+                    <ShareButton
+                        title={"Escoteiros pela Biodiversidade"}
+                        text={"Em fevereiro de 2024 os jovens do Grupo Escoteiro Coqueiral realizaram o projeto Escoteiros pela Biodiversidade. Cada ramo executou algum serviço em prol da proteção da nossa biodiversidade nativa. Os lobinhos separararm sementes e prepararam saquinhos..."}
+                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/escoteiros-pela-biodiversidade/`}
+                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/biodiversidade (1).jpg`}
+                    />
+                </div>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""

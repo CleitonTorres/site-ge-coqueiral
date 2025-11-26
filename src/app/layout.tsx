@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next"
 
 import { GlobalWorkerOptions } from 'pdfjs-dist';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
@@ -164,6 +165,14 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                             </div>
                             <div className='cursorPointer empresaAmiga flexRowCenter'>
                                 <a href="/empresa-parceira" target='_self'>Empresa Parceira</a>
+                            </div>
+                            <div className='cursorPointer empresaAmiga flexRowCenter'>
+                                <ShareButton 
+                                    title="Compartilhe o site do 19º Grupo Escoteiro Coqueiral!"
+                                    text="Confira o site oficial dos Escoteiros de Coqueiral e fique por dentro das nossas atividades, eventos e projetos educacionais. Junte-se a nós nessa jornada de aventura e aprendizado!"
+                                    url={process.env.NEXT_PUBLIC_ROOT_URL || 'https://www.19.escoteiroses.org.br'}
+                                    imageUrl={process.env.NEXT_PUBLIC_ROOT_URL ? `${process.env.NEXT_PUBLIC_ROOT_URL}/logo/logo.png` : 'https://www.19.escoteiroses.org.br/logo/logo.png'}
+                                />
                             </div>
                         </div>
                         <div className='boxIconMenu' onClick={mobileMenu}>

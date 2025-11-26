@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -32,6 +33,14 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Pipa Escoteira</h1>
             <div className={styles.conteiner}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
+                    <ShareButton
+                        title={"Pipa Escoteira"}
+                        text={"O 19º Grupo Escoteiro Coqueiral tem trabalhado constantemente para indicado para fortalecer as atividades culturais familiares e tradicionais promovendo com regularidade anual atividades relacionadas as lembranças de infância de pais e avós..."}
+                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/pipa-escoteira/`}
+                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/pipa-escoteira/pipas (2).jpg`}
+                    />
+                </div>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""

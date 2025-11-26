@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import ShareButton from '@/components/layout/shareButton/shareButton';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -32,6 +33,14 @@ export default function Page(){
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <h1 className={styles.title}>Dia de Semear Paz</h1>
             <div className={styles.conteiner}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
+                    <ShareButton
+                        title={"Dia de Semear Paz"}
+                        text={"Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos sofridos pelas crianças afetadas pelas chuvas em Mimoso do Sul."}
+                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/dia-de-semear-paz/`}
+                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/mensageiros-da-paz (4).jpg`}
+                    />
+                </div>
                 <div className={styles.subConteiner}>
                     <Image 
                         alt=""
