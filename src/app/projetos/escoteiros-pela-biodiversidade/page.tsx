@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Escoteiros pela Biodiversidade",
         description:
             "Catalogar e georeferenciar algumas espécies invasoras que estão proximos à mata ciliar da lagoa de Coqueiral....",
-        images: [],
+        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/biodiversidade (1).jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/escoteiros-pela-biodiversidade'
     }
   };

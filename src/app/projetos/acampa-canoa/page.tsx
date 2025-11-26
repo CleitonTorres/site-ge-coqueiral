@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Acampa Canoa",
         description:
             "O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela...",
-        images: [],
+        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/acampa-canoa/acampa-canoa01.jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/acampa-canoa'
     }
   };

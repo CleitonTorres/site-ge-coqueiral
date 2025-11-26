@@ -10,19 +10,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
         title: "Pipa Escoteira",
         description:
-        "Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite....",
+            "Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite....",
         keywords:
-        "cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira",
-        authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
+            "cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira",
+        authors: [{ name: "19º Grupo Escoteiro Coqueiral" }],
         icons: {
-        icon: "/favicon.ico",
+            icon: "/favicon.ico",
         },
         metadataBase: new URL('https://www.19.escoteiroses.org.br/projetos/pipa-escoteira'),
         openGraph: {
             title: "Pipa Escoteira",
             description:
                 "Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite....",
-            images: [],
+            images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/pipa-escoteira/pipas (2).jpg`],
             url: 'www.19.escoteiroses.org.br/projetos/pipa-escoteira'
         }
     };

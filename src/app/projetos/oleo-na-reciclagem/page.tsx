@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Escoteiro Dev",
         description:
             "O projeto De Óleo na Reciclagem é um projeto que busca destinar o óleo usado de cozinha para sua devida reciclagem...",
-        images: [],
+        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/oleo/oleo.png`],
         url: 'www.19.escoteiroses.org.br/projetos/oleo-na-reciclagem/'
     }
   };

@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Escoteiro Dev",
         description:
             "O Escoteiro Dev é um curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos...",
-        images: [],
+        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/escoteiro-dev.jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/escoteiro-dev'
     }
   };

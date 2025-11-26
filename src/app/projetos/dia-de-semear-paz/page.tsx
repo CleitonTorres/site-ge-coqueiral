@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Dia de Semear Paz",
         description:
             "Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos...",
-        images: [],
+        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/mensageiros-da-paz (4).jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/dia-de-semear-paz'
     }
   };
