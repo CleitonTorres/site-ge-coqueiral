@@ -195,7 +195,7 @@ export default function Page(){
                         •	Destaque permanente na área “Apoiadores” do Instagram oficial; <br />
                         •	Post exclusivo agradecendo o patrocinador, com foto institucional da empresa para reforço de imagem; <br />
                         •	Registro fotográfico e audiovisual com referência à marca apoiadora nos materiais oficiais do evento; <br />
-                        •	Uso do selo institucional “Empresa Parceira do Esporte e da Juventude” para fins institucionais e de responsabilidade social (ESG). <br />
+                        •    Certificado digital de agradecimento e reconhecimento pela parceria e apoio ao projeto social; <br />
                     </p>
                 </div>
                 <div className={styles.subConteiner}>
@@ -231,6 +231,20 @@ export default function Page(){
                                 nameEmpresa='Club da Orla'
                                 logoURL='/logo/empresas-parceira/logoClub.jpg'
                                 linkSiteEmpresa='https://www.instagram.com/clubedaorla/'
+                            />
+                        </Box>
+                        <Box customClass={['margin', 'flexRowWrap', 'width300']}>
+                            <CardEmpresaParceira 
+                                nameEmpresa='Sicredi' 
+                                logoURL='/logo/empresas-parceira/logo-sicredi.webp'
+                                linkSiteEmpresa={'https://www.sicredi.com.br/coop/interestados/'}
+                            />
+                        </Box>
+                        <Box customClass={['margin', 'flexRowWrap', 'width300']}>
+                            <CardEmpresaParceira 
+                                nameEmpresa='Weld Pro' 
+                                logoURL='/logo/empresas-parceira/logo-weld.png'
+                                linkSiteEmpresa={'https://www.linkedin.com/company/weldpro-comercio/'}
                             />
                         </Box>
                     </div>
