@@ -114,8 +114,8 @@ function Page(){
         const filesData = e.target.files;        
         const fileListArray = filesData ? Array.from(filesData) as File[] : [];
 
-        if(fileListArray.length > 9){
-            alert("O limite de imagens é 9 imagens por notícia");
+        if(fileListArray.length > 10){
+            alert("O limite de imagens é 10 imagens por notícia");
             return;
         }
 
@@ -536,7 +536,7 @@ function Page(){
                         <div className={styles.boxInput}>
                             <label htmlFor="user">
                                 Resolução ideal da imagem do banner (1200x600)<br/>
-                                máximo 6 imagens <br/>
+                                máximo 10 imagens <br/>
                                 <s>A primeira imagem carregada será usada de capa.</s>
                                 <input 
                                     type="file" 
