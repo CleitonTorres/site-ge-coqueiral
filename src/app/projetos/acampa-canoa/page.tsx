@@ -121,12 +121,6 @@ export default function Page(){
                     <h2 className={styles.subTitle}>Primeira Edição do Acampa Canoa</h2>
                     <p className={styles.paragraph}>
                         A primeira edição do foi o Acampa Canoa 2025, que aconteceu de 07 à 09/02/2025, reuniu 22 jovens de diferentes grupos escoteiros, de diferentes localidades como Cachoeiro de Itapemirim, Vila Velha, Vitória e Aracruz. E a expectativa para o Acampa Canoa 2026 é aumentar nossa capacidade de infra para atender ao menos 32 jovens, incluindo jovens escoteiros de Linhares.<br/>
-                        Não podemos deixar de ressalvar que já contamos com o apoio do: <br/>
-                        - Capitania dos Portos do Espírito Santo.
-                        - Corpo de Bombeiros ES com a segurança. <br />
-                        - <Link href={'https://www.instagram.com/vaacanoeiros/'} target='_blank' style={{fontWeight: 500}}> Equipe VAA Canoeiros</Link> e <Link href={'https://radicaloficial.com.br/'} target='_blank' style={{fontWeight: 500}}>Equipe Radical Oficial</Link> com as oficinas e equipamentos náuticos,<br />
-                        - Com disponibilização do local para pernoite temos o <Link href={'https://www.instagram.com/clubedaorla/'} target='_blank' style={{fontWeight: 500}}>Club da Orla (Coqueiral/ES)</Link> e Secretária de Educação Municipal (EMEF Coqueiral). <br />
-                        - Equipes de chefes escoteiros do 19º Grupo Escoteiro Coqueiral na coordenação do evento.
                     </p>
                     <br />
                     <iframe 
@@ -195,7 +189,7 @@ export default function Page(){
                         •	Destaque permanente na área “Apoiadores” do Instagram oficial; <br />
                         •	Post exclusivo agradecendo o patrocinador, com foto institucional da empresa para reforço de imagem; <br />
                         •	Registro fotográfico e audiovisual com referência à marca apoiadora nos materiais oficiais do evento; <br />
-                        •    Certificado digital de agradecimento e reconhecimento pela parceria e apoio ao projeto social; <br />
+                        •   Certificado digital de agradecimento e reconhecimento pela parceria e apoio ao projeto social; <br />
                     </p>
                 </div>
                 <div className={styles.subConteiner}>
