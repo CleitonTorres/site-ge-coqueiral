@@ -1,7 +1,7 @@
 'use client'
 import { ProfileProps } from "@/@types/types";
 import { createCookie, destroyCookie, getCookie } from "@/scripts/globais";
-import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { createContext, Dispatch, JSX, ReactNode, SetStateAction, useState } from "react";
 import Modal from "../layout/modal/modal";
 
 type PropsContext ={

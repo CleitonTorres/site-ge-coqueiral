@@ -3,6 +3,7 @@ import styles from './card.module.css';
 import Link from "next/link";
 import { DataNews } from "@/@types/types";
 import { dateFormat3, handleTypeUrl } from "@/scripts/globais";
+import { JSX } from "react";
 
 const formatText = (text:string) => {
     if(!text) return<></>;

@@ -4,6 +4,7 @@ import { dateFormat3, handleTypeUrl } from "@/scripts/globais";
 import Image from "next/image";
 import Link from "next/link";
 import styles from './styles.module.css';
+import { JSX } from "react";
 
 export default async function NewsHomeSection() {
     const formatText = (text:string) => {
