@@ -118,9 +118,13 @@ export default function Page(){
                         </p>
                     </div>
 
-                    <h2 className={styles.subTitle}>Primeira Edição do Acampa Canoa</h2>
+                    <h2 className={styles.subTitle}>Primeira Edição do Acampa Canoa (2025)</h2>
                     <p className={styles.paragraph}>
                         A primeira edição do foi o Acampa Canoa 2025, que aconteceu de 07 à 09/02/2025, reuniu 22 jovens de diferentes grupos escoteiros, de diferentes localidades como Cachoeiro de Itapemirim, Vila Velha, Vitória e Aracruz. E a expectativa para o Acampa Canoa 2026 é aumentar nossa capacidade de infra para atender ao menos 32 jovens, incluindo jovens escoteiros de Linhares.<br/>
+                    </p>
+                    <h2 className={styles.subTitle}>A Segunda Edição do Acampa Canoa (2026)</h2>
+                    <p className={styles.paragraph}>
+                        A segunda edição do Acampa Canoa aconteceu de 23 a 25/01/2026, e contou com a participação de jovens escoteiros do Ramo Sênior (15 a 17 anos) de diversos grupos escoteiros do Espírito Santo, totalizando 38 participantes jovem e 25 adultos voluntários distribuidos entre escotistas e equipe de serviço.
                     </p>
                     <br />
                     <iframe 
@@ -245,30 +249,67 @@ export default function Page(){
                 </div>
             </div>
             <div style={{
-                border: '1px solid var(--cinza-escuro)', 
-                borderRadius: '8px',
-                width: 300, 
-                height: 'auto',
-                padding: 10,
+                display: 'flex', 
+                gap: 20, 
+                justifyContent: 'center', 
+                alignItems: 'center',                
                 marginTop: 40,
                 flexWrap: 'wrap',
             }}>
                 <Link 
                     href={'https://photos.app.goo.gl/7J37NqUfdenihuLs7'} 
                     target='_blank'
+                    style={{
+                        border: '1px solid var(--cinza-escuro)', 
+                        borderRadius: '8px',
+                        padding: 10,
+                    }}  
                 >
                     <h2 
                         className={styles.subtitle}
                         style={{textAlign: 'center'}}
                     >
-                        Veja nosso álbum de fotos.
+                        Veja nosso álbum de fotos - 2025.
                     </h2>                    
                     <Image 
                         alt='esporte, escoteiros, aracruz, coqueiral, nautico, canoa, velas, caiaque, rio, mar, lagoa'
                         src={'/images/projetos/acampa-canoa/acampa-canoa (3).jpg'}
                         width={300}
                         height={200}
-                        style={{objectFit: 'contain', height: 'auto', width: '100%'}}
+                        style={{
+                            objectFit: 'contain', 
+                            height: 'auto', 
+                            width: '100%', 
+                            borderRadius: 8
+                        }}
+                    />
+                </Link>
+                <Link 
+                    href={'https://photos.app.goo.gl/m59ZTaMkWQUzwWap9'} 
+                    target='_blank'
+                    style={{
+                        border: '1px solid var(--cinza-escuro)', 
+                        borderRadius: '8px',
+                        padding: 10,
+                    }} 
+                >
+                    <h2 
+                        className={styles.subtitle}
+                        style={{textAlign: 'center'}}
+                    >
+                        Veja nosso álbum de fotos - 2026.
+                    </h2>                    
+                    <Image 
+                        alt='esporte, escoteiros, aracruz, coqueiral, nautico, canoa, velas, caiaque, rio, mar, lagoa'
+                        src={'/images/projetos/acampa-canoa/acampa.png'}
+                        width={300}
+                        height={200}
+                        style={{
+                            objectFit: 'contain', 
+                            height: 'auto', 
+                            width: '100%', 
+                            borderRadius: 8
+                        }}
                     />
                 </Link>
             </div>

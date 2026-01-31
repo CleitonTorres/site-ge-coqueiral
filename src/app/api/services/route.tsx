@@ -5,7 +5,6 @@ import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { Storage } from "@google-cloud/storage";
 import { adressToString, dateFormat2, parseGoogleStorageUrl } from "@/scripts/globais";
-
 import { BodyEmail, newSAAEEmail } from "@/components/emailTemplates/newSaae";
 import util from 'util';
 import nodemailer from 'nodemailer';
@@ -46,11 +45,6 @@ const credentials = {
     universe_domain: `${process.env.NEXT_PUBLIC_UNIVERSE_DOMAIN}`
 } as ServiceAccountCredentials;
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
 
 const getInstagramFeed = async (limit?:string) => {
   const url = limit ? 
@@ -65,7 +59,6 @@ const getInstagramFeed = async (limit?:string) => {
 
   return response.json();
 };
-
 
 export async function GET(req: NextRequest) {
     const authorization = req.headers.get('Authorization');
