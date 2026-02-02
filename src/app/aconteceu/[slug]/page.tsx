@@ -116,7 +116,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             title: noticia.title,
             description: noticia.paragraph,
-            images: noticia.imageID ? [{ url: noticia.imageID[0] }] : [],
+            images: noticia.imageID ? [{ 
+                url: noticia.imageID[0],
+                width: 800,
+                height: 600,
+                alt: noticia.title
+            }] : [],
             url: `${process.env.NEXT_PUBLIC_SITE_URL}/aconteceu/${noticia._id}`
         }
     };

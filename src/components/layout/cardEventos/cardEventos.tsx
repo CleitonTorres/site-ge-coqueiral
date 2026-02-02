@@ -3,10 +3,33 @@ import styles from './cardEventos.module.css';
 import { DataNews } from '@/@types/types';
 import { dateFormat2, dateFormat3, handleTypeUrl } from '@/scripts/globais';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 type Props = {
     dataNews: DataNews
 } 
+
+// Configurar SEO dinâmico
+export async function generateMetadata({ dataNews }: Props): Promise<Metadata> {
+    if (!dataNews || !dataNews.slug) {
+        return {
+            title: "Notícia não encontrada",
+            description: "A notícia requisitada não foi encontrada.",
+        };
+    }
+
+    return {
+        title: dataNews.title,
+        description: dataNews.paragraph,
+        openGraph: {
+            title: dataNews.title,
+            description: dataNews.paragraph,
+            images: dataNews.imageID ? [{ url: dataNews.imageID[0] }] : [],
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/aconteceu/${dataNews._id}`
+        }
+    };
+}
+
 export default function CardEventos({dataNews}:Props){
     return(
         <Link 

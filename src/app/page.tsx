@@ -173,20 +173,11 @@ function Home() {
             />
           </Link>
         </Box>
-        <Link 
-          href='/eventos' 
-          target='_self'
-          style={{
-              color: 'white', 
-              fontWeight: 600, 
-              backgroundColor: 'var(--azul-escuro)',
-              padding: '10px 20px',
-          }}
-        >
-          VER TODOS
-        </Link>
       </Section>
-            
+
+      {/* eventos */}
+      <NewsHomeSection apenasEventos/>
+
       {/* notícias */}
       <NewsHomeSection />
 

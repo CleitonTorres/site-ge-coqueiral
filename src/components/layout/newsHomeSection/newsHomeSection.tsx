@@ -6,7 +6,10 @@ import Link from "next/link";
 import styles from './styles.module.css';
 import { JSX } from "react";
 
-export default async function NewsHomeSection() {
+type Props = {
+    apenasEventos?: boolean;
+}
+export default async function NewsHomeSection({apenasEventos}:Props) {
     const formatText = (text:string) => {
         if(!text) return<></>;
 
@@ -73,9 +76,18 @@ export default async function NewsHomeSection() {
 
         return (
             <section className={styles.section}>
-                <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Notícias</h1>        
+                <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>{apenasEventos ? 'Nossos Eventos' : 'Notícias'}</h1>        
                 <div className={styles.conteiner}>
                     {news
+                    .filter((n)=>{
+                        if(apenasEventos && n.evento){
+                            return true;
+                        }else if(!apenasEventos && !n.evento){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    })
                     ?.map((news)=>{            
                         return(
                             <Link 
@@ -105,7 +117,7 @@ export default async function NewsHomeSection() {
                     })}
                 </div>
                 <Link 
-                    href='/aconteceu' 
+                    href={apenasEventos ? '/eventos' : '/aconteceu'} 
                     target='_self' 
                     style={{
                         color: 'white', 

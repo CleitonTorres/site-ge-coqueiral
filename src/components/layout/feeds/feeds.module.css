@@ -37,9 +37,15 @@
     overflow-y: scroll;
     padding: 3px;
     width: 100%;
+    text-align: justify;
 }
 .textWhite .item, .textWhite .item, .textWhite .item{
     color: var(--white);
+}
+.item video, .item img, .carouselItem video, .carouselItem img{
+    width: auto;
+    max-height: 400px;
+    object-fit: cover;
 }
 
 /* Container do carrossel */

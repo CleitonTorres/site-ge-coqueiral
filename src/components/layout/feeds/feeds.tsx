@@ -96,13 +96,12 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
                   alt={'Post do Instagram'}
                   width={200}
                   height={200}
-                  style={{ width: '100%', borderRadius: '8px' }}
                   quality={100}
                   priority
                   unoptimized
                 />
               ) : post.media_type === 'VIDEO' ? (
-                <video controls style={{ width: '100%' }}>
+                <video controls>
                   <source src={post.media_url} type="video/mp4" />
                 </video>
               ) : null}
@@ -134,7 +133,7 @@ const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
                       quality={100}
                     />
                   ) : post.media_type === 'VIDEO' ? (
-                    <video controls style={{ width: '100%' }}>
+                    <video controls>
                       <source src={post.media_url} type="video/mp4" />
                     </video>
                   ) : null}

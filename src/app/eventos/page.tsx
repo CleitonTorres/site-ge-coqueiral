@@ -13,8 +13,7 @@ export default async function Page(){
             {
             headers: {
                 Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`,
-            },
-            cache: 'force-cache', // SEO friendly
+            }
             }
         );
 
@@ -39,7 +38,7 @@ export default async function Page(){
                 <meta name="author" content="19 Grupo Escoteiro Coqueiral" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <link rel="icon" href="/favicon.ico" />
-            </Head>
+            </Head> 
             <section>
                 <div className={styles.conteiner}>
                     <h1 className={styles.title}>Nossos Eventos</h1>
