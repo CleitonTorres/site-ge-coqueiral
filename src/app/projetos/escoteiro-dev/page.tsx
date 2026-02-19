@@ -57,7 +57,7 @@ export default function Page(){
                         <b>Tutor</b>: Cleiton Torres Machado – Programador Fullstack desde 2013 <br />
                         <b>Eixo de atuação</b>: Cultura Digital / Inclusão Social / Tecnologia / Inclusão Digital <br />
                         <b>Local de execução</b>: Igreja Católica de Coqueiral, Coquerial, Aracruz/ES. <br />
-                        <b>Horários :</b> Às quartas-feiras de 18h às 20h.
+                        <b>Horários :</b> Às quintas-feiras de 18h às 20h.
                     </p>
                     <br />
                     <p className={styles.paragraph}>
