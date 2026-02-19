@@ -45,38 +45,56 @@ export default function Page(){
                         alt=""
                         width={970}
                         height={350}
-                        src={'/images/escoteiro-dev.jpg'}
+                        src={'/images/projetos/escoteiro-dev/banner-escoteiro-dev.png'}
                         className={styles.image}
                     /> 
-                    <h6>presentes na foto: Tânia representando a parceira Number One, tutor ch. Cleiton e jovens alunos escoteiros e não escoteiros.</h6>
                     <br />
                     
                     <p className={styles.paragraph}>
                         <b>Nome do Projeto</b>: Escoteiro Dev <br />
                         <b>Proponente</b>: 19º Grupo Escoteiro Coqueiral - 05.991.537/0001-84 <br />
-                        <b>Responsável</b>: Rubia Veiga Ribeiro Machado – Coordenador Geral <br />
+                        <b>Responsável</b>: Rubia Veiga Ribeiro Machado – Coordenador Geral/Diretora Presidente <br />
                         <b>Tutor</b>: Cleiton Torres Machado – Programador Fullstack desde 2013 <br />
                         <b>Eixo de atuação</b>: Cultura Digital / Inclusão Social / Tecnologia / Inclusão Digital <br />
-                        <b>Local de execução</b>: Coqueiral, Aracruz/ES.
+                        <b>Local de execução</b>: Igreja Católica de Coqueiral, Coquerial, Aracruz/ES. <br />
+                        <b>Horários :</b> Às quartas-feiras de 18h às 20h.
                     </p>
+                    <br />
                     <p className={styles.paragraph}>
                         O Projeto Escoteiro Dev (Dev de developer ou desenvolvedor em inglês) nasceu a fim de atender a uma demanda educativa no ramo de conhecimento Ciência e Tecnologia, e, em decorrência do comprometimento do 19º Grupo Escoteiro Coqueiral com os ODSs, em especial o ODS 4 (Educação de qualidade) e ODS 9 (Indústria, inovação e infraestrutura), e visando proporcionar a nossa comunidade mais opções de educação com viés tecnológico que seja acessível a todos o 19º GE Coqueiral decidiu implementar o projeto Escoteiro Dev com o seguinte objetivo.                    
                     </p>
+                
                     <p className={styles.paragraph}>
                         O Projeto consiste no oferecimento de aulas gratuitas de Informática e Programação Básica a jovens de entre 11 e 17 anos de idade, adultos e povos originários moradores do litoral de Aracruz, escoteiros ou não escoteiros. A duração prevista do curso é de 10 meses, sendo uma aula semanal de 2 horas, com carga horaria total de 80 horas.
                     </p>
+                    <video 
+                        className={styles.video}
+                        autoPlay
+                        controls
+                        src="/videos/projetos/escoteiro-dev/dev-video-divulgacao.mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
                     <br />
                     <h1 className={styles.subTitle}>
                         Das Inscrições
                     </h1>
                     <p className={styles.paragraph}>
-                        As inscrições são feitas por um adulto legalmente responsável por meio do preenchimento do formulário de inscrição, de forma gratuita e voluntária. Não há custos de participação, havendo como requisito o interesse do participante pelo assunto, o respeito aos demais participantes e aos princípios de ética e moral.
+                        As inscrições são feitas por um adulto legalmente responsável por meio do preenchimento do formulário de inscrição, de forma gratuita e voluntária. Não há custos de participação, havendo como requisito o interesse do participante pelo assunto, ter um equipamento próprio para estudo, o respeito aos demais participantes e aos princípios de ética e moral.
+                    </p>
+                    <br />
+                    <p className={styles.destaque}>
+                        Clique <Link href={'https://docs.google.com/forms/d/e/1FAIpQLSf92qJptoHYGmj4R5zopAYTVvY9-nmpZLs2XuYAchpvGOueVA/viewform?usp=sharing&ouid=101627827701717184070'} target='_blank'>
+                                aqui
+                            </Link> para se inscrever no curso Escoteiro Dev.
                     </p>
                     <br />
 
                     <h1 className={styles.subTitle}>Das Condições</h1>
                     <p className={styles.paragraph}>
                         Os interessados precisam possuir mais de 11 anos de idade, ter afinidade por tecnologia, boa capacidade de leitura e cálculos básicos, possuir um equipamento notebook para estudo. Por se tratar de um projeto voluntário e que envolve crianças menores, a inscrição será feita em nome de um de seus responsáveis legais, sendo a criança cadastrada como beneficiária. Também fica combinado entre a organização e os responsáveis subscritos que este deve contribuir para garantir a segurança dos alunos e devem combinar com os outros responsáveis uma escala para que sempre tenha ao menos 1 responsável presente durante a tutoria.
+                    </p>
+                    <p className={styles.paragraph}>
+                        O projeto está buscando equipamentos para fornecer aulas aos interessados que ainda não possui notebooks, mas a princípio não será possível ingressar no curso sem ter seu próprio equipamento notebook.
                     </p>
                     <br />
 
@@ -100,7 +118,6 @@ export default function Page(){
                         •	Incentivar o protagonismo juvenil e o trabalho em equipe através da criação de projetos digitais colaborativos. <br />
                         •	Despertar o interesse por carreiras tecnológicas e contribuir para a inclusão produtiva e social. <br />
                         •	Difundir a cultura do software livre e da cidadania digital.
-
                     </p>
                     <br />
 
@@ -154,13 +171,21 @@ export default function Page(){
                         Cada turma desenvolverá um projeto final autoral, como um site, jogo ou aplicativo com temática escoteira ou comunitária, aplicando na prática os conhecimentos adquiridos.
                         As atividades priorizam o trabalho em grupo, a resolução de problemas reais e a criação colaborativa, estimulando a autonomia e o protagonismo dos participantes.
                     </p>
+                    <p className={styles.paragraph}>
+                        A dinâmica das aulas consiste em:
+                        •	15 minutos iniciais para prática de digitação.
+                        •	Leitura da apostila na aula correspondente.
+                        •	Exercícios práticos a cada aula e desenvolvimento de um projeto pessoal.
+                        •	Bate papo relacionado a aula do dia com nossa IA Devinho para fixação de conteúdo.
+                        •	Tutor presencial para explicações adicionais, condução das aulas.
+                    </p>
                     <br />
                     <h1 className={styles.subTitle}>
                         Resultados Esperados
                     </h1>
                     <p className={styles.paragraph}>
                         •	Formação de jovens com competências digitais básicas e intermediárias. <br />
-                        •	Produção de pelo menos 3 projetos digitais desenvolvidos pelos alunos. <br />
+                        •	Produção de pelo menos 3 projetos digitais desenvolvidos pelos alunos (portifólio e dois jogos). <br />
                         •	Ampliação do interesse pela cultura digital e pelo uso criativo da tecnologia. <br />
                         •	Inclusão de jovens e adultos em situação de vulnerabilidade no universo tecnológico. <br />
                         •	Criação de uma rede de aprendizado colaborativo com tutores, escoteiros e comunidade. <br />
@@ -173,9 +198,8 @@ export default function Page(){
                     <p className={styles.paragraph}>
                         •	Acesso gratuito às aulas e materiais didáticos. <br />
                         •	Disponibilização pública e gratuita dos projetos criados (licença livre). <br />
-                        •	Oficina aberta à comunidade sobre segurança digital e uso consciente da internet. <br />
                         •	Exposição ou mostra pública dos resultados em espaço cultural ou escola local. <br />
-                        •	Produção de vídeos tutoriais com as principais lições aprendidas, divulgados nas redes sociais do grupo escoteiro.
+                        •	Produção de duas apostilas (Informática Básica e Programação Básica) digitais com todo o conteúdo programático para acesso público.
 
                     </p>
                     <br />
@@ -229,7 +253,7 @@ export default function Page(){
                     <br />
 
                     <h1 className={styles.subTitle}>
-                        Custos para Captação via Lei de Incentivo
+                        Custos para Captação via Lei de Incentivo. Para continuidade do projeto.
                     </h1>
                     <p className={styles.paragraph}>
                         ●   Tutor e assistente (10 meses): R$ 9.200,00. <br />

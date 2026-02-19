@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-function Home() {
+async function Home() {
   return (
     <>
       <Banner 

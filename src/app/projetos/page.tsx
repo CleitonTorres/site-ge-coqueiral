@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-function Page(){
+async function Page(){
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
             <div className={styles.conteiner}>
