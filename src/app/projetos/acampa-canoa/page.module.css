@@ -65,6 +65,16 @@
     width: 560px; 
     height: 315px;
 }
+.link{
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+}
+.link:hover{
+    color: var(--azul-claro);
+    text-decoration: underline;
+}
 @media (max-width: 991px){
     .subTitle{
         margin-left: 20px;
