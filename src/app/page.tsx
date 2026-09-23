@@ -19,6 +19,7 @@ const partners = [
   { name: 'Vaa Canoeiros', logo: 'vaaCanoneiros.png', url: 'https://www.instagram.com/vaacanoeiros/' },
   { name: 'Radical Oficial', logo: 'logoRadical.png', url: 'https://radicaloficial.com.br/' },
   { name: 'Club da Orla', logo: 'logoClub.jpg', url: 'https://www.instagram.com/clubedaorla/' },
+  {name: 'Sicredi', logo: 'logo-sicredi.webp', url: 'https://www.sicredi.com.br/coop/interestados/'}
 ];
 
 const stats = [
@@ -54,7 +55,12 @@ export default function Home() {
       <div className={styles.news}><NewsHomeSection apenasEventos /><NewsHomeSection /></div>
       <section className={styles.partners} aria-labelledby="partners-heading">
         <span className={styles.eyebrow}>Uma rede que faz a diferença</span><h2 id="partners-heading">Quem apoia o escotismo em Coqueiral</h2>
-        <ul>{partners.map(partner => <li key={partner.name}><a href={partner.url} target="_blank" rel="noopener noreferrer" aria-label={`${partner.name} (abre em nova aba)`}><Image src={`/logo/empresas-parceira/${partner.logo}`} width={180} height={100} alt={partner.name} /></a></li>)}</ul>
+        <ul>{partners.map(partner => 
+          <li key={partner.name}>
+            <a href={partner.url} target="_blank" rel="noopener noreferrer" aria-label={`${partner.name} (abre em nova aba)`}>
+              <Image src={`/logo/empresas-parceira/${partner.logo}`} width={180} height={100} alt={partner.name} />
+            </a></li>)}
+          </ul>
       </section>
       <section className={styles.quote} aria-label="Uma inspiração para o nosso trabalho">
         <blockquote>“Não há ensino que se compare ao exemplo.”<cite>Baden-Powell</cite></blockquote>

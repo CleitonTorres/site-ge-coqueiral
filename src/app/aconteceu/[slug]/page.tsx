@@ -83,7 +83,7 @@ export async function generateStaticParams() {
     try {
         const response = await axios.get(`${process.env.ROOT_URL}${process.env.URL_SERVICES}`, {
             params: {service: 'news'}, 
-            headers: {
+            headers: { 
                 'Authorization': `Bearer ${process.env.AUTORIZATION}`
             }
         });
