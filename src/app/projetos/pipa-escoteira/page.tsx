@@ -1,5 +1,5 @@
 import Section from '@/components/layout/sections/section';
-import styles from './page.module.css';
+import styles from '../project-detail.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
             title: "Pipa Escoteira",
             description:
                 "Proteger a tradição de soltar pipas é preservar um elo afetivo entre gerações, um gesto simples que carrega em si a riqueza das memórias e dos vínculos humanos. Em um tempo em que a infância muitas vezes se perde em telas e tecnologias, soltar uma pipa representa um convite....",
-            images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/pipa-escoteira/pipas (2).jpg`],
+            images: [`${process.env.ROOT_URL}/images/projetos/pipa-escoteira/pipas (2).jpg`],
             url: 'www.19.escoteiroses.org.br/projetos/pipa-escoteira'
         }
     };
@@ -37,8 +37,8 @@ export default function Page(){
                     <ShareButton
                         title={"Pipa Escoteira"}
                         text={"O 19º Grupo Escoteiro Coqueiral tem trabalhado constantemente para indicado para fortalecer as atividades culturais familiares e tradicionais promovendo com regularidade anual atividades relacionadas as lembranças de infância de pais e avós..."}
-                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/pipa-escoteira/`}
-                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/pipa-escoteira/pipas (2).jpg`}
+                        url={`${process.env.ROOT_URL}/projetos/pipa-escoteira/`}
+                        imageUrl={`${process.env.ROOT_URL}/images/projetos/pipa-escoteira/pipas (2).jpg`}
                     />
                 </div>
                 <div className={styles.subConteiner}>
@@ -132,13 +132,14 @@ export default function Page(){
                 <div style={{
                     border: '1px solid var(--cinza-escuro)', 
                     borderRadius: '8px',
-                    width: 300, 
+                    width: 300,
+                    maxWidth: '100%',
                     height: 'auto',
                     padding: '10px'
                 }}>
                     <Link 
                         href={'https://photos.app.goo.gl/DZaDEzy7tYve1SQd7'} 
-                        target='_blank'
+                        target="_blank" rel="noopener noreferrer"
                     >
                         <h2 
                             className={styles.subtitle}

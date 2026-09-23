@@ -17,13 +17,13 @@ export default function Page(){
     const onSubmit = async (data: Feedbacks):Promise<boolean> => {
         console.log(data);
         try {
-            const resp = await axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
+            const resp = await axios.post(`${process.env.URL_SERVICES}`, {
                 data,
                 service: 'saveFeedback',
                 idSaae: idSaae,
             }, {
                 headers:{
-                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                    'Authorization': `Bearer ${process.env.AUTORIZATION}`
                 }
             });
 

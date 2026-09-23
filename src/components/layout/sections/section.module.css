@@ -30,11 +30,11 @@
     align-items: flex-start;
 }
 .fullWidth {
-    width: 100vw;
+    width: 100%;
 }
 .maxWidth{
-    width: 100vw;
-    min-width: 400px;
+    width: 100%;
+    min-width: 0;
     max-width: var(--widthLarge) !important;
 }
 .minWidth{

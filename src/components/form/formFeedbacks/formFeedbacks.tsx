@@ -30,13 +30,13 @@ export default function FeedbackForm({ idSaae, onSubmit }: FeedbackFormProps) {
 
     const searchSaae = async()=>{
         try{
-            const resp = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+            const resp = await axios.get(`${process.env.URL_SERVICES}`,{
                 params:{
                     service: 'getSaaeById',
                     idSaae: idSaae
                 },
                 headers:{
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                'Authorization': `Bearer ${process.env.AUTORIZATION}`
                 }
             });
             if(resp.status === 200){

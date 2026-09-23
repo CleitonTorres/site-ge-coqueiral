@@ -37,20 +37,20 @@ export default function Page(){
         setShowModal(true);
 
         grecaptcha.ready(()=> {
-            grecaptcha.execute(`${process.env.NEXT_PUBLIC_RECAPTCHA_KEY_SITE}`, {action: 'submit'})
+            grecaptcha.execute(`${process.env.RECAPTCHA_KEY_SITE}`, {action: 'submit'})
             .then(async(token:string)=> {
-                axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+                axios.post(`${process.env.URL_SERVICES}`,{
                     service: "recatptcha",
                     token: token
                 },{
                     headers:{
-                        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                        "Authorization": `Bearer ${process.env.AUTORIZATION}`
                     }
                 })  
                 .then(async(resp)=>{
                     const data  = resp.data as ResponseRecaptcha;
                     if(data.success || data.score >= 0.8){
-                        await axios.get(`${process.env.NEXT_PUBLIC_URL_AUTH}`,{
+                        await axios.get(`${process.env.URL_AUTH}`,{
                             params:{            
                                 data: encryptPassword(JSON.stringify(dataForm)),
                                 service: "auth"

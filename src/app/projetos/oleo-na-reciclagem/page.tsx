@@ -1,5 +1,5 @@
 import Section from '@/components/layout/sections/section';
-import styles from './page.module.css';
+import styles from '../project-detail.module.css';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import Carrocel from '@/components/layout/carrocel/carrocel';
@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Escoteiro Dev",
         description:
             "O projeto De Óleo na Reciclagem é um projeto que busca destinar o óleo usado de cozinha para sua devida reciclagem...",
-        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/oleo/oleo.png`],
+        images: [`${process.env.ROOT_URL}/images/projetos/oleo/oleo.png`],
         url: 'www.19.escoteiroses.org.br/projetos/oleo-na-reciclagem/'
     }
   };
@@ -31,14 +31,14 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Page(){
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
-            <h1 className={styles.title}>De Oléo na Reciclagem</h1>
+            <h1 className={styles.title}>De Óleo na Reciclagem</h1>
             <div className={styles.conteiner}>
                 <div style={{width: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10}}>
                     <ShareButton
                         title={"De Óleo na Reciclagem"}
                         text={"O objetivo deste projeto é estruturar e operacionalizar um serviço de coleta, transporte e destinação adequada de óleo vegetal usado, gerado por residências e pequenos comércios e residências nos bairros Coqueiral, Sauê e Santa Cruz..."}
-                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/oleo-na-reciclagem/`}
-                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/oleo/oleo.png`}
+                        url={`${process.env.ROOT_URL}/projetos/oleo-na-reciclagem/`}
+                        imageUrl={`${process.env.ROOT_URL}/images/projetos/oleo/oleo.png`}
                     />
                 </div>
                 <div className={styles.subConteiner}>
@@ -51,16 +51,16 @@ export default function Page(){
                     /> 
                     <br />
                     
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Do Objetivo.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         O objetivo deste projeto é estruturar e operacionalizar um serviço de coleta, transporte e destinação adequada de óleo vegetal usado, gerado por residências e pequenos comércios e residências nos bairros Coqueiral, Sauê e Santa Cruz, através da aquisição de veículo específico (Fiat Strada 2020), bem como custear seu combustível/manutenção pelo periodo minimo de 4 anos e remunerar um coletor com carga de trabalho 4 vezes por semana (4 horas por dia). O óleo coletado será encaminhado para empresa recicladora parceira para reciclagem ou transformação.
                     </p>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Problemas a serem resolvidos.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         O descarte inadequado do óleo vegetal usado por residências e pequenos comércios compromete o meio ambiente: entupimento de redes de esgoto, contaminação de solo e água, aumento do custo de tratamento de efluentes.
                     </p>
@@ -81,9 +81,9 @@ export default function Page(){
                         '/images/projetos/oleo/oleo (2).jpg',
                     ]} />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Relação entre os objetivos e as diretrizes da Lei de Incentivo à Reciclagem.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         A Lei nº 14.260/2021 estabelece como objetivo “incentivar a cadeia produtiva da reciclagem, com vistas a fomentar o uso de matérias-primas e de insumos de materiais recicláveis e reciclados” (Art. 1º).  Além disso, conforme regulamentação, projetos que envolvem “aquisição de equipamentos e de veículos para a coleta seletiva, a reutilização, o beneficiamento, o tratamento e a reciclagem de materiais” são elegíveis para apoio. 
                     </p>
@@ -100,18 +100,18 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Público-alvo.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         •	Direto: moradores e pequenos comércios dos bairros Coqueiral - Aracruz/ES, Sauê - Aracruz/ES e Santa Cruz - Aracruz/ES, que geram óleo vegetal usado. <br />
                         •	Indireto: comunidade do município que se beneficia da diminuição de rejeitos inadequados, melhoria da limpeza urbana e valorização da economia circular local.
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Resultados esperados
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         •	Ampliar a coleta para 100 residências cadastradas. <br />
                         •	Implementação de uma operação de coleta de óleo vegetal usado com veículo próprio (Fiat Strada 2020) e equipe dedicada, operando quatro vezes por semana. <br />
@@ -127,7 +127,7 @@ export default function Page(){
             </div>
             <Link 
                 href={'https://photos.app.goo.gl/Yn5JQcgKcwGL7pjH6'} 
-                target='_blank'
+                target="_blank" rel="noopener noreferrer"
             >
                 <h2 
                     className={styles.subtitle}

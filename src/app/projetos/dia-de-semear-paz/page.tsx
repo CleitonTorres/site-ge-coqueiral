@@ -1,5 +1,5 @@
 import Section from '@/components/layout/sections/section';
-import styles from './page.module.css';
+import styles from '../project-detail.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Dia de Semear Paz",
         description:
             "Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos...",
-        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/mensageiros-da-paz (4).jpg`],
+        images: [`${process.env.ROOT_URL}/images/mensageiros-da-paz (4).jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/dia-de-semear-paz'
     }
   };
@@ -37,8 +37,8 @@ export default function Page(){
                     <ShareButton
                         title={"Dia de Semear Paz"}
                         text={"Planejar e executar um projeto que tenha como objetivo contribuir com a minimização dos impactos sofridos pelas crianças afetadas pelas chuvas em Mimoso do Sul."}
-                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/dia-de-semear-paz/`}
-                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/mensageiros-da-paz (4).jpg`}
+                        url={`${process.env.ROOT_URL}/projetos/dia-de-semear-paz/`}
+                        imageUrl={`${process.env.ROOT_URL}/images/mensageiros-da-paz (4).jpg`}
                     />
                 </div>
                 <div className={styles.subConteiner}>
@@ -109,7 +109,7 @@ export default function Page(){
             </div>
             <Link 
                 href={'https://photos.app.goo.gl/ENG394XHfzMciiR58'} 
-                target='_blank'
+                target="_blank" rel="noopener noreferrer"
             >
                 <h2 
                     className={styles.subtitle}

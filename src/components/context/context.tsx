@@ -56,7 +56,7 @@ export default function Provider({children}:{children:ReactNode}){
       }else{
           destroyCookie('coqueiralSite')
           createCookie(token)
-          setDataUser({...token, token: `${process.env.NEXT_PUBLIC_AUTORIZATION}`})
+          setDataUser({...token, token: `${process.env.AUTORIZATION}`})
           return;
       }
     } 

@@ -10,7 +10,7 @@ export type PropsSingIn = {
 }
 
 async function auth(user:string, password:string) {
-    const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/Auth"); 
+    const db = await connectToDatabase(process.env.URL_MONGO, "/api/Auth");
     const collection = db.collection('users');
 
     const doc = await collection.findOne({user: user});
@@ -70,12 +70,12 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const dataForm = JSON.parse(decryptPassword(body.dataNewUser)) as ProfileProps;
 
-        if (!dataForm || token !== `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`) {
+        if (!dataForm || token !== `Bearer ${process.env.AUTORIZATION}`) {
             return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
         }
 
         // Conectando ao banco de dados
-        const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postUser");
+        const db = await connectToDatabase(process.env.URL_MONGO, "/api/postUser");
         const collection = db.collection('users');
 
         // Verificando se o usuário já existe

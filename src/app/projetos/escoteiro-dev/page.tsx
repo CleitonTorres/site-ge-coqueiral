@@ -1,5 +1,5 @@
 import Section from '@/components/layout/sections/section';
-import styles from './page.module.css';
+import styles from '../project-detail.module.css';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Escoteiro Dev",
         description:
             "O Escoteiro Dev é um curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos...",
-        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/escoteiro-dev.jpg`],
+        images: [`${process.env.ROOT_URL}/images/escoteiro-dev.jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/escoteiro-dev'
     }
   };
@@ -36,8 +36,8 @@ export default function Page(){
                     <ShareButton
                         title={"Escoteiro Dev"}
                         text={"O Escoteiro Dev é um curso é oferecido pelo 19º ES Grupo Escoteiro Coqueiral, CNPJ nº 05.991.537/0001-84, fundado em 04/09/1988, associação civil de direito privado e sem fins lucrativos..."}
-                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/escoteiro-dev/`}
-                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/escoteiro-dev.jpg`}
+                        url={`${process.env.ROOT_URL}/projetos/escoteiro-dev/`}
+                        imageUrl={`${process.env.ROOT_URL}/images/escoteiro-dev.jpg`}
                     />
                 </div>
                 <div className={styles.subConteiner}>
@@ -68,28 +68,27 @@ export default function Page(){
                         O Projeto consiste no oferecimento de aulas gratuitas de Informática e Programação Básica a jovens de entre 11 e 17 anos de idade, adultos e povos originários moradores do litoral de Aracruz, escoteiros ou não escoteiros. A duração prevista do curso é de 10 meses, sendo uma aula semanal de 2 horas, com carga horaria total de 80 horas.
                     </p>
                     <video 
-                        className={styles.video}
-                        autoPlay
+                        className={styles.video} preload="metadata"
                         controls
                         src="/videos/projetos/escoteiro-dev/dev-video-divulgacao.mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Das Inscrições
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         As inscrições são feitas por um adulto legalmente responsável por meio do preenchimento do formulário de inscrição, de forma gratuita e voluntária. Não há custos de participação, havendo como requisito o interesse do participante pelo assunto, ter um equipamento próprio para estudo, o respeito aos demais participantes e aos princípios de ética e moral.
                     </p>
                     <br />
                     <p className={styles.destaque}>
-                        Clique <Link href={'https://docs.google.com/forms/d/e/1FAIpQLSf92qJptoHYGmj4R5zopAYTVvY9-nmpZLs2XuYAchpvGOueVA/viewform?usp=sharing&ouid=101627827701717184070'} target='_blank'>
+                        Clique <Link href={'https://docs.google.com/forms/d/e/1FAIpQLSf92qJptoHYGmj4R5zopAYTVvY9-nmpZLs2XuYAchpvGOueVA/viewform?usp=sharing&ouid=101627827701717184070'} target="_blank" rel="noopener noreferrer">
                                 aqui
                             </Link> para se inscrever no curso Escoteiro Dev.
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>Das Condições</h1>
+                    <h2 className={styles.subTitle}>Das Condições</h2>
                     <p className={styles.paragraph}>
                         Os interessados precisam possuir mais de 11 anos de idade, ter afinidade por tecnologia, boa capacidade de leitura e cálculos básicos, possuir um equipamento notebook para estudo. Por se tratar de um projeto voluntário e que envolve crianças menores, a inscrição será feita em nome de um de seus responsáveis legais, sendo a criança cadastrada como beneficiária. Também fica combinado entre a organização e os responsáveis subscritos que este deve contribuir para garantir a segurança dos alunos e devem combinar com os outros responsáveis uma escala para que sempre tenha ao menos 1 responsável presente durante a tutoria.
                     </p>
@@ -98,17 +97,17 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Objetivo Geral
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         Ofertar aulas de informática e programação básica visando garantir a conectividade, inclusão social, a cultura digital, a capacitação profissional e o acesso de comunidades carentes ou povos originários a tecnologias digitais a fim de fortalecer suas respectivas comunidades.
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Objetivos Específicos
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         •	Estimular a criatividade e o convívio social por meio tecnologia e criação de jogos eletrônicos. <br />
                         •	Oferecer aulas gratuitas de informática e programação básica para crianças, adolescentes, jovens e adultos. <br />
@@ -121,9 +120,9 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Do conteúdo da tutoria.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         A curso será baseado, <b>mas não se limitando:</b>
                     </p>
@@ -133,16 +132,16 @@ export default function Page(){
                         <b>Web Design:</b> 1) Conhecer o que faz um web design. 2) conhecer o significado de web design, layout, wireframe, mapa do site, HTML, XHTML, JavaScript, CSS, acessibilidade e outros e conhecer os principais programas utilizados por web designers. 3) Construir o mapa de um site. 4) construir um layout de site. 5) escrever o código HTML do layout construído.
                     </p>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Horários.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         As aulas ocorrerão às quartas-feiras de 18:00 às 20:00, o dia é hora pode ser reajustado conforme a necessidade do tutor ou da maioria dos alunos.
                     </p>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Justificativa
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         A sociedade contemporânea é profundamente influenciada pela tecnologia digital, tornando essencial o domínio de ferramentas de informática e noções básicas de programação. Entretanto, muitos jovens - especialmente de comunidades periféricas, tradicionais e rurais - ainda não têm acesso equitativo a esses conhecimentos.
                     </p>
@@ -154,9 +153,9 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Metodologia
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         A metodologia do projeto será baseada no “aprender fazendo” (learning by doing) e no “aprendizado por meio de projetos”, inspirando-se em práticas pedagógicas ativas.
                     </p>
@@ -180,9 +179,9 @@ export default function Page(){
                         •	Tutor presencial para explicações adicionais, condução das aulas.
                     </p>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Resultados Esperados
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         •	Formação de jovens com competências digitais básicas e intermediárias. <br />
                         •	Produção de pelo menos 3 projetos digitais desenvolvidos pelos alunos (portifólio e dois jogos). <br />
@@ -192,9 +191,9 @@ export default function Page(){
                         •	Realização de um evento de culminância para apresentação pública dos projetos desenvolvidos.
                     </p>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Contrapartidas Sociais
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         •	Acesso gratuito às aulas e materiais didáticos. <br />
                         •	Disponibilização pública e gratuita dos projetos criados (licença livre). <br />
@@ -203,9 +202,9 @@ export default function Page(){
 
                     </p>
                     <br />
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Sustentabilidade
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         O Escoteiro Dev é estruturado para receber financiamentos via leis de incentivo fiscais e editais de cultura, educação e tecnologia. Após o primeiro ciclo, o projeto:    
                     </p>
@@ -217,18 +216,18 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Público Alvo
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         Adolescente, jovens e adultos com idade igual ou superior a 11 anos, residentes na comunidade local de povos originários. <br />
                         Estimativa: 30 participantes diretos e 200 beneficiários indiretos (famílias, visitantes, público das exposições).
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Recursos e materiais necessários
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         ●	Notebook Dell 8GB RAM, 512GB SSD (para alunos que não tem o equipamento). <br />
                         ●	Notebook do tutor. <br />
@@ -242,9 +241,9 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Material individual
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         ●	Notebook pessoal (se possuir). <br />
                         ●	Caderno de anotações. <br />
@@ -252,9 +251,9 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <h1 className={styles.subTitle}>
+                    <h2 className={styles.subTitle}>
                         Custos para Captação via Lei de Incentivo. Para continuidade do projeto.
-                    </h1>
+                    </h2>
                     <p className={styles.paragraph}>
                         ●   Tutor e assistente (10 meses): R$ 9.200,00. <br />
                         ●   Coordenação e captação de recurso (10 meses): R$ 4.000,00. <br />
@@ -274,7 +273,7 @@ export default function Page(){
             }}>
                 <Link 
                     href={'https://photos.app.goo.gl/EdWwgRt2nPbC73aH6'} 
-                    target='_blank'
+                    target="_blank" rel="noopener noreferrer"
                 >
                     <h2 
                         className={styles.subtitle}

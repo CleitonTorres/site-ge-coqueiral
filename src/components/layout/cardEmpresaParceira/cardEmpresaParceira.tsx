@@ -8,9 +8,9 @@ type Props = {
 }
 export default function CardEmpresaParceira ({nameEmpresa, logoURL, linkSiteEmpresa}:Props){
     return(
-        <a href={linkSiteEmpresa} target='_blank' className={styles.conteiner}>
+        <a href={linkSiteEmpresa} target='_blank' rel='noopener noreferrer' aria-label={`${nameEmpresa} (abre em nova aba)`} className={styles.conteiner}>
             <Image 
-              alt='imagem seja escoteiro'
+              alt={nameEmpresa}
               width={200}
               height={135}
               src={logoURL}

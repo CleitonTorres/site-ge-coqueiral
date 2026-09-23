@@ -1,5 +1,5 @@
 import Section from '@/components/layout/sections/section';
-import styles from './page.module.css';
+import styles from '../project-detail.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import { Metadata } from 'next';
@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Escoteiros pela Biodiversidade",
         description:
             "Catalogar e georeferenciar algumas espécies invasoras que estão proximos à mata ciliar da lagoa de Coqueiral....",
-        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/biodiversidade (1).jpg`],
+        images: [`${process.env.ROOT_URL}/images/biodiversidade (1).jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/escoteiros-pela-biodiversidade'
     }
   };
@@ -36,8 +36,8 @@ export default function Page(){
                     <ShareButton
                         title={"Escoteiros pela Biodiversidade"}
                         text={"Em fevereiro de 2024 os jovens do Grupo Escoteiro Coqueiral realizaram o projeto Escoteiros pela Biodiversidade. Cada ramo executou algum serviço em prol da proteção da nossa biodiversidade nativa. Os lobinhos separararm sementes e prepararam saquinhos..."}
-                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/escoteiros-pela-biodiversidade/`}
-                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/biodiversidade (1).jpg`}
+                        url={`${process.env.ROOT_URL}/projetos/escoteiros-pela-biodiversidade/`}
+                        imageUrl={`${process.env.ROOT_URL}/images/biodiversidade (1).jpg`}
                     />
                 </div>
                 <div className={styles.subConteiner}>
@@ -74,7 +74,7 @@ export default function Page(){
                     </p>
                     <a 
                         href='https://sdgs.scout.org/project/escoteiros-pela-biodiversidade-0'
-                        target='_blank'
+                        target="_blank" rel="noopener noreferrer"
                         className='link'
                     >
                         link do projeto na plataforma scouts for ODS

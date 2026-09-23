@@ -7,6 +7,7 @@ import { Storage } from "@google-cloud/storage";
 import { adressToString, dateFormat2, parseGoogleStorageUrl } from "@/scripts/globais";
 import { BodyEmail, newSAAEEmail } from "@/components/emailTemplates/newSaae";
 import util from 'util';
+import { instagramAccessToken } from '@/server/instagram';
 import nodemailer from 'nodemailer';
 
 // Configurar o transporte SMTP para o seu provedor de e-mail
@@ -14,7 +15,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'gep@paralegalsolucoes.com.br',
-      pass: process.env.NEXT_PUBLIC_PASS_EMAIL,
+      pass: process.env.PASS_EMAIL,
     }
 });
 
@@ -32,28 +33,28 @@ interface ServiceAccountCredentials {
 }
 
 const credentials = {
-    type: `${process.env.NEXT_PUBLIC_TYPE}`,
-    project_id: `${process.env.NEXT_PUBLIC_PROJECT_ID}`,
-    private_key_id: `${process.env.NEXT_PUBLIC_PRIVATE_KEY_ID}`,
-    private_key: process.env.NEXT_PUBLIC_PRIVATE_KEY?.split(String.raw`\n`).join('\n'),
-    client_email: `${process.env.NEXT_PUBLIC_CLIENT_EMAIL}`,
-    client_id: `${process.env.NEXT_PUBLIC_CLIENT_ID}`,
-    auth_uri: `${process.env.NEXT_PUBLIC_AUTH_URI}`,
-    token_uri: `${process.env.NEXT_PUBLIC_TOKEN_URI}`,
-    auth_provider_x509_cert_url: `${process.env.NEXT_PUBLIC_AUTH_PROVIDER}`,
-    client_x509_cert_url: `${process.env.NEXT_PUBLIC_CLIENT_CERT}`,
-    universe_domain: `${process.env.NEXT_PUBLIC_UNIVERSE_DOMAIN}`
+    type: `${process.env.TYPE}`,
+    project_id: `${process.env.PROJECT_ID}`,
+    private_key_id: `${process.env.PRIVATE_KEY_ID}`,
+    private_key: process.env.PRIVATE_KEY?.split(String.raw`\n`).join('\n'),
+    client_email: `${process.env.CLIENT_EMAIL}`,
+    client_id: `${process.env.CLIENT_ID}`,
+    auth_uri: `${process.env.AUTH_URI}`,
+    token_uri: `${process.env.TOKEN_URI}`,
+    auth_provider_x509_cert_url: `${process.env.AUTH_PROVIDER}`,
+    client_x509_cert_url: `${process.env.CLIENT_CERT}`,
+    universe_domain: `${process.env.UNIVERSE_DOMAIN}`
 } as ServiceAccountCredentials;
 
 
 const getInstagramFeed = async (limit?:string) => {
+  const token = await instagramAccessToken();
   const url = limit ? 
-    `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}` :
-   `${process.env.NEXT_PUBLIC_INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&access_token=${process.env.NEXT_PUBLIC_TOKEN_INSTA}`;
-  const response = await fetch(url);
+    `${process.env.INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=${limit}&access_token=${encodeURIComponent(token)}` :
+   `${process.env.INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&access_token=${encodeURIComponent(token)}`;
+  const response = await fetch(url, {cache: 'no-store', signal: AbortSignal.timeout(8000)});
   
   if (!response.ok) {
-    console.log("response", response);
     throw new Error('Erro ao buscar o feed do Instagram');
   }
 
@@ -62,7 +63,7 @@ const getInstagramFeed = async (limit?:string) => {
 
 export async function GET(req: NextRequest) {
     const authorization = req.headers.get('Authorization');
-    const matchAuth = authorization === `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+    const matchAuth = authorization === `Bearer ${process.env.AUTORIZATION}`
     
     if (!matchAuth) {
         return NextResponse.json({ error: 'Acess Token inválido' }, { status: 401 });
@@ -76,7 +77,7 @@ export async function GET(req: NextRequest) {
 
     if(service === 'news'){
         if(slug){
-            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/news"); 
+            const db = await connectToDatabase(process.env.URL_MONGO, "/api/news");
             const collection = db.collection('news');
         
             const data = collection.findOne({slug:slug});
@@ -88,7 +89,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({news}, {status: 200});
         }
 
-        const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/news"); 
+        const db = await connectToDatabase(process.env.URL_MONGO, "/api/news");
         const collection = db.collection('news');
     
         const data = collection.find({});
@@ -100,7 +101,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json({news}, {status: 200});         
     }else if(service === 'getSaae'){
-        const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/getSaae"); 
+        const db = await connectToDatabase(process.env.URL_MONGO, "/api/getSaae");
         const collection = db.collection('saae');
     
         const data = collection.find({});
@@ -112,7 +113,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({saaes}, {status: 200});         
     }else if(service === 'getSaaeById'){
         const idSaae = url.searchParams.get('idSaae') as string;
-        const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/getSaae"); 
+        const db = await connectToDatabase(process.env.URL_MONGO, "/api/getSaae");
         const collection = db.collection('saae');
     
         const data = await collection.findOne<SAAE>({_id: new ObjectId(idSaae)});
@@ -220,7 +221,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     const authorization = req.headers.get('Authorization');
-    const matchAuth = authorization === `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+    const matchAuth = authorization === `Bearer ${process.env.AUTORIZATION}`
     
     if (!matchAuth) {
         return NextResponse.json({ error: 'Acess Token inválido' }, { status: 401 });
@@ -238,7 +239,7 @@ export async function POST(req: NextRequest) {
 
         if(service === 'recatptcha'){
             const response = await axios.post('https://www.google.com/recaptcha/api/siteverify',
-                `secret=${process.env.NEXT_PUBLIC_RECATCHA_SECRET_KEY}&response=${token}`
+                `secret=${process.env.RECATCHA_SECRET_KEY}&response=${token}`
             );
             if(response && response.data){
                 const data = response.data as ResponseRecaptcha;
@@ -251,7 +252,7 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({error: "Sem dados na requisição"}, {status: 500});
             }
             // Conectando ao banco de dados
-            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postUser");
+            const db = await connectToDatabase(process.env.URL_MONGO, "/api/postUser");
             const collection = db.collection('news');
 
             const resp = await collection.insertOne({...news, _id: new ObjectId()});
@@ -262,14 +263,14 @@ export async function POST(req: NextRequest) {
                 const feed = await getInstagramFeed(limit);
                 return NextResponse.json(feed, {status: 200});
             }catch(error){
-                console.log(error);
+                console.error('Instagram: não foi possível carregar o feed.');
                 return NextResponse.json({error: "Não foi possivel receber o feed"}, {status: 500});
             }
         }else if(service === 'saaeResposta'){
             if(!status || !idSaae)  return NextResponse.json({error: "Falta dados para a atualização"}, {status: 500});
 
             // Conectando ao banco de dados
-            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postUser");
+            const db = await connectToDatabase(process.env.URL_MONGO, "/api/postUser");
             const collection = db.collection('saae');
 
             const resp = await collection.updateOne({_id: new ObjectId(idSaae)},
@@ -289,7 +290,7 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({error: "Falta dados para a atualização"}, {status: 500});
 
             // Conectando ao banco de dados
-            const db = await connectToDatabase(process.env.NEXT_PUBLIC_URL_MONGO, "/api/postFeedback");
+            const db = await connectToDatabase(process.env.URL_MONGO, "/api/postFeedback");
             const collection = db.collection<SAAE>('saae');
 
             const resp = await collection.updateOne({

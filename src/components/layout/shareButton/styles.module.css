@@ -1,41 +1,12 @@
-/* src/components/layout/shareButton/styles.module.css */
-.overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.modal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    min-width: 260px;
-    text-align: center;
-}
-
-.option {
-    display: block;
-    margin: 10px 0;
-    padding: 10px;
-    background: #efefef;
-    border-radius: 6px;
-    text-decoration: none;
-    color: #333;
-    cursor: pointer;
-}
-
-.close {
-    margin-top: 15px;
-    padding: 10px;
-    background: #ccc;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+.trigger { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--azul-escuro); border: 1px solid white; color: white; min-height: 44px; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.trigger svg { fill: currentColor; color: inherit; }
+.trigger svg * { fill: currentColor; color: inherit; }
+.modal { margin: auto; width: min(420px, calc(100% - 40px)); max-height: calc(100dvh - 40px); overflow: auto; border: 0; border-radius: 12px; padding: 28px; box-shadow: 0 20px 80px #0004; }
+.modal::backdrop { background: #142540b3; }
+.modal h2 { color: var(--azul-escuro); margin-bottom: 20px; }
+.option { display: block; width: 100%; text-align: left; color: var(--azul-escuro); background: white; border: 0; border-bottom: 1px solid var(--cinza); padding: 12px; min-height: 44px; cursor: pointer; }
+.option:hover { background: var(--cinza); }
+.linkLabel { display: block; margin-top: 16px; font-size: .85rem; }
+.linkLabel input { width: 100%; margin-top: 8px; padding: 10px; border: 1px solid var(--cinza-escuro); border-radius: 4px; }
+.status { min-height: 24px; margin-top: 12px; font-size: .9rem; }
+.close { background: var(--azul-escuro); color: white; padding: 12px; border-radius: 6px; width: 100%; border: none; margin-top: 16px; cursor: pointer; }

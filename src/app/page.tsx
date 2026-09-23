@@ -1,256 +1,68 @@
-'use server'
-import Banner from '@/components/layout/banner/banner';
-import Box from '@/components/layout/box/box';
-import CardEmpresaParceira from '@/components/layout/cardEmpresaParceira/cardEmpresaParceira';
-import InstagramFeed from '@/components/layout/feeds/feeds';
-import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
-import Projetos from '@/components/layout/projetos/projetos';
-import Section from '@/components/layout/sections/section';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import Banner from '@/components/layout/banner/banner';
+import Projetos from '@/components/layout/projetos/projetos';
+import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
+import InstagramFeed from '@/components/layout/feeds/feeds';
+import styles from './page.module.css';
 
-// Configurar SEO dinâmico
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "19º ES Grupo Escoteiro Coqueiral",
-    description:
-      "O 19º Grupo Escoteiro Coqueiral (19º GE Coqueiral), é filiado à União dos Escoteiros do Brasil (UEB) ...",
-    keywords:
-      "escoteiros, ueb, capixaba, coqueiral, aracruz, litoral, praia mais bonita do es, educação não formal, cultura, comunidade, impacto social, trabalho voluntário, projetos sociais, meio ambiente, educação, esporte, escoteiro dev, acampa canoa, escoteiros pela biodiversidade, dia de semear paz, pipa escoteira",
-    authors: [{ name: "19 Grupo Escoteiro Coqueiral" }],
-    icons: {
-      icon: "/favicon.ico",
-    },
-    metadataBase: new URL("https://19.escoteiroses.org.br"),
-    openGraph: {
-          title: "19º ES Grupo Escoteiro Coqueiral",
-          description: "O 19º Grupo Escoteiro Coqueiral (19º GE Coqueiral), é filiado à União dos Escoteiros do Brasil (UEB) ...",
-          images: [],
-          url: 'https://19.escoteiroses.org.br/'
-    }
-  };
-}
+export const metadata: Metadata = {
+  title: '19º ES Grupo Escoteiro Coqueiral',
+  description: 'Educação para a vida em Coqueiral, Aracruz. Conheça o 19º Grupo Escoteiro Coqueiral, nossos projetos e como participar.',
+  metadataBase: new URL('https://19.escoteiroses.org.br'),
+  openGraph: { title: '19º ES Grupo Escoteiro Coqueiral', description: 'Aventura, amizade e educação para a vida.', url: 'https://19.escoteiroses.org.br/', images: ['/images/projetos/acampa-canoa/acampa-canoa01.jpg'] },
+};
 
-async function Home() {
+const partners = [
+  { name: 'Paralegal Soluções', logo: 'paraLegal.png', url: 'https://www.paralegalsolucoes.com.br/' },
+  { name: 'Vaa Canoeiros', logo: 'vaaCanoneiros.png', url: 'https://www.instagram.com/vaacanoeiros/' },
+  { name: 'Radical Oficial', logo: 'logoRadical.png', url: 'https://radicaloficial.com.br/' },
+  { name: 'Club da Orla', logo: 'logoClub.jpg', url: 'https://www.instagram.com/clubedaorla/' },
+];
+
+const stats = [
+  ['66.787', 'jovens atendidos', '40.png'],
+  ['25.408', 'voluntários', '41.png'],
+  ['1.416', 'unidades escoteiras', '42.png'],
+  ['7.536.668', 'horas de voluntariado em 2024', '43.png'],
+];
+
+export default function Home() {
   return (
-    <>
-      <Banner 
-        title='19º ES Grupo Escoteiro Coqueiral.' 
-        subTitle='Educação para a vida'
-        paragraph='Venha fazer parte deste Movimento que já conta com mais de 57 milhões de pessoas em todo o mundo.'
-        imageURL='/logo/logo.png'
-        videoURL='/videos/banner.webm'
-      />
-
-      {/* estatisticas */}
-      <Section customClass={['fullWidth', 'flexRowCenter', 'minWidth']}> 
-        <Box customClass={['flexColl', 'width300']}> 
-          <Image 
-            alt='imagem seja escoteiro'
-            width={181}
-            height={181}
-            src={'/icons/40.png'}
-          />
-          <span style={{fontSize: 32, fontWeight: 600}}>66.787</span>
-          <span style={{fontWeight: 300, textAlign: 'center'}}>jovens atendidos no Brasil</span>
-        </Box>
-        <Box customClass={['flexColl', 'width300']}>
-          <Image 
-            alt='imagem seja escoteiro'
-            width={181}
-            height={181}
-            src={'/icons/41.png'}
-          />
-          <span style={{fontSize: 32, fontWeight: 600}}>25.408</span>
-          <span style={{fontWeight: 300, textAlign: 'center'}}>voluntários no Brasil</span>
-        </Box>
-        <Box customClass={['flexColl', 'width300']}>
-          <Image 
-            alt='imagem seja escoteiro'
-            width={181}
-            height={181}
-            src={'/icons/42.png'}
-          />
-          <span style={{fontSize: 32, fontWeight: 600}}>1.416</span>
-          <span style={{fontWeight: 300, textAlign: 'center'}}>unidades escoteiras no Brasil</span>
-        </Box>
-        <Box customClass={['flexColl', 'width300']}>
-          <Image 
-            alt='imagem seja escoteiro'
-            width={181}
-            height={181}
-            src={'/icons/43.png'}
-          />
-          <span style={{fontSize: 32, fontWeight: 600}}>7.536.668</span>
-          <span style={{fontWeight: 300, textAlign: 'center'}}>horas de voluntariado em 2024 no Brasil</span>
-        </Box>
-      </Section>
-
-      {/* Projetos */}
-      <Projetos resume/>
-
-      {/* destaques */}
-      <Section customClass={['fullWidth', 'minWidth']}>
-        <h1 className='textLarge' style={{color: 'var(--azul-escuro)'}}>Destaques</h1>
-        <Box customClass={['margin', 'flexRowWrap']}>
-          <Link 
-            href='/seja-escoteiro' 
-            target='_self' 
-            style={{position: 'relative'}}
-            className='destaquesImg'
-          >
-            <Image 
-              alt='imagem seja escoteiro'
-              width={408}
-              height={178}
-              src={'/images/ePrancheta-1-1.png'}
-              style={{objectFit: 'contain'}}
-              className='destaquesImg'
-            />
-          </Link>
-          <Link 
-            href='/empresa-parceira' 
-            target='_self' 
-            style={{position: 'relative'}} 
-            className='destaquesImg'
-          >
-            <Image 
-              alt='imagem seja escoteiro'
-              width={408}
-              height={135}
-              src={'/images/empresaParceira.jpg'}
-              className='destaquesImg'
-            />
-            <span style={{
-              position: 'absolute', 
-              left: '53%', 
-              top: '40%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: 24,
-              textWrap: 'nowrap',
-              color: 'var(--white)',
-              fontWeight: 600
-            }}>Seja uma Empresa Parceira</span>
-            <span style={{
-              position: 'absolute', 
-              left: '50%', 
-              top: '60%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: 10,
-              color: 'var(--white)',
-              fontWeight: 600
-            }}>saiba como</span>
-            <Image 
-              alt=''
-              width={26}
-              height={26}
-              src={'https://upload.wikimedia.org/wikipedia/commons/3/3c/Fleur-de-lis-fill.svg'}
-              style={{
-                position: 'absolute', 
-                right: 0, 
-                top: '60%',
-                transform: 'translate(-50%, 0%)',
-                backgroundColor:'var(--white)',
-                borderRadius: '50%',
-                padding: 3
-              }}
-            />
-          </Link>
-          <Link 
-            href='/espacos-seguros' 
-            target='_self' 
-            style={{position: 'relative'}}
-            className='destaquesImg'
-          >
-            <Image 
-              alt='imagem seja escoteiro'
-              width={408}
-              height={178}
-              src={'/images/espacoseguro.png'}
-              style={{objectFit: 'contain'}}
-              className='destaquesImg'
-            />
-          </Link>
-        </Box>
-      </Section>
-
-      {/* eventos */}
-      <NewsHomeSection apenasEventos/>
-
-      {/* notícias */}
-      <NewsHomeSection />
-
-      {/* empresas parceiras */}
-      <Section customClass={['fullWidth', 'flexCollTop']}>
-        <h1 
-          className='textLarge textResponsive' 
-          style={{color: 'var(--azul-escuro)', textAlign: 'center'}}
-        >
-          Empresas que apoiam o escotismo em Coqueiral
-        </h1>
-        <Section customClass={['fullWidth',  'flexRowCenter', 'minWidth']}>
-          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
-            <CardEmpresaParceira 
-              nameEmpresa='Paralegal Soluções' 
-              logoURL='/logo/empresas-parceira/paraLegal.png'
-              linkSiteEmpresa={'https://www.paralegalsolucoes.com.br/'}
-            />
-          </Box>
-          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
-            <CardEmpresaParceira 
-              nameEmpresa='Vaa Canoeiros' 
-              logoURL='/logo/empresas-parceira/vaaCanoneiros.png'
-              linkSiteEmpresa={'https://www.instagram.com/vaacanoeiros/'}
-            />
-          </Box>
-          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
-            <CardEmpresaParceira 
-              nameEmpresa='Radical Oficial' 
-              logoURL='/logo/empresas-parceira/logoRadical.png'
-              linkSiteEmpresa={'https://radicaloficial.com.br/'}
-            />
-          </Box>
-          <Box customClass={['margin', 'flexRowWrap', 'width300']}>
-              <CardEmpresaParceira 
-                  nameEmpresa='Club da Orla'
-                  logoURL='/logo/empresas-parceira/logoClub.jpg'
-                  linkSiteEmpresa='https://www.instagram.com/clubedaorla/'
-              />
-          </Box>
-        </Section>
-      </Section>
-
-      <Section customClass={['fullWidth', 'flexCollTop']}>
-        <div className='boxFraseBP'>
-          <h1 
-            style={{fontSize: '4em', fontWeight: 300, width: '100%', textAlign: 'center'}}
-          >
-            Não há ensino que se compare ao exemplo.
-          </h1>
-          <Image 
-            alt='assinatura baden powell'
-            width={340}
-            height={108}
-            src={'/icons/home-phrase.png'}
-            style={{objectFit: 'contain'}}
-          />
+    <div className={styles.home}>
+      <Banner title="Aventura que ensina. Amizades para a vida." subTitle="19º ES Grupo Escoteiro Coqueiral" paragraph="Na natureza e na comunidade, cada descoberta é uma oportunidade de crescer. Venha viver o escotismo com a gente." videoURL="/videos/banner.webm" imageURL="/logo/logo.png" />
+      <section className={styles.intro} aria-labelledby="intro-heading">
+        <div><span className={styles.eyebrow}>Educação para a vida</span><h2 id="intro-heading">Um mundo de descobertas começa aqui.</h2></div>
+        <div><p>Somos parte de um movimento que reúne jovens e voluntários para aprender fazendo, cuidar do próximo e construir um mundo melhor.</p><Link href="/coqueiral">Conheça o nosso grupo <span aria-hidden="true">→</span></Link></div>
+      </section>
+      <section className={styles.stats} aria-label="O movimento escoteiro no Brasil">
+        <div className={styles.statsInner}>
+          {stats.map(([value, label, icon]) => <div className={styles.stat} key={icon}><Image src={`/icons/${icon}`} width={64} height={64} alt="" /><strong>{value}</strong><span>{label}</span></div>)}
         </div>
-        <Image 
-          alt='figura de um escoteiro'
-          width={300}
-          height={300}
-          src={'/icons/scout.png'}
-          style={{position: 'absolute', right: 0, width: '30vw', objectFit: 'contain', maxWidth: 296 }}
-        />
-      </Section>
-
-      {/* feeds do insta */}
-        <Section customClass={['fullWidth', 'flexCollTop']}>
-            <InstagramFeed limit={9} carrocel/>
-        </Section>
-    </>
+        <p>O movimento escoteiro no Brasil</p>
+      </section>
+      <Projetos resume />
+      <section className={styles.opportunities} aria-labelledby="opportunities-heading">
+        <div className={styles.sectionHeading}><span className={styles.eyebrow}>Encontre seu caminho</span><h2 id="opportunities-heading">O escotismo também é para você.</h2></div>
+        <div className={styles.opportunityGrid}>
+          <Link href="/seja-escoteiro" className={styles.opportunity}><span className={styles.number}>01</span><h3>Venha ser escoteiro</h3><p>Descubra como participar do grupo, como jovem ou voluntário.</p><span className={styles.action}>Quero participar →</span></Link>
+          <Link href="/empresa-parceira" className={styles.opportunity}><span className={styles.number}>02</span><h3>Apoie novas histórias</h3><p>Sua empresa pode contribuir com a educação de crianças e jovens.</p><span className={styles.action}>Seja uma empresa parceira →</span></Link>
+          <Link href="/espacos-seguros" className={styles.opportunity}><span className={styles.number}>03</span><h3>Cuidado em cada atividade</h3><p>Conheça nosso compromisso com espaços seguros e acolhedores.</p><span className={styles.action}>Conheça os espaços seguros →</span></Link>
+        </div>
+      </section>
+      <div className={styles.news}><NewsHomeSection apenasEventos /><NewsHomeSection /></div>
+      <section className={styles.partners} aria-labelledby="partners-heading">
+        <span className={styles.eyebrow}>Uma rede que faz a diferença</span><h2 id="partners-heading">Quem apoia o escotismo em Coqueiral</h2>
+        <ul>{partners.map(partner => <li key={partner.name}><a href={partner.url} target="_blank" rel="noopener noreferrer" aria-label={`${partner.name} (abre em nova aba)`}><Image src={`/logo/empresas-parceira/${partner.logo}`} width={180} height={100} alt={partner.name} /></a></li>)}</ul>
+      </section>
+      <section className={styles.quote} aria-label="Uma inspiração para o nosso trabalho">
+        <blockquote>“Não há ensino que se compare ao exemplo.”<cite>Baden-Powell</cite></blockquote>
+        <Image src="/icons/scout.png" alt="" width={220} height={220} />
+      </section>
+      <section className={styles.instagram} aria-label="Acompanhe o grupo no Instagram">
+        <InstagramFeed limit={9} carrocel />
+      </section>
+    </div>
   );
 }
-
-export default Home;

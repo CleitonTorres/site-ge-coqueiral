@@ -7,7 +7,7 @@ import { calcTotalFilesMB, dateFormat2, encryptPassword, gerarSlug } from '@/scr
 import Modal from '@/components/layout/modal/modal';
 import LoadIcon from '@/components/layout/loadIcon/loadIcon';
 import axios from 'axios';
-import { v4 } from 'uuid';
+
 import NewsPage from '@/components/layout/newsPage/newsPage';
 import Provider, { Context } from '@/components/context/context';
 import { uels } from '@/components/data-training/data-training';
@@ -16,7 +16,7 @@ function Page(){
     const context = useContext(Context);
     const [dataNewUser, setDataNewUser] = useState({} as ProfileProps);
     const [showModal, setShowModal] = useState(false);
-    const [actions, setAction] = useState<number | undefined>();
+    const [actions, setAction] = useState<number | undefined>(3);
     const [dataNews, setDataNews] = useState({} as DataNews);
     const [keyWords, setKeyWords] = useState<string>('');
 
@@ -30,7 +30,8 @@ function Page(){
 
         setDataNewUser((prev)=>{
             if(name === 'nameUel'){
-                const findUel = (uels || []).find(i=> i.nameUel.includes(value));                               
+                const findUel = (uels || []).find(i=> i.nameUel === value);
+                if (!findUel) return {...prev, dadosUel: {...prev.dadosUel, nameUel: ''}};                               
                 return{
                     ...prev,
                     dadosUel: {
@@ -114,7 +115,7 @@ function Page(){
         const filesData = e.target.files;        
         const fileListArray = filesData ? Array.from(filesData) as File[] : [];
 
-        if(fileListArray.length > 10){
+        if(files.length + fileListArray.length > 10){
             alert("O limite de imagens é 10 imagens por notícia");
             return;
         }
@@ -139,44 +140,7 @@ function Page(){
         }
     }
     
-    const handleImageChange = () => {
-        let data:string[] = [];
-        if(files.length === 0){
-            setDataNews((prev)=>{
-                return{
-                    ...prev,
-                    imageID: []
-                }
-            })
-        }
-        for (let i= 0; i < files.length; i++) {
-            const match = files[i].file instanceof Blob;
-            if(!match) break;
-            
-            const reader = new FileReader();
-
-            reader.onload = () => {
-                data = [...data, reader.result as string]
-                setDataNews((prev)=>{
-                    return{
-                        ...prev,
-                        imageID: data
-                    }
-                })
-            };
-            reader.readAsDataURL(files[i].file); // Lê o arquivo como uma URL base64   
-        }        
-    }
-
-    const handleActions = (id:number)=>{
-        if(actions === id){
-            setAction(undefined)
-        }else{
-            setAction(id)
-        }
-    }
-
-    const submit = async(e:FormEvent<HTMLButtonElement>)=>{
+    const submit = async(e:FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         if(!dataNewUser.user || !dataNewUser.password || !dataNewUser.name){
             alert("Preencha os campos de autenticação!")
@@ -184,7 +148,7 @@ function Page(){
         }
         setShowModal(true);
 
-        await axios.post(`${process.env.NEXT_PUBLIC_URL_AUTH}`,
+        await axios.post(`${process.env.URL_AUTH}`,
             {            
                 dataNewUser: encryptPassword(JSON.stringify(dataNewUser)),
             },{
@@ -206,9 +170,9 @@ function Page(){
         });
     }
 
-    const submitNews = async(e:FormEvent<HTMLButtonElement>)=>{
+    const submitNews = async(e:FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
-        if(!dataNews.title || !dataNews.paragraph || !dataNews.imageID){
+        if(!dataNews.title || !dataNews.paragraph || !files.length){
             alert("Preencha os campos obrigatórios!")
             return;
         }
@@ -231,7 +195,7 @@ function Page(){
                 formData.append('destinationFolder', "uploads-imagens-news");
                 formData.append('bucketName', "site-coqueiral-storage");
 
-                const respUpload = await axios.post(`${process.env.NEXT_PUBLIC_URL_UPLOAD}/uploadImagens/`, formData,{
+                const respUpload = await axios.post(`${process.env.URL_UPLOAD}/uploadImagens/`, formData,{
                     headers:{
                         'Authorization': `Bearer ${context.dataUser.token}`
                     }
@@ -244,12 +208,13 @@ function Page(){
                     console.log('erro ao subir imagem', respUpload);
                     alert("Ocorreu um erro ao tentar subir a imagem");
                     setShowModal(false);
+                    return;
                 }
                 
                 console.log('urls', idImage)
             }           
 
-            await axios.post(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,
+            await axios.post(`${process.env.URL_SERVICES}`,
                 {
                     service: 'news',
                     news: {
@@ -265,7 +230,9 @@ function Page(){
                 }
             )
             .then(()=>{
-                setDataNews({} as DataNews)
+                setDataNews({} as DataNews);
+                setFiles([]);
+                setKeyWords('')
                 alert("Gravado com sucesso!");
                 setShowModal(false);
             })
@@ -292,55 +259,76 @@ function Page(){
     },[]);
 
     useEffect(()=>{
-        handleImageChange();
+        let cancelled = false;
+        Promise.all(files.map(({file}) => new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+        }))).then(imageID => {
+            if (!cancelled) setDataNews(prev => ({...prev, imageID}));
+        }).catch(() => {
+            if (!cancelled) alert('Não foi possível preparar a prévia das imagens. Selecione os arquivos novamente.');
+        });
+        return () => { cancelled = true; };
     },[files]);
     
     return(
         <Section customClass={['flexCollTop', 'fullWidth']}>
-            <h1 className={styles.title}>Área Restrita</h1>
-            <h4>Bem vindo(a), {context.dataUser?.name}</h4>
             <div className={styles.conteiner}>
-                <div className={styles.subConteiner}>                    
-                    <ul>
-                        <li className={`${styles.cardActions} boxShadow`} onClick={()=>handleActions(1)}>
-                            <b className='cursorPointer'>Cadastrar usuário</b>
-                        </li>
-                        <li className={`${styles.cardActions} boxShadow`} onClick={()=>handleActions(2)}>
-                            <b className='cursorPointer'>Documento de membros</b>
-                        </li>
-                        <li className={`${styles.cardActions} boxShadow`} onClick={()=>handleActions(3)}>
-                            <b className='cursorPointer'>Cadastrar notícia</b>
-                        </li>
-                    </ul>
-                    <br />
-                    
-                </div>
+                <header className={styles.header}>
+                    <span className={styles.eyebrow}>ADMINISTRATIVO</span>
+                    <h1 className={styles.title}>Área restrita</h1>
+                    <p>Bem-vindo(a){context.dataUser?.name ? `, ${context.dataUser.name}` : ''}.</p>
+                    <p>Organize os acessos e compartilhe as novidades do grupo.</p>
+                </header>
+                <nav className={styles.actions} aria-label="Ferramentas administrativas">
+                    <button type="button" className={styles.cardActions} aria-pressed={actions === 1}
+                        aria-controls="cadastro-usuario" onClick={()=>setAction(1)}
+                        disabled={!["Admin", "Dirigente"].includes(context.dataUser?.nivelAcess)}>
+                        <span className={styles.actionNumber} aria-hidden="true">01</span>
+                        <strong>Cadastrar usuário</strong>
+                        <span>Gerencie o acesso de novos integrantes.</span>
+                        <small>{["Admin", "Dirigente"].includes(context.dataUser?.nivelAcess) ? 'Gerenciar acessos →' : 'Disponível para administradores e dirigentes'}</small>
+                    </button>
+                    <button type="button" className={styles.cardActions} disabled>
+                        <span className={styles.actionNumber} aria-hidden="true">02</span>
+                        <strong>Documentos de membros</strong>
+                        <span>Consulte os documentos dos integrantes.</span>
+                        <small>Em breve</small>
+                    </button>
+                    <button type="button" className={styles.cardActions} aria-pressed={actions === 3}
+                        aria-controls="cadastro-noticia" onClick={()=>setAction(3)}>
+                        <span className={styles.actionNumber} aria-hidden="true">03</span>
+                        <strong>Cadastrar notícia</strong>
+                        <span>Compartilhe histórias, atividades e eventos.</span>
+                        <small>Preparar publicação →</small>
+                    </button>
+                </nav>
                 {actions === 1 && ["Admin", "Dirigente"].includes(context.dataUser.nivelAcess) ? 
-                <form className={`${styles.subConteiner}`} method='POST'>
-                    <h4>Cadastrar novo usuário</h4>
+                <form id="cadastro-usuario" className={styles.subConteiner} onSubmit={submit} aria-busy={showModal}>
+                    <p className={styles.eyebrow}>ACESSOS DO GRUPO</p>
+                    <h2>Cadastrar novo usuário</h2><p className={styles.intro}>Preencha os dados do integrante e defina seu acesso. Nome, usuário e senha são obrigatórios.</p>
                     <div className={styles.boxInputs}>
                         <div className={styles.boxInput}> 
-                            <label htmlFor="user">Nome</label>                   
-                            <input 
-                                type="text" 
-                                name='name' 
+                            <label htmlFor="name">Nome</label>                   
+                            <input id="name" type="text" 
+                                name='name' required autoComplete='name' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.name || '' }
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Registro Escoteiro</label>                   
-                            <input 
-                                type="text" 
+                            <label htmlFor="registro">Registro Escoteiro</label>                   
+                            <input id="registro" type="text" 
                                 name='registro' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.registro || '' }
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Cargo</label>                   
-                            <select 
-                                name='cargo' 
+                            <label htmlFor="cargo">Cargo</label>                   
+                            <select id="cargo" name='cargo' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.cargo || '' }
                             >
@@ -353,14 +341,13 @@ function Page(){
                                     'Diretor(a) Financeiro',
                                     'Diretor(a) de Métodos Educativos',
                                     'Diretor(a) Presidente'].map(item=> (
-                                    <option value={item} key={v4()}>{item}</option>
+                                    <option value={item} key={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Ramo</label>                   
-                            <select 
-                                name='ramo' 
+                            <label htmlFor="ramo">Ramo</label>                   
+                            <select id="ramo" name='ramo' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.ramo || '' }
                             >
@@ -371,47 +358,43 @@ function Page(){
                                     'Sênior', 
                                     'Pioneiro',
                                     'Diretoria'].map(item=> (
-                                    <option value={item} key={v4()}>{item}</option>
+                                    <option value={item} key={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Nível de formação</label>                   
-                            <select 
-                                name='nivelFormacao' 
+                            <label htmlFor="nivelFormacao">Nível de formação</label>                   
+                            <select id="nivelFormacao" name='nivelFormacao' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.nivelFormacao || '' }
                             >
                                 {['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (
-                                    <option value={item} key={v4()}>{item}</option>
+                                    <option value={item} key={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Nível de Acesso</label>                   
-                            <select 
-                                name='nivelAcess' 
+                            <label htmlFor="nivelAcess">Nível de Acesso</label>                   
+                            <select id="nivelAcess" name='nivelAcess' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.nivelAcess || '' }
                             >
                                 {['', 'Escotista', 'Dirigente', 'Regional-admin'].map(item=> (
-                                    <option value={item} key={v4()}>{item}</option>
+                                    <option value={item} key={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Contato</label>                   
-                            <input 
-                                type="tel" 
+                            <label htmlFor="tel">Contato</label>                   
+                            <input id="tel" type="tel" 
                                 name='tel' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.tel || '' }
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">E-mail</label>                   
-                            <input 
-                                type="email" 
+                            <label htmlFor="email">E-mail</label>                   
+                            <input id="email" type="email" 
                                 name='email' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.email || '' }
@@ -419,18 +402,16 @@ function Page(){
                         </div>
                         <div className={styles.boxInput}>
                             <label htmlFor="user">Usuário</label>                   
-                            <input 
-                                type="text" 
-                                name='user' 
+                            <input id="user" type="text" 
+                                name='user' required autoComplete='off' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.user || '' }
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Senha</label>       
-                            <input 
-                                type="password" 
-                                name='password'
+                            <label htmlFor="password">Senha</label>       
+                            <input id="password" type="password" 
+                                name='password' required autoComplete='new-password'
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.password || '' }
                             /> 
@@ -439,13 +420,13 @@ function Page(){
                     <div className={styles.boxInput}>
                         <div className={styles.boxInput}> 
                             <label htmlFor="nameUel">UEL</label>
-                            <select
+                            <select id="nameUel"
                                 name='nameUel' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.dadosUel?.nameUel || '' }
                             >
                                 <option value=""></option>
-                                {uels.sort((a,b)=>{
+                                {[...uels].sort((a,b)=>{
                                     const item1 = a.numUel;
                                     const item2 = b.numUel;
                                     if(item1 > item2){
@@ -459,87 +440,81 @@ function Page(){
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Presidente da UEL</label>                   
-                            <input 
-                                type="text" 
+                            <label htmlFor="dadosUel.presidenteUel">Presidente da UEL</label>                   
+                            <input id="dadosUel.presidenteUel" type="text" 
                                 name='dadosUel.presidenteUel' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.dadosUel?.presidenteUel || '' }
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Registro do(a) Presidente da UEL</label>                   
-                            <input 
-                                type="text" 
+                            <label htmlFor="dadosUel.regEscoteiroPresidente">Registro do(a) Presidente da UEL</label>                   
+                            <input id="dadosUel.regEscoteiroPresidente" type="text" 
                                 name='dadosUel.regEscoteiroPresidente' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.dadosUel?.regEscoteiroPresidente || '' }
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Contato do(a) Presidente da UEL</label>                   
-                            <input 
-                                type="text" 
+                            <label htmlFor="dadosUel.telPresidente">Contato do(a) Presidente da UEL</label>                   
+                            <input id="dadosUel.telPresidente" type="text" 
                                 name='dadosUel.telPresidente' 
                                 onChange={(e)=>handleData(e)}
                                 value={dataNewUser.dadosUel?.telPresidente || '' }
                             />
                         </div>
                     </div>
-                    <button onClick={(e)=>submit(e)}>
-                        Ok
+                    <button type="submit" className={styles.submit} disabled={showModal}>
+                        Cadastrar usuário
                     </button>
                 </form>
                 :null}
 
                 {actions === 3 ? 
                 <>
-                <form className={`${styles.subConteiner}`} method='POST'>
-                    <h4>Cadastrar notícia</h4> 
+                <form id="cadastro-noticia" className={styles.subConteiner} onSubmit={submitNews} aria-busy={showModal}>
+                    <p className={styles.eyebrow}>NOVIDADES DO COQUEIRAL</p>
+                    <h2>Cadastrar notícia</h2><p className={styles.intro}>Conte o que acontece no grupo. Título, imagens e texto são obrigatórios.</p> 
                     <div className={styles.boxInputs}>
                         <div className={`${styles.boxInput}`}> 
-                            <label htmlFor="user">Título</label>                   
-                            <input 
-                                type="text" 
-                                name='title' 
+                            <label htmlFor="title">Título</label>                   
+                            <input id="title" type="text" 
+                                name='title' required 
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.title || '' }
                                 placeholder='título da notícia'
                             />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Essa notícia deve aparecer em Destaques?</label>                   
-                            <select 
-                                name='destaque' 
+                            <label htmlFor="destaque">Essa notícia deve aparecer em Destaques?</label>                   
+                            <select id="destaque" name='destaque' 
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.destaque ? 'Sim' : 'Não'  }
                             >
-                                <option value={''} key={v4()}></option>
+                                <option value={''}>Selecione</option>
                                 {['Não','Sim'].map(item=> (
-                                    <option value={item} key={v4()}>{item}</option>
+                                    <option value={item} key={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">Se trata de um Evento?</label>                   
-                            <select 
-                                name='evento' 
+                            <label htmlFor="evento">Se trata de um Evento?</label>                   
+                            <select id="evento" name='evento' 
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.evento ? 'Sim' : 'Não'  }
                             >
-                                <option value={''} key={v4()}></option>
+                                <option value={''}>Selecione</option>
                                 {['Não','Sim'].map(item=> (
-                                    <option value={item} key={v4()}>{item}</option>
+                                    <option value={item} key={item}>{item}</option>
                                 ))}
                             </select>
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">
+                            <label htmlFor="upload">
                                 Resolução ideal da imagem do banner (1200x600)<br/>
                                 máximo 10 imagens <br/>
-                                <s>A primeira imagem carregada será usada de capa.</s>
-                                <input 
-                                    type="file" 
+                                <span>A primeira imagem será a capa. JPG ou PNG, até 9 MB por imagem.</span>
+                                <input id="upload" type="file" 
                                     name='upload' 
                                     accept='.jpeg, .png, .jpg'
                                     multiple
@@ -549,16 +524,15 @@ function Page(){
                             {files?.map((f, i)=>(
                                 <p key={f.fileName+i} className={styles.itensFotos}>
                                     {f.fileName}
-                                    <span onClick={()=>removeFile(f.fileName)}>X</span>
+                                    <button type="button" aria-label={`Remover imagem ${f.fileName}`} onClick={()=>removeFile(f.fileName)}>×</button>
                                 </p>
                             ))
 
                             }
                         </div>
                         <div className={`${styles.boxInput}`}> 
-                            <label htmlFor="user">Link do mapa</label>                   
-                            <input 
-                                type="text" 
+                            <label htmlFor="linkMaps">Link do mapa</label>                   
+                            <input id="linkMaps" type="text" 
                                 name='linkMaps' 
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.linkMaps || '' }
@@ -566,27 +540,26 @@ function Page(){
                             />
                         </div>
                         <div className={`${styles.boxInput}`}> 
-                            <label htmlFor="user">Data</label>                   
-                            <input 
-                                type="date" 
+                            <label htmlFor="date">Data</label>                   
+                            <input id="date" type="date" 
                                 name='date' 
                                 onChange={(e)=>handleDataNews(e)}
-                                datatype={dateFormat2(dataNews.date) || '' }
-                                placeholder='link das coordenadas'
-                            />
+                                value={dataNews.date && !isNaN(new Date(dataNews.date).getTime()) ? dateFormat2(dataNews.date).split('/').reverse().join('-') : ''}
+                                                            />
                         </div>
                         <div className={styles.boxInput}>
-                            <label htmlFor="user">
+                            <label htmlFor="keyWords">
                                 Palavras chaves                  
-                                <input 
-                                    name='keyWords' 
+                                <input id="keyWords" name='keyWords' 
                                     onChange={(e)=>handleKeysWorld(e)}
                                     onKeyDown={(e)=>{if(e.key === 'Enter') {
-                                        if(e.currentTarget?.value.length <= 1) return;
+                                        e.preventDefault();
+                                        const keyword = e.currentTarget.value.trim();
+                                        if(keyword.length <= 1) return;
                                         setDataNews((prev)=>{
                                             return{
                                                 ...prev,
-                                                keywords: [...prev.keywords || [], e.currentTarget?.value]
+                                                keywords: [...prev.keywords || [], keyword]
                                             }
                                         });
                                         setKeyWords('');
@@ -600,44 +573,33 @@ function Page(){
                                 {dataNews.keywords?.map((item, index)=>(
                                     <div key={index+"keysworld"} style={{position: 'relative', paddingRight: '16px'}}>
                                         <span>{item}</span>
-                                        <span 
-                                            key={index+"keysworld"}
-                                            onClick={()=>removeKeyWords(index)}
-                                            style={{
-                                                cursor: 'pointer', 
-                                                color: 'var(--white)',
-                                                position: 'absolute',
-                                                right: '4px',
-                                                top: '-6px',
-                                            }}
-                                        >
-                                            x
-                                        </span>
+                                        <button type="button" aria-label={`Remover palavra-chave ${item}`} onClick={()=>removeKeyWords(index)}>×</button>
                                     </div>
                                 ))}
                             </div>
                         </div>
                         <div className={styles.boxTextArea}>
-                            <label htmlFor="user">Texto</label>                   
-                            <textarea 
-                                name='paragraph' 
+                            <label htmlFor="paragraph">Texto da notícia</label><p id="texto-ajuda" className={styles.hint}>Escreva o conteúdo em parágrafos, usando Enter para separar as ideias.</p>                   
+                            <textarea id="paragraph" name='paragraph' required aria-describedby='texto-ajuda' 
                                 onChange={(e)=>handleDataNews(e)}
                                 value={dataNews.paragraph || '' }
-                                placeholder='exemplo: *texto da notícia* (vai ficar em negrito) /p texto qualquer /p (vai quebrar linha como um parágrafo)'
+                                placeholder='Compartilhe os detalhes da atividade…'
                             />
                         </div>
                     </div>
-                    <button onClick={(e)=>submitNews(e)}>
-                        Ok
+                    <button type="submit" className={styles.submit} disabled={showModal}>
+                        Publicar notícia
                     </button>
                 </form>
-                <div className={styles.subConteiner} style={{maxWidth: 'var(--widthLarge)'}}>
-                    <h4>Preview da Notícia</h4>
+                <details className={styles.preview}>
+                    <summary>Prévia da notícia <span>Confira o conteúdo antes de publicar</span></summary>
+                    <div className={styles.previewContent}>
                     <NewsPage
                         origem='cadastro'
                         dataNews={dataNews}
                     />
-                </div>
+                    </div>
+                </details>
                 </>
                 :null}
             </div>

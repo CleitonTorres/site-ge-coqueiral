@@ -1,126 +1,42 @@
-import Link from "next/link";
-import Box from "../box/box";
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
+import styles from './projetos.module.css';
 
-type Props = {
-    resume: boolean;
-};
-export default function Projetos({resume}: Props){
-    return(
-        <section className="projetos">
-            {/* Projetos */}
-                <h1 
-                    className='textLarge' 
-                    style={{
-                        width: '100%',
-                        color: 'var(--azul-escuro)',
-                        textAlign: 'center',
-                    }
-                }>
-                    Nossos Projetos
-                </h1>
-                <Box customClass={['margin', 'flexRowWrap']}>
-                <Link 
-                    href={'/projetos/acampa-canoa'} 
-                    target='_self' 
-                    className='cardProjetos'
-                >
-                    <Image 
-                    alt='imagem acampa canoa, esporte, educação, escotismo, nautico, aracruz, grupo escoteiro coqueiral, acampamento volante, praias, praia da balsa, piraque açu, jovens, aventureiros'
-                    width={408}
-                    height={178}
-                    src={'/images/projetos/acampa-canoa/acampa-canoa01.jpg'}
-                    />
-                    <span>Acampa Canoa (Esporte/Educação)</span>
-                </Link>
-                <Link 
-                    href={'/projetos/pipa-escoteira'} 
-                    target='_self' 
-                    className='cardProjetos'
-                >
-                    <Image 
-                    alt='imagem do projeto Pipa Escoteira, cultura, tradições, escotismo, jovens, aracruz, grupo escoteiro coqueiral, atividades culturais, educação cultural'
-                    width={408}
-                    height={178}
-                    src={'/images/projetos/pipa-escoteira/pipa-escoteira01.jpeg'}
-                    />
-                    <span>Pipa Escoteira (Cultura)</span>
-                </Link>
-                <Link 
-                    href={'/projetos/oleo-na-reciclagem'}  
-                    target='_self' 
-                    className='cardProjetos'
-                >
-                    <Image 
-                        alt='meio ambiente, reciclagem, óleo de cozinha, logística reversa, escotismo, jovens, aracruz, grupo escoteiro coqueiral' 
-                        width={970}
-                        height={350} 
-                        loading='eager'
-                        quality={100}
-                        priority
-                        unoptimized
-                        src={'/images/projetos/oleo/oleo.png'}
-                        about='projeto de meio ambiente meio ambiente que coleta óleo usado de cozinha e destina a reciclagem.'
-                    />
-                    <span>De Óleo na Reciclagem (Meio Ambiente/Logística Reversa) </span>
-                </Link>
-                <Link 
-                    href={'/projetos/escoteiros-pela-biodiversidade'} 
-                    target='_self' 
-                    className='cardProjetos'
-                >
-                    <Image 
-                    alt="proteção ambiental, meio ambiente, sustentabilidade, escotismo, jovens, aracruz, grupo escoteiro coqueiral"
-                    width={970}
-                    height={350}
-                    src={'/images/biodiversidade (1).jpg'}
-                    />
-                    <span>Escoteiros pela Biodiversidade (Meio Ambiente)</span>
-                </Link>
-                <Link 
-                    href={'/projetos/escoteiro-dev'}  
-                    target='_self' 
-                    className='cardProjetos'
-                >
-                    <Image 
-                        alt="tecnologia, cultura digital, educação tecnológica, escotismo, jovens, aracruz, grupo escoteiro coqueiral"
-                        width={970}
-                        height={350}
-                        src={'/images/escoteiro-dev.jpg'}
-                    /> 
-                    <span>Escoteiro Dev (Cultura/Educação/Tecnologia)</span>
-                </Link>
-                </Box>
-                {resume ? <Link 
-                    href='/projetos' 
-                    target='_self' 
-                    style={{
-                        color: 'white', 
-                        fontWeight: 600, 
-                        backgroundColor: 'var(--azul-escuro)',
-                        padding: '10px 20px',
-                        textAlign: 'center',
-                        marginTop: '20px',
-                    }}
-                >
-                    VER TODOS
-                </Link> : 
-                <>
-                    <Link 
-                        href={'/projetos/dia-de-semear-paz'} 
-                        target='_self' 
-                        className='cardProjetos'
-                    >
-                        <Image 
-                        alt="serviço social, defesa social, comunidade, escotismo, jovens, voluntariado, aracruz, grupo escoteiro coqueiral"
-                        width={970}
-                        height={350}
-                        src={'/images/mensageiros-da-paz (4).jpg'}
-                        /> 
-                        <span>Dia de Semear Paz (Defesa/Social/Comunidade)</span>
-                    </Link>
-                </>
-                }
-        </section>
-    )
+const projects = [
+  { slug: 'acampa-canoa', title: 'Acampa Canoa', category: 'Esporte e educação', image: '/images/projetos/acampa-canoa/acampa-canoa01.jpg', description: 'Aventura, trabalho em equipe e aprendizado em contato com a natureza.' },
+  { slug: 'pipa-escoteira', title: 'Pipa Escoteira', category: 'Cultura', image: '/images/projetos/pipa-escoteira/pipa-escoteira01.jpeg', description: 'Brincadeiras e tradições que aproximam gerações e valorizam nossa cultura.' },
+  { slug: 'oleo-na-reciclagem', title: 'De Óleo na Reciclagem', category: 'Meio ambiente', image: '/images/projetos/oleo/oleo.png', description: 'Coleta de óleo de cozinha usado para dar um destino responsável a esse resíduo.' },
+  { slug: 'escoteiros-pela-biodiversidade', title: 'Escoteiros pela Biodiversidade', category: 'Meio ambiente', image: '/images/biodiversidade (1).jpg', description: 'Conhecer e cuidar da vida ao nosso redor, com ações de educação ambiental.' },
+  { slug: 'escoteiro-dev', title: 'Escoteiro Dev', category: 'Educação e tecnologia', image: '/images/escoteiro-dev.jpg', description: 'Cultura digital e tecnologia como caminhos para aprender, criar e compartilhar.' },
+  { slug: 'dia-de-semear-paz', title: 'Dia de Semear Paz', category: 'Comunidade', image: '/images/mensageiros-da-paz (4).jpg', description: 'Voluntariado e ações na comunidade para cultivar uma cultura de paz.' },
+];
+
+export default function Projetos({ resume }: { resume: boolean }) {
+  return (
+    <section className={styles.section} aria-labelledby="projects-heading">
+      <div className={styles.heading}>
+        <div>
+          <span className={styles.eyebrow}>Aprender fazendo</span>
+          <h2 id="projects-heading">{resume ? 'Pequenas ações. Grandes descobertas.' : 'Conheça nossas iniciativas'}</h2>
+          <p>Educação, cultura e cuidado com o meio ambiente. Descubra o que construímos juntos em Coqueiral.</p>
+        </div>
+        {resume && <Link className={styles.all} href="/projetos">Todos os projetos <span aria-hidden="true">↗</span></Link>}
+      </div>
+      <ul className={styles.grid}>
+        {(resume ? projects.slice(0, 3) : projects).map((project) => (
+          <li key={project.slug}>
+            <Link href={`/projetos/${project.slug}`} className={styles.card}>
+              <Image src={project.image} alt="" width={600} height={375} sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" className={styles.image} />
+              <div className={styles.body}>
+                <span className={styles.category}>{project.category}</span>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <span className={styles.more}>Conhecer projeto <span aria-hidden="true">→</span></span>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
 }

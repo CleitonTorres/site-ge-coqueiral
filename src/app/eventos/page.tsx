@@ -9,10 +9,10 @@ import Head from 'next/head';
 export default async function Page(){
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}?service=news`,
+            `${process.env.ROOT_URL}${process.env.URL_SERVICES}?service=news`,
             {
             headers: {
-                Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`,
+                Authorization: `Bearer ${process.env.AUTORIZATION}`,
             }
             }
         );

@@ -25,7 +25,7 @@ export async function generateMetadata({ dataNews }: Props): Promise<Metadata> {
             title: dataNews.title,
             description: dataNews.paragraph,
             images: dataNews.imageID ? [{ url: dataNews.imageID[0] }] : [],
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/aconteceu/${dataNews._id}`
+            url: `${process.env.SITE_URL}/aconteceu/${dataNews._id}`
         }
     };
 }

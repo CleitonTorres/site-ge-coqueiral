@@ -1,167 +1,45 @@
-'use client'
+'use client';
 import axios from 'axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { IoIosArrowBack, IoIosArrowForward  } from "react-icons/io";
 import styles from './feeds.module.css';
 
-type InstagramPost = {
-  id: string;
-  caption: string;
-  media_type: string;
-  media_url: string;
-  permalink: string;
-};
-
-type Props = {
-  limit?: number,
-  customClass?: string[],
-  carrocel?: boolean
-}
-const InstagramFeed = ({limit, customClass, carrocel}:Props) => {
+type InstagramPost = { id: string; caption: string; media_type: string; media_url: string; permalink: string };
+type Props = { limit?: number; customClass?: string[]; carrocel?: boolean };
+export default function InstagramFeed({ limit, customClass = [], carrocel }: Props) {
   const [posts, setPosts] = useState<InstagramPost[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [customStyles, setCustomStyles] = useState('');
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  // Função para navegar para o próximo post
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % posts.length); // Vai para o próximo post e loopa
-  };
-
-  // Função para navegar para o post anterior
-  const goToPrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + posts.length) % posts.length); // Vai para o post anterior e loopa
-  };
-
-  useEffect(()=>{
-      if(Array.isArray(customClass)){
-          let newString = '';
-          for (const item of customClass) {
-              newString += styles[item] + " ";         
-          }
-          setCustomStyles(newString)
-      }else{
-          setCustomStyles(customClass ? styles[customClass] : '') 
-      }
-  },[customClass]);
-
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
-    const fetchInstagramFeed = async () => {
+    const controller = new AbortController();
+    async function load() {
       try {
-        const response = await axios.post('/api/services',{ 
-            service: 'feedInsta',
-            limit: limit
-        },{
-            headers:{
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
-            }
-        });
-
-        const data = response.data;
-
-        setPosts(data.data);
-      } catch (error) {
-        console.error('Erro ao carregar o feed do Instagram:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInstagramFeed();
+        const response = await axios.post('/api/services', { service: 'feedInsta', limit }, { headers: { Authorization: `Bearer ${process.env.AUTORIZATION}` }, signal: controller.signal, timeout: 10000 });
+        if (!controller.signal.aborted) setPosts(Array.isArray(response.data.data) ? response.data.data : []);
+      } catch { /* O link para o perfil continua disponível quando o serviço falhar. */ }
+      finally { if (!controller.signal.aborted) setLoading(false); }
+    }
+    void load();
+    return () => controller.abort();
   }, [limit]);
 
-  // Troca automática de imagem a cada 5 segundos
-  useEffect(() => {
-    const interval = setInterval(() => {
-      goToNext(); // Chama a função para ir para o próximo post
-    }, 8000); // 5 segundos
-
-    return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
-  }, [posts]);
-
-
-  if (loading) return <p>Carregando feed do Instagram...</p>;
-
-  if(!carrocel){
-    return(
-        <div className={`${styles.conteiner} ${customStyles}`}>
-          <h2>Feed do Instagram</h2>       
-          <div className={styles.content}>
-          {posts.map((post) => (
-            <div key={post.id} className={styles.item}>
-              {post.media_type === 'IMAGE' || post.media_type === 'CAROUSEL_ALBUM' ? (
-                <Image
-                  src={post.media_url}
-                  alt={'Post do Instagram'}
-                  width={200}
-                  height={200}
-                  quality={100}
-                  priority
-                  unoptimized
-                />
-              ) : post.media_type === 'VIDEO' ? (
-                <video controls>
-                  <source src={post.media_url} type="video/mp4" />
-                </video>
-              ) : null}
-              <p>{post.caption}</p>
-              <a href={post.permalink} target="_blank" rel="noopener noreferrer">
-                Ver no Instagram
-              </a>
-            </div>
-          ))}
-        </div> 
-        </div>
-    )
-  }else{
-      return(
-        <div className={`${styles.conteiner} ${customStyles}`}>
-          <h2>Feed do Instagram</h2>
-          <div className={styles.carousel}>
-            <div className={styles.carouselWrapper} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-              {posts.map((post) => (
-                <div className={styles.carouselItem} key={post.id}>
-                  {post.media_type === 'IMAGE' || post.media_type === 'CAROUSEL_ALBUM' ? (
-                    <Image
-                      src={post.media_url}
-                      alt={'Post do Instagram'}
-                      width={200}
-                      height={200}
-                      priority
-                      unoptimized
-                      quality={100}
-                    />
-                  ) : post.media_type === 'VIDEO' ? (
-                    <video controls>
-                      <source src={post.media_url} type="video/mp4" />
-                    </video>
-                  ) : null}
-                  <p>{post.caption}</p>
-                  <a href={post.permalink} target="_blank" rel="noopener noreferrer">
-                    Ver no Instagram
-                  </a>
-                </div>
-              ))}
-            </div>
-
-            {/* Botões de Navegação */}
-            <div className={styles.navigation}>
-              <IoIosArrowBack 
-                onClick={goToPrev}
-                className={styles.navButton}
-                size={36}
-              />
-              <IoIosArrowForward 
-                onClick={goToNext} 
-                className={styles.navButton}
-                size={36}
-              />
-            </div>
-          </div>
-        </div>
-      )
-  }
+  const visiblePosts = carrocel ? posts.slice(currentIndex, currentIndex + 1) : posts;
+  return <div className={`${styles.conteiner} ${customClass.map(name => styles[name] || '').join(' ')}`}>
+    <h2>Nosso dia a dia no Instagram</h2>
+    {loading ? <p role="status">Carregando publicações…</p> : posts.length === 0 ? <p>Continue acompanhando nossas atividades pelo perfil do grupo.</p> : <>
+      <div className={styles.content}>
+        {visiblePosts.map(post => <article className={styles.item} key={post.id}>
+          {post.media_type === 'VIDEO' ? <video controls preload="metadata" aria-label={post.caption?.slice(0, 100) || 'Vídeo do grupo'} src={post.media_url} /> : <Image src={post.media_url} alt={post.caption?.slice(0, 150) || 'Publicação do Grupo Escoteiro Coqueiral'} width={600} height={600} unoptimized />}
+          {post.caption && <p>{post.caption}</p>}
+          <a href={post.permalink} target="_blank" rel="noopener noreferrer">Ver publicação no Instagram<span className="sr-only"> (abre em nova aba)</span></a>
+        </article>)}
+      </div>
+      {carrocel && posts.length > 1 && <div className={styles.navigation}>
+        <button type="button" aria-label="Publicação anterior" onClick={() => setCurrentIndex((currentIndex - 1 + posts.length) % posts.length)}>← Anterior</button>
+        <span role="status" aria-live="polite">{currentIndex + 1} de {posts.length}</span>
+        <button type="button" aria-label="Próxima publicação" onClick={() => setCurrentIndex((currentIndex + 1) % posts.length)}>Próxima →</button>
+      </div>}
+    </>}
+    <a className={styles.profile} href="https://www.instagram.com/19escoqueiral/" target="_blank" rel="noopener noreferrer">Siga @19escoqueiral<span className="sr-only"> (abre em nova aba)</span></a>
+  </div>;
 }
-
-export default InstagramFeed;

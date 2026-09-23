@@ -1,5 +1,5 @@
 import Section from '@/components/layout/sections/section';
-import styles from './page.module.css';
+import styles from '../project-detail.module.css';
 import Image from 'next/image';
 import Carrocel from '@/components/layout/carrocel/carrocel';
 import Box from '@/components/layout/box/box';
@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Acampa Canoa",
         description:
             "O Acampa Canoa é um acampamento escoteiro para jovens de 15 a 17 anos, de ambos os sexos, do ramo Sênior, organizado e idealizado pela...",
-        images: [`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/acampa-canoa/acampa-canoa01.jpg`],
+        images: [`${process.env.ROOT_URL}/images/projetos/acampa-canoa/acampa-canoa01.jpg`],
         url: 'www.19.escoteiroses.org.br/projetos/acampa-canoa'
     }
   };
@@ -39,8 +39,8 @@ export default function Page(){
                     <ShareButton
                         title={"Acampa Canoa Sênior"}
                         text={"O Acampa Canoa é um projeto socioesportivo para jovens de 15 a 17 anos, de ambos os sexos, escoteiros ou não, organizado e idealizado pela chefia Sênior do 19º Grupo Escoteiro Coqueiral, Coqueiral, Aracruz/ES, que tem a finalidade de aprimorar os jovens em técnicas náuticas como condução de embarcações a remo e pesca."}
-                        url={`${process.env.NEXT_PUBLIC_ROOT_URL}/projetos/acampa-canoa/`}
-                        imageUrl={`${process.env.NEXT_PUBLIC_ROOT_URL}/images/projetos/acampa-canoa/acampa-canoa01.jpg`}
+                        url={`${process.env.ROOT_URL}/projetos/acampa-canoa/`}
+                        imageUrl={`${process.env.ROOT_URL}/images/projetos/acampa-canoa/acampa-canoa01.jpg`}
                     />
                 </div>
                 <div className={styles.subConteiner}>
@@ -137,7 +137,7 @@ export default function Page(){
                     <iframe 
                         className={styles.video}
                         src="https://www.youtube.com/embed/YLkBr_TdjeM?si=AywYpcNHWKTxTCdZ" 
-                        title="YouTube video player" 
+                        title="Acampa Canoa — vídeo da primeira edição" loading="lazy"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     >
                     </iframe><br />
@@ -202,7 +202,7 @@ export default function Page(){
                     <br />
                     <p className={styles.paragraph}>
                         Leia o regulamento do Bolsa Atleta no link: 
-                        <a className={styles.link} href='https://docs.google.com/document/d/1trdwb0WwgKGnnsIrFKKTw88zOClcqzqI/edit?usp=sharing&ouid=116004798520201029660&rtpof=true&sd=true' target='_blank'>Regulamento da Competição Náutica</a>
+                        <a className={styles.link} href='https://docs.google.com/document/d/1trdwb0WwgKGnnsIrFKKTw88zOClcqzqI/edit?usp=sharing&ouid=116004798520201029660&rtpof=true&sd=true' target="_blank" rel="noopener noreferrer">Regulamento da Competição Náutica</a>
                     </p>
                 </div>
 
@@ -224,7 +224,7 @@ export default function Page(){
                     </p>
                     <br />
 
-                    <a href="https://www.instagram.com/19escoqueiral/" className={styles.link} target='_blank'>
+                    <a href="https://www.instagram.com/19escoqueiral/" className={styles.link} target="_blank" rel="noopener noreferrer">
                         Entre em Contato e saiba mais como apoiar esse projeto!
                     </a>
                 </div>
@@ -290,7 +290,7 @@ export default function Page(){
             }}>
                 <Link 
                     href={'https://photos.app.goo.gl/7J37NqUfdenihuLs7'} 
-                    target='_blank'
+                    target="_blank" rel="noopener noreferrer"
                     style={{
                         border: '1px solid var(--cinza-escuro)', 
                         borderRadius: '8px',
@@ -318,7 +318,7 @@ export default function Page(){
                 </Link>
                 <Link 
                     href={'https://photos.app.goo.gl/m59ZTaMkWQUzwWap9'} 
-                    target='_blank'
+                    target="_blank" rel="noopener noreferrer"
                     style={{
                         border: '1px solid var(--cinza-escuro)', 
                         borderRadius: '8px',

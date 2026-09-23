@@ -5,14 +5,16 @@
     justify-content: center;
     align-items: center;
     width: 200px;
+    max-width: 100%;
 }
 .logo{
     object-fit: contain;
     width: 100%;
 }
 .spam01{
-    font-size: 24;
-    text-wrap: nowrap;
+    font-size: 1rem;
+    text-wrap: wrap;
+    text-align: center;
     color: var(--azul-escuro);
     font-weight: 600
 }

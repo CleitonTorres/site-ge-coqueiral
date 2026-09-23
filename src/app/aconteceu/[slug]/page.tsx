@@ -49,7 +49,7 @@ export default async function Page({ params }: PageProps) {
                 <ShareButton
                     title={noticia.title}
                     text={noticia.paragraph}
-                    url={`${process.env.NEXT_PUBLIC_ROOT_URL}/aconteceu/${noticia.slug}`}
+                    url={`${process.env.ROOT_URL}/aconteceu/${noticia.slug}`}
                     imageUrl={noticia.imageID ? (typeof noticia.imageID === 'string' ? noticia.imageID : noticia.imageID[0]) : ''}
                 />
             </div>
@@ -60,13 +60,13 @@ export default async function Page({ params }: PageProps) {
 
 async function getNewsData(slug: string) {
     try{
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
+        const response = await axios.get(`${process.env.ROOT_URL}${process.env.URL_SERVICES}`, {
             params: {
                 service: 'news',
                 slug: slug,
             },
             headers: {
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                'Authorization': `Bearer ${process.env.AUTORIZATION}`
             }
         });
 
@@ -81,10 +81,10 @@ async function getNewsData(slug: string) {
 // Gerar os caminhos estáticos (substitui getStaticPaths)
 export async function generateStaticParams() {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_ROOT_URL}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
+        const response = await axios.get(`${process.env.ROOT_URL}${process.env.URL_SERVICES}`, {
             params: {service: 'news'}, 
             headers: {
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                'Authorization': `Bearer ${process.env.AUTORIZATION}`
             }
         });
 
@@ -122,7 +122,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                 height: 600,
                 alt: noticia.title
             }] : [],
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/aconteceu/${noticia._id}`
+            url: `${process.env.SITE_URL}/aconteceu/${noticia._id}`
         }
     };
 }

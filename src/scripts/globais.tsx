@@ -11,7 +11,7 @@ import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa6";
  * @returns {string} - Senha criptografada
  */
 export const encryptPassword = (password:string)=> {
-    const key = `${process.env.NEXT_PUBLIC_TOKEN_APP}`; // Chave para a criptografia
+    const key = `${process.env.TOKEN_APP}`; // Chave para a criptografia
     const encrypted = CryptoJS.AES.encrypt(password, key).toString();
 
     return encrypted;
@@ -23,7 +23,7 @@ export const encryptPassword = (password:string)=> {
  * @returns {string} senha descriptografada
  */
 export const decryptPassword = (encryptedPassword:string)=> {
-    const key = `${process.env.NEXT_PUBLIC_TOKEN_APP}`;
+    const key = `${process.env.TOKEN_APP}`;
 
     try {
         const decrypted = CryptoJS.AES.decrypt(encryptedPassword, key).toString(CryptoJS.enc.Utf8);
@@ -506,14 +506,14 @@ export const signedURL = async(fileUrl:string)=>{
     }
 
     try{
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_URL_SERVICES}`,{
+        const response = await axios.get(`${process.env.URL_SERVICES}`,{
             params: {
                 service: 'getUrlKey',
                 fileUrl: fileUrl,
                 expiresInMs: 2
             },
             headers: {
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                'Authorization': `Bearer ${process.env.AUTORIZATION}`
             }
         });
 
@@ -685,7 +685,7 @@ export const adressToString = (adress?:Endereco)=>{
  * @returns 
  */
 export const getStaticMapUrl = (lat: number, lng: number, label: string) => {
-    const API_KEY = `${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`; // Substitua pela sua chave
+    const API_KEY = `${process.env.API_KEY_GOOGLE}`; // Substitua pela sua chave
     return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=19&size=600x300&maptype=satellite
     &markers=color:red%7Clabel:${label}%7C${lat},${lng}
     &key=${API_KEY}`;
@@ -701,7 +701,7 @@ export const getStaticMapUrl = (lat: number, lng: number, label: string) => {
 export const generateStaticMapURL = (points: { lat: number; lng: number }[]) => {
     if (!points || points.length === 0) return "";
 
-    const API_KEY = `${process.env.NEXT_PUBLIC_API_KEY_GOOGLE}`; // Substitua pela sua chave
+    const API_KEY = `${process.env.API_KEY_GOOGLE}`; // Substitua pela sua chave
     const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
     const size = "600x400"; // Defina o tamanho da imagem
     const path = points.map(p => `${p.lat},${p.lng}`).join("|");

@@ -3,15 +3,15 @@ import { MetadataRoute } from 'next';
 import axios from 'axios';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL || "https://19.escoteiroses.org.br";
+    const baseUrl = process.env.ROOT_URL || "https://19.escoteiroses.org.br";
 
     console.log("Gerando sitemap...", baseUrl);
     try {
         // Busca todas as notícias da API
-        const response = await axios.get(`${baseUrl}${process.env.NEXT_PUBLIC_URL_SERVICES}`, {
+        const response = await axios.get(`${baseUrl}${process.env.URL_SERVICES}`, {
             params: { service: 'news' },
             headers: {
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_AUTORIZATION}`
+                'Authorization': `Bearer ${process.env.AUTORIZATION}`
             }
         });
 

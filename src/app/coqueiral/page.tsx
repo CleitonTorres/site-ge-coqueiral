@@ -67,7 +67,7 @@ export default function Coqueiral (){
                     <b>- MUTECO:</b> é uma grande ação ecológica que movimenta as crianças e jovens escoteiros de todo o País, além de ser uma grande oportunidade para que todo reflitam sobre a importância do Meio Ambiente em suas vidas. Neste evento é comumente realizado projetos de limpeza das praia, bosques, e distribuição de sementes ou mudas.
                 </p>
                 <p>
-                    <b>-MUTICOM:</b> é uma atividade de mobilização nacional voltada à integração e colaboração dos Escoteiros do Brasil com a sociedade, espalhadas em todo o território nacional. O MutCom é uma oportunidade de proporcionar as crianças, adolescentes e jovens atividades de serviço comunitário que exerçam a função de estimular seu envolvimento com a comunidade, no intuito de promover a formação do indivíduo que queremos entregar à sociedade.
+                    <b>- MUTICOM:</b> é uma atividade de mobilização nacional voltada à integração e colaboração dos Escoteiros do Brasil com a sociedade, espalhadas em todo o território nacional. O MutCom é uma oportunidade de proporcionar as crianças, adolescentes e jovens atividades de serviço comunitário que exerçam a função de estimular seu envolvimento com a comunidade, no intuito de promover a formação do indivíduo que queremos entregar à sociedade.
                 </p>
                 <p>
                     <b>- EDUCAÇÃO ESCOTEIRA:</b> O Educação Escoteira é um projeto anual com o objetivo mostrar para a comunidade um pouco do universo escoteiro nesse grande evento os escoteiros visitam escolas locais e aplicam atividades educativas baseadas no método escoteiro.
