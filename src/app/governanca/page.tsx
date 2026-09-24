@@ -64,7 +64,7 @@ export default function Page(){
                     <ul className={styles.boxLinks}>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>
-                            <a href="https://drive.google.com/file/d/1WK2V1144XU3_c9-3zBGMxbUydm2siZk0/view?usp=sharing" target='_blank'>Estatuto</a>
+                            <a href="https://drive.google.com/open?id=1UccoNsQ_4EpGhnJJ0cV4YAISvslWL1EN&usp=drive_fs" target='_blank'>Estatuto</a>
                         </li>
                         <li className='boxShadow cursoPointer'>
                             <Image alt='' width={80} height={100} src={'/icons/IconeDoc.png'}/>

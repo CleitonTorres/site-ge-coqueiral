@@ -1,0 +1,6 @@
+.date { font-size: .85rem; color: #535d68; }
+.excerpt { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.empty { padding: 40px 24px; border: 1px solid var(--cinza-escuro); border-radius: 12px; background: var(--cinza); }
+.empty h3 { color: var(--azul-escuro); font-size: 1.3rem; }
+.empty p { margin-top: 12px; line-height: 1.7; }
+.empty a { display: inline-block; color: var(--azul-escuro); padding: 12px 0; text-decoration: underline; }
