@@ -5,6 +5,7 @@ import Banner from '@/components/layout/banner/banner';
 import Projetos from '@/components/layout/projetos/projetos';
 import NewsHomeSection from '@/components/layout/newsHomeSection/newsHomeSection';
 import InstagramFeed from '@/components/layout/feeds/feeds';
+import OpenRegistrations from '@/components/layout/openRegistrations/openRegistrations';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -44,6 +45,7 @@ export default function Home() {
         <p>O movimento escoteiro no Brasil</p>
       </section>
       <Projetos resume />
+      <OpenRegistrations />
       <section className={styles.opportunities} aria-labelledby="opportunities-heading">
         <div className={styles.sectionHeading}><span className={styles.eyebrow}>Encontre seu caminho</span><h2 id="opportunities-heading">O escotismo também é para você.</h2></div>
         <div className={styles.opportunityGrid}>

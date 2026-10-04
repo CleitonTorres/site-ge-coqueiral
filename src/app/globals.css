@@ -235,9 +235,12 @@ body {
 
 /* recaptcha */
 .grecaptcha-badge{
-  position: absolute !important;
+  position: fixed !important;
+  top: auto !important;
+  left: auto !important;
   bottom: 14px !important;
-  right: -186px !important;
+  right: 0 !important;
+  z-index: 1000;
 }
 @keyframes slide {
   0%{

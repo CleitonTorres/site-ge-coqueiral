@@ -3,6 +3,7 @@ import { closeDatabase, connectToDatabase } from "@/scripts/connectDB";
 import { decryptPassword, encryptPassword } from "@/scripts/globais";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
+import { signRegistrationToken } from '@/server/registrations';
 
 export type PropsSingIn = {
     user:string,
@@ -51,7 +52,11 @@ export async function GET(req: NextRequest) {
             }
 
             if (response.doc) {
-                return NextResponse.json(response.doc, { status: 200 });
+                const result = NextResponse.json(response.doc, { status: 200 });
+                if (process.env.INSCRICOES_SECRET && process.env.INSCRICOES_SECRET.length >= 32) {
+                    result.cookies.set('coqueiral-admin', signRegistrationToken({scope: 'admin', userId: response.doc._id.toString(), role: response.doc.nivelAcess, expires: Date.now() + 8 * 60 * 60 * 1000}), {httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 8 * 60 * 60});
+                }
+                return result;
             }
 
             return NextResponse.json({ error: "Autenticação falhou sem detalhes." }, { status: 500 });

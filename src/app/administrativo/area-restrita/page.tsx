@@ -11,6 +11,8 @@ import axios from 'axios';
 import NewsPage from '@/components/layout/newsPage/newsPage';
 import Provider, { Context } from '@/components/context/context';
 import { uels } from '@/components/data-training/data-training';
+import RegistrationAdmin from '@/components/form/registration/registrationAdmin';
+import ReceivedRegistrations from '@/components/form/registration/receivedRegistrations';
 
 function Page(){
     const context = useContext(Context);
@@ -304,170 +306,189 @@ function Page(){
                         <span>Compartilhe histórias, atividades e eventos.</span>
                         <small>Preparar publicação →</small>
                     </button>
-                </nav>
-                {actions === 1 && ["Admin", "Dirigente"].includes(context.dataUser.nivelAcess) ? 
-                <form id="cadastro-usuario" className={styles.subConteiner} onSubmit={submit} aria-busy={showModal}>
-                    <p className={styles.eyebrow}>ACESSOS DO GRUPO</p>
-                    <h2>Cadastrar novo usuário</h2><p className={styles.intro}>Preencha os dados do integrante e defina seu acesso. Nome, usuário e senha são obrigatórios.</p>
-                    <div className={styles.boxInputs}>
-                        <div className={styles.boxInput}> 
-                            <label htmlFor="name">Nome</label>                   
-                            <input id="name" type="text" 
-                                name='name' required autoComplete='name' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.name || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="registro">Registro Escoteiro</label>                   
-                            <input id="registro" type="text" 
-                                name='registro' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.registro || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="cargo">Cargo</label>                   
-                            <select id="cargo" name='cargo' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.cargo || '' }
-                            >
-                                {[
-                                    '',
-                                    'Chefe de ramo', 
-                                    'Ch. Assistente de ramo',
-                                    'Ch. Assistente administrativo', 
-                                    'Diretor(a) Administrativo', 
-                                    'Diretor(a) Financeiro',
-                                    'Diretor(a) de Métodos Educativos',
-                                    'Diretor(a) Presidente'].map(item=> (
-                                    <option value={item} key={item}>{item}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="ramo">Ramo</label>                   
-                            <select id="ramo" name='ramo' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.ramo || '' }
-                            >
-                                {[
-                                    '',
-                                    'Lobinho', 
-                                    'Escoteiro', 
-                                    'Sênior', 
-                                    'Pioneiro',
-                                    'Diretoria'].map(item=> (
-                                    <option value={item} key={item}>{item}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="nivelFormacao">Nível de formação</label>                   
-                            <select id="nivelFormacao" name='nivelFormacao' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.nivelFormacao || '' }
-                            >
-                                {['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (
-                                    <option value={item} key={item}>{item}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="nivelAcess">Nível de Acesso</label>                   
-                            <select id="nivelAcess" name='nivelAcess' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.nivelAcess || '' }
-                            >
-                                {['', 'Escotista', 'Dirigente', 'Regional-admin'].map(item=> (
-                                    <option value={item} key={item}>{item}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="tel">Contato</label>                   
-                            <input id="tel" type="tel" 
-                                name='tel' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.tel || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="email">E-mail</label>                   
-                            <input id="email" type="email" 
-                                name='email' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.email || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="user">Usuário</label>                   
-                            <input id="user" type="text" 
-                                name='user' required autoComplete='off' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.user || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="password">Senha</label>       
-                            <input id="password" type="password" 
-                                name='password' required autoComplete='new-password'
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.password || '' }
-                            /> 
-                        </div>
-                    </div>
-                    <div className={styles.boxInput}>
-                        <div className={styles.boxInput}> 
-                            <label htmlFor="nameUel">UEL</label>
-                            <select id="nameUel"
-                                name='nameUel' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.dadosUel?.nameUel || '' }
-                            >
-                                <option value=""></option>
-                                {[...uels].sort((a,b)=>{
-                                    const item1 = a.numUel;
-                                    const item2 = b.numUel;
-                                    if(item1 > item2){
-                                        return 1
-                                    }else if(item1 < item2){
-                                        return -1
-                                    }else return 0;
-                                }).map(uel=> (
-                                    <option value={uel.nameUel} key={uel.nameUel}>{`${uel.numUel || ''} ${uel.ufUel || ''} - ${uel.nameUel || ''}`}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="dadosUel.presidenteUel">Presidente da UEL</label>                   
-                            <input id="dadosUel.presidenteUel" type="text" 
-                                name='dadosUel.presidenteUel' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.dadosUel?.presidenteUel || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="dadosUel.regEscoteiroPresidente">Registro do(a) Presidente da UEL</label>                   
-                            <input id="dadosUel.regEscoteiroPresidente" type="text" 
-                                name='dadosUel.regEscoteiroPresidente' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.dadosUel?.regEscoteiroPresidente || '' }
-                            />
-                        </div>
-                        <div className={styles.boxInput}>
-                            <label htmlFor="dadosUel.telPresidente">Contato do(a) Presidente da UEL</label>                   
-                            <input id="dadosUel.telPresidente" type="text" 
-                                name='dadosUel.telPresidente' 
-                                onChange={(e)=>handleData(e)}
-                                value={dataNewUser.dadosUel?.telPresidente || '' }
-                            />
-                        </div>
-                    </div>
-                    <button type="submit" className={styles.submit} disabled={showModal}>
-                        Cadastrar usuário
+                    <button type="button" className={styles.cardActions} aria-pressed={actions === 4}
+                        aria-controls="formularios-inscricao" onClick={()=>setAction(4)}
+                        disabled={!["Admin", "Dirigente"].includes(context.dataUser?.nivelAcess)}>
+                        <span className={styles.actionNumber} aria-hidden="true">04</span>
+                        <strong>Formulários de inscrição</strong>
+                        <span>Configure campos, kits, anexos e abertura de inscrições.</span>
+                        <small>Gerenciar inscrições →</small>
                     </button>
-                </form>
+                <button type="button" className={styles.cardActions} aria-pressed={actions === 5}
+                    aria-controls="inscricoes-recebidas" onClick={()=>setAction(5)}>
+                    <span className={styles.actionNumber} aria-hidden="true">05</span>
+                    <strong>Inscrições recebidas</strong>
+                    <span>Consulte participantes, kits e comprovantes enviados.</span>
+                    <small>Ver inscrições →</small>
+                </button>
+                </nav>
+                {actions === 5 && <div id="inscricoes-recebidas"><ReceivedRegistrations /></div>}
+                {actions === 4 && ["Admin", "Dirigente"].includes(context.dataUser?.nivelAcess) &&
+                    <div id="formularios-inscricao"><RegistrationAdmin /></div>
+                }
+                {actions === 1 && ["Admin", "Dirigente"].includes(context.dataUser.nivelAcess) ? 
+                    <form id="cadastro-usuario" className={styles.subConteiner} onSubmit={submit} aria-busy={showModal}>
+                        <p className={styles.eyebrow}>ACESSOS DO GRUPO</p>
+                        <h2>Cadastrar novo usuário</h2><p className={styles.intro}>Preencha os dados do integrante e defina seu acesso. Nome, usuário e senha são obrigatórios.</p>
+                        <div className={styles.boxInputs}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="name">Nome</label>
+                                <input id="name" type="text"
+                                    name='name' required autoComplete='name'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.name || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="registro">Registro Escoteiro</label>
+                                <input id="registro" type="text"
+                                    name='registro'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.registro || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="cargo">Cargo</label>
+                                <select id="cargo" name='cargo'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.cargo || '' }
+                                >
+                                    {[
+                                        '',
+                                        'Chefe de ramo',
+                                        'Ch. Assistente de ramo',
+                                        'Ch. Assistente administrativo',
+                                        'Diretor(a) Administrativo',
+                                        'Diretor(a) Financeiro',
+                                        'Diretor(a) de Métodos Educativos',
+                                        'Diretor(a) Presidente'].map(item=> (
+                                        <option value={item} key={item}>{item}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="ramo">Ramo</label>
+                                <select id="ramo" name='ramo'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.ramo || '' }
+                                >
+                                    {[
+                                        '',
+                                        'Lobinho',
+                                        'Escoteiro',
+                                        'Sênior',
+                                        'Pioneiro',
+                                        'Diretoria'].map(item=> (
+                                        <option value={item} key={item}>{item}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="nivelFormacao">Nível de formação</label>
+                                <select id="nivelFormacao" name='nivelFormacao'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.nivelFormacao || '' }
+                                >
+                                    {['', 'Preliminar', 'Intermediário', 'Avançado'].map(item=> (
+                                        <option value={item} key={item}>{item}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="nivelAcess">Nível de Acesso</label>
+                                <select id="nivelAcess" name='nivelAcess'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.nivelAcess || '' }
+                                >
+                                    {['', 'Escotista', 'Dirigente', 'Regional-admin'].map(item=> (
+                                        <option value={item} key={item}>{item}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="tel">Contato</label>
+                                <input id="tel" type="tel"
+                                    name='tel'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.tel || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="email">E-mail</label>
+                                <input id="email" type="email"
+                                    name='email'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.email || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="user">Usuário</label>
+                                <input id="user" type="text"
+                                    name='user' required autoComplete='off'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.user || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="password">Senha</label>
+                                <input id="password" type="password"
+                                    name='password' required autoComplete='new-password'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.password || '' }
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.boxInput}>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="nameUel">UEL</label>
+                                <select id="nameUel"
+                                    name='nameUel'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.dadosUel?.nameUel || '' }
+                                >
+                                    <option value=""></option>
+                                    {[...uels].sort((a,b)=>{
+                                        const item1 = a.numUel;
+                                        const item2 = b.numUel;
+                                        if(item1 > item2){
+                                            return 1
+                                        }else if(item1 < item2){
+                                            return -1
+                                        }else return 0;
+                                    }).map(uel=> (
+                                        <option value={uel.nameUel} key={uel.nameUel}>{`${uel.numUel || ''} ${uel.ufUel || ''} - ${uel.nameUel || ''}`}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="dadosUel.presidenteUel">Presidente da UEL</label>
+                                <input id="dadosUel.presidenteUel" type="text"
+                                    name='dadosUel.presidenteUel'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.dadosUel?.presidenteUel || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="dadosUel.regEscoteiroPresidente">Registro do(a) Presidente da UEL</label>
+                                <input id="dadosUel.regEscoteiroPresidente" type="text"
+                                    name='dadosUel.regEscoteiroPresidente'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.dadosUel?.regEscoteiroPresidente || '' }
+                                />
+                            </div>
+                            <div className={styles.boxInput}>
+                                <label htmlFor="dadosUel.telPresidente">Contato do(a) Presidente da UEL</label>
+                                <input id="dadosUel.telPresidente" type="text"
+                                    name='dadosUel.telPresidente'
+                                    onChange={(e)=>handleData(e)}
+                                    value={dataNewUser.dadosUel?.telPresidente || '' }
+                                />
+                            </div>
+                        </div>
+                        <button type="submit" className={styles.submit} disabled={showModal}>
+                            Cadastrar usuário
+                        </button>
+                    </form>
                 :null}
 
                 {actions === 3 ? 

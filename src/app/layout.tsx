@@ -23,6 +23,7 @@ const groups = [
     ['Escoteiros pela Biodiversidade', '/projetos/escoteiros-pela-biodiversidade'], ['Escoteiro Dev', '/projetos/escoteiro-dev'], ['Dia de Semear Paz', '/projetos/dia-de-semear-paz'],
   ] },
   { title: 'Participe', links: [
+    ['Inscrições', '/inscricoes'],
     ['Como ser escoteiro', '/seja-escoteiro'], ['Ramo Lobinho', '/ramo-lobinho'], ['Ramo Escoteiro', '/ramo-escoteiro'], ['Ramo Sênior', '/ramo-senior'], ['Ramo Pioneiro', '/ramo-pioneiro'],
     ['Seja voluntário', '/seja-escoteiro'], ['Como abrir uma UEL', '/como-abrir-uma-uel'], ['Clube de vantagens', 'https://www.escoteiros.org.br/clube-de-vantagens/'],
   ] },

@@ -20,6 +20,7 @@ export default function Banner({ title, subTitle, paragraph, imageURL, videoURL,
     preference.addEventListener('change', update);
     return () => preference.removeEventListener('change', update);
   }, [videoURL]);
+  
   return (
     <section className={`${styles.conteiner} ${customClass.map(name => styles[name] || '').join(' ')}`}>
       {videoURL && <video ref={video} muted loop playsInline preload="metadata" poster={isHome ? '/images/projetos/acampa-canoa/acampa-canoa01.jpg' : undefined} className={styles.video} aria-hidden="true" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}><source src={videoURL} type={videoURL.endsWith('.webm') ? 'video/webm' : 'video/mp4'} /></video>}
