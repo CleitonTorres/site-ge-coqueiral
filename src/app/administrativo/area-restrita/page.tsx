@@ -14,8 +14,11 @@ import { uels } from '@/components/data-training/data-training';
 import RegistrationAdmin from '@/components/form/registration/registrationAdmin';
 import ReceivedRegistrations from '@/components/form/registration/receivedRegistrations';
 
+import LinktreeAdmin from '@/components/form/linktree/linktreeAdmin';
+
 function Page(){
     const context = useContext(Context);
+    const canEditLinktree = ['Admin', 'Dirigente'].includes(context.dataUser?.nivelAcess);
     const [dataNewUser, setDataNewUser] = useState({} as ProfileProps);
     const [showModal, setShowModal] = useState(false);
     const [actions, setAction] = useState<number | undefined>(3);
@@ -321,7 +324,15 @@ function Page(){
                     <span>Consulte participantes, kits e comprovantes enviados.</span>
                     <small>Ver inscrições →</small>
                 </button>
+                    <button type="button" className={styles.cardActions} aria-pressed={actions === 6}
+                        aria-controls="editor-linktree" onClick={() => setAction(6)} disabled={!canEditLinktree}>
+                        <span className={styles.actionNumber} aria-hidden="true">06</span>
+                        <strong>Linktree</strong>
+                        <span>Atualize o perfil e os links importantes do grupo.</span>
+                        <small>{canEditLinktree ? 'Gerenciar links →' : 'Disponível para Admin e Dirigente'}</small>
+                    </button>
                 </nav>
+                {actions === 6 && canEditLinktree && <div id="editor-linktree"><LinktreeAdmin /></div>}
                 {actions === 5 && <div id="inscricoes-recebidas"><ReceivedRegistrations /></div>}
                 {actions === 4 && ["Admin", "Dirigente"].includes(context.dataUser?.nivelAcess) &&
                     <div id="formularios-inscricao"><RegistrationAdmin /></div>

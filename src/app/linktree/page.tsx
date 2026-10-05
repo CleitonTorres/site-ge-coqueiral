@@ -1,8 +1,11 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import styles from './linktree.module.css';
 
 // Interface para tipagem dos links
 interface LinkItem {
-  id: number;
+  id: number | string;
   label: string;
   url: string;
 }
@@ -15,21 +18,49 @@ interface ProfileData {
   links: LinkItem[];
 }
 
-// Mock de dados (Altere com as suas informações)
-const profile: ProfileData = {
-  name: "19º Grupo Escoteiro Coqueiral",
-  bio: "Desde 1988 formando cidadãos de valor.",
-  avatarUrl: "/logo/logo.png",
-  links: [
-    { id: 1, label: "Site Institucional", url: "https://grupoescoteirocoqueiral.org.br" },
-    { id: 2, label: "Festival de Pipas", url: "https://www.grupoescoteirocoqueiral.org.br/inscricoes/festival-de-pipas-2026" },
-    { id: 3, label: "Nossos Projetos", url: "https://www.grupoescoteirocoqueiral.org.br/projetos" },
-    { id: 4, label: "Nota Premiada Capixaba", url: "https://www.notapremiadacapixaba.es.gov.br/" },
-    { id: 5, label: "Instagram", url: "https://www.instagram.com/19escoqueiral/" },
-  ]
-};
-
 export default function Linktree() {
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setError(false);
+
+    async function loadProfile() {
+      try {
+        const response = await fetch('/api/linktree', {
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error('Falha ao carregar Linktree.');
+        const data: ProfileData = await response.json();
+        if (!controller.signal.aborted) setProfile(data);
+      } catch {
+        if (!controller.signal.aborted) setError(true);
+      }
+    }
+
+    void loadProfile();
+    return () => controller.abort();
+  }, [attempt]);
+
+  if (!profile) {
+    return (
+      <div className={styles.container}>
+        <main className={styles.linksContainer}>
+          <p role={error ? 'alert' : 'status'}>
+            {error ? 'Não foi possível carregar os links. Tente novamente.' : 'Carregando links...'}
+          </p>
+          {error && (
+            <button type="button" className={styles.linkButton} onClick={() => setAttempt(value => value + 1)}>
+              Tentar novamente
+            </button>
+          )}
+        </main>
+      </div>
+    );
+  }
   return (
     <div className={styles.container}>
       <header className={styles.header}>
