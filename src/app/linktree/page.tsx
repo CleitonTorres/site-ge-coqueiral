@@ -22,9 +22,10 @@ const profile: ProfileData = {
   avatarUrl: "/logo/logo.png",
   links: [
     { id: 1, label: "Site Institucional", url: "https://grupoescoteirocoqueiral.org.br" },
-    { id: 2, label: "Nossos Projetos", url: "https://www.grupoescoteirocoqueiral.org.br/projetos" },
-    { id: 3, label: "Nota Premiada Capixaba", url: "https://www.notapremiadacapixaba.es.gov.br/" },
-    { id: 4, label: "Instagram", url: "https://www.instagram.com/19escoqueiral/" },
+    { id: 2, label: "Festival de Pipas", url: "https://www.grupoescoteirocoqueiral.org.br/inscricoes/festival-de-pipas-2026" },
+    { id: 3, label: "Nossos Projetos", url: "https://www.grupoescoteirocoqueiral.org.br/projetos" },
+    { id: 4, label: "Nota Premiada Capixaba", url: "https://www.notapremiadacapixaba.es.gov.br/" },
+    { id: 5, label: "Instagram", url: "https://www.instagram.com/19escoqueiral/" },
   ]
 };
 
