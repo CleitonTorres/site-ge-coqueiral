@@ -51,6 +51,33 @@ export default function Page(){
                     />
                     <br />
                     <br />
+                    <div style={{
+                        border: '1px solid var(--cinza-escuro)', 
+                        borderRadius: '8px',
+                        width: 300,
+                        maxWidth: '100%',
+                        height: 'auto',
+                        padding: '10px'
+                    }}>
+                        <Link 
+                            href={'/inscricoes/festival-de-pipas-2026'} 
+                            target="_self" rel="noopener noreferrer"
+                        >
+                            <h2 
+                                className={styles.subtitle}
+                                style={{textAlign: 'center'}}
+                            >
+                                Inscrições para o Festival 2026 - 12/10.
+                            </h2>                    
+                            <Image 
+                                alt='pipas, escoteiros, aracruz, coqueiral, cultura'
+                                src={'/images/projetos/pipa-escoteira/pipas (3).jpeg'}
+                                width={300}
+                                height={200}
+                                style={{objectFit: 'contain', height: 'auto', width: '100%'}}
+                            />
+                        </Link>
+                    </div>
                     <p className={styles.paragraph}>
                         O 19º Grupo Escoteiro Coqueiral tem trabalhado constantemente para indicado para fortalecer as atividades culturais familiares e tradicionais promovendo com regularidade anual atividades relacionadas as lembranças de infância de pais e avós. Um exemplo desse trabalho é nossa oficina de Pipas, que tem como objetivos integração das famílias envolvendo crianças, jovens, pais e filhos em uma atividade recreativa, integração social reunindo diversos segmentos da sociedade numa comunidade integrada para o mesmo fim, levando lazer, cultura e entretenimento à comunidade local.
                     </p>

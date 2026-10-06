@@ -55,6 +55,7 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
     ticket.current = null;
     setError("");
   };
+  
   const total =
     form?.kits.reduce(
       (sum, kit) => sum + (quantities[kit.id] || 0) * kit.priceCents,
