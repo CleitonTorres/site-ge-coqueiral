@@ -9,6 +9,7 @@ import {
   validateAnswers,
 } from "@/lib/registrations/model";
 import styles from "./styles.module.css";
+import { validateParticipantEmail } from '@/lib/registrations/participant-email';
 
 export const money = (cents: number) =>
   (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -18,6 +19,9 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
   const [form, setForm] = useState<PublicForm | null>(null);
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [email, setEmail] = useState('');
+  const emailField = form?.fields.find(field => field.type === 'email');
+  const participantEmail = emailField ? answers[emailField.id] || '' : email;
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
@@ -26,6 +30,7 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
     message: string;
     registrationId: string;
     protocol?: string;
+    participantEmailStatus?: string;
   } | null>(null);
   const ticket = useRef<Ticket | null>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -91,6 +96,7 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
     setError("");
     try {
       validateAnswers(form, { answers, quantities });
+      validateParticipantEmail(participantEmail);
       if (form.filesRequired && !files.length)
         throw new Error("Anexe o comprovante de pagamento.");
       setBusy(true);
@@ -119,6 +125,7 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
             answers,
             quantities,
             captcha,
+            participantEmail,
           }),
         });
         const data = await authorization.json();
@@ -195,6 +202,11 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
               <strong>Guarde seu protocolo!</strong>
             </p>
             <p>Protocolo: {success.protocol || success.registrationId}</p>
+            <p>{success.participantEmailStatus === 'sent'
+              ? `Enviamos a confirmação da inscrição para ${participantEmail}. Confira também a pasta de spam.`
+              : success.participantEmailStatus === 'processing'
+                ? 'Sua inscrição foi recebida. O envio do e-mail de confirmação está em processamento.'
+                : 'Sua inscrição foi recebida, mas não foi possível confirmar o envio do e-mail. Guarde seu protocolo.'}</p>
             <Link href="/inscricoes">Ver outras inscrições →</Link>
           </div>
         ) : !form.open ? (
@@ -226,7 +238,7 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
                     <div className={styles.field} key={field.id}>
                       <label htmlFor={`field-${field.id}`}>
                         {field.label}
-                        {field.required ? " *" : " (opcional)"}
+                        {field.required || field.id === emailField?.id ? " *" : " (opcional)"}
                       </label>
                       {field.type === "textarea" ? (
                         <textarea
@@ -264,7 +276,7 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
                         <input
                           id={`field-${field.id}`}
                           type={field.type}
-                          required={field.required}
+                          required={field.required || field.id === emailField?.id}
                           maxLength={5000}
                           value={answers[field.id] || ""}
                           onChange={(e) => {
@@ -278,6 +290,11 @@ export default function RegistrationFormView({ slug }: { slug: string }) {
                       )}
                     </div>
                   ))}
+                  {!emailField && <div className={styles.field}>
+                    <label htmlFor="participant-email">Seu e-mail *</label>
+                    <input id="participant-email" type="email" autoComplete="email" required maxLength={254} value={email} onChange={event => {invalidate(); setEmail(event.target.value);}} />
+                    <p className={styles.hint}>Enviaremos a confirmação e os dados da inscrição para este endereço.</p>
+                  </div>}
                   {!!form.kits.length && (
                     <fieldset>
                       <legend className={styles.legend}>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'node:crypto';
+import { validateParticipantEmail } from '@/lib/registrations/participant-email';
 import { insertRegistrationWithProtocol } from '@/server/registration-protocol';
 import { registrationDb, sameOrigin, signRegistrationToken } from '@/server/registrations';
 import { RegistrationForm, validateAnswers } from '@/lib/registrations/model';
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
     if (!form.open) return NextResponse.json({error: 'As inscrições estão fechadas.'}, {status: 409});
     if (form.revision !== body.revision) return NextResponse.json({error: 'O formulário mudou. Atualize a página antes de se inscrever.'}, {status: 409});
     let registration;
-    try { registration = validateAnswers(form, body); } catch (error) { return NextResponse.json({error: (error as Error).message}, {status: 400}); }
+    try { registration = {...validateAnswers(form, body), participantEmail: validateParticipantEmail(body.participantEmail)}; } catch (error) { return NextResponse.json({error: (error as Error).message}, {status: 400}); }
     const id = randomUUID();
     const expires = Date.now() + 30 * 60 * 1000;
     const ticket = signRegistrationToken({scope: 'registration-upload', id, slug: form.slug, expires});

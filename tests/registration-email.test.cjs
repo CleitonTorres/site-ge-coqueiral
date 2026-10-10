@@ -15,6 +15,19 @@ function load(relative, mocks = {}) {
 }
 const layout = load('../src/emails/templates/layout.ts');
 const {newRegistrationEmail} = load('../src/emails/templates/new-registration.ts', {'./layout': layout});
+const {registrationConfirmationEmail} = load('../src/emails/templates/registration-confirmation.ts', {'./layout': layout});
+const {validateParticipantEmail} = load('../src/lib/registrations/participant-email.ts');
+test('e-mail de confirmação é obrigatório e rejeita destinatários múltiplos ou cabeçalhos', () => {
+  assert.equal(validateParticipantEmail(' teste@example.com '), 'teste@example.com');
+  for (const value of ['', null, 'a,b@example.com', 'a@example.com,b@example.com', 'a@example.com\r\nBcc:x@y.com']) assert.throws(() => validateParticipantEmail(value));
+});
+test('confirmação inclui respostas e protocolo sem acesso à área administrativa', () => {
+  const result = registrationConfirmationEmail({protocol: 'ABCD-2345', title: 'Pipas', name: 'Maria', submittedAt: new Date(), kits: [{name: 'Kit', quantity: 2, subtotalCents: 3000}], totalCents: 3000, answers: [['Nome', '<Maria>']], dashboardUrl: 'https://example.com/administrativo'});
+  assert.match(result.html, /&lt;Maria&gt;/);
+  assert.match(result.text, /2 × Kit/);
+  assert.match(result.text, /ABCD-2345/);
+  assert.doesNotMatch(result.html, /href=.*administrativo/);
+});
 const {emailNotificationId} = load('../src/server/email/notification-token.ts');
 test('template antigo mantém dados e usa layout compartilhado com HTML escapado', () => {
   const {newSAAEEmail} = load('../src/emails/templates/new-saae.ts', {'./layout': layout});
@@ -44,27 +57,29 @@ test('notificação só envia concluídas, impede duplicações e permite retry 
   let record = null, sends = 0, fail = false;
   const collection = {
     findOne: async () => record,
-    findOneAndUpdate: async () => {
-      if (record.adminEmail?.status === 'sending' || record.adminEmail?.status === 'sent') return null;
-      record.adminEmail = {status: 'sending'}; return record;
+    findOneAndUpdate: async (_filter, update) => {
+      const channel = Object.keys(update.$set)[0];
+      if (record[channel]?.status === 'sending' || record[channel]?.status === 'sent') return null;
+      record[channel] = update.$set[channel]; return record;
     },
-    updateOne: async (_filter, update) => {record.adminEmail.status = update.$set['adminEmail.status'];},
+    updateOne: async (_filter, update) => {for (const [key, value] of Object.entries(update.$set)) {const [channel, field] = key.split('.'); record[channel][field] = value;}},
   };
   const {notifyRegistration} = load('../src/server/email/registration-notification.ts', {
     'server-only': {}, '@/server/registrations': {registrationDb: async () => ({collection: () => collection})},
     '@/emails/templates/new-registration': {newRegistrationEmail},
-    './transport': {emailConfiguration: () => {}, sendTemplateEmail: async () => {sends++; if (fail) throw new Error('SMTP_FAILED'); return 'message-id';}},
+    '@/emails/templates/registration-confirmation': {registrationConfirmationEmail},
+    './transport': {sendTemplateEmail: async (_template, recipient) => {sends++; if (fail && !recipient) throw new Error('SMTP_FAILED'); if (recipient) assert.equal(recipient, 'maria@example.com'); return 'message-id';}},
   });
   assert.equal((await notifyRegistration('id')).status, 'not-found');
-  record = {slug: 'pipas', submittedAt: new Date(), answers: {nome: 'Maria'}, kits: [], totalCents: 0, formSnapshot: {title: 'Pipas'}};
+  record = {slug: 'pipas', participantEmail: 'maria@example.com', submittedAt: new Date(), answers: {nome: 'Maria'}, kits: [], totalCents: 0, formSnapshot: {title: 'Pipas'}};
   fail = true;
-  await assert.rejects(notifyRegistration('id'), /SMTP_FAILED/);
+  assert.equal((await notifyRegistration('id')).participantEmailStatus, 'sent');
   assert.equal(record.adminEmail.status, 'failed');
   fail = false;
   assert.equal((await notifyRegistration('id')).status, 'sent');
   assert.equal((await notifyRegistration('id')).status, 'sent');
-  assert.equal(sends, 2);
+  assert.equal(sends, 3);
   record.adminEmail.status = 'sending';
   assert.equal((await notifyRegistration('id')).status, 'processing');
-  assert.equal(sends, 2);
+  assert.equal(sends, 3);
 });

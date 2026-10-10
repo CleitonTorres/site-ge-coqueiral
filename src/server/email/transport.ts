@@ -1,7 +1,7 @@
 import "server-only";
 import nodemailer from "nodemailer";
 
-export function emailConfiguration() {
+export function emailConfiguration(requireAdmin = true) {
   const {
     SMTP_HOST,
     SMTP_USER,
@@ -21,7 +21,7 @@ export function emailConfiguration() {
     !SMTP_USER ||
     !SMTP_PASSWORD ||
     !EMAIL_FROM ||
-    !recipients.length ||
+    (requireAdmin && !recipients.length) ||
     !Number.isInteger(port) ||
     port < 1 ||
     port > 65535
@@ -52,8 +52,10 @@ export async function sendTemplateEmail(template: {
   subject: string;
   text: string;
   html: string;
-}) {
-  const config = emailConfiguration();
+}, recipient?: string) {
+  const config = emailConfiguration(!recipient);
+  if (recipient && !/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(recipient)) throw new Error('EMAIL_RECIPIENT_INVALID');
+  const recipients = recipient ? [recipient] : config.recipients;
   transporter ??= nodemailer.createTransport({
     host: config.host,
     port: config.port,
@@ -70,12 +72,12 @@ export async function sendTemplateEmail(template: {
   // Separate envelopes avoid exposing the list of administrative recipients.
   const result = await transporter.sendMail({
     from: config.from,
-    to: config.from,
-    bcc: config.recipients,
+    to: recipient || config.from,
+    ...(recipient ? {} : {bcc: recipients}),
     subject: template.subject,
     text: template.text,
     html: template.html,
-    envelope: { from: config.auth.user, to: config.recipients },
+    envelope: { from: config.auth.user, to: recipients },
   });
   
   if (!result.accepted?.length || result.rejected?.length)

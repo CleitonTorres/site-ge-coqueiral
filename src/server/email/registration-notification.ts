@@ -1,11 +1,12 @@
+import { registrationConfirmationEmail } from "@/emails/templates/registration-confirmation";
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { registrationDb } from "@/server/registrations";
 import { newRegistrationEmail } from "@/emails/templates/new-registration";
-import { emailConfiguration, sendTemplateEmail } from "./transport";
+import { sendTemplateEmail } from "./transport";
 
-export async function notifyRegistration(id: string) {
-  emailConfiguration();
+async function notifyChannel(id: string, channel: "adminEmail" | "participantEmailNotification") {
+
 
   const siteUrl = new URL(
     process.env.EMAIL_SITE_URL || "https://www.grupoescoteirocoqueiral.org.br",
@@ -21,7 +22,8 @@ export async function notifyRegistration(id: string) {
   });
 
   if (!existing) return { status: "not-found" };
-  if (existing.adminEmail?.status === "sent") return { status: "sent" };
+  if (channel === "participantEmailNotification" && !existing.participantEmail) return {status: "skipped"};
+  if (existing[channel]?.status === "sent") return { status: "sent" };
   
   const attemptId = randomUUID();
   const claimed = await collection.findOneAndUpdate(
@@ -29,17 +31,17 @@ export async function notifyRegistration(id: string) {
       registrationId: id,
       status: "completed",
       $or: [
-        { "adminEmail.status": { $exists: false } },
-        { "adminEmail.status": "failed" },
+        { [`${channel}.status`]: { $exists: false } },
+        { [`${channel}.status`]: "failed" },
         {
-          "adminEmail.status": "sending",
-          "adminEmail.startedAt": { $lt: new Date(Date.now() - 5 * 60 * 1000) },
+          [`${channel}.status`]: "sending",
+          [`${channel}.startedAt`]: { $lt: new Date(Date.now() - 5 * 60 * 1000) },
         },
       ],
     },
     {
       $set: {
-        adminEmail: { status: "sending", startedAt: new Date(), attemptId },
+        [channel]: { status: "sending", startedAt: new Date(), attemptId },
       },
     },
     { returnDocument: "after" },
@@ -54,7 +56,7 @@ export async function notifyRegistration(id: string) {
         .collection("registrationForms")
         .findOne({ slug: claimed.slug }));
 
-    const template = newRegistrationEmail({
+    const data = {
       protocol: claimed.protocol || id,
       title: form?.title || claimed.slug,
       name: claimed.answers?.name || claimed.answers?.nome || "Não informado",
@@ -62,30 +64,42 @@ export async function notifyRegistration(id: string) {
       kits: claimed.kits || [],
       totalCents: claimed.totalCents || 0,
       dashboardUrl: new URL("/administrativo/area-restrita", siteUrl).href,
-    });
+    };
     
-    const messageId = await sendTemplateEmail(template);
+    const template = channel === 'adminEmail' ? newRegistrationEmail(data) : registrationConfirmationEmail({...data,
+      answers: [...Object.entries(claimed.answers || {}).map(([key, value]) => [form?.fields?.find((field: {id: string; label: string}) => field.id === key)?.label || key, String(value)] as [string, string]), ['E-mail de confirmação', claimed.participantEmail]],
+    });
+    const messageId = await sendTemplateEmail(template, channel === 'participantEmailNotification' ? claimed.participantEmail : undefined);
     await collection.updateOne(
-      { registrationId: id, "adminEmail.attemptId": attemptId },
+      { registrationId: id, [`${channel}.attemptId`]: attemptId },
       {
         $set: {
-          "adminEmail.status": "sent",
-          "adminEmail.sentAt": new Date(),
-          "adminEmail.messageId": messageId,
+          [`${channel}.status`]: "sent",
+          [`${channel}.sentAt`]: new Date(),
+          [`${channel}.messageId`]: messageId,
         },
       },
     );
     return { status: "sent" };
   } catch (error) {
     await collection.updateOne(
-      { registrationId: id, "adminEmail.attemptId": attemptId },
+      { registrationId: id, [`${channel}.attemptId`]: attemptId },
       {
         $set: {
-          "adminEmail.status": "failed",
-          "adminEmail.failedAt": new Date(),
+          [`${channel}.status`]: "failed",
+          [`${channel}.failedAt`]: new Date(),
         },
       },
     );
     throw error;
   }
+}
+
+export async function notifyRegistration(id: string) {
+  const results = await Promise.allSettled([notifyChannel(id, 'adminEmail'), notifyChannel(id, 'participantEmailNotification')]);
+  const status = (result: PromiseSettledResult<{status: string}>) => result.status === 'fulfilled' ? result.value.status : 'failed';
+  const adminStatus = status(results[0]);
+  const participantEmailStatus = status(results[1]);
+  if (results.some(result => result.status === 'rejected')) console.warn('[emails] falha de notificação', {registrationId: id, adminStatus, participantEmailStatus});
+  return {status: adminStatus === 'not-found' ? 'not-found' : adminStatus === 'processing' ? 'processing' : adminStatus === 'sent' ? 'sent' : 'failed', adminStatus, participantEmailStatus};
 }
